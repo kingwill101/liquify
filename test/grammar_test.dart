@@ -71,14 +71,52 @@ void main() {
       });
     });
 
-      test('Parses general tag', () {
-        testParser('{% tagname %}', (document) {
-          expect(document.children.length, 1);
+    test('Parses basic tag without content', () {
+      testParser('{% tagname %}', (document) {
+        expect(document.children.length, 1);
 
-          final tag = document.children[0] as Tag;
-          expect(tag.name, 'tagname');
-        });
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        assert(tag.content.isEmpty);
       });
+    });
+
+    test('Parses tag with variables', () {
+      testParser('{% tagname my_string = "Hello World!" %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        assert(tag.content.isNotEmpty);
+        expect(tag.content[0], isA<Assignment>());
+      });
+    });
+
+    test('Parses tag with comma separated arguments', () {
+      testParser('{% tagname var1,var2,var3, var4 %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        assert(tag.content.isNotEmpty);
+        expect(tag.content[0], isA<Identifier>());
+        expect(tag.content[1], isA<Identifier>());
+        expect(tag.content[2], isA<Identifier>());
+        expect(tag.content[3], isA<Identifier>());
+      });
+
+      testParser('{% tagname "var1",var2,var3,"var4" %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        assert(tag.content.isNotEmpty);
+        expect(tag.content[0], isA<Literal>());
+        expect(tag.content[1], isA<Identifier>());
+        expect(tag.content[2], isA<Identifier>());
+        expect(tag.content[3], isA<Literal>());
+      });
+    });
 
     //   test('Parses assignments within tags', () {
     //     testParser('{% if user %}{% assign my_variable = "string" %}{% endif %}',
@@ -151,6 +189,10 @@ void main() {
     //     }
     //   });
   });
+}
+Result parse(String input) {
+  final parser = LiquidGrammar().build();
+  return parser.parse(input);
 }
 
 void testParser(String source, void Function(Document document) testFunction) {
