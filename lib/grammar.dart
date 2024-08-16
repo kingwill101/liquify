@@ -85,8 +85,11 @@ class LiquidGrammar extends GrammarDefinition {
   Parser varStart() => string('{{-') | string('{{');
   Parser varEnd() => string('-}}') | string('}}');
 
-  Parser variable() =>
-      (varStart().trim() & ref0(expression).trim() & varEnd()).map((values) {
+  Parser variable() => (varStart().trim() &
+              ref0(expression).trim() &
+              filter().star().trim() &
+              varEnd())
+          .map((values) {
         Expression expr = values[1];
         String name = '';
         if (expr is Identifier) {
@@ -94,6 +97,12 @@ class LiquidGrammar extends GrammarDefinition {
         } else if (expr is MemberAccess) {
           name = (expr.object as Identifier).name;
         }
+
+        if ((values[2] as List).isNotEmpty) {
+          return FilteredExpression(
+              Variable(name, expr), (values[2] as List).cast<Filter>());
+        }
+
         return Variable(name, expr);
       });
 

@@ -16,6 +16,58 @@ void main() {
         expect((variable.expression as Identifier).name, 'user');
       });
     });
+    test('Parses variable expression with filters', () {
+      testParser('{{ user | filter1 | filter2 }}', (document) {
+        expect(document.children.length, 1);
+
+        final filtered = document.children[0] as FilteredExpression;
+
+        expect(filtered.expression, isA<Variable>());
+
+        final variable = filtered.expression as Variable;
+        expect((variable.expression as Identifier).name, 'user');
+        expect(filtered.filters.length, 2);
+        expect(filtered.filters[0].name.name, 'filter1');
+        expect(filtered.filters[1].name.name, 'filter2');
+      });
+    });
+
+    test('Parses variable expression with filter arguments', () {
+      testParser('{{ user | filter1: var1,var2 | filter2: var3:3, var4:4 }}',
+          (document) {
+        expect(document.children.length, 1);
+
+        final filtered = document.children[0] as FilteredExpression;
+
+        expect(filtered.expression, isA<Variable>());
+        final variable = filtered.expression as Variable;
+        expect((variable.expression as Identifier).name, 'user');
+
+        expect(filtered.filters.length, 2);
+
+        expect(filtered.filters[0].name.name, 'filter1');
+        expect(filtered.filters[0].arguments.length, 2);
+        expect((filtered.filters[0].arguments[0] as Identifier).name, 'var1');
+        expect((filtered.filters[0].arguments[1] as Identifier).name, 'var2');
+
+        expect(filtered.filters[1].name.name, 'filter2');
+        expect(filtered.filters[1].arguments.length, 2);
+        expect((filtered.filters[1].arguments[0] as NamedArgument).name.name,
+            'var3');
+        expect(
+            ((filtered.filters[1].arguments[0] as NamedArgument).value
+                    as Literal)
+                .value,
+            3);
+        expect((filtered.filters[1].arguments[1] as NamedArgument).name.name,
+            'var4');
+        expect(
+            ((filtered.filters[1].arguments[1] as NamedArgument).value
+                    as Literal)
+                .value,
+            4);
+      });
+    });
 
     test('Parses variable expression with whitespace control', () {
       testParser('{{- user -}}', (document) {
@@ -191,7 +243,7 @@ void main() {
         expect(
             ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
                 .value,
-            '1');
+            1);
         expect(
             ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
                 .type,
@@ -215,7 +267,7 @@ void main() {
         expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .value,
-            '3');
+          '3');
         expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .type,
@@ -260,7 +312,7 @@ void main() {
         expect(tag.filters[0].name.name, 'filter1');
         expect(tag.filters[1].name.name, 'filter2');
         expect(tag.filters[1].arguments.length, 1);
-        expect((tag.filters[1].arguments[0] as Literal).value, '123');
+        expect((tag.filters[1].arguments[0] as Literal).value, 123);
       });
     });
 
@@ -386,14 +438,14 @@ void main() {
         // The left side should be a comparison
         final leftComparison = operation.left as BinaryOperation;
         expect(leftComparison.operator, '==');
-        expect((leftComparison.left as Literal).value, '1');
-        expect((leftComparison.right as Literal).value, '1');
+        expect((leftComparison.left as Literal).value, 1);
+        expect((leftComparison.right as Literal).value, 1);
 
         // The right side should be a comparison
         final rightComparison = operation.right as BinaryOperation;
         expect(rightComparison.operator, '>');
-        expect((rightComparison.left as Literal).value, '2');
-        expect((rightComparison.right as Literal).value, '1');
+        expect((rightComparison.left as Literal).value, 2);
+        expect((rightComparison.right as Literal).value, 1);
       });
     });
 
@@ -437,14 +489,14 @@ void main() {
         // The right side of the AND should be a comparison
         final comparison = leftOperation.right as BinaryOperation;
         expect(comparison.operator, '==');
-        expect((comparison.left as Literal).value, '1');
-        expect((comparison.right as Literal).value, '1');
+        expect((comparison.left as Literal).value, 1);
+        expect((comparison.right as Literal).value, 1);
 
         // The right side of the OR should be a comparison
         final rightComparison = operation.right as BinaryOperation;
         expect(rightComparison.operator, '<');
-        expect((rightComparison.left as Literal).value, '2');
-        expect((rightComparison.right as Literal).value, '3');
+        expect((rightComparison.left as Literal).value, 2);
+        expect((rightComparison.right as Literal).value, 3);
       });
     });
 

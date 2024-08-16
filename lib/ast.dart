@@ -75,7 +75,7 @@ class Identifier extends Expression {
 }
 
 class Literal extends Expression {
-  final dynamic value;
+  final dynamic _value;
   final LiteralType type;
 
   Literal(this._value, this.type);
@@ -164,21 +164,16 @@ class Variable extends ASTNode {
 
   Variable(this.name, this.expression);
 
-  List<Filter> get filters => expression is FilteredExpression
-      ? (expression as FilteredExpression).filters
-      : [];
-
   @override
   Map<String, dynamic> toJson() => {
         'type': 'Variable',
         'name': name,
         'expression': expression.toJson(),
-        'filters': filters.map((filter) => filter.toJson()).toList(),
       };
 }
 
 class FilteredExpression extends ASTNode {
-  final Expression expression;
+  final ASTNode expression;
   final List<Filter> filters;
 
   FilteredExpression(this.expression, this.filters);
