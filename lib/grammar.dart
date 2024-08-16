@@ -14,21 +14,20 @@ class LiquidGrammar extends GrammarDefinition {
   Parser tagStart() => string('{%-') | string('{%');
   Parser tagEnd() => string('-%}') | string('%}');
 
+  Parser tag() => (tagStart() &
+              ref0(identifier).trim() &
+              ref0(tagContent).trim() &
+              ref0(filter).star().trim() &
+              tagEnd())
+          .map((values) {
+        return Tag((values[1] as Identifier).name, values[2] as List<ASTNode>,
+            filters: (values[3] as List).cast<Filter>());
+      });
 
-Parser tag() =>
-  (tagStart() & ref0(identifier).trim() & ref0(tagContent).trim() & ref0(filter).star() & tagEnd())
-    .map((values) {
-      return Tag(
-        (values[1] as Identifier).name,
-        values[2] as List<ASTNode>,
-        filters: (values[3] as List).cast<Filter>()
-      );
-    });
-
-Parser tagContent() =>
-  (ref0(expression) | ref0(assignment) | ref0(literal) | ref0(identifier)).star()
-    .map((result) => result.cast<ASTNode>());
-
+  Parser tagContent() =>
+      (ref0(expression) | ref0(assignment) | ref0(literal) | ref0(identifier))
+          .star()
+          .map((result) => result.cast<ASTNode>());
 
   Parser tagArguments() => (ref0(commaSeparatedArguments) |
       ref0(spaceSeparatedArguments) |
@@ -73,12 +72,15 @@ Parser tagContent() =>
   Parser filteredExpression() => (ref0(expression) & ref0(filter).plus()).map(
       (values) => FilteredExpression(
           values[0] as Expression, (values[1] as List).cast<Filter>()));
-
-  Parser filter() => (char('|').trim() &
-          ref0(identifier).trim() &
-          ref0(filterArguments).optional())
-      .map((values) =>
-          Filter(values[1] as Identifier;
+  Parser filter() {
+    return (char('|').trim() &
+            ref0(identifier).trim() &
+            (char(':').trim() &
+                    (ref0(namedArgument) | ref0(literal) | ref0(identifier))
+                        .plusSeparated(char(',').trim()))
+                .optional())
+        .map((values) {
+      final filterName = values[1] as Identifier;
       final args = values[2] != null
           ? (values[2] as List)[1].elements.cast<ASTNode>()
           : <ASTNode>[];
@@ -134,12 +136,6 @@ Parser tagContent() =>
             (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
         return MemberAccess(object, members);
       });
-
-  Parser identifier() =>
-      (letter() & word().star()).flatten().map((name) => Identifier(name));
-
-  Parser literal() => (char('"') & pattern('^"').star().flatten() & char('"'))
-      .map((values) => Literal(values[1]));
 
   Parser text() => pattern('^{').plus().flatten().map((text) => TextNode(text));
 

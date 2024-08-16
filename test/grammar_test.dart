@@ -144,15 +144,90 @@ void main() {
     });
 
     test('Parses tag with filter and arguments', () {
-      testParser('{% tagname | filter1: arg1, "arg2" %}', (document) {
+      testParser('{% tagname | filter1: arg1, arg2, "arg3" %}', (document) {
         expect(document.children.length, 1);
         final tag = document.children[0] as Tag;
         expect(tag.name, 'tagname');
         expect(tag.filters.length, 1);
         expect(tag.filters[0].name.name, 'filter1');
-        expect(tag.filters[0].arguments.length, 2);
+        expect(tag.filters[0].arguments.length, 3);
         expect((tag.filters[0].arguments[0] as Identifier).name, 'arg1');
-        expect((tag.filters[0].arguments[1] as Literal).value, 'arg2');
+        expect((tag.filters[0].arguments[1] as Identifier).name, 'arg2');
+        expect((tag.filters[0].arguments[2] as Literal).value, 'arg3');
+      });
+    });
+
+    test('Parses tag with filter and named arguments for all literal types',
+        () {
+      testParser(
+          '{% tagname | filter1: arg1:1, arg2:"2", arg3:\'3\', arg4:true, arg5:false %}',
+          (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        expect(tag.filters.length, 1);
+        expect(tag.filters[0].name.name, 'filter1');
+        expect(tag.filters[0].arguments.length, 5);
+
+        // Checking the first argument (number)
+        expect(
+            (tag.filters[0].arguments[0] as NamedArgument).name.name, 'arg1');
+        expect(
+            ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
+                .value,
+            '1');
+        expect(
+            ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
+                .type,
+            LiteralType.number);
+
+        // Checking the second argument (double-quoted string)
+        expect(
+            (tag.filters[0].arguments[1] as NamedArgument).name.name, 'arg2');
+        expect(
+            ((tag.filters[0].arguments[1] as NamedArgument).value as Literal)
+                .value,
+            '2');
+        expect(
+            ((tag.filters[0].arguments[1] as NamedArgument).value as Literal)
+                .type,
+            LiteralType.string);
+
+        // Checking the third argument (single-quoted string)
+        expect(
+            (tag.filters[0].arguments[2] as NamedArgument).name.name, 'arg3');
+        expect(
+            ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
+                .value,
+            '3');
+        expect(
+            ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
+                .type,
+            LiteralType.string);
+
+        // Checking the fourth argument (boolean true)
+        expect(
+            (tag.filters[0].arguments[3] as NamedArgument).name.name, 'arg4');
+        expect(
+            ((tag.filters[0].arguments[3] as NamedArgument).value as Literal)
+                .value,
+            true);
+        expect(
+            ((tag.filters[0].arguments[3] as NamedArgument).value as Literal)
+                .type,
+            LiteralType.boolean);
+
+        // Checking the fifth argument (boolean false)
+        expect(
+            (tag.filters[0].arguments[4] as NamedArgument).name.name, 'arg5');
+        expect(
+            ((tag.filters[0].arguments[4] as NamedArgument).value as Literal)
+                .value,
+            false);
+        expect(
+            ((tag.filters[0].arguments[4] as NamedArgument).value as Literal)
+                .type,
+            LiteralType.boolean);
       });
     });
 
@@ -266,9 +341,10 @@ void testParser(String source, void Function(Document document) testFunction) {
     } else {
       fail('Parsing failed: ${result.message}\nSource: $source');
     }
-  } catch (e) {
+  } catch (e, trace) {
     print("source: $source");
     print('Error: $e');
+    print('Trace: $trace');
     rethrow;
   }
 }

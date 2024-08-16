@@ -39,7 +39,7 @@ class Identifier extends Expression {
 
 class Literal extends Expression {
   final dynamic value;
-final LiteralType type;
+  final LiteralType type;
 
   Literal(this.value, this.type);
 }
@@ -78,11 +78,12 @@ class Variable extends ASTNode {
   final Expression expression;
   final String name;
 
-  Variable(this.name,this.expression);
+  Variable(this.name, this.expression);
 
-  List<Filter> get filters => expression is FilteredExpression ? (expression as FilteredExpression).filters : [];
+  List<Filter> get filters => expression is FilteredExpression
+      ? (expression as FilteredExpression).filters
+      : [];
 }
-
 
 class FilteredExpression extends ASTNode {
   final Expression expression;
@@ -96,4 +97,11 @@ class Filter extends ASTNode {
   final List<ASTNode> arguments;
 
   Filter(this.name, this.arguments);
+}
+
+class NamedArgument extends ASTNode {
+  final Identifier name;
+  final Expression value;
+
+  NamedArgument(this.name, this.value);
 }
