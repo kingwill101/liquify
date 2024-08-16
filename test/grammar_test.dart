@@ -117,6 +117,19 @@ void main() {
         expect(tag.content[3], isA<Literal>());
       });
     });
+    test('Parses tag with spac separated arguments', () {
+      testParser('{% tagname var1 var2 var3 var4 %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        assert(tag.content.isNotEmpty);
+        expect(tag.content[0], isA<Identifier>());
+        expect(tag.content[1], isA<Identifier>());
+        expect(tag.content[2], isA<Identifier>());
+        expect(tag.content[3], isA<Identifier>());
+      });
+    });
 
     test('Parses tag with variable and filter', () {
       testParser('{% tagname myvar | filter1 %}', (document) {
@@ -124,8 +137,8 @@ void main() {
         final tag = document.children[0] as Tag;
         expect(tag.name, 'tagname');
         expect(tag.content.length, 1);
-        final variable = tag.content[0] as Identifier;
-        expect(variable.name, 'myvar');
+        ASTNode variable = tag.content[0];
+        expect((variable as Identifier).name, 'myvar');
         expect(tag.filters.length, 1);
         expect(tag.filters[0].name.name, 'filter1');
         expect(tag.filters[0].arguments.isEmpty, true);
