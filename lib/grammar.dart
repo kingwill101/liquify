@@ -5,44 +5,51 @@ class LiquidGrammar extends GrammarDefinition {
   @override
   Parser start() => ref0(document).end();
 
-Parser document() => ref0(element).star().map((elements) => Document(elements.cast<ASTNode>()));
+  Parser document() => ref0(element)
+      .star()
+      .map((elements) => Document(elements.cast<ASTNode>()));
 
   Parser element() => ref0(tag) | ref0(variable) | ref0(text);
 
   Parser tagStart() => string('{%-') | string('{%');
   Parser tagEnd() => string('-%}') | string('%}');
 
-Parser tag() =>
-    (tagStart() & ref0(identifier).trim() & ref0(tagArguments).optional().trim() & tagEnd())
-        .map((values) {
-      return Tag((values[1] as Identifier).name, (values[2] as List<ASTNode>?) ?? []);
-    });
+  Parser tag() => (tagStart() &
+              ref0(identifier).trim() &
+              ref0(tagContent).trim() &
+              tagEnd())
+          .map((values) {
+        return Tag((values[1] as Identifier).name, values[2] as List<ASTNode>);
+      });
 
+  Parser tagArguments() => (ref0(commaSeparatedArguments) |
+      ref0(spaceSeparatedArguments) |
+      ref0(filteredArgument));
 
-  Parser tagArguments() =>
-      (ref0(commaSeparatedArguments) | ref0(spaceSeparatedArguments))
-      .map((result) => result.cast<ASTNode>());
+  Parser tagContent() =>
+      (ref0(assignment) | ref0(tagArguments) | ref0(literal) | ref0(identifier))
+          .star()
+          .map((result) {
+        return result[0].cast<ASTNode>();
+      });
 
-  Parser commaSeparatedArguments() =>
-      ref0(argument).plusSeparated(char(',').trim())
-      .map((result) => result.elements);
-
-  Parser spaceSeparatedArguments() =>
-      ref0(argument).trim().plus();
-
-  Parser argument() =>
-      ref0(assignment) | ref0(identifier) | ref0(literal) | ref0(variable);
+  Parser filteredArgument() =>
+      (ref0(expression) & ref0(filter).star().optional()).map((values) {
+        var expr = values[0] as Expression;
+        var filters = (values[1] as List?)?.cast<Filter>() ?? [];
+        return FilteredExpression(expr, filters);
+      });
 
   Parser assignment() =>
-      (ref0(identifier).trim() & char('=').trim() & ref0(literal).trim())
-      .map((values) => Assignment((values[0] as Identifier).name, values[2] as Literal));
+      (ref0(identifier).trim() & char('=').trim() & ref0(literal).trim()).map(
+          (values) =>
+              Assignment((values[0] as Identifier).name, values[2] as Literal));
 
   Parser varStart() => string('{{-') | string('{{');
   Parser varEnd() => string('-}}') | string('}}');
 
   Parser variable() =>
-      (varStart().trim() & ref0(expression).trim() & varEnd())
-          .map((values) {
+      (varStart().trim() & ref0(expression).trim() & varEnd()).map((values) {
         Expression expr = values[1] as Expression;
         String name = '';
         if (expr is Identifier) {
@@ -53,24 +60,50 @@ Parser tag() =>
         return Variable(name, expr);
       });
 
-  Parser expression() => ref0(memberAccess) | ref0(identifier) | ref0(literal);
+  Parser variableExpression() => ref0(filteredExpression) | ref0(expression);
 
-  Parser memberAccess() => 
-      (ref0(identifier) & (char('.') & ref0(identifier)).plus())
-      .map((values) {
+  Parser filteredExpression() => (ref0(expression) & ref0(filter).plus()).map(
+      (values) => FilteredExpression(
+          values[0] as Expression, (values[1] as List).cast<Filter>()));
+
+  Parser filter() =>
+      (char('|') & ref0(identifier).trim() & ref0(filterArguments).optional())
+          .map((values) {
+        return Filter(
+            values[1] as Identifier, (values[2] as List<ASTNode>?) ?? []);
+      });
+
+  Parser filterArguments() =>
+      (char(':') & ref0(argument).plusSeparated(char(',').trim()))
+          .map((values) {
+        return (values[1] as SeparatedList).elements;
+      });
+
+  Parser argument() =>
+      ref0(assignment) | ref0(identifier) | ref0(literal) | ref0(variable);
+
+  Parser expression() => ref0(memberAccess) | ref0(identifier);
+
+  Parser memberAccess() =>
+      (ref0(identifier) & (char('.') & ref0(identifier)).plus()).map((values) {
         var object = values[0] as Identifier;
-        var members = (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
+        var members =
+            (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
         return MemberAccess(object, members);
       });
 
-  Parser identifier() => 
-      (letter() & word().star())
-      .flatten()
-      .map((name) => Identifier(name));
+  Parser identifier() =>
+      (letter() & word().star()).flatten().map((name) => Identifier(name));
 
-  Parser literal() =>
-      (char('"') & pattern('^"').star().flatten() & char('"'))
+  Parser literal() => (char('"') & pattern('^"').star().flatten() & char('"'))
       .map((values) => Literal(values[1]));
 
   Parser text() => pattern('^{').plus().flatten().map((text) => TextNode(text));
+
+  Parser commaSeparatedArguments() =>
+      ref0(argument).plusSeparated(char(',').trim()).map((result) {
+        return result.elements.cast<Identifier>();
+      });
+
+  Parser spaceSeparatedArguments() => ref0(argument).trim().plus();
 }

@@ -6,18 +6,12 @@ class Document extends ASTNode {
   Document(this.children);
 }
 
-class Variable extends ASTNode {
-  final String name;
-  final Expression expression;
-
-  Variable(this.name, this.expression);
-}
-
 class Tag extends ASTNode {
   final String name;
   final List<ASTNode> content;
+  final List<Filter> filters;
 
-  Tag(this.name, this.content);
+  Tag(this.name, this.content, {this.filters = const []});
 }
 
 class Assignment extends ASTNode {
@@ -62,7 +56,6 @@ class MemberAccess extends Expression {
   MemberAccess(this.object, this.members);
 }
 
-
 class UnaryOperation extends Expression {
   final String operator;
   final Expression expression;
@@ -76,4 +69,28 @@ class FilterExpression extends Expression {
   final List<Expression> arguments;
 
   FilterExpression(this.filter, this.expression, this.arguments);
+}
+
+class Variable extends ASTNode {
+  final Expression expression;
+  final String name;
+
+  Variable(this.name,this.expression);
+
+  List<Filter> get filters => expression is FilteredExpression ? (expression as FilteredExpression).filters : [];
+}
+
+
+class FilteredExpression extends ASTNode {
+  final Expression expression;
+  final List<Filter> filters;
+
+  FilteredExpression(this.expression, this.filters);
+}
+
+class Filter extends ASTNode {
+  final Identifier name;
+  final List<ASTNode> arguments;
+
+  Filter(this.name, this.arguments);
 }

@@ -118,6 +118,61 @@ void main() {
       });
     });
 
+    test('Parses tag with variable and filter', () {
+      testParser('{% tagname myvar | filter1 %}', (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        expect(tag.content.length, 1);
+        final variable = tag.content[0] as Variable;
+        expect(variable.name, 'myvar');
+        expect(tag.filters.length, 1);
+        expect(tag.filters[0].name.name, 'filter1');
+        expect(tag.filters[0].arguments.isEmpty, true);
+      });
+    });
+
+    test('Parses tag with multiple filters', () {
+      testParser('{% tagname | filter1 | filter2 %}', (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        expect(tag.filters.length, 2);
+        expect(tag.filters[0].name.name, 'filter1');
+        expect(tag.filters[1].name.name, 'filter2');
+      });
+    });
+
+    test('Parses tag with filter and arguments', () {
+      testParser('{% tagname | filter1: arg1, "arg2" %}', (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        expect(tag.filters.length, 1);
+        expect(tag.filters[0].name.name, 'filter1');
+        expect(tag.filters[0].arguments.length, 2);
+        expect((tag.filters[0].arguments[0] as Identifier).name, 'arg1');
+        expect((tag.filters[0].arguments[1] as Literal).value, 'arg2');
+      });
+    });
+
+    test('Parses tag with arguments and filters', () {
+      testParser('{% tagname arg1 "arg2" | filter1 | filter2: 123 %}',
+          (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        expect(tag.content.length, 2);
+        expect((tag.content[0] as Identifier).name, 'arg1');
+        expect((tag.content[1] as Literal).value, 'arg2');
+        expect(tag.filters.length, 2);
+        expect(tag.filters[0].name.name, 'filter1');
+        expect(tag.filters[1].name.name, 'filter2');
+        expect(tag.filters[1].arguments.length, 1);
+        expect((tag.filters[1].arguments[0] as Literal).value, '123');
+      });
+    });
+
     //   test('Parses assignments within tags', () {
     //     testParser('{% if user %}{% assign my_variable = "string" %}{% endif %}',
     //         (document) {
@@ -190,6 +245,7 @@ void main() {
     //   });
   });
 }
+
 Result parse(String input) {
   final parser = LiquidGrammar().build();
   return parser.parse(input);
