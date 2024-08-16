@@ -78,11 +78,50 @@ Parser tagContent() =>
           ref0(identifier).trim() &
           ref0(filterArguments).optional())
       .map((values) =>
-          Filter(values[1] as Identifier, (values[2] as List<ASTNode>?) ?? []));
+          Filter(values[1] as Identifier;
+      final args = values[2] != null
+          ? (values[2] as List)[1].elements.cast<ASTNode>()
+          : <ASTNode>[];
+      return Filter(filterName, args);
+    });
+  }
 
-  Parser filterArguments() =>
-      (char(':') & ref0(argument).plusSeparated(char(',').trim()))
-          .map((values) => (values[1] as SeparatedList).elements);
+  Parser namedArgument() {
+    return (ref0(identifier) &
+            char(':').trim() &
+            (ref0(literal) | ref0(identifier)))
+        .map((values) {
+      return NamedArgument(values[0] as Identifier, values[2] as Expression);
+    });
+  }
+
+  Parser identifier() {
+    return (letter() & word().star()).flatten().map((name) => Identifier(name));
+  }
+
+  Parser literal() {
+    return ref0(booleanLiteral) | ref0(numericLiteral) | ref0(stringLiteral);
+  }
+
+  Parser numericLiteral() {
+    return digit().plus().flatten().map((value) {
+      return Literal(value, LiteralType.number);
+    });
+  }
+
+  Parser stringLiteral() {
+    return (char('"') & pattern('^"').star().flatten() & char('"') |
+            char("'") & pattern("^'").star().flatten() & char("'"))
+        .map((values) {
+      return Literal(values[1], LiteralType.string);
+    });
+  }
+
+  Parser booleanLiteral() {
+    return (string('true') | string('false')).map((value) {
+      return Literal(value == 'true', LiteralType.boolean);
+    });
+  }
 
   Parser argument() => ref0(expression) | ref0(literal);
 

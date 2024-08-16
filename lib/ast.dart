@@ -38,10 +38,13 @@ class Identifier extends Expression {
 }
 
 class Literal extends Expression {
-  final String value;
+  final dynamic value;
+final LiteralType type;
 
-  Literal(this.value);
+  Literal(this.value, this.type);
 }
+
+enum LiteralType { string, number, boolean }
 
 class TextNode extends ASTNode {
   final String text;
