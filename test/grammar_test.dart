@@ -298,15 +298,22 @@ void main() {
         });
       }
     });
-    //     for (final testCase in comparisonTests) {
-    //       testParser(testCase, (document) {
-    //         expect(document.children.length, 3);
-    //         final ifTag = document.children[0] as Tag;
-    //         expect(ifTag.name, 'if');
-    //         expect(ifTag.content[0] is BinaryOperation, true);
-    //       });
-    //     }
-    //   });
+
+    test('Parses unary operations', () {
+      testParser('{% if not user.is_logged_in %}', (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'if');
+        expect(tag.content[0], isA<UnaryOperation>());
+      });
+
+      testParser('{% if !user.is_logged_in %}', (document) {
+        expect(document.children.length, 1);
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'if');
+        expect(tag.content[0], isA<UnaryOperation>());
+      });
+    });
 
     //   test('Parses logical operators', () {
     //     final logicalTests = [

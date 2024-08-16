@@ -42,7 +42,7 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser tagContent() {
-    return (ref0(comparison) | ref0(assignment) | ref0(argument))
+    return (ref0(comparison) | ref0(unaryOperation) | ref0(assignment) | ref0(argument))
         .star()
         .map((values) {
       var result = [];
@@ -128,7 +128,11 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser expression() =>
-      ref0(comparison) | ref0(memberAccess) | ref0(identifier);
+      ref0(unaryOperation) |
+      ref0(comparison) |
+      ref0(memberAccess) |
+      ref0(identifier) |
+      ref0(literal);
 
   Parser memberAccess() =>
       (ref0(identifier) & (char('.') & ref0(identifier)).plus()).map((values) {
@@ -152,4 +156,8 @@ class LiquidGrammar extends GrammarDefinition {
       .seq(ref0(memberAccess) | ref0(identifier) | ref0(literal))
       .trim()
       .map((values) => BinaryOperation(values[0], values[1], values[2]));
+
+  Parser unaryOperator() => (string('not').trim() | char('!').trim());
+Parser unaryOperation() => (ref0(unaryOperator) & ref0(expression))
+    .map((values) => UnaryOperation(values[0], values[1]));
 }
