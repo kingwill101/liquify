@@ -267,7 +267,7 @@ void main() {
         expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .value,
-          '3');
+            '3');
         expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .type,
@@ -500,38 +500,21 @@ void main() {
       });
     });
 
-    //   test('Parses logical operators', () {
-    //     final logicalTests = [
-    //       '{% if product.type == "Shirt" or product.type == "Shoes" %}This is a shirt or a pair of shoes.{% endif %}',
-    //       '{% if true or false and false %}True{% endif %}',
-    //       '{% if true and false and false or true %}False{% endif %}',
-    //     ];
+    test('Parses contains operator', () {
+      final containsTests = [
+        '{% if product.title contains "Pack" %}Contains Pack{% endif %}',
+        '{% if product.tags contains "Hello" %}Contains Hello{% endif %}',
+      ];
 
-    //     for (final testCase in logicalTests) {
-    //       testParser(testCase, (document) {
-    //         expect(document.children.length, 3);
-    //         final ifTag = document.children[0] as Tag;
-    //         expect(ifTag.name, 'if');
-    //         expect(ifTag.content[0] is BinaryOperation, true);
-    //       });
-    //     }
-    //   });
-
-    //   test('Parses contains operator', () {
-    //     final containsTests = [
-    //       '{% if product.title contains "Pack" %}Contains Pack{% endif %}',
-    //       '{% if product.tags contains "Hello" %}Contains Hello{% endif %}',
-    //     ];
-
-    //     for (final testCase in containsTests) {
-    //       testParser(testCase, (document) {
-    //         expect(document.children.length, 3);
-    //         final ifTag = document.children[0] as Tag;
-    //         expect(ifTag.name, 'if');
-    //         expect(ifTag.content[0] is BinaryOperation, true);
-    //       });
-    //     }
-    //   });
+      for (final testCase in containsTests) {
+        testParser(testCase, (document) {
+          expect(document.children.length, 3);
+          final ifTag = document.children[0] as Tag;
+          expect(ifTag.name, 'if');
+          expect(ifTag.content[0] is BinaryOperation, true);
+        });
+      }
+    });
   });
 }
 
