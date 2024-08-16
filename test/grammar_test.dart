@@ -124,7 +124,7 @@ void main() {
         final tag = document.children[0] as Tag;
         expect(tag.name, 'tagname');
         expect(tag.content.length, 1);
-        final variable = tag.content[0] as Variable;
+        final variable = tag.content[0] as Identifier;
         expect(variable.name, 'myvar');
         expect(tag.filters.length, 1);
         expect(tag.filters[0].name.name, 'filter1');

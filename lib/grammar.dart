@@ -14,23 +14,31 @@ class LiquidGrammar extends GrammarDefinition {
   Parser tagStart() => string('{%-') | string('{%');
   Parser tagEnd() => string('-%}') | string('%}');
 
-  Parser tag() => (tagStart() &
-              ref0(identifier).trim() &
-              ref0(tagContent).trim() &
-              tagEnd())
-          .map((values) {
-        return Tag((values[1] as Identifier).name, values[2] as List<ASTNode>);
-      });
+
+Parser tag() =>
+  (tagStart() & ref0(identifier).trim() & ref0(tagContent).trim() & ref0(filter).star() & tagEnd())
+    .map((values) {
+      return Tag(
+        (values[1] as Identifier).name,
+        values[2] as List<ASTNode>,
+        filters: (values[3] as List).cast<Filter>()
+      );
+    });
+
+Parser tagContent() =>
+  (ref0(expression) | ref0(assignment) | ref0(literal) | ref0(identifier)).star()
+    .map((result) => result.cast<ASTNode>());
+
 
   Parser tagArguments() => (ref0(commaSeparatedArguments) |
       ref0(spaceSeparatedArguments) |
       ref0(filteredArgument));
 
-  Parser tagContent() =>
-      (ref0(assignment) | ref0(tagArguments) | ref0(literal) | ref0(identifier))
-          .star()
-          .map((result) {
-        return result[0].cast<ASTNode>();
+  Parser tagArgument() =>
+      (ref0(expression) & ref0(filter).star()).map((values) {
+        var expr = values[0] as Expression;
+        var filters = (values[1] as List).cast<Filter>();
+        return FilteredExpression(expr, filters);
       });
 
   Parser filteredArgument() =>
@@ -66,21 +74,17 @@ class LiquidGrammar extends GrammarDefinition {
       (values) => FilteredExpression(
           values[0] as Expression, (values[1] as List).cast<Filter>()));
 
-  Parser filter() =>
-      (char('|') & ref0(identifier).trim() & ref0(filterArguments).optional())
-          .map((values) {
-        return Filter(
-            values[1] as Identifier, (values[2] as List<ASTNode>?) ?? []);
-      });
+  Parser filter() => (char('|').trim() &
+          ref0(identifier).trim() &
+          ref0(filterArguments).optional())
+      .map((values) =>
+          Filter(values[1] as Identifier, (values[2] as List<ASTNode>?) ?? []));
 
   Parser filterArguments() =>
       (char(':') & ref0(argument).plusSeparated(char(',').trim()))
-          .map((values) {
-        return (values[1] as SeparatedList).elements;
-      });
+          .map((values) => (values[1] as SeparatedList).elements);
 
-  Parser argument() =>
-      ref0(assignment) | ref0(identifier) | ref0(literal) | ref0(variable);
+  Parser argument() => ref0(expression) | ref0(literal);
 
   Parser expression() => ref0(memberAccess) | ref0(identifier);
 
