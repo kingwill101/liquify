@@ -78,7 +78,19 @@ class Literal extends Expression {
   final dynamic value;
   final LiteralType type;
 
-  Literal(this.value, this.type);
+  Literal(this._value, this.type);
+
+  get value => switch (type) {
+        LiteralType.string => _value.toString(),
+        LiteralType.number => _value is num || _value is int || _value is double
+            ? _value
+            : num.parse(_value as String),
+        LiteralType.boolean => _value is bool
+            ? _value
+            : _value == 'true'
+                ? true
+                : false,
+      };
 
   @override
   Map<String, dynamic> toJson() => {
