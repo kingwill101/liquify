@@ -14,19 +14,21 @@ class LiquidGrammar extends GrammarDefinition {
   Parser tagStart() => string('{%-') | string('{%');
   Parser tagEnd() => string('-%}') | string('%}');
 
-  // Make tagContent optional to handle empty tags
   Parser tag() => (tagStart() &
               ref0(identifier).trim() &
-              ref0(tagContent).optional().trim() &  // Optional content
+              ref0(tagContent).optional().trim() &
               ref0(filter).star().trim() &
               tagEnd())
           .map((values) {
-        return Tag((values[1] as Identifier).name,
-            (values[2] as List<ASTNode>?) ?? [],
-            filters: (values[3] as List).cast<Filter>());
+        final name = (values[1] as Identifier).name;
+        final content = values[2] as List<ASTNode>? ?? [];
+        final filters = (values[3] as List).cast<Filter>();
+        final nonFilterContent =
+            content.where((node) => node is! Filter).toList();
+        return Tag(name, nonFilterContent, filters: filters);
       });
 
-  Parser filter() {
+ Parser filter() {
     return (char('|').trim() &
             ref0(identifier).trim() &
             (char(':').trim() &
@@ -42,17 +44,23 @@ class LiquidGrammar extends GrammarDefinition {
     });
   }
 
-  // Make sure tagContent can be empty (optional expressions)
+  Parser filterArguments() => ref0(expression)
+      .plusSeparated(char(',').trim())
+      .map((values) => values.elements);
+
   Parser tagContent() {
-    return ref0(expression).optional().map((values) {
-      if (values == null) {
-        return <ASTNode>[];
+    return (ref0(assignment) | ref0(argument) | ref0(expression))
+        .star()
+        .map((values) {
+      var res = [];
+      for (final entry in values) {
+        if (entry is List) {
+          res.addAll(entry);
+        } else {
+          res.add(entry);
+        }
       }
-      if (values is List) {
-        return values.cast<ASTNode>();
-      } else {
-        return [values as ASTNode];
-      }
+      return res.cast<ASTNode>();
     });
   }
 
@@ -67,20 +75,21 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser argument() {
-    return (ref0(literal) | ref0(identifier))
+    return ref0(expression)
         .plusSeparated(char(',').trim())
         .or(ref0(expression).plusSeparated(whitespace().plus()))
-        .map((result) => result.elements.cast<ASTNode>());
+        .map((result) {
+      return result.elements;
+    });
   }
+  
 
   Parser varStart() => string('{{-') | string('{{');
   Parser varEnd() => string('-}}') | string('}}');
 
   Parser variable() =>
       (varStart().trim() & ref0(expression).trim() & varEnd()).map((values) {
-        Expression expr = values[1] is List
-            ? values[1][0] as Expression
-            : values[1] as Expression;
+        Expression expr = values[1];
         String name = '';
         if (expr is Identifier) {
           name = expr.name;
@@ -91,9 +100,7 @@ class LiquidGrammar extends GrammarDefinition {
       });
 
   Parser namedArgument() {
-    return (ref0(identifier) &
-            char(':').trim() &
-            (ref0(literal) | ref0(identifier)))
+    return (ref0(identifier) & char(':').trim() & ref0(expression))
         .map((values) {
       return NamedArgument(values[0] as Identifier, values[2] as Expression);
     });
@@ -102,7 +109,7 @@ class LiquidGrammar extends GrammarDefinition {
   Parser identifier() {
     return (letter() & word().star())
         .flatten()
-        .where((name) => name != 'and' && name != 'or' && name != 'not')
+        .where((name) => !['and', 'or', 'not', 'contains'].contains(name))
         .map((name) => Identifier(name));
   }
 
@@ -130,14 +137,12 @@ class LiquidGrammar extends GrammarDefinition {
     });
   }
 
-  // The expression parser is the main parser for evaluating expressions
   Parser expression() {
     return ref0(logicalExpression)
         .or(ref0(comparison))
         .or(ref0(unaryOperation))
         .or(ref0(memberAccess))
         .or(ref0(assignment))
-        // .or(ref0(argument).optional())
         .or(ref0(literal))
         .or(ref0(identifier));
   }
@@ -158,7 +163,8 @@ class LiquidGrammar extends GrammarDefinition {
       string('<=').trim() |
       string('>=').trim() |
       char('<').trim() |
-      char('>').trim();
+      char('>').trim() |
+      string('contains').trim();
 
   Parser logicalOperator() => string('and').trim() | string('or').trim();
 
@@ -170,23 +176,29 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser logicalExpression() {
-    return ref0(comparison)
-        .seq(ref0(logicalOperator).seq(ref0(comparison)).star())
+    return ref0(comparisonOrExpression)
+        .seq(ref0(logicalOperator).seq(ref0(comparisonOrExpression)).star())
         .map((values) {
-      var expr = values[0]; // Start with the first expression
-
+      var expr = values[0];
       for (var pair in values[1]) {
-        final op = pair[0]; // Logical operator (e.g., 'and', 'or')
-        final right = pair[1]; // Right-hand expression
+        final op = pair[0];
+        final right = pair[1];
         expr = BinaryOperation(expr, op, right);
       }
-
       return expr;
     });
   }
 
+  Parser comparisonOrExpression() =>
+      ref0(comparison) |
+      ref0(unaryOperation) |
+      ref0(memberAccess) |
+      ref0(literal) |
+      ref0(identifier);
+
   Parser unaryOperator() => (string('not').trim() | char('!').trim());
 
-  Parser unaryOperation() => (ref0(unaryOperator) & ref0(expression))
-      .map((values) => UnaryOperation(values[0], values[1]));
+  Parser unaryOperation() =>
+      (ref0(unaryOperator) & ref0(comparisonOrExpression))
+          .map((values) => UnaryOperation(values[0], values[1]));
 }
