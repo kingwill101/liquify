@@ -28,7 +28,7 @@ class LiquidGrammar extends GrammarDefinition {
         return Tag(name, nonFilterContent, filters: filters);
       });
 
- Parser filter() {
+  Parser filter() {
     return (char('|').trim() &
             ref0(identifier).trim() &
             (char(':').trim() &
@@ -75,14 +75,12 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser argument() {
-    return ref0(expression)
-        .plusSeparated(char(',').trim())
-        .or(ref0(expression).plusSeparated(whitespace().plus()))
+    return (ref0(expression).trim())
+        .plusSeparated(char(',').optional().trim())
         .map((result) {
       return result.elements;
     });
   }
-  
 
   Parser varStart() => string('{{-') | string('{{');
   Parser varEnd() => string('-}}') | string('}}');
