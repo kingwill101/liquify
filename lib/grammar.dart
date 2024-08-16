@@ -42,7 +42,9 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser tagContent() {
-    return (ref0(assignment) | ref0(argument)).star().map((values) {
+    return (ref0(comparison) | ref0(assignment) | ref0(argument))
+        .star()
+        .map((values) {
       var result = [];
       for (final i in values) {
         if (i is List) {
@@ -65,16 +67,13 @@ class LiquidGrammar extends GrammarDefinition {
     });
   }
 
-Parser argument() {
-  return (ref0(literal) | ref0(identifier))
-      .separatedBy(char(',').trim().or(whitespace().plus()))
-      .map((result) {
-    return result.whereType<ASTNode>().toList();
-  });
-}
-
-
-
+  Parser argument() {
+    return (ref0(literal) | ref0(identifier))
+        .separatedBy(char(',').trim().or(whitespace().plus()))
+        .map((result) {
+      return result.whereType<ASTNode>().toList();
+    });
+  }
 
   Parser varStart() => string('{{-') | string('{{');
   Parser varEnd() => string('-}}') | string('}}');
@@ -128,7 +127,8 @@ Parser argument() {
     });
   }
 
-  Parser expression() => ref0(memberAccess) | ref0(identifier);
+  Parser expression() =>
+      ref0(comparison) | ref0(memberAccess) | ref0(identifier);
 
   Parser memberAccess() =>
       (ref0(identifier) & (char('.') & ref0(identifier)).plus()).map((values) {
@@ -139,4 +139,17 @@ Parser argument() {
       });
 
   Parser text() => pattern('^{').plus().flatten().map((text) => TextNode(text));
+  Parser comparisonOperator() =>
+      string('==') |
+      string('!=') |
+      string('<=') |
+      string('>=') |
+      char('<') |
+      char('>');
+  Parser comparison() => (ref0(memberAccess) | ref0(identifier) | ref0(literal))
+      .trim()
+      .seq(ref0(comparisonOperator).trim())
+      .seq(ref0(memberAccess) | ref0(identifier) | ref0(literal))
+      .trim()
+      .map((values) => BinaryOperation(values[0], values[1], values[2]));
 }

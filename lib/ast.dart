@@ -26,7 +26,7 @@ class BinaryOperation extends Expression {
   final Expression left;
   final Expression right;
 
-  BinaryOperation(this.operator, this.left, this.right);
+  BinaryOperation(this.left, this.operator,this.right);
 }
 
 class Expression extends ASTNode {}

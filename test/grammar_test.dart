@@ -261,34 +261,43 @@ void main() {
       });
     });
 
-      test('Parses assignments within tags', () {
-        testParser('{% if user %}{% assign my_variable = "string" %}{% endif %}',
-            (document) {
-          expect(document.children.length, 3);
+    test('Parses assignments within tags', () {
+      testParser('{% if user %}{% assign my_variable = "string" %}{% endif %}',
+          (document) {
+        expect(document.children.length, 3);
 
+        final ifTag = document.children[0] as Tag;
+        expect(ifTag.name, 'if');
+        expect((ifTag.content[0] as Identifier).name, 'user');
+
+        final assignTag = document.children[1] as Tag;
+        expect(assignTag.name, 'assign');
+        expect((assignTag.content[0] as Assignment).variable, 'my_variable');
+        expect((assignTag.content[0] as Assignment).value is Literal, true);
+        expect(((assignTag.content[0] as Assignment).value as Literal).value,
+            'string');
+      });
+    });
+
+    test('Parses comparison operators', () {
+      final comparisonTests = [
+        '{% if 1 == 1 %}Equal{% endif %}',
+        '{% if 1 != 2 %}Not Equal{% endif %}',
+        '{% if 1 < 2 %}Less than{% endif %}',
+        '{% if 2 > 1 %}Greater than{% endif %}',
+        '{% if 1 <= 1 %}Less than or equal{% endif %}',
+        '{% if 2 >= 1 %}Greater than or equal{% endif %}',
+      ];
+
+      for (final testCase in comparisonTests) {
+        testParser(testCase, (document) {
+          expect(document.children.length, 3);
           final ifTag = document.children[0] as Tag;
           expect(ifTag.name, 'if');
-          expect((ifTag.content[0] as Identifier).name, 'user');
-
-          final assignTag = document.children[1] as Tag;
-          expect(assignTag.name, 'assign');
-          expect((assignTag.content[0] as Assignment).variable, 'my_variable');
-          expect((assignTag.content[0] as Assignment).value is Literal, true);
-          expect(((assignTag.content[0] as Assignment).value as Literal).value,
-              'string');
+          expect(ifTag.content[0] is BinaryOperation, true);
         });
-      });
-
-    //   test('Parses comparison operators', () {
-    //     final comparisonTests = [
-    //       '{% if 1 == 1 %}Equal{% endif %}',
-    //       '{% if 1 != 2 %}Not Equal{% endif %}',
-    //       '{% if 1 < 2 %}Less than{% endif %}',
-    //       '{% if 2 > 1 %}Greater than{% endif %}',
-    //       '{% if 1 <= 1 %}Less than or equal{% endif %}',
-    //       '{% if 2 >= 1 %}Greater than or equal{% endif %}',
-    //     ];
-
+      }
+    });
     //     for (final testCase in comparisonTests) {
     //       testParser(testCase, (document) {
     //         expect(document.children.length, 3);
