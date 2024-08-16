@@ -1,9 +1,17 @@
-class ASTNode {}
+class ASTNode {
+  Map<String, dynamic> toJson() => {};
+}
 
 class Document extends ASTNode {
   final List<ASTNode> children;
 
   Document(this.children);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Document',
+        'children': children.map((child) => child.toJson()).toList(),
+      };
 }
 
 class Tag extends ASTNode {
@@ -12,6 +20,14 @@ class Tag extends ASTNode {
   final List<Filter> filters;
 
   Tag(this.name, this.content, {this.filters = const []});
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Tag',
+        'name': name,
+        'content': content.map((child) => child.toJson()).toList(),
+        'filters': filters.map((filter) => filter.toJson()).toList(),
+      };
 }
 
 class Assignment extends ASTNode {
@@ -19,6 +35,13 @@ class Assignment extends ASTNode {
   final Expression value;
 
   Assignment(this.variable, this.value);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Assignment',
+        'variable': variable,
+        'value': value.toJson(),
+      };
 }
 
 class BinaryOperation extends Expression {
@@ -26,7 +49,15 @@ class BinaryOperation extends Expression {
   final Expression left;
   final Expression right;
 
-  BinaryOperation(this.left, this.operator,this.right);
+  BinaryOperation(this.left, this.operator, this.right);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'BinaryOperation',
+        'operator': operator,
+        'left': left.toJson(),
+        'right': right.toJson(),
+      };
 }
 
 class Expression extends ASTNode {}
@@ -35,6 +66,12 @@ class Identifier extends Expression {
   final String name;
 
   Identifier(this.name);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Identifier',
+        'name': name,
+      };
 }
 
 class Literal extends Expression {
@@ -42,6 +79,13 @@ class Literal extends Expression {
   final LiteralType type;
 
   Literal(this.value, this.type);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Literal',
+        'value': value,
+        'literalType': type.toString().split('.').last,
+      };
 }
 
 enum LiteralType { string, number, boolean }
@@ -50,6 +94,12 @@ class TextNode extends ASTNode {
   final String text;
 
   TextNode(this.text);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'TextNode',
+        'text': text,
+      };
 }
 
 class MemberAccess extends Expression {
@@ -57,6 +107,13 @@ class MemberAccess extends Expression {
   final List<String> members;
 
   MemberAccess(this.object, this.members);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'MemberAccess',
+        'object': object.toJson(),
+        'members': members,
+      };
 }
 
 class UnaryOperation extends Expression {
@@ -64,6 +121,13 @@ class UnaryOperation extends Expression {
   final Expression expression;
 
   UnaryOperation(this.operator, this.expression);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'UnaryOperation',
+        'operator': operator,
+        'expression': expression.toJson(),
+      };
 }
 
 class FilterExpression extends Expression {
@@ -72,6 +136,14 @@ class FilterExpression extends Expression {
   final List<Expression> arguments;
 
   FilterExpression(this.filter, this.expression, this.arguments);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'FilterExpression',
+        'filter': filter,
+        'expression': expression.toJson(),
+        'arguments': arguments.map((arg) => arg.toJson()).toList(),
+      };
 }
 
 class Variable extends ASTNode {
@@ -83,6 +155,14 @@ class Variable extends ASTNode {
   List<Filter> get filters => expression is FilteredExpression
       ? (expression as FilteredExpression).filters
       : [];
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Variable',
+        'name': name,
+        'expression': expression.toJson(),
+        'filters': filters.map((filter) => filter.toJson()).toList(),
+      };
 }
 
 class FilteredExpression extends ASTNode {
@@ -90,6 +170,13 @@ class FilteredExpression extends ASTNode {
   final List<Filter> filters;
 
   FilteredExpression(this.expression, this.filters);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'FilteredExpression',
+        'expression': expression.toJson(),
+        'filters': filters.map((filter) => filter.toJson()).toList(),
+      };
 }
 
 class Filter extends ASTNode {
@@ -97,6 +184,13 @@ class Filter extends ASTNode {
   final List<ASTNode> arguments;
 
   Filter(this.name, this.arguments);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Filter',
+        'name': name.toJson(),
+        'arguments': arguments.map((arg) => arg.toJson()).toList(),
+      };
 }
 
 class NamedArgument extends ASTNode {
@@ -104,4 +198,11 @@ class NamedArgument extends ASTNode {
   final Expression value;
 
   NamedArgument(this.name, this.value);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'NamedArgument',
+        'name': name.toJson(),
+        'value': value.toJson(),
+      };
 }
