@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:liquid_grammar/ast.dart';
 import 'package:liquid_grammar/grammar.dart';
 import 'package:liquid_grammar/util.dart';
-import 'package:test/test.dart';
 import 'package:petitparser/petitparser.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Liquid Grammar Parser', () {
@@ -19,6 +19,19 @@ void main() {
         expect(tag.name, 'liquid');
         expect(tag.content.length, 2);
         expect((tag.content[0] as Tag).name, 'assign');
+      });
+    });
+
+    test('Parses raw tags', () {
+      testParser('''
+{% raw %}
+ assign my_variable = "string"
+{% endraw %}''', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'raw');
+        expect(tag.content.length, 1);
       });
     });
 

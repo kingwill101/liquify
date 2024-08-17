@@ -109,6 +109,7 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser varStart() => string('{{-') | string('{{');
+
   Parser varEnd() => string('-}}') | string('}}');
 
   Parser variable() => (varStart().trim() &
@@ -234,6 +235,22 @@ class LiquidGrammar extends GrammarDefinition {
   Parser unaryOperation() =>
       (ref0(unaryOperator) & ref0(comparisonOrExpression))
           .map((values) => UnaryOperation(values[0], values[1]));
+
+  Parser rawTag() {
+    return (tagStart() &
+    string('raw').trim() &
+    tagEnd() &
+    any().starLazy(
+        (tagStart() & string('endraw').trim() & tagEnd())).flatten() &
+    tagStart() &
+    string('endraw').trim() &
+    tagEnd())
+        .map((values) {
+      return Tag("raw", [TextNode(values[3])]);
+    });
+  }
+
+
   Parser liquidTag() => (tagStart() &
               string('liquid').trim() &
               any().starLazy(tagEnd()).flatten() &
