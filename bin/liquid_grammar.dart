@@ -1,7 +1,9 @@
-import 'package:liquid_grammar/liquid_grammar.dart';
+
+import 'package:liquid_grammar/grammar.dart';
+import 'package:petitparser/core.dart';
 
 void main() {
-  final parser = LiquidGrammarDefinition().build();
+  final parser = LiquidGrammar().build();
 
   final result = parser.parse(r'''
  {% assign raw_content = "raw content" %}
@@ -9,7 +11,7 @@ void main() {
 {{ raw_content | date }}
 ''');
 
-  if (result.isSuccess) {
+  if (result is Success) {
 
     print(result.value);
   } else {
