@@ -35,6 +35,26 @@ void main() {
       });
     });
 
+    test('Parses complex tags', () {
+      testParser('''
+{% if user.logged_in %}
+  <p>Welcome back, {{ user.name }}!</p>
+  {% if user.admin %}
+  <p>You are an admin!</p>
+  {% endif %}
+  {% assign my_variable = "string" %}
+ {% else %}
+ <p>Please log in.</p>
+ {% raw %}
+    {{{ }}}  {{f sdfad }} 
+    {{{ }}}}}}
+ {% endraw %}
+{% endif %}
+''', (document) {
+        expect(document.children.length, greaterThan(0));
+      });
+    });
+
     test('Parses simple variable expression', () {
       testParser('{{ user }}', (document) {
         expect(document.children.length, 1);
