@@ -178,7 +178,8 @@ class LiquidGrammar extends GrammarDefinition {
         .or(ref0(memberAccess))
         .or(ref0(assignment))
         .or(ref0(literal))
-        .or(ref0(identifier));
+        .or(ref0(identifier))
+        .or(ref0(range));
   }
 
   Parser memberAccess() =>
@@ -198,14 +199,15 @@ class LiquidGrammar extends GrammarDefinition {
       string('>=').trim() |
       char('<').trim() |
       char('>').trim() |
-      string('contains').trim();
+      string('contains').trim() |
+      string('in').trim();
 
   Parser logicalOperator() => string('and').trim() | string('or').trim();
 
   Parser comparison() {
-    return (ref0(memberAccess) | ref0(identifier) | ref0(literal))
+    return (ref0(memberAccess) | ref0(identifier) | ref0(literal)| ref0(range))
         .seq(ref0(comparisonOperator))
-        .seq(ref0(memberAccess) | ref0(identifier) | ref0(literal))
+        .seq(ref0(memberAccess) | ref0(identifier) | ref0(literal)| ref0(range))
         .map((values) => BinaryOperation(values[0], values[1], values[2]));
   }
 
@@ -235,6 +237,23 @@ class LiquidGrammar extends GrammarDefinition {
   Parser unaryOperation() =>
       (ref0(unaryOperator) & ref0(comparisonOrExpression))
           .map((values) => UnaryOperation(values[0], values[1]));
+
+  Parser range() {
+    return (char('(').trim() &
+        (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+        string('..') &
+        (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+        char(')').trim()).map((values) {
+          final start = values[1];
+          final end = values[3];
+          return BinaryOperation(start ,'..', end );
+        });
+  }
+
+  Parser groupedExpression() {
+    return (char('(').trim() & ref0(expression).trim() & char(')').trim())
+        .map((values) => GroupedExpression(values[1]));
+  }
 
   Parser rawTag() {
     return (tagStart() &

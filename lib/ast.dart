@@ -30,6 +30,13 @@ class Tag extends ASTNode {
       };
 }
 
+
+class GroupedExpression extends ASTNode {
+  final ASTNode expression;
+
+  GroupedExpression(this.expression);
+}
+
 class Assignment extends ASTNode {
   final String variable;
   final Expression value;
@@ -46,8 +53,8 @@ class Assignment extends ASTNode {
 
 class BinaryOperation extends Expression {
   final String operator;
-  final Expression left;
-  final Expression right;
+  final ASTNode left;
+  final ASTNode right;
 
   BinaryOperation(this.left, this.operator, this.right);
 

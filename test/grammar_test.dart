@@ -562,6 +562,84 @@ void main() {
         });
       }
     });
+
+    test('Parses a simple range in a tag', () {
+      testParser('{% for i in (1..5) %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'for');
+        expect(tag.content.length, 1);
+
+        final inOperator = tag.content[0] as BinaryOperation;
+        expect(inOperator.operator, 'in');
+
+        expect((inOperator.left), isA<Identifier>());
+        expect((inOperator.right), isA<BinaryOperation>());
+
+        expect((inOperator.left as Identifier).name, 'i');
+
+        final range = inOperator.right as BinaryOperation;
+        expect(range.operator, '..');
+        expect((range.left as Literal).value, 1);
+        expect((range.right as Literal).value, 5);
+
+      });
+    });
+
+    test('Parses a range in an if statement', () {
+      testParser('{% if (3..7) contains 5 %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'if');
+        expect(tag.content.length, 1);
+
+        final containsOperation = tag.content[0] as BinaryOperation;
+        expect(containsOperation.operator, 'contains');
+
+        final range = containsOperation.left as BinaryOperation;
+        expect(range.operator, '..');
+        expect((range.left as Literal).value, 3);
+        expect((range.right as Literal).value, 7);
+
+        expect((containsOperation.right as Literal).value, 5);
+      });
+    });
+
+    test('Parses a complex range with logical operators', () {
+      testParser('{% if i in (1..5) and j in (6..10) %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'if');
+        expect(tag.content.length, 1);
+
+        final andOperation = tag.content[0] as BinaryOperation;
+        expect(andOperation.operator, 'and');
+
+        final firstInOperation = andOperation.left as BinaryOperation;
+        expect(firstInOperation.operator, 'in');
+
+        final secondInOperation = andOperation.right as BinaryOperation;
+        expect(secondInOperation.operator, 'in');
+
+        // First in operation check
+        expect((firstInOperation.left as Identifier).name, 'i');
+        final firstRange = firstInOperation.right as BinaryOperation;
+        expect(firstRange.operator, '..');
+        expect((firstRange.left as Literal).value, 1);
+        expect((firstRange.right as Literal).value, 5);
+
+        // Second in operation check
+        expect((secondInOperation.left as Identifier).name, 'j');
+        final secondRange = secondInOperation.right as BinaryOperation;
+        expect(secondRange.operator, '..');
+        expect((secondRange.left as Literal).value, 6);
+        expect((secondRange.right as Literal).value, 10);
+      });
+    });
+
   });
 }
 
