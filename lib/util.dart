@@ -1,9 +1,9 @@
 import 'package:liquid_grammar/ast.dart';
 
 void printAST(ASTNode node, int indent) {
-  final indentStr = ' ' * indent;
+  final indentStr = '   ' * indent;
   print('$indentStr${node.runtimeType}');
-  
+
   if (node is Document) {
     for (final child in node.children) {
       printAST(child, indent + 1);
@@ -14,9 +14,11 @@ void printAST(ASTNode node, int indent) {
     for (final child in node.content) {
       printAST(child, indent + 2);
     }
-    print('$indentStr  Filters:');
-    for (final filter in node.filters) {
-      printAST(filter, indent + 2);
+    if (node.filters.isNotEmpty) {
+      print('$indentStr  Filters:');
+      for (final filter in node.filters) {
+        printAST(filter, indent + 2);
+      }
     }
   } else if (node is Assignment) {
     print('$indentStr  Variable: ${node.variable}');

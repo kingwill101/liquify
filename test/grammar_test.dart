@@ -8,6 +8,20 @@ import 'package:petitparser/petitparser.dart';
 
 void main() {
   group('Liquid Grammar Parser', () {
+    test('Parses liquid tags', () {
+      testParser('''
+{% liquid 
+ assign my_variable = "string"
+%}''', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'liquid');
+        expect(tag.content.length, 2);
+        expect((tag.content[0] as Tag).name, 'assign');
+      });
+    });
+
     test('Parses simple variable expression', () {
       testParser('{{ user }}', (document) {
         expect(document.children.length, 1);

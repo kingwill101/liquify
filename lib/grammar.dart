@@ -1,7 +1,32 @@
 import 'package:petitparser/petitparser.dart';
+
 import 'ast.dart';
 
+class TagRegistry {
+  static final List<String> _tags = [];
+
+  static void register(String name) {
+    _tags.add(name);
+  }
+
+  static List<String> get tags => _tags;
+
+}
+
 class LiquidGrammar extends GrammarDefinition {
+  LiquidGrammar(){
+    TagRegistry.register('assign');
+    TagRegistry.register('capture');
+    TagRegistry.register('comment');
+    TagRegistry.register('cycle');
+    TagRegistry.register('for');
+    TagRegistry.register('if');
+    TagRegistry.register('case');
+    TagRegistry.register('when');
+    TagRegistry.register('liquid');
+    TagRegistry.register('raw');
+  }
+
   @override
   Parser start() => ref0(document).end();
 
@@ -9,7 +34,8 @@ class LiquidGrammar extends GrammarDefinition {
       .star()
       .map((elements) => Document(elements.cast<ASTNode>()));
 
-  Parser element() => ref0(tag) | ref0(variable) | ref0(text);
+  Parser element() =>
+      ref0(liquidTag) | ref0(rawTag) | ref0(tag) | ref0(variable) | ref0(text);
 
   Parser tagStart() => string('{%-') | string('{%');
   Parser tagEnd() => string('-%}') | string('%}');
@@ -208,4 +234,33 @@ class LiquidGrammar extends GrammarDefinition {
   Parser unaryOperation() =>
       (ref0(unaryOperator) & ref0(comparisonOrExpression))
           .map((values) => UnaryOperation(values[0], values[1]));
+  Parser liquidTag() => (tagStart() &
+              string('liquid').trim() &
+              any().starLazy(tagEnd()).flatten() &
+              tagEnd())
+          .map((values) {
+            //TODO better mechanism for registering tags
+        return Tag("liquid", liquidTagContents(values[2], TagRegistry.tags));
+      });
+}
+
+liquidTagContents(String content, List<String> tagRegistry) {
+  final lines = content.split('\n').map((line) => line.trim()).toList();
+  StringBuffer buffer = StringBuffer();
+  for (var line in lines) {
+    final firstWord = line.split(' ').first;
+
+    if (tagRegistry.contains(firstWord)) {
+      buffer.writeln("{% $line %}");
+    } else {
+      buffer.writeln(line);
+    }
+  }
+
+  final result = LiquidGrammar().build().parse(buffer.toString());
+  if (result is Success) {
+    return (result.value as Document).children;
+  }
+
+  return [TextNode(content)]; // Return a list or a specific node type
 }
