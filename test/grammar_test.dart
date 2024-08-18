@@ -196,17 +196,17 @@ void main() {
     });
 
     test('Parses tag with comma separated arguments', () {
-      // testParser('{% tagname var1,var2,var3, var4 %}', (document) {
-      //   expect(document.children.length, 1);
+      testParser('{% tagname var1,var2,var3, var4 %}', (document) {
+        expect(document.children.length, 1);
 
-      //   final tag = document.children[0] as Tag;
-      //   expect(tag.name, 'tagname');
-      //   assert(tag.content.isNotEmpty);
-      //   expect(tag.content[0], isA<Identifier>());
-      //   expect(tag.content[1], isA<Identifier>());
-      //   expect(tag.content[2], isA<Identifier>());
-      //   expect(tag.content[3], isA<Identifier>());
-      // });
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'tagname');
+        assert(tag.content.isNotEmpty);
+        expect(tag.content[0], isA<Identifier>());
+        expect(tag.content[1], isA<Identifier>());
+        expect(tag.content[2], isA<Identifier>());
+        expect(tag.content[3], isA<Identifier>());
+      });
 
       testParser('{% tagname "var1",var2,var3,"var4" %}', (document) {
         expect(document.children.length, 1);
@@ -637,6 +637,27 @@ void main() {
         expect(secondRange.operator, '..');
         expect((secondRange.left as Literal).value, 6);
         expect((secondRange.right as Literal).value, 10);
+      });
+    });
+
+    test('Parses a simple grouped expression', () {
+      testParser('{% if (1 + 2) == 3 %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'if');
+        expect(tag.content.length, 1);
+
+        final comparison = tag.content[0] as BinaryOperation;
+        expect(comparison.operator, '==');
+
+        final groupedExpression = (comparison.left as GroupedExpression)
+            .expression as BinaryOperation;
+        expect(groupedExpression.operator, '+');
+        expect((groupedExpression.left as Literal).value, 1);
+        expect((groupedExpression.right as Literal).value, 2);
+
+        expect((comparison.right as Literal).value, 3);
       });
     });
 

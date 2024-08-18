@@ -10,11 +10,10 @@ class TagRegistry {
   }
 
   static List<String> get tags => _tags;
-
 }
 
 class LiquidGrammar extends GrammarDefinition {
-  LiquidGrammar(){
+  LiquidGrammar() {
     TagRegistry.register('assign');
     TagRegistry.register('capture');
     TagRegistry.register('comment');
@@ -38,29 +37,30 @@ class LiquidGrammar extends GrammarDefinition {
       ref0(liquidTag) | ref0(rawTag) | ref0(tag) | ref0(variable) | ref0(text);
 
   Parser tagStart() => string('{%-') | string('{%');
+
   Parser tagEnd() => string('-%}') | string('%}');
 
   Parser tag() => (tagStart() &
-              ref0(identifier).trim() &
-              ref0(tagContent).optional().trim() &
-              ref0(filter).star().trim() &
-              tagEnd())
-          .map((values) {
-        final name = (values[1] as Identifier).name;
-        final content = values[2] as List<ASTNode>? ?? [];
-        final filters = (values[3] as List).cast<Filter>();
-        final nonFilterContent =
-            content.where((node) => node is! Filter).toList();
-        return Tag(name, nonFilterContent, filters: filters);
-      });
+  ref0(identifier).trim() &
+  ref0(tagContent).optional().trim() &
+  ref0(filter).star().trim() &
+  tagEnd())
+      .map((values) {
+    final name = (values[1] as Identifier).name;
+    final content = values[2] as List<ASTNode>? ?? [];
+    final filters = (values[3] as List).cast<Filter>();
+    final nonFilterContent =
+    content.where((node) => node is! Filter).toList();
+    return Tag(name, nonFilterContent, filters: filters);
+  });
 
   Parser filter() {
     return (char('|').trim() &
-            ref0(identifier).trim() &
-            (char(':').trim() &
-                    (ref0(namedArgument) | ref0(literal) | ref0(identifier))
-                        .plusSeparated(char(',').trim()))
-                .optional())
+    ref0(identifier).trim() &
+    (char(':').trim() &
+    (ref0(namedArgument) | ref0(literal) | ref0(identifier))
+        .plusSeparated(char(',').trim()))
+        .optional())
         .map((values) {
       final filterName = values[1] as Identifier;
       final args = values[2] != null
@@ -75,7 +75,7 @@ class LiquidGrammar extends GrammarDefinition {
       .map((values) => values.elements);
 
   Parser tagContent() {
-    return (ref0(assignment) | ref0(argument) | ref0(expression))
+    return (ref0(assignment) |  ref0(argument) | ref0(expression))
         .star()
         .map((values) {
       var res = [];
@@ -92,8 +92,8 @@ class LiquidGrammar extends GrammarDefinition {
 
   Parser assignment() {
     return (ref0(identifier).trim() &
-            char('=').trim() &
-            ref0(expression).trim())
+    char('=').trim() &
+    ref0(expression).trim())
         .map((values) {
       return Assignment(
           (values[0] as Identifier).name, values[2] as Expression);
@@ -113,25 +113,25 @@ class LiquidGrammar extends GrammarDefinition {
   Parser varEnd() => string('-}}') | string('}}');
 
   Parser variable() => (varStart().trim() &
-              ref0(expression).trim() &
-              filter().star().trim() &
-              varEnd())
-          .map((values) {
-        Expression expr = values[1];
-        String name = '';
-        if (expr is Identifier) {
-          name = expr.name;
-        } else if (expr is MemberAccess) {
-          name = (expr.object as Identifier).name;
-        }
+  ref0(expression).trim() &
+  filter().star().trim() &
+  varEnd())
+      .map((values) {
+    Expression expr = values[1];
+    String name = '';
+    if (expr is Identifier) {
+      name = expr.name;
+    } else if (expr is MemberAccess) {
+      name = (expr.object as Identifier).name;
+    }
 
-        if ((values[2] as List).isNotEmpty) {
-          return FilteredExpression(
-              Variable(name, expr), (values[2] as List).cast<Filter>());
-        }
+    if ((values[2] as List).isNotEmpty) {
+      return FilteredExpression(
+          Variable(name, expr), (values[2] as List).cast<Filter>());
+    }
 
-        return Variable(name, expr);
-      });
+    return Variable(name, expr);
+  });
 
   Parser namedArgument() {
     return (ref0(identifier) & char(':').trim() & ref0(expression))
@@ -159,7 +159,7 @@ class LiquidGrammar extends GrammarDefinition {
 
   Parser stringLiteral() {
     return (char('"') & pattern('^"').star().flatten() & char('"') |
-            char("'") & pattern("^'").star().flatten() & char("'"))
+    char("'") & pattern("^'").star().flatten() & char("'"))
         .map((values) {
       return Literal(values[1], LiteralType.string);
     });
@@ -174,6 +174,8 @@ class LiquidGrammar extends GrammarDefinition {
   Parser expression() {
     return ref0(logicalExpression)
         .or(ref0(comparison))
+        .or(ref0(groupedExpression))
+        .or(ref0(arithmeticExpression))
         .or(ref0(unaryOperation))
         .or(ref0(memberAccess))
         .or(ref0(assignment))
@@ -186,7 +188,7 @@ class LiquidGrammar extends GrammarDefinition {
       (ref0(identifier) & (char('.') & ref0(identifier)).plus()).map((values) {
         var object = values[0] as Identifier;
         var members =
-            (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
+        (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
         return MemberAccess(object, members);
       });
 
@@ -205,15 +207,23 @@ class LiquidGrammar extends GrammarDefinition {
   Parser logicalOperator() => string('and').trim() | string('or').trim();
 
   Parser comparison() {
-    return (ref0(memberAccess) | ref0(identifier) | ref0(literal)| ref0(range))
+    return (ref0(groupedExpression) |
+    ref0(memberAccess) |
+    ref0(identifier) |
+    ref0(literal) |
+    ref0(range))
         .seq(ref0(comparisonOperator))
-        .seq(ref0(memberAccess) | ref0(identifier) | ref0(literal)| ref0(range))
+        .seq(ref0(groupedExpression) |
+    ref0(memberAccess) |
+    ref0(identifier) |
+    ref0(literal) |
+    ref0(range))
         .map((values) => BinaryOperation(values[0], values[1], values[2]));
   }
 
   Parser logicalExpression() {
     return ref0(comparisonOrExpression)
-        .seq(ref0(logicalOperator).seq(ref0(comparisonOrExpression)).star())
+        .seq(ref0(logicalOperator).seq(ref0(comparisonOrExpression)).plus())
         .map((values) {
       var expr = values[0];
       for (var pair in values[1]) {
@@ -226,7 +236,9 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser comparisonOrExpression() =>
+      ref0(groupedExpression) |
       ref0(comparison) |
+      ref0(arithmeticExpression) |
       ref0(unaryOperation) |
       ref0(memberAccess) |
       ref0(literal) |
@@ -240,27 +252,46 @@ class LiquidGrammar extends GrammarDefinition {
 
   Parser range() {
     return (char('(').trim() &
-        (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
-        string('..') &
-        (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
-        char(')').trim()).map((values) {
-          final start = values[1];
-          final end = values[3];
-          return BinaryOperation(start ,'..', end );
-        });
+    (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+    string('..') &
+    (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+    char(')').trim())
+        .map((values) {
+      final start = values[1];
+      final end = values[3];
+      return BinaryOperation(start, '..', end);
+    });
+  }
+
+  Parser arithmeticExpression() {
+    return (ref0(identifier) | ref0(literal) | ref0(range))
+        .trim()
+        .seq(char('+').trim() |
+    char('-').trim() |
+    char('*').trim() |
+    char('/').trim())
+        .seq(ref0(identifier) | ref0(literal) | ref0(range))
+        .trim()
+        .map((values) {
+      return BinaryOperation(values[0], values[1], values[2]);
+    });
   }
 
   Parser groupedExpression() {
-    return (char('(').trim() & ref0(expression).trim() & char(')').trim())
-        .map((values) => GroupedExpression(values[1]));
+    return seq3(
+        char('(').trim(),            // Match the opening parenthesis and trim any surrounding whitespace.
+        ref0(expression).trim(),     // Parse the expression inside the parentheses, trimming any surrounding whitespace.
+        char(')').trim()             // Match the closing parenthesis and trim any surrounding whitespace.
+    ).map((values) => GroupedExpression(values.$2));
   }
 
   Parser rawTag() {
     return (tagStart() &
     string('raw').trim() &
     tagEnd() &
-    any().starLazy(
-        (tagStart() & string('endraw').trim() & tagEnd())).flatten() &
+    any()
+        .starLazy((tagStart() & string('endraw').trim() & tagEnd()))
+        .flatten() &
     tagStart() &
     string('endraw').trim() &
     tagEnd())
@@ -269,15 +300,14 @@ class LiquidGrammar extends GrammarDefinition {
     });
   }
 
-
   Parser liquidTag() => (tagStart() &
-              string('liquid').trim() &
-              any().starLazy(tagEnd()).flatten() &
-              tagEnd())
-          .map((values) {
-            //TODO better mechanism for registering tags
-        return Tag("liquid", liquidTagContents(values[2], TagRegistry.tags));
-      });
+  string('liquid').trim() &
+  any().starLazy(tagEnd()).flatten() &
+  tagEnd())
+      .map((values) {
+    //TODO better mechanism for registering tags
+    return Tag("liquid", liquidTagContents(values[2], TagRegistry.tags));
+  });
 }
 
 liquidTagContents(String content, List<String> tagRegistry) {
