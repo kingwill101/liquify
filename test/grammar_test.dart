@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:liquid_grammar/ast.dart';
 import 'package:liquid_grammar/grammar.dart';
 import 'package:liquid_grammar/util.dart';
+import 'package:petitparser/debug.dart';
 import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
@@ -583,7 +584,6 @@ void main() {
         expect(range.operator, '..');
         expect((range.left as Literal).value, 1);
         expect((range.right as Literal).value, 5);
-
       });
     });
 
@@ -643,9 +643,13 @@ void main() {
   });
 }
 
-Result parse(String input) {
+Result parse(String input, [bool enableTrace = false]) {
   final parser = LiquidGrammar().build();
-  return parser.parse(input);
+  if (enableTrace) {
+    return trace(parser).parse(input);
+  } else {
+    return parser.parse(input);
+  }
 }
 
 void testParser(String source, void Function(Document document) testFunction) {
