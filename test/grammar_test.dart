@@ -661,6 +661,33 @@ void main() {
       });
     });
 
+    test('Parses nested grouped expressions', () {
+      testParser('{% if ((1 + 2) * 3) == 9 %}', (document) {
+        expect(document.children.length, 1);
+
+        final tag = document.children[0] as Tag;
+        expect(tag.name, 'if');
+        expect(tag.content.length, 1);
+
+        final comparison = tag.content[0] as BinaryOperation;
+        expect(comparison.operator, '==');
+
+        final outerGroup = (comparison.left as GroupedExpression);
+        final groupedExpression = outerGroup.expression as BinaryOperation;
+        expect(groupedExpression.operator, '*');
+
+        final innerGroup = groupedExpression.left as GroupedExpression;
+        final innerExpression = innerGroup.expression as BinaryOperation;
+        expect(innerExpression.operator, '+');
+        expect((innerExpression.left as Literal).value, 1);
+        expect((innerExpression.right as Literal).value, 2);
+
+        expect((groupedExpression.right as Literal).value, 3);
+        expect((comparison.right as Literal).value, 9);
+      });
+    });
+
+
   });
 }
 
