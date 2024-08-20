@@ -53,7 +53,7 @@ class LiquidGrammar extends GrammarDefinition {
       .map((values) => values.elements);
 
   Parser tagContent() {
-    return (ref0(assignment) | ref0(argument) | ref0(expression))
+    return (ref0(assignment) | ref0(argument)  | ref0(expression))
         .star()
         .map((values) {
       var res = [];
@@ -74,7 +74,7 @@ class LiquidGrammar extends GrammarDefinition {
             ref0(expression).trim())
         .map((values) {
       return Assignment(
-          (values[0] as Identifier).name, values[2] as Expression);
+          (values[0] as Identifier), values[2] as ASTNode);
     });
   }
 
@@ -95,7 +95,7 @@ class LiquidGrammar extends GrammarDefinition {
               filter().star().trim() &
               varEnd())
           .map((values) {
-        Expression expr = values[1];
+        ASTNode expr = values[1];
         String name = '';
         if (expr is Identifier) {
           name = expr.name;
@@ -114,7 +114,7 @@ class LiquidGrammar extends GrammarDefinition {
   Parser namedArgument() {
     return (ref0(identifier) & char(':').trim() & ref0(expression))
         .map((values) {
-      return NamedArgument(values[0] as Identifier, values[2] as Expression);
+      return NamedArgument(values[0] as Identifier, values[2] as ASTNode);
     });
   }
 
@@ -157,6 +157,7 @@ class LiquidGrammar extends GrammarDefinition {
         .or(ref0(unaryOperation))
         .or(ref0(memberAccess))
         .or(ref0(assignment))
+        .or(ref0(namedArgument))
         .or(ref0(literal))
         .or(ref0(identifier))
         .or(ref0(range));

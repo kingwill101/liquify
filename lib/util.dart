@@ -34,12 +34,12 @@ void printAST(ASTNode node, int indent) {
     print('$indentStr  Operator: ${node.operator}');
     print('$indentStr  Expression:');
     printAST(node.expression, indent + 4);
-  } else if (node is FilterExpression) {
-    print('$indentStr  Filter: ${node.filter}');
+  } else if (node is FilteredExpression) {
+    print('$indentStr  Filters: ');
     print('$indentStr  Expression:');
     printAST(node.expression, indent + 2);
     print('$indentStr  Arguments:');
-    for (final arg in node.arguments) {
+    for (final arg in node.filters) {
       printAST(arg, indent + 2);
     }
   } else if (node is MemberAccess) {
@@ -68,3 +68,4 @@ void printAST(ASTNode node, int indent) {
     printAST(node.expression, indent + 2);
   }
 }
+

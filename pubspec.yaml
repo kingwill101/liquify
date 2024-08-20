@@ -10,8 +10,7 @@ environment:
 dependencies:
   # path: ^1.8.0
   petitparser: ^6.0.2
-  liquid_engine:
-    path: ../liquid_dart
+  uuid: ^4.4.2
 
 dev_dependencies:
   lints: ^4.0.0

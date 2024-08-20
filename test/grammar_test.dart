@@ -375,7 +375,9 @@ void main() {
 
         final assignTag = document.children[1] as Tag;
         expect(assignTag.name, 'assign');
-        expect((assignTag.content[0] as Assignment).variable, 'my_variable');
+        expect(
+            ((assignTag.content[0] as Assignment).variable as Identifier).name,
+            'my_variable');
         expect((assignTag.content[0] as Assignment).value is Literal, true);
         expect(((assignTag.content[0] as Assignment).value as Literal).value,
             'string');
@@ -686,8 +688,6 @@ void main() {
         expect((comparison.right as Literal).value, 9);
       });
     });
-
-
   });
 }
 
