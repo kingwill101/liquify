@@ -11,7 +11,7 @@ void main() {
   group('Liquid Grammar Parser', () {
     test('Parses liquid tags', () {
       testParser('''
-{% liquid 
+{% liquid
  assign my_variable = "string"
 %}''', (document) {
         expect(document.children.length, 1);
@@ -47,7 +47,7 @@ void main() {
  {% else %}
  <p>Please log in.</p>
  {% raw %}
-    {{{ }}}  {{f sdfad }} 
+    {{{ }}}  {{f sdfad }}
     {{{ }}}}}}
  {% endraw %}
 {% endif %}
@@ -367,13 +367,15 @@ void main() {
     test('Parses assignments within tags', () {
       testParser('{% if user %}{% assign my_variable = "string" %}{% endif %}',
           (document) {
-        expect(document.children.length, 3);
+        expect(document.children.length, 1);
 
         final ifTag = document.children[0] as Tag;
         expect(ifTag.name, 'if');
+        expect(ifTag.body.length, 1);
+
         expect((ifTag.content[0] as Identifier).name, 'user');
 
-        final assignTag = document.children[1] as Tag;
+        final assignTag = ifTag.body[0] as Tag;
         expect(assignTag.name, 'assign');
         expect(
             ((assignTag.content[0] as Assignment).variable as Identifier).name,
@@ -396,10 +398,11 @@ void main() {
 
       for (final testCase in comparisonTests) {
         testParser(testCase, (document) {
-          expect(document.children.length, 3);
+          expect(document.children.length, 1);
           final ifTag = document.children[0] as Tag;
           expect(ifTag.name, 'if');
           expect(ifTag.content[0] is BinaryOperation, true);
+          expect(ifTag.body.length, 1);
         });
       }
     });
@@ -558,10 +561,11 @@ void main() {
 
       for (final testCase in containsTests) {
         testParser(testCase, (document) {
-          expect(document.children.length, 3);
+          expect(document.children.length, 1);
           final ifTag = document.children[0] as Tag;
           expect(ifTag.name, 'if');
           expect(ifTag.content[0] is BinaryOperation, true);
+          expect(ifTag.body.length, 1);
         });
       }
     });
@@ -686,6 +690,124 @@ void main() {
 
         expect((groupedExpression.right as Literal).value, 3);
         expect((comparison.right as Literal).value, 9);
+      });
+    });
+
+    group('control flow', () {
+      group('IfTag', () {
+        test('basic if statement', () {
+          testParser(
+              '{% if true %}'
+              'Should be True'
+              '{% mytag %}'
+              '{% endif %}', (document) {
+            expect(document.children.length, 1);
+            final ifTag = document.children[0] as Tag;
+            expect(ifTag.name, 'if');
+            expect(ifTag.content.length, 1);
+
+            expect((ifTag.content[0] as Literal).value, true);
+
+            expect(ifTag.body.length, 2);
+            expect(ifTag.body[0], isA<TextNode>());
+            expect(ifTag.body[1], isA<Tag>());
+          });
+        });
+
+        test('if-else statement', () {
+          testParser(
+              '{% if false %}'
+                  'True'
+              '{% else %}'
+                  'False'
+              '{% endif %}', (document) {
+            expect(document.children.length, 1);
+            final ifTag = document.children[0] as Tag;
+            expect(ifTag.name, 'if');
+            expect(ifTag.content.length, 1);
+            expect((ifTag.content[0] as Literal).value, false);
+
+            expect(ifTag.body.length, 2);
+            expect(ifTag.body[0], isA<TextNode>());
+            expect(ifTag.body[1], isA<Tag>());
+            // expect(ifTag.elseBody.length, 1);
+            // expect(ifTag.elseBody[0], isA<TextNode>());
+          });
+        });
+
+        test('nested if statements', () {
+          testParser(
+              '{% if true %}'
+                  '{% if false %}'
+                      'Inner False'
+                  '{% else %}'
+                      'Inner True'
+                  '{% endif %}'
+              '{% endif %}', (document) {
+            expect(document.children.length, 1);
+            final outerIfTag = document.children[0] as Tag;
+            expect(outerIfTag.name, 'if');
+            expect(outerIfTag.content.length, 1);
+            expect((outerIfTag.content[0] as Literal).value, true);
+            expect(outerIfTag.body.length, 1);
+
+            final innerIfTag = outerIfTag.body[0] as Tag;
+            expect(innerIfTag.name, 'if');
+            expect(innerIfTag.content.length, 1);
+            expect((innerIfTag.content[0] as Literal).value, false);
+            expect(innerIfTag.body.length, 2);
+            expect(innerIfTag.body[0], isA<TextNode>());
+            expect(innerIfTag.body[1], isA<Tag>());
+          });
+        });
+
+        test('if statement with break', () {
+          testParser(
+              '{% for item in (1..5) %}'
+                '{% if item == 3 %}'
+                    '{% break %}'
+                '{% endif %}'
+                '{{ item }}'
+              '{% endfor %}', (document) {
+            expect(document.children.length, 1);
+            final forTag = document.children[0] as Tag;
+            expect(forTag.name, 'for');
+            expect(forTag.body.length, 2);
+
+            final ifTag = forTag.body[0] as Tag;
+            expect(ifTag.name, 'if');
+            expect(ifTag.content.length, 1);
+            expect(ifTag.content[0], isA<BinaryOperation>());
+            expect(ifTag.body.length, 1);
+            expect((ifTag.body[0] as Tag).name, 'break');
+
+            expect(forTag.body[1], isA<Variable>());
+          });
+        });
+
+        test('if statement with continue', () {
+          testParser(
+              '{% for item in (1..5) %}'
+                  '{% if item == 3 %}'
+                      '{% continue %}'
+                  '{% endif %}'
+                  '{{ item }}'
+              '{% endfor %}', (document) {
+            expect(document.children.length, 1);
+            final forTag = document.children[0] as Tag;
+            expect(forTag.name, 'for');
+            expect(forTag.body.length, 2);
+
+            final ifTag = forTag.body[0] as Tag;
+            expect(ifTag.name, 'if');
+            expect(ifTag.content.length, 1);
+            expect(ifTag.content[0], isA<BinaryOperation>());
+            expect(ifTag.body.length, 1);
+            expect((ifTag.body[0] as Tag).name, 'continue');
+
+            expect(forTag.body[1], isA<Variable>());
+          });
+        });
       });
     });
   });

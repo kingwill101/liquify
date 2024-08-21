@@ -1,22 +1,35 @@
+import 'package:liquid_grammar/ast.dart';
 import 'package:liquid_grammar/registry.dart';
 import 'package:petitparser/petitparser.dart';
 
-import 'ast.dart';
+extension TagExtension on LiquidGrammar {
+  Parser<Tag> someTag(String name,
+      {Parser<dynamic>? start,
+      Parser<dynamic>? end,
+      Parser<dynamic>? content,
+      Parser<dynamic>? filters,
+      bool hasContent = true}) {
+    var parser = ((start ?? tagStart()) & string(name).trim());
 
-class LiquidGrammar extends GrammarDefinition {
-  @override
-  Parser start() => ref0(document).end();
+    if (hasContent) {
+      parser = parser &
+          (content ?? ref0(tagContent).optional()).trim() &
+          (filters ?? ref0(filter).star()).trim();
+    }
 
-  Parser document() => ref0(element)
-      .star()
-      .map((elements) => Document(elements.cast<ASTNode>()));
+    parser = parser & (end ?? tagEnd());
 
-  Parser element() =>
-      ref0(liquidTag) | ref0(rawTag) | ref0(tag) | ref0(variable) | ref0(text);
-
-  Parser tagStart() => string('{%-') | string('{%');
-
-  Parser tagEnd() => string('-%}') | string('%}');
+    return parser.map((values) {
+      if (!hasContent) {
+        return Tag(name, []);
+      }
+      final tagContent =
+          values[2] is List<ASTNode> ? values[2] as List<ASTNode> : [];
+      final tagFilters =
+          values[3] is List ? (values[3] as List).cast<Filter>() : <Filter>[];
+      return Tag(name, tagContent.cast(), filters: tagFilters);
+    });
+  }
 
   Parser tag() => (tagStart() &
               ref0(identifier).trim() &
@@ -31,6 +44,141 @@ class LiquidGrammar extends GrammarDefinition {
             content.where((node) => node is! Filter).toList();
         return Tag(name, nonFilterContent, filters: filters);
       });
+
+  Parser<Tag> breakTag() => someTag('break', hasContent: false);
+
+  Parser<Tag> continueTag() => someTag('continue', hasContent: false);
+
+  Parser<Tag> elseTag() => someTag('else', hasContent: false);
+
+  Parser elseBlock() => seq2(
+        ref0(elseTag),
+        ref0(element)
+            .starLazy(ref0(endCaseTag).or(ref0(endIfTag)).or(ref0(endForTag))),
+      ).map((values) {
+        final eTag = values.$1;
+        eTag.body = values.$2.cast<ASTNode>();
+        return eTag as ASTNode;
+      });
+}
+
+extension IFBlockExtension on LiquidGrammar {
+  Parser ifBlock() => seq3(
+        ref0(ifTag),
+        ref0(element).starLazy(endIfTag()),
+        ref0(endIfTag),
+      ).map((values) {
+        final ifTag = values.$1 as Tag;
+        ifTag.body = values.$2.cast<ASTNode>();
+        return ifTag as ASTNode;
+      });
+
+  Parser ifTag() => someTag("if");
+
+  Parser elseifOrElse() => ref0(elseifTag) | ref0(elseTag);
+
+  Parser elseifTag() => (tagStart() &
+              string('elseif').trim() &
+              ref0(tagContent).optional().trim() &
+              ref0(filter).star().trim() &
+              tagEnd() &
+              ref0(element).starLazy(ref0(elseifOrElse).or(ref0(endIfTag))))
+          .map((values) {
+        final content = values[2] as List<ASTNode>? ?? [];
+        final filters = (values[3] as List).cast<Filter>();
+        final body = values[5].cast<ASTNode>();
+        return Tag('elseif', content, filters: filters)..body = body;
+      });
+
+  Parser endIfTag() =>
+      (tagStart() & string('endif').trim() & tagEnd()).map((values) {
+        return Tag('endif', []);
+      });
+}
+
+extension FromBlockExtension on LiquidGrammar {
+  Parser forBlock() => seq3(
+        ref0(forTag),
+        ref0(element).starLazy(endForTag()),
+        ref0(endForTag),
+      ).map((values) {
+        final forTag = values.$1;
+        forTag.body = values.$2.cast<ASTNode>();
+        return forTag as ASTNode;
+      });
+
+  Parser<Tag> forTag() => someTag('for');
+
+  Parser endForTag() =>
+      (tagStart() & string('endfor').trim() & tagEnd()).map((values) {
+        return Tag('endfor', []);
+      });
+}
+
+extension CaseWhenTagExtension on LiquidGrammar {
+  Parser caseBlock() => seq3(
+        ref0(caseTag),
+        ref0(element).starLazy(endCaseTag()),
+        ref0(endCaseTag),
+      ).map((values) {
+        final caseTag = values.$1;
+        caseTag.body = values.$2.cast<ASTNode>();
+        return caseTag as ASTNode;
+      });
+
+  Parser<Tag> whenTag() => someTag('when');
+
+  Parser<Tag> caseTag() => someTag('case');
+
+  Parser endCaseTag() =>
+      (tagStart() & string('endcase').trim() & tagEnd()).map((values) {
+        return Tag('endcase', []);
+      });
+}
+
+class LiquidGrammar extends GrammarDefinition {
+  @override
+  Parser start() => ref0(document).end();
+
+  Parser document() => ref0(element)
+      .star()
+      .map((elements) => Document(elements.cast<ASTNode>()));
+
+  Parser element() =>
+      ref0(liquidTag) |
+      ref0(rawTag) |
+      ref0(ifBlock) |
+      ref0(elseBlock) |
+      ref0(forBlock) |
+      ref0(caseBlock) |
+      ref0(breakTag) |
+      ref0(continueTag) |
+      ref0(tag) |
+      ref0(variable) |
+      ref0(text);
+
+  Parser caseBlock() => seq3(
+        ref0(caseTag),
+        ref0(element).starLazy(ref0(endCaseTag)),
+        ref0(endCaseTag),
+      ).map((values) {
+        final ifTag = values.$1;
+        ifTag.body = values.$2.cast<ASTNode>();
+        return ifTag as ASTNode;
+      });
+
+  Parser elseTag() => (tagStart() &
+              string('else').trim() &
+              tagEnd() &
+              ref0(element).starLazy(ref0(endIfTag).or(ref0(endCaseTag))))
+          .map((values) {
+        final body = values[3].cast<ASTNode>();
+        return Tag('else', [])..body = body;
+      });
+
+  Parser tagStart() => string('{%-') | string('{%');
+
+  Parser tagEnd() => string('-%}') | string('%}');
 
   Parser filter() {
     return (char('|').trim() &
@@ -53,7 +201,7 @@ class LiquidGrammar extends GrammarDefinition {
       .map((values) => values.elements);
 
   Parser tagContent() {
-    return (ref0(assignment) | ref0(argument)  | ref0(expression))
+    return (ref0(assignment) | ref0(argument) | ref0(expression))
         .star()
         .map((values) {
       var res = [];
@@ -74,7 +222,9 @@ class LiquidGrammar extends GrammarDefinition {
             ref0(expression).trim())
         .map((values) {
       return Assignment(
-          (values[0] as Identifier), values[2] as ASTNode);
+        (values[0] as Identifier),
+        values[2] as ASTNode,
+      );
     });
   }
 
@@ -163,6 +313,10 @@ class LiquidGrammar extends GrammarDefinition {
         .or(ref0(range));
   }
 
+  Parser block() {
+    return ref0(element).star();
+  }
+
   Parser memberAccess() =>
       (ref0(identifier) & (char('.') & ref0(identifier)).plus()).map((values) {
         var object = values[0] as Identifier;
@@ -186,19 +340,17 @@ class LiquidGrammar extends GrammarDefinition {
   Parser logicalOperator() => string('and').trim() | string('or').trim();
 
   Parser comparison() {
-    return (
-        ref0(memberAccess) |
-        ref0(identifier) |
-        ref0(literal) |
-        ref0(groupedExpression) |
-        ref0(range))
+    return (ref0(memberAccess) |
+            ref0(identifier) |
+            ref0(literal) |
+            ref0(groupedExpression) |
+            ref0(range))
         .seq(ref0(comparisonOperator))
-        .seq(
-        ref0(memberAccess) |
-        ref0(identifier) |
-        ref0(literal) |
-        ref0(groupedExpression)|
-        ref0(range))
+        .seq(ref0(memberAccess) |
+            ref0(identifier) |
+            ref0(literal) |
+            ref0(groupedExpression) |
+            ref0(range))
         .map((values) => BinaryOperation(values[0], values[1], values[2]));
   }
 
@@ -245,13 +397,19 @@ class LiquidGrammar extends GrammarDefinition {
   }
 
   Parser arithmeticExpression() {
-    return (ref0(groupedExpression) |ref0(identifier) | ref0(literal) | ref0(range))
+    return (ref0(groupedExpression) |
+            ref0(identifier) |
+            ref0(literal) |
+            ref0(range))
         .trim()
         .seq(char('+').trim() |
-    char('-').trim() |
-    char('*').trim() |
-    char('/').trim())
-        .seq(ref0(groupedExpression) |ref0(identifier) | ref0(literal) | ref0(range))
+            char('-').trim() |
+            char('*').trim() |
+            char('/').trim())
+        .seq(ref0(groupedExpression) |
+            ref0(identifier) |
+            ref0(literal) |
+            ref0(range))
         .trim()
         .map((values) {
       return BinaryOperation(values[0], values[1], values[2]);
