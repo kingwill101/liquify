@@ -2,10 +2,10 @@ import 'package:liquid_grammar/visitor.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class ASTNode {
-    final String id;
+  final String id;
 
   ASTNode() : id = Uuid().v4();
-  
+
   Map<String, dynamic> toJson() => {};
 
   T accept<T>(ASTVisitor<T> visitor);
@@ -29,15 +29,22 @@ class Document extends ASTNode {
 class Tag extends ASTNode {
   final String name;
   final List<ASTNode> content;
+  List<ASTNode> body;
   final List<Filter> filters;
 
-  Tag(this.name, this.content, {this.filters = const []});
+  Tag(
+    this.name,
+    this.content, {
+    this.filters = const [],
+    this.body = const [],
+  });
 
   @override
   Map<String, dynamic> toJson() => {
         'type': 'Tag',
         'name': name,
         'content': content.map((child) => child.toJson()).toList(),
+        'body': body.map((child) => child.toJson()).toList(),
         'filters': filters.map((filter) => filter.toJson()).toList(),
       };
 
@@ -106,6 +113,7 @@ class Identifier extends ASTNode {
         'type': 'Identifier',
         'name': name,
       };
+
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitIdentifier(this);
 }
@@ -145,8 +153,10 @@ class TextNode extends ASTNode {
   final String text;
 
   TextNode(this.text);
+
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitTextNode(this);
+
   @override
   Map<String, dynamic> toJson() => {
         'type': 'TextNode',
@@ -169,7 +179,6 @@ class MemberAccess extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitMemberAccess(this);
-
 }
 
 class UnaryOperation extends ASTNode {
@@ -177,17 +186,17 @@ class UnaryOperation extends ASTNode {
   final ASTNode expression;
 
   UnaryOperation(this.operator, this.expression);
+
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitUnaryOperation(this);
+
   @override
   Map<String, dynamic> toJson() => {
         'type': 'UnaryOperation',
         'operator': operator,
         'expression': expression.toJson(),
       };
-
 }
-
 
 class Variable extends ASTNode {
   final ASTNode expression;
@@ -218,6 +227,7 @@ class FilteredExpression extends ASTNode {
         'expression': expression.toJson(),
         'filters': filters.map((filter) => filter.toJson()).toList(),
       };
+
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitFilterExpression(this);
 }
@@ -244,8 +254,10 @@ class NamedArgument extends ASTNode {
   final ASTNode value;
 
   NamedArgument(this.name, this.value);
+
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitNamedArgument(this);
+
   @override
   Map<String, dynamic> toJson() => {
         'type': 'NamedArgument',
