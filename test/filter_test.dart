@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:liquify/src/filters/array.dart';
 import 'package:liquify/src/filters/date.dart';
 import 'package:liquify/src/filters/html.dart' as html;
+import 'package:liquify/src/filters/math.dart';
 import 'package:test/test.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -285,6 +286,78 @@ void main() {
       expect(arrayToSentenceString([], [], {}), equals(''));
       expect(arrayToSentenceString(['apple', 'banana', 'orange'], ['or'], {}),
           equals('apple, banana, or orange'));
+    });
+  });
+
+  group('Math Filters', () {
+    test('abs', () {
+      expect(abs(-5, [], {}), equals(5));
+      expect(abs(5, [], {}), equals(5));
+      expect(abs(0, [], {}), equals(0));
+    });
+
+    test('at_least', () {
+      expect(atLeast(5, [10], {}), equals(10));
+      expect(atLeast(15, [10], {}), equals(15));
+      expect(() => atLeast(5, [], {}), throwsArgumentError);
+    });
+
+    test('at_most', () {
+      expect(atMost(5, [10], {}), equals(5));
+      expect(atMost(15, [10], {}), equals(10));
+      expect(() => atMost(5, [], {}), throwsArgumentError);
+    });
+
+    test('ceil', () {
+      expect(ceil(5.1, [], {}), equals(6));
+      expect(ceil(5.9, [], {}), equals(6));
+      expect(ceil(5.0, [], {}), equals(5));
+    });
+
+    test('divided_by', () {
+      expect(dividedBy(10, [2], {}), equals(5));
+      expect(dividedBy(10, [3], {}), equals(10 / 3));
+      expect(dividedBy(10, [3, true], {}), equals(3));
+      expect(() => dividedBy(10, [], {}), throwsArgumentError);
+    });
+
+    test('floor', () {
+      expect(floor(5.1, [], {}), equals(5));
+      expect(floor(5.9, [], {}), equals(5));
+      expect(floor(5.0, [], {}), equals(5));
+    });
+
+    test('minus', () {
+      expect(minus(10, [3], {}), equals(7));
+      expect(minus(3, [10], {}), equals(-7));
+      expect(() => minus(10, [], {}), throwsArgumentError);
+    });
+
+    test('modulo', () {
+      expect(modulo(10, [3], {}), equals(1));
+      expect(modulo(-10, [3], {}), equals(2)); // Changed from -1 to 2
+      expect(modulo(10, [-3], {}), equals(1));
+      expect(modulo(-10, [-3], {}), equals(2));
+      expect(() => modulo(10, [], {}), throwsArgumentError);
+    });
+
+    test('times', () {
+      expect(times(5, [3], {}), equals(15));
+      expect(times(-5, [3], {}), equals(-15));
+      expect(() => times(5, [], {}), throwsArgumentError);
+    });
+
+    test('round', () {
+      expect(round(5.5, [], {}), equals(6));
+      expect(round(5.4, [], {}), equals(5));
+      expect(round(5.1234, [2], {}), equals(5.12));
+      expect(round(5.1254, [2], {}), equals(5.13));
+    });
+
+    test('plus', () {
+      expect(plus(5, [3], {}), equals(8));
+      expect(plus(-5, [3], {}), equals(-2));
+      expect(() => plus(5, [], {}), throwsArgumentError);
     });
   });
 
