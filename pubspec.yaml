@@ -3,8 +3,14 @@ description: >
   A powerful and extensible Liquid template engine for Dart.
   Supports full Liquid syntax, custom tags and filters, and high-performance parsing and rendering.
 version: 0.2.0
-repository: https://github.com/kingwil101/liquify
+repository: https://github.com/kingwill101/liquify
 
+topics: 
+  - liquid
+  - templating
+  - teamplate-engine
+  - dart
+  
 environment:
   sdk: ">=3.5.0 <4.0.0"
 
@@ -20,3 +26,6 @@ dependencies:
 dev_dependencies:
   lints: ^4.0.0
   test: ^1.24.0
+
+funding:
+  - https://www.buymeacoffee.com/kingwill101
