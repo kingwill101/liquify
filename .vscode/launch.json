@@ -5,9 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "liquid_grammar",
+            "name": "liquify",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "vmAdditionalArgs": ["--enable-experiment=macros"]
         }
     ]
 }
