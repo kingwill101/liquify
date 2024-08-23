@@ -67,6 +67,57 @@ void main() {
         expect((variable.expression as Identifier).name, 'user');
       });
     });
+
+    group('Numeric Literals', () {
+      test('Parses positive integers', () {
+        testParser('{% assign my_int = 25 %}', (document) {
+          expect(document.children.length, 1);
+          final assignTag = document.children[0] as Tag;
+          expect(assignTag.name, 'assign');
+          final assignment = assignTag.content[0] as Assignment;
+          expect(assignment.value, isA<Literal>());
+          expect((assignment.value as Literal).value, 25);
+          expect((assignment.value as Literal).type, LiteralType.number);
+        });
+      });
+
+      test('Parses negative integers', () {
+        testParser('{% assign my_int = -39 %}', (document) {
+          expect(document.children.length, 1);
+          final assignTag = document.children[0] as Tag;
+          expect(assignTag.name, 'assign');
+          final assignment = assignTag.content[0] as Assignment;
+          expect(assignment.value, isA<Literal>());
+          expect((assignment.value as Literal).value, -39);
+          expect((assignment.value as Literal).type, LiteralType.number);
+        });
+      });
+
+      test('Parses positive floats', () {
+        testParser('{% assign my_float = 3.14159 %}', (document) {
+          expect(document.children.length, 1);
+          final assignTag = document.children[0] as Tag;
+          expect(assignTag.name, 'assign');
+          final assignment = assignTag.content[0] as Assignment;
+          expect(assignment.value, isA<Literal>());
+          expect((assignment.value as Literal).value, 3.14159);
+          expect((assignment.value as Literal).type, LiteralType.number);
+        });
+      });
+
+      test('Parses negative floats', () {
+        testParser('{% assign my_float = -39.756 %}', (document) {
+          expect(document.children.length, 1);
+          final assignTag = document.children[0] as Tag;
+          expect(assignTag.name, 'assign');
+          final assignment = assignTag.content[0] as Assignment;
+          expect(assignment.value, isA<Literal>());
+          expect((assignment.value as Literal).value, -39.756);
+          expect((assignment.value as Literal).type, LiteralType.number);
+        });
+      });
+    });
+
     test('Parses variable expression with filters', () {
       testParser('{{ user | filter1 | filter2 }}', (document) {
         expect(document.children.length, 1);
@@ -80,6 +131,32 @@ void main() {
         expect(filtered.filters.length, 2);
         expect(filtered.filters[0].name.name, 'filter1');
         expect(filtered.filters[1].name.name, 'filter2');
+      });
+    });
+
+    test('Parses variable with multiple filters and arguments', () {
+      testParser('{{ price | multiply: 1.1 | round }}', (document) {
+        expect(document.children.length, 1);
+
+        final variable = document.children[0] as FilteredExpression;
+        expect(variable.expression, isA<Variable>());
+
+        final identity = variable.expression as Variable;
+        expect(identity.name, 'price');
+
+        expect(variable.filters.length, 2);
+
+        // Check first filter (multiply)
+        final multiplyFilter = variable.filters[0];
+        expect(multiplyFilter.name.name, 'multiply');
+        expect(multiplyFilter.arguments.length, 1);
+        expect(multiplyFilter.arguments[0], isA<Literal>());
+        expect((multiplyFilter.arguments[0] as Literal).value, 1.1);
+
+        // Check second filter (round)
+        final roundFilter = variable.filters[1];
+        expect(roundFilter.name.name, 'round');
+        expect(roundFilter.arguments.isEmpty, true);
       });
     });
 

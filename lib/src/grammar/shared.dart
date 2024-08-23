@@ -89,8 +89,15 @@ Parser literal() {
 }
 
 Parser numericLiteral() {
-  return digit().plus().flatten().map((value) {
-    return Literal(value, LiteralType.number);
+  return (char('-').optional() &
+          (digit().plus() & (char('.') & digit().plus()).optional()))
+      .flatten()
+      .map((value) {
+    if (value.contains('.')) {
+      return Literal(double.parse(value), LiteralType.number);
+    } else {
+      return Literal(int.parse(value), LiteralType.number);
+    }
   });
 }
 
