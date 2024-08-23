@@ -1,3 +1,5 @@
+import 'package:liquify/src/filters/filters.dart';
+
 /// Represents a function that can be used as a filter in the Liquid template engine.
 ///
 /// [value] The input value to be filtered.
@@ -9,11 +11,7 @@ typedef FilterFunction = dynamic Function(dynamic value,
 /// A registry for storing and retrieving filter functions.
 class FilterRegistry {
   /// A map of filter names to their corresponding filter functions.
-  static final Map<String, FilterFunction> _filters = {
-    'upper': (value, args, namedArgs) => value.toString().toUpperCase(),
-    'lower': (value, args, namedArgs) => value.toString().toLowerCase(),
-    'length': (value, args, namedArgs) => value.toString().length,
-  };
+  static final Map<String, FilterFunction> _filters = builtInFilters;
 
   /// Registers a new filter function with the given name.
   ///
