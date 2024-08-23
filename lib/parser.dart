@@ -93,3 +93,4 @@ library liquify_parser;
 
 export 'package:liquify/src/tag.dart';
 export 'package:liquify/src/registry.dart';
+export 'package:liquify/src/context.dart';

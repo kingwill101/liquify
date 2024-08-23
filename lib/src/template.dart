@@ -9,10 +9,14 @@ class Template {
   /// [data] is an optional map of variables to be used in the template evaluation.
   ///
   /// Returns the rendered output as a String.
-  static String parse(String input, {Map<String, dynamic> data = const {}}) {
+  static String parse(
+    String input, {
+    Map<String, dynamic> data = const {},
+    parser.Evaluator? evaluator,
+  }) {
     parser.registerBuiltIns();
     final parsed = parser.parseInput(input);
-    parser.Evaluator evaluator = parser.Evaluator(Environment(data));
+    evaluator ??= parser.Evaluator(Environment(data));
     evaluator.evaluateNodes(parsed);
     return evaluator.buffer.toString();
   }

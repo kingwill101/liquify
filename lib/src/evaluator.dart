@@ -1,4 +1,5 @@
 import 'package:liquify/src/context.dart';
+import 'package:liquify/src/drop.dart';
 import 'package:liquify/src/registry.dart';
 
 import 'ast.dart';
@@ -207,13 +208,20 @@ class Evaluator implements ASTVisitor<dynamic> {
 
     var objectVal = context.getVariable(objName);
 
-    if (objectVal is Map) {
-      for (final member in node.members) {
-        if (objectVal is Map && objectVal.containsKey(member)) {
-          objectVal = objectVal[member];
+    for (final member in node.members) {
+      if (objectVal is Drop) {
+        objectVal = objectVal(Symbol(member));
+      } else if (objectVal is Map && objectVal.containsKey(member)) {
+        objectVal = objectVal[member];
+      } else if (objectVal is List && int.tryParse(member) != null) {
+        final index = int.parse(member);
+        if (index >= 0 && index < objectVal.length) {
+          objectVal = objectVal[index];
         } else {
           return null;
         }
+      } else if (objectVal == null) {
+        return null;
       }
     }
     return objectVal;

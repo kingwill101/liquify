@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Drop support
+
 ## 0.3.0
 
 - Support floating point numbers
