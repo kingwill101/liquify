@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-import 'package:liquid_grammar/ast.dart';
-import 'package:liquid_grammar/grammar.dart';
-import 'package:liquid_grammar/util.dart';
+import 'package:liquify/src/ast.dart';
+import 'package:liquify/src/grammar/grammar.dart';
+import 'package:liquify/src/registry.dart';
+import 'package:liquify/src/util.dart';
 import 'package:petitparser/debug.dart';
 import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
 void main() {
+  registerBuiltIns();
+
   group('Liquid Grammar Parser', () {
     test('Parses liquid tags', () {
       testParser('''
@@ -100,14 +103,16 @@ void main() {
 
         expect(filtered.filters[1].name.name, 'filter2');
         expect(filtered.filters[1].arguments.length, 2);
-        expect((filtered.filters[1].arguments[0] as NamedArgument).name.name,
+        expect(
+            (filtered.filters[1].arguments[0] as NamedArgument).identifier.name,
             'var3');
         expect(
             ((filtered.filters[1].arguments[0] as NamedArgument).value
                     as Literal)
                 .value,
             3);
-        expect((filtered.filters[1].arguments[1] as NamedArgument).name.name,
+        expect(
+            (filtered.filters[1].arguments[1] as NamedArgument).identifier.name,
             'var4');
         expect(
             ((filtered.filters[1].arguments[1] as NamedArgument).value
@@ -286,8 +291,8 @@ void main() {
         expect(tag.filters[0].arguments.length, 5);
 
         // Checking the first argument (number)
-        expect(
-            (tag.filters[0].arguments[0] as NamedArgument).name.name, 'arg1');
+        expect((tag.filters[0].arguments[0] as NamedArgument).identifier.name,
+            'arg1');
         expect(
             ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
                 .value,
@@ -298,8 +303,8 @@ void main() {
             LiteralType.number);
 
         // Checking the second argument (double-quoted string)
-        expect(
-            (tag.filters[0].arguments[1] as NamedArgument).name.name, 'arg2');
+        expect((tag.filters[0].arguments[1] as NamedArgument).identifier.name,
+            'arg2');
         expect(
             ((tag.filters[0].arguments[1] as NamedArgument).value as Literal)
                 .value,
@@ -310,8 +315,8 @@ void main() {
             LiteralType.string);
 
         // Checking the third argument (single-quoted string)
-        expect(
-            (tag.filters[0].arguments[2] as NamedArgument).name.name, 'arg3');
+        expect((tag.filters[0].arguments[2] as NamedArgument).identifier.name,
+            'arg3');
         expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .value,
@@ -322,8 +327,8 @@ void main() {
             LiteralType.string);
 
         // Checking the fourth argument (boolean true)
-        expect(
-            (tag.filters[0].arguments[3] as NamedArgument).name.name, 'arg4');
+        expect((tag.filters[0].arguments[3] as NamedArgument).identifier.name,
+            'arg4');
         expect(
             ((tag.filters[0].arguments[3] as NamedArgument).value as Literal)
                 .value,
@@ -334,8 +339,8 @@ void main() {
             LiteralType.boolean);
 
         // Checking the fifth argument (boolean false)
-        expect(
-            (tag.filters[0].arguments[4] as NamedArgument).name.name, 'arg5');
+        expect((tag.filters[0].arguments[4] as NamedArgument).identifier.name,
+            'arg5');
         expect(
             ((tag.filters[0].arguments[4] as NamedArgument).value as Literal)
                 .value,
@@ -717,9 +722,9 @@ void main() {
         test('if-else statement', () {
           testParser(
               '{% if false %}'
-                  'True'
+              'True'
               '{% else %}'
-                  'False'
+              'False'
               '{% endif %}', (document) {
             expect(document.children.length, 1);
             final ifTag = document.children[0] as Tag;
@@ -738,11 +743,11 @@ void main() {
         test('nested if statements', () {
           testParser(
               '{% if true %}'
-                  '{% if false %}'
-                      'Inner False'
-                  '{% else %}'
-                      'Inner True'
-                  '{% endif %}'
+              '{% if false %}'
+              'Inner False'
+              '{% else %}'
+              'Inner True'
+              '{% endif %}'
               '{% endif %}', (document) {
             expect(document.children.length, 1);
             final outerIfTag = document.children[0] as Tag;
@@ -764,10 +769,10 @@ void main() {
         test('if statement with break', () {
           testParser(
               '{% for item in (1..5) %}'
-                '{% if item == 3 %}'
-                    '{% break %}'
-                '{% endif %}'
-                '{{ item }}'
+              '{% if item == 3 %}'
+              '{% break %}'
+              '{% endif %}'
+              '{{ item }}'
               '{% endfor %}', (document) {
             expect(document.children.length, 1);
             final forTag = document.children[0] as Tag;
@@ -788,10 +793,10 @@ void main() {
         test('if statement with continue', () {
           testParser(
               '{% for item in (1..5) %}'
-                  '{% if item == 3 %}'
-                      '{% continue %}'
-                  '{% endif %}'
-                  '{{ item }}'
+              '{% if item == 3 %}'
+              '{% continue %}'
+              '{% endif %}'
+              '{{ item }}'
               '{% endfor %}', (document) {
             expect(document.children.length, 1);
             final forTag = document.children[0] as Tag;
@@ -840,7 +845,10 @@ void testParser(String source, void Function(Document document) testFunction) {
         rethrow;
       }
     } else {
-      fail('Parsing failed: ${result.message}\nSource: $source');
+      final lineAndColumn = Token.lineAndColumnOf(source, result.position);
+
+      fail(
+          'Parsing failed:  Error ${result.message} at ${lineAndColumn.join(':')}');
     }
   } catch (e, trace) {
     print("source: $source");

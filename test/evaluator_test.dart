@@ -1,21 +1,19 @@
-import 'package:liquid_grammar/ast.dart';
-import 'package:liquid_grammar/context.dart';
-import 'package:liquid_grammar/evaluator.dart';
-import 'package:liquid_grammar/filter_registry.dart';
-import 'package:liquid_grammar/registry.dart';
+import 'package:liquify/src/ast.dart';
+import 'package:liquify/src/context.dart';
+import 'package:liquify/src/evaluator.dart';
+import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/registry.dart';
 import 'package:test/test.dart';
 
 void main() {
-  Environment context = Environment();
+  late Evaluator evaluator;
+
+  setUp(() {
+    registerBuiltIns();
+    evaluator = Evaluator(Environment());
+  });
 
   group('Evaluator', () {
-    final evaluator = Evaluator(context);
-
-    setUp(() {
-      // Register custom tags
-      registerBuiltIns();
-    });
-
     test('evaluates literals', () {
       expect(evaluator.evaluate(Literal(5, LiteralType.number)), 5);
       expect(evaluator.evaluate(Literal(true, LiteralType.boolean)), true);
