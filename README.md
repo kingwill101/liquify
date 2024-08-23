@@ -1,134 +1,151 @@
-# Liquify - Liquid Template Engine for Dart
+# Liquify - Powerful Liquid Template Engine for Dart
 
-Liquify is a Dart implementation of the Liquid template language, originally created by Shopify. This library allows you to parse and render Liquid templates in your Dart and Flutter applications.
+Liquify is a comprehensive Dart implementation of the Liquid template language, originally created by Shopify. This high-performance library allows you to parse, render, and extend Liquid templates in your Dart and Flutter applications.
 
 ## Features
 
-- Full support for standard Liquid syntax
-- Custom tag and filter creation
-- Extensible architecture
-- Efficient parsing and rendering
+- Full support for standard Liquid syntax and semantics
+- Extensible architecture for custom tags and filters
+- High-performance parsing and rendering
+- Strong typing and null safety
+- Comprehensive error handling and reporting
+- Support for complex data structures and nested objects
+- Easy integration with Dart and Flutter projects
+- Extensive set of built-in filters ported from LiquidJS
 
 ## Installation
 
-Add this to your package's `pubspec.yaml` file:
+Add Liquify to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  liquify: ^0.2.0
+```
+
+Or, for the latest development version:
 
 ```yaml
 dependencies:
   liquify:
-    git: https://github.com/yourorganization/liquify.git
+    git: https://github.com/kingwill101/liquify.git
 ```
 
 Then run `dart pub get` or `flutter pub get` to install the package.
 
 ## Usage
 
-Basic usage of Liquify involves parsing a template string and providing data:
+### Basic Template Rendering
 
 ```dart
 import 'package:liquify/liquify.dart';
 
 void main() {
-  final result = Template.parse('''
-    {% assign my_name = "Bob" %}
-    {{ user.name.first | upper }}
-    {{ my_name }}
-  ''', data: {
-    'user': {
-      'name': {'first': 'Bob'}
-    },
-  });
+  final data = {
+    'name': 'Alice',
+    'items': ['apple', 'banana', 'cherry']
+  };
+
+  final result = Template.parse(
+    'Hello, {{ name | upcase }}! Your items are: {% for item in items %}{{ item }}{% unless forloop.last %}, {% endunless %}{% endfor %}.',
+    data: data
+  );
 
   print(result);
+  // Output: Hello, ALICE! Your items are: apple, banana, cherry.
 }
 ```
 
-This will output:
-```
-BOB
-Bob
-```
+### Custom Tags
 
-## Custom Tags
-
-Liquify allows you to create custom tags. Here's an example of a custom `box` tag that wraps content in a styled div:
+Liquify allows you to create and use custom tags. Here's an example of a custom `reverse` tag:
 
 ```dart
-import 'package:liquify/parser.dart';
+import 'package:liquify/liquify.dart';
 
-class BoxTag extends BaseTag with CustomTagParser {
-  String? style;
-
-  BoxTag(super.content, super.filters);
-
-  @override
-  void preprocess(Evaluator evaluator) {
-    if (content.isNotEmpty && content[0] is Literal) {
-      style = (content[0] as Literal).value;
-    }
-  }
+class ReverseTag extends AbstractTag with CustomTagParser {
+  ReverseTag(List<ASTNode> content, List<Filter> filters) : super(content, filters);
 
   @override
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    buffer.write('<div style="${style ?? ''}">\n');
-    for (final node in body) {
-      evaluator.evaluate(node);
-    }
-    buffer.write('\n</div>');
+    String result = content.map((node) => evaluator.evaluate(node).toString()).join('').split('').reversed.join('');
+    buffer.write(result);
   }
 
   @override
   Parser parser() {
-    return seq3(
-      tagStart() & string('box').trim(),
-      ref0(expression).optional().trim(),
-      tagEnd(),
-    )
-    .seq(ref0(content))
-    .seq(tagStart() & string('endbox').trim() & tagEnd())
-    .map((values) {
-      final styleArg = values[0][1];
-      final bodyContent = values[1];
-      return Tag('box',
-        styleArg != null ? [styleArg] : [],
-        body: bodyContent
-      );
+    return (tagStart() &
+            string('reverse').trim() &
+            tagEnd() &
+            any()
+                .starLazy(tagStart() & string('endreverse').trim() & tagEnd())
+                .flatten() &
+            tagStart() &
+            string('endreverse').trim() &
+            tagEnd())
+        .map((values) {
+      return Tag("reverse", [TextNode(values[3])]);
     });
   }
+}
 
-  Parser content() {
-    return any().starLazy(tagStart() & string('endbox').trim() & tagEnd());
-  }
+void main() {
+  // Register the custom tag
+  TagRegistry.register('reverse', (content, filters) => ReverseTag(content, filters));
+
+  // Use the custom tag
+  final result = Template.parse('{% reverse %}Hello, World!{% endreverse %}');
+  print(result);
+  // Output: !dlroW ,olleH
 }
 ```
 
-To use this custom tag:
+### Custom Filters
+
+You can also create custom filters:
 
 ```dart
 import 'package:liquify/liquify.dart';
 
 void main() {
-  TagRegistry.register('box', (content, filters) => BoxTag(content, filters));
+  // Register a custom filter
+  FilterRegistry.register('multiply', (value, args, _) {
+    final multiplier = args.isNotEmpty ? args[0] as num : 2;
+    return (value as num) * multiplier;
+  });
 
-  final template = '''
-    {% box "color: blue; padding: 10px;" %}
-      This content will be in a blue box with padding.
-    {% endbox %}
-  ''';
-
-  final result = Template.parse(template);
+  // Use the custom filter
+  final result = Template.parse('{{ price | multiply: 1.1 | round }}', data: {'price': 100});
   print(result);
+  // Output: 110
 }
 ```
 
-## Documentation
+## Advanced Usage
 
-For more detailed documentation, please refer to the [API reference](link-to-your-api-docs).
+For more advanced usage, including creating complex custom tags with parsing logic, refer to the [Advanced Usage Guide](docs/advanced_usage.md).
+
+## API Documentation
+
+Detailed API documentation is available [here](https://pub.dev/documentation/liquify/latest/).
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Acknowledgements
+
+- Shopify for the original Liquid template language
+- The Dart team for the excellent language and tools
+- [LiquidJS](https://github.com/harttle/liquidjs) for their comprehensive set of filters, which we've ported to Dart
+- [liquid_dart](https://github.com/ergonlabs/liquid_dart) for their initial Dart implementation, which served as inspiration for this project
+
+## Related Projects
+
+- [LiquidJS](https://github.com/harttle/liquidjs): A popular JavaScript implementation of Liquid templates
+- [liquid_dart](https://github.com/ergonlabs/liquid_dart): An earlier Dart implementation of Liquid templates (now unmaintained)
+
+Liquify aims to provide a modern, maintained, and feature-rich Liquid template engine for the Dart ecosystem, building upon the work of these excellent projects.
