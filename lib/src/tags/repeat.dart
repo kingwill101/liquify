@@ -1,14 +1,12 @@
-import 'package:liquid_grammar/evaluator.dart';
-import 'package:liquid_grammar/tag.dart';
+import 'package:liquify/src/buffer.dart';
+import 'package:liquify/src/evaluator.dart';
+import 'package:liquify/src/tags/tag.dart';
 
-class RepeatTag extends BaseTag {
+class RepeatTag extends AbstractTag {
   RepeatTag(super.content, super.filters);
 
   @override
-  bool get hasEndTag => true;
-
-  @override
-  dynamic evaluate(Evaluator evaluator, StringBuffer buffer) {
+  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     super.evaluate(evaluator, buffer);
 
     final times = int.parse(evaluator.evaluate(content.first));
@@ -19,11 +17,5 @@ class RepeatTag extends BaseTag {
             .map((node) => evaluator.evaluate(node))
             .join(' ')).join(' ');
     buffer.write(applyFilters(value, evaluator));
-  }
-
-  @override
-  evaluateWithContext(Evaluator evaluator, StringBuffer buffer) {
-    // TODO: implement evaluateWithContext
-    throw UnimplementedError();
   }
 }
