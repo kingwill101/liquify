@@ -58,8 +58,7 @@ void customFilterExample() {
 }
 
 class ReverseTag extends AbstractTag with CustomTagParser {
-  ReverseTag(List<ASTNode> content, List<Filter> filters)
-      : super(content, filters);
+  ReverseTag(super.content, super.filters);
 
   @override
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {

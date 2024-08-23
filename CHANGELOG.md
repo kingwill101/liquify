@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Support floating point numbers
+- Suuport negative numbers
+
 ## 0.2.0
 
 - Add built in filters
