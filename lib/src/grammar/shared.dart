@@ -50,7 +50,7 @@ Parser varStart() => string('{{-') | string('{{');
 
 Parser varEnd() => string('-}}') | string('}}');
 
-Parser variable() => (varStart().trim() &
+Parser variable() => (varStart() &
             ref0(expression).trim() &
             filter().star().trim() &
             varEnd())

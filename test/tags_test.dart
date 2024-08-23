@@ -175,28 +175,30 @@ Inner Index: {{ forloop.index }}
     });
 
     test('forloop with limit and offset', () {
-      final result = parser.parse('''{% for item in (1..10) limit:3 offset:2 %}
+      final result = parser.parse('''
+{% for item in (1..10) limit:3 offset:2 %}
 {{ forloop.index }}: {{ item }}
 {% endfor %}''');
       if (result is Success) {
         final document = result.value;
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), '1: 3\n2: 4\n3: 5\n');
+        expect(evaluator.buffer.toString(), '\n1: 3\n\n2: 4\n\n3: 5\n');
       } else {
         fail('Parsing failed: ${result.message}');
       }
     });
 
     test('forloop with reversed', () {
-      final result = parser.parse('''{% for item in (1..3) reversed %}
-   {{ forloop.index }}: {{ item }}
+      final result = parser.parse('''
+{% for item in (1..3) reversed %}
+{{ forloop.index }}: {{ item }}
 {% endfor %}
       ''');
       if (result is Success) {
         final document = result.value;
         evaluator.evaluate(document);
         expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' '),
-            '1: 3 2: 2 3: 1 ');
+            ' 1: 3 2: 2 3: 1 ');
       } else {
         fail('Parsing failed: ${result.message}');
       }
@@ -595,7 +597,7 @@ These shoes are not awesome.{% endunless %}''');
       if (result is Success) {
         final document = result.value;
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), 'I am being captured.');
+        expect(evaluator.buffer.toString(), '\nI am being captured.');
       } else {
         fail('Parsing failed: ${result.message}');
       }
@@ -625,7 +627,7 @@ These shoes are not awesome.{% endunless %}''');
       if (result is Success) {
         final document = result.value;
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), '\n0\n1\n210');
+        expect(evaluator.buffer.toString(), '\n0\n1\n2\n10');
       } else {
         fail('Parsing failed: ${result.message}');
       }
@@ -656,7 +658,7 @@ These shoes are not awesome.{% endunless %}''');
       if (result is Success) {
         final document = result.value;
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), '\n-1\n-2\n-310');
+        expect(evaluator.buffer.toString(), '\n-1\n-2\n-3\n10');
       } else {
         fail('Parsing failed: ${result.message}');
       }
