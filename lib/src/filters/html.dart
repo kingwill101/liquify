@@ -53,7 +53,6 @@ FilterFunction xmlEscape = escape;
 FilterFunction unescape = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   final str = _stringify(value);
-  // TODO: Implement memory limit check if needed
   return str.replaceAllMapped(
     RegExp(r'&(amp|lt|gt|#34|#39);'),
     (Match m) => _unescapeMap[m.group(0)] ?? m.group(0)!,
@@ -83,7 +82,6 @@ FilterFunction escapeOnce = (dynamic value, List<dynamic> arguments,
 FilterFunction newlineToBr = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   final str = _stringify(value);
-  // TODO: Implement memory limit check if needed
   return str.replaceAll(RegExp(r'\r?\n'), '<br />\n');
 };
 
@@ -97,7 +95,6 @@ FilterFunction newlineToBr = (dynamic value, List<dynamic> arguments,
 FilterFunction stripHtml = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   final str = _stringify(value);
-  // TODO: Implement memory limit check if needed
   return str.replaceAll(
     RegExp(
         r'<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<.*?>|<!--[\s\S]*?-->'),

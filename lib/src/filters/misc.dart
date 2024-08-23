@@ -76,18 +76,18 @@ FilterFunction inspect = (dynamic value, List<dynamic> arguments,
   int? space = arguments.isNotEmpty ? arguments[0] as int? : null;
   Set<dynamic> ancestors = {};
 
-  dynamic _serialize(dynamic object) {
+  dynamic serialize(dynamic object) {
     if (object is! Map && object is! List) return object;
     if (ancestors.contains(object)) return '[Circular]';
     ancestors.add(object);
     if (object is List) {
-      var result = object.map(_serialize).toList();
+      var result = object.map(serialize).toList();
       ancestors.remove(object);
       return result;
     } else if (object is Map) {
       var result = {};
       object.forEach((key, value) {
-        result[key] = _serialize(value);
+        result[key] = serialize(value);
       });
       ancestors.remove(object);
       return result;
@@ -96,8 +96,8 @@ FilterFunction inspect = (dynamic value, List<dynamic> arguments,
   }
 
   return space != null && space > 0
-      ? JsonEncoder.withIndent(' ' * space).convert(_serialize(value))
-      : JsonEncoder().convert(_serialize(value));
+      ? JsonEncoder.withIndent(' ' * space).convert(serialize(value))
+      : JsonEncoder().convert(serialize(value));
 };
 
 /// Converts the input value to an integer.

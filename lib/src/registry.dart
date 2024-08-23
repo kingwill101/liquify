@@ -1,6 +1,6 @@
-import 'package:liquify/src/ast.dart';
-import 'package:liquify/src/mixins/parser.dart';
-import 'package:liquify/src/tags/tags.dart';
+import 'package:liquify/src/ast.dart' show ASTNode, Filter;
+import 'package:liquify/src/mixins/parser.dart' show CustomTagParser;
+import 'package:liquify/src/tags/tags.dart' as tags;
 
 import 'tags/tag.dart';
 
@@ -53,32 +53,38 @@ class TagRegistry {
 
 /// Registers all built-in Liquid tags.
 void registerBuiltIns() {
-  TagRegistry.register('echo', (content, filters) => EchoTag(content, filters));
   TagRegistry.register(
-      'assign', (content, filters) => AssignTag(content, filters));
+      'echo', (content, filters) => tags.EchoTag(content, filters));
   TagRegistry.register(
-      'increment', (content, filters) => IncrementTag(content, filters));
+      'assign', (content, filters) => tags.AssignTag(content, filters));
   TagRegistry.register(
-      'decrement', (content, filters) => DecrementTag(content, filters));
+      'increment', (content, filters) => tags.IncrementTag(content, filters));
   TagRegistry.register(
-      'repeat', (content, filters) => RepeatTag(content, filters));
-  TagRegistry.register('for', (content, filters) => ForTag(content, filters));
-  TagRegistry.register('if', (content, filters) => IfTag(content, filters));
-  TagRegistry.register('elseif', (content, filters) => IfTag(content, filters));
+      'decrement', (content, filters) => tags.DecrementTag(content, filters));
   TagRegistry.register(
-      'continue', (content, filters) => ContinueTag(content, filters));
+      'repeat', (content, filters) => tags.RepeatTag(content, filters));
   TagRegistry.register(
-      'break', (content, filters) => BreakTag(content, filters));
+      'for', (content, filters) => tags.ForTag(content, filters));
   TagRegistry.register(
-      'cycle', (content, filters) => CycleTag(content, filters));
+      'if', (content, filters) => tags.IfTag(content, filters));
   TagRegistry.register(
-      'tablerow', (content, filters) => TableRowTag(content, filters));
+      'elseif', (content, filters) => tags.IfTag(content, filters));
   TagRegistry.register(
-      'unless', (content, filters) => UnlessTag(content, filters));
+      'continue', (content, filters) => tags.ContinueTag(content, filters));
   TagRegistry.register(
-      'capture', (content, filters) => CaptureTag(content, filters));
+      'break', (content, filters) => tags.BreakTag(content, filters));
   TagRegistry.register(
-      'liquid', (content, filters) => LiquidTag(content, filters));
-  TagRegistry.register('case', (content, filters) => CaseTag(content, filters));
-  TagRegistry.register('raw', (content, filters) => RawTag(content, filters));
+      'cycle', (content, filters) => tags.CycleTag(content, filters));
+  TagRegistry.register(
+      'tablerow', (content, filters) => tags.TableRowTag(content, filters));
+  TagRegistry.register(
+      'unless', (content, filters) => tags.UnlessTag(content, filters));
+  TagRegistry.register(
+      'capture', (content, filters) => tags.CaptureTag(content, filters));
+  TagRegistry.register(
+      'liquid', (content, filters) => tags.LiquidTag(content, filters));
+  TagRegistry.register(
+      'case', (content, filters) => tags.CaseTag(content, filters));
+  TagRegistry.register(
+      'raw', (content, filters) => tags.RawTag(content, filters));
 }

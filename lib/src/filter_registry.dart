@@ -1,4 +1,4 @@
-import 'package:liquify/src/filters/filters.dart';
+import 'package:liquify/src/filters/filters.dart' as filters;
 
 /// Represents a function that can be used as a filter in the Liquid template engine.
 ///
@@ -11,7 +11,7 @@ typedef FilterFunction = dynamic Function(dynamic value,
 /// A registry for storing and retrieving filter functions.
 class FilterRegistry {
   /// A map of filter names to their corresponding filter functions.
-  static final Map<String, FilterFunction> _filters = builtInFilters;
+  static final Map<String, FilterFunction> _filters = filters.builtInFilters;
 
   /// Registers a new filter function with the given name.
   ///

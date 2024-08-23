@@ -1,4 +1,4 @@
-import 'package:liquify/parser.dart';
+import 'package:liquify/parser.dart' as parser;
 import 'package:liquify/src/context.dart';
 
 /// The Template class provides static methods for parsing and rendering Liquid templates.
@@ -10,9 +10,9 @@ class Template {
   ///
   /// Returns the rendered output as a String.
   static String parse(String input, {Map<String, dynamic> data = const {}}) {
-    registerBuiltIns();
-    final parsed = parseInput(input);
-    Evaluator evaluator = Evaluator(Environment(data));
+    parser.registerBuiltIns();
+    final parsed = parser.parseInput(input);
+    parser.Evaluator evaluator = parser.Evaluator(Environment(data));
     evaluator.evaluateNodes(parsed);
     return evaluator.buffer.toString();
   }
