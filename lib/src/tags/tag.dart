@@ -24,11 +24,6 @@ abstract class AbstractTag {
   /// Returns a list of all identifiers in the tag's content.
   List<Identifier> get args => content.whereType<Identifier>().toList();
 
-  /// Checks if the tag has a 'reversed' identifier in its content.
-  bool hasReverse() => content.any((arg) => content
-      .whereType<Identifier>()
-      .where((i) => i.name == "reversed")
-      .isNotEmpty);
 
   /// Preprocesses the tag's content. Override this method for custom preprocessing.
   void preprocess(Evaluator evaluator) {
