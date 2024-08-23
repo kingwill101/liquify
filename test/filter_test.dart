@@ -3,6 +3,9 @@ import 'package:liquify/src/filters/array.dart';
 import 'package:liquify/src/filters/date.dart';
 import 'package:liquify/src/filters/html.dart' as html;
 import 'package:liquify/src/filters/math.dart';
+import 'package:liquify/src/filters/misc.dart';
+import 'package:liquify/src/filters/string.dart';
+import 'package:liquify/src/filters/url.dart';
 import 'package:test/test.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -108,6 +111,7 @@ void main() {
           equals([1, 2])); // negative index beyond start
     });
   });
+
   group('URL Filters', () {
     test('urlDecode', () {
       expect(urlDecode('hello+world', [], {}), equals('hello world'));
@@ -147,6 +151,7 @@ void main() {
           equals('hello,-world!')); // raw mode preserves punctuation
     });
   });
+
   group('String Filters', () {
     test('append', () {
       expect(append('Hello', ['World'], {}), equals('HelloWorld'));
@@ -286,6 +291,55 @@ void main() {
       expect(arrayToSentenceString([], [], {}), equals(''));
       expect(arrayToSentenceString(['apple', 'banana', 'orange'], ['or'], {}),
           equals('apple, banana, or orange'));
+    });
+  });
+
+  group('Misc Filters', () {
+    test('defaultFilter', () {
+      expect(defaultFilter(null, ['default'], {}), equals('default'));
+      expect(defaultFilter('', ['default'], {}), equals('default'));
+      expect(defaultFilter([], ['default'], {}), equals('default'));
+      expect(defaultFilter(false, ['default'], {}), equals('default'));
+      expect(defaultFilter(false, ['default', true], {}), equals(false));
+      expect(defaultFilter('value', ['default'], {}), equals('value'));
+      expect(defaultFilter(42, ['default'], {}), equals(42));
+      expect(() => defaultFilter('value', [], {}), throwsArgumentError);
+    });
+
+    test('json', () {
+      expect(json({'a': 1, 'b': 2}, [], {}), equals('{"a":1,"b":2}'));
+      expect(
+          json({'a': 1, 'b': 2}, [2], {}), equals('{\n  "a": 1,\n  "b": 2\n}'));
+      expect(json([1, 2, 3], [], {}), equals('[1,2,3]'));
+      expect(json('string', [], {}), equals('"string"'));
+      expect(json(42, [], {}), equals('42'));
+    });
+
+    test('inspect with circular references', () {
+      var nestedCircular = <String, dynamic>{
+        'a': <String, dynamic>{'b': <String, dynamic>{}}
+      };
+
+      var aMap = nestedCircular['a'] as Map<String, dynamic>;
+      var bMap = aMap['b'] as Map<String, dynamic>;
+      bMap['c'] = aMap;
+
+      expect(inspect(nestedCircular, [], {}),
+          equals('{"a":{"b":{"c":"[Circular]"}}}'));
+    });
+
+    test('toInteger', () {
+      expect(toInteger('42', [], {}), equals(42));
+      expect(toInteger(42.5, [], {}), equals(43)); // Rounds to nearest integer
+      expect(toInteger('-10', [], {}), equals(-10));
+      expect(() => toInteger('not a number', [], {}), throwsFormatException);
+    });
+
+    test('raw', () {
+      expect(raw('string', [], {}), equals('string'));
+      expect(raw(42, [], {}), equals(42));
+      expect(raw({'a': 1}, [], {}), equals({'a': 1}));
+      expect(raw([1, 2, 3], [], {}), equals([1, 2, 3]));
     });
   });
 
