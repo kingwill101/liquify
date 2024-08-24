@@ -20,6 +20,17 @@ void main() {
       expect(evaluator.evaluate(Literal('hello', LiteralType.string)), 'hello');
     });
 
+    test('evaluates assignment with filtered expression', () {
+      final assignment = Assignment(
+        Identifier('uppercased_name'),
+        FilteredExpression(Literal('john', LiteralType.string),
+            [Filter(Identifier('capitalize'), [])]),
+      );
+
+      evaluator.evaluate(assignment);
+      expect(evaluator.evaluate(Identifier('uppercased_name')), 'John');
+    });
+
     test('evaluates binary operations', () {
       final addition = BinaryOperation(
           Literal(2, LiteralType.number), '+', Literal(3, LiteralType.number));
