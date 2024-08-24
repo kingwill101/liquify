@@ -1,3 +1,4 @@
+import 'package:liquify/src/fs.dart';
 import 'filter_registry.dart';
 
 /// Represents the execution environment for a code context.
@@ -8,8 +9,7 @@ import 'filter_registry.dart';
 class Environment {
   final List<Map<String, dynamic>> _variableStack;
 
-
-/// Constructs a new `Environment` instance with the provided initial data.
+  /// Constructs a new `Environment` instance with the provided initial data.
   ///
   /// The `Environment` class manages the variable stack and filters used within a
   /// code context. This constructor initializes the variable stack with the given
@@ -17,7 +17,7 @@ class Environment {
   ///
   /// Parameters:
   /// - `data`: An optional map of initial variables and their values. Defaults to an empty map.
-    Environment([Map<String, dynamic> data = const {}])
+  Environment([Map<String, dynamic> data = const {}])
       : _variableStack = [data] /*_filters = {}*/;
 
   Environment._clone(
@@ -41,6 +41,16 @@ class Environment {
     // Shallow copy the filters (assuming filters are immutable)
     // final clonedFilters = Map<String, FilterFunction>.from(_filters);
     return Environment._clone(clonedVariableStack /*, clonedFilters*/);
+  }
+
+  Root? _root;
+
+  void setRoot(Root? root) {
+    _root = root;
+  }
+
+  Root? getRoot() {
+    return _root;
   }
 
   call(String key) {

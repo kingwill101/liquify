@@ -5,12 +5,12 @@ description: >
 version: 0.4.0
 repository: https://github.com/kingwill101/liquify
 
-topics: 
+topics:
   - liquid
   - templating
   - teamplate-engine
   - dart
-  
+
 environment:
   sdk: ">=3.5.0 <4.0.0"
 
@@ -21,6 +21,8 @@ dependencies:
   intl: ^0.19.0
   timezone: ^0.9.4
   gato: ^0.0.5+1
+  file: ^7.0.0
+  path: ^1.9.0
 
 dev_dependencies:
   lints: ^4.0.0

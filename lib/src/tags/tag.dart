@@ -24,7 +24,6 @@ abstract class AbstractTag {
   /// Returns a list of all identifiers in the tag's content.
   List<Identifier> get args => content.whereType<Identifier>().toList();
 
-
   /// Preprocesses the tag's content. Override this method for custom preprocessing.
   void preprocess(Evaluator evaluator) {
     // Default implementation does nothing
@@ -52,8 +51,10 @@ abstract class AbstractTag {
   /// Evaluates the tag, pushing a new scope before evaluation and popping it after.
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     evaluator.context.pushScope();
-    final result =
-        evaluateWithContext(evaluator.createInnerEvaluator(), buffer);
+    final result = evaluateWithContext(
+        evaluator.createInnerEvaluator()
+          ..context.setRoot(evaluator.context.getRoot()),
+        buffer);
     evaluator.context.popScope();
     return result;
   }

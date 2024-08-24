@@ -1,3 +1,4 @@
+import 'package:liquify/parser.dart' show parseInput;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
 import 'package:liquify/src/registry.dart';
@@ -20,15 +21,24 @@ class Evaluator implements ASTVisitor<dynamic> {
     return Evaluator.withBuffer(innerContext, buffer);
   }
 
-  void buildNodeMap(List<ASTNode> nodes) {
-    for (final node in nodes) {
-      nodeMap[node.id] = node;
-      if (node is Document) {
-        buildNodeMap(node.children);
-      } else if (node is Tag) {
-        buildNodeMap(node.content);
-      }
+  String resolveTemplate(String templateName) {
+    final root = context.getRoot();
+    if (root == null) {
+      throw Exception('No root directory set for template resolution');
     }
+
+    final source = root.resolve(templateName);
+    return source.content;
+  }
+
+  List<ASTNode> resolveAndParseTemplate(String templateName) {
+    final root = context.getRoot();
+    if (root == null) {
+      throw Exception('No root directory set for template resolution');
+    }
+
+    final source = root.resolve(templateName);
+    return parseInput(source.content);
   }
 
   dynamic evaluate(ASTNode node) {
