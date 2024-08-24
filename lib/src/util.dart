@@ -69,7 +69,6 @@ void printAST(ASTNode node, int indent) {
   }
 }
 
-
 (List<ASTNode>, int) findTagChildren(List<ASTNode> nodes, Tag startTag) {
   final endTagName = 'end${startTag.name}';
   var nestedCount = 0;
