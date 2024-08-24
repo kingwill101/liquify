@@ -120,10 +120,6 @@ void main() {
 }
 ```
 
-## Advanced Usage
-
-For more advanced usage, including creating complex custom tags with parsing logic, refer to the [Advanced Usage Guide](docs/advanced_usage.md).
-
 ## API Documentation
 
 Detailed API documentation is available [here](https://pub.dev/documentation/liquify/latest/).
