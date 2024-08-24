@@ -1,5 +1,7 @@
+import 'package:file/memory.dart';
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
+import 'package:liquify/src/fs.dart';
 import 'package:liquify/src/grammar/grammar.dart';
 import 'package:liquify/src/registry.dart';
 import 'package:petitparser/core.dart';
@@ -597,7 +599,7 @@ These shoes are not awesome.{% endunless %}''');
       if (result is Success) {
         final document = result.value;
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), '\nI am being captured.');
+        expect(evaluator.buffer.toString(), 'I am being captured.\n');
       } else {
         fail('Parsing failed: ${result.message}');
       }
@@ -783,6 +785,178 @@ These shoes are not awesome.{% endunless %}''');
         final document = result.value;
         evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '\n');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+  });
+
+  group('RenderTag', () {
+    late MemoryFileSystem fileSystem;
+    late FileSystemRoot root;
+
+    setUp(() {
+      fileSystem = MemoryFileSystem();
+      root = FileSystemRoot('/templates', fileSystem: fileSystem);
+      evaluator.context.setRoot(root);
+
+      // Set up some mock templates
+      fileSystem.file('/templates/simple.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('Hello, {{ name }}!');
+      fileSystem.file('/templates/with_vars.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('{{ greeting }}, {{ person }}!');
+      fileSystem.file('/templates/for_loop.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('{% for item in items %}{{ item }} {% endfor %}');
+      fileSystem.file('/templates/nested.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('{% render "simple.liquid" name: "World" %}');
+      fileSystem.file('/templates/with_product.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('Product: {{ product.title }}');
+    });
+
+    test('renders a simple template', () {
+      final result = parser.parse('{% render "simple.liquid" name: "World" %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), 'Hello, World!');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('renders a template with variables', () {
+      final result = parser.parse(
+          '{% render "with_vars.liquid" greeting: "Hi", person: "John" %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), 'Hi, John!');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('renders a template with a for loop', () {
+      final result =
+          parser.parse('{% render "for_loop.liquid" items: (1..3) %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), '1 2 3 ');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('renders a nested template', () {
+      final result = parser.parse('{% render "nested.liquid" %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), 'Hello, World!');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('throws exception for non-existent template', () {
+      final result = parser.parse('{% render "non_existent.liquid" %}');
+      if (result is Success) {
+        final document = result.value;
+        expect(() => evaluator.evaluate(document), throwsException);
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('renders with "with" parameter', () {
+      evaluator.context.setVariable('product', {'title': 'Awesome Shirt'});
+      final result = parser
+          .parse('{% render "with_product.liquid" with product as product %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), 'Product: Awesome Shirt');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('renders with "for" parameter', () {
+      evaluator.context.setVariable('products', [
+        {'title': 'Shirt'},
+        {'title': 'Pants'},
+        {'title': 'Hat'}
+      ]);
+      final result = parser
+          .parse('{% render "with_product.liquid" for products as product %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(),
+            'Product: ShirtProduct: PantsProduct: Hat');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('respects variable scope', () {
+      evaluator.context.setVariable('name', 'Outside');
+      final result = parser.parse('''
+        Outside: {{ name }}
+        {% render "simple.liquid" name: "Inside" %}
+        Outside again: {{ name }}
+      ''');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(
+            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+            'Outside: Outside Hello, Inside! Outside again: Outside');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('handles recursive rendering', () {
+      fileSystem.file('/templates/recursive.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('''
+        {% if depth > 0 %}
+          Depth: {{ depth }}
+          {% assign new_depth = depth | minus: 1 %}
+          {% render "recursive.liquid" depth: new_depth %}
+        {% else %}
+          Bottom reached
+        {% endif %}
+        ''');
+
+      final result = parser.parse('{% render "recursive.liquid" depth: 3 %}');
+      if (result is Success) {
+        final document = result.value;
+        evaluator.evaluate(document);
+        expect(
+            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+            'Depth: 3 Depth: 2 Depth: 1 Bottom reached');
+      } else {
+        fail('Parsing failed: ${result.message}');
+      }
+    });
+
+    test('handles errors in rendered template', () {
+      fileSystem.file('/templates/error.liquid')
+        ..createSync(recursive: true)
+        ..writeAsStringSync('{{ undefined_variable }}');
+
+      final result = parser.parse('{% render "error.liquid" %}');
+      if (result is Success) {
+        final document = result.value;
+        expect(evaluator.evaluate(document), '');
       } else {
         fail('Parsing failed: ${result.message}');
       }

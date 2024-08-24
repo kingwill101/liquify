@@ -12,5 +12,6 @@ export 'assign.dart';
 export 'capture.dart';
 export 'liquid.dart';
 export 'raw.dart';
+export 'render.dart';
 export 'increment.dart';
 export 'decrement.dart';
