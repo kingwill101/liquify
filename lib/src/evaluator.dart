@@ -191,7 +191,16 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   dynamic visitFilterExpression(FilteredExpression node) {
-    var value = node.expression.accept(this);
+    dynamic value;
+
+    if (node.expression is Assignment) {
+      (node.expression as Assignment).value.accept(this);
+      value = context.getVariable(
+          ((node.expression as Assignment).value as Identifier).name);
+    } else {
+      value = node.expression.accept(this);
+    }
+
     for (final filter in node.filters) {
       final filterFunction = filter.accept(this);
       value = filterFunction(value);

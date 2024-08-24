@@ -1,3 +1,4 @@
+import 'package:liquify/liquify.dart';
 import 'package:liquify/src/ast.dart';
 export 'package:liquify/src/ast.dart';
 import 'package:liquify/src/grammar/grammar.dart';
@@ -29,8 +30,22 @@ Parser filterArguments() => ref0(expression)
     .map((values) => values.elements);
 
 Parser assignment() {
-  return (ref0(identifier).trim() & char('=').trim() & ref0(expression).trim())
+  return (ref0(identifier).trim() &
+          char('=').trim() &
+          ref0(expression).trim() &
+          filter().star().trim())
       .map((values) {
+    if ((values[3] as List).isNotEmpty) {
+      return Assignment(
+        (values[0] as Identifier),
+        FilteredExpression(
+            Assignment(
+              (values[0] as Identifier),
+              values[2] as ASTNode,
+            ),
+            (values[3] as List).cast<Filter>()),
+      );
+    }
     return Assignment(
       (values[0] as Identifier),
       values[2] as ASTNode,
@@ -50,10 +65,8 @@ Parser varStart() => string('{{-') | string('{{');
 
 Parser varEnd() => string('-}}') | string('}}');
 
-Parser variable() => (varStart() &
-            ref0(expression).trim() &
-            filter().star().trim() &
-            varEnd())
+Parser variable() =>
+    (varStart() & ref0(expression).trim() & filter().star().trim() & varEnd())
         .map((values) {
       ASTNode expr = values[1];
       String name = '';
@@ -307,6 +320,7 @@ Parser<Tag> continueTag() => someTag('continue', hasContent: false);
 Parser<Tag> elseTag() => someTag('else', hasContent: false);
 
 List<ASTNode> parseInput(String input) {
+  registerBuiltIns();
   final result = LiquidGrammar().build().parse(input);
 
   if (result is Success) {
