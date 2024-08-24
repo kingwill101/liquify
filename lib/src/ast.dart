@@ -1,10 +1,7 @@
 import 'package:liquify/src/visitor.dart';
-import 'package:uuid/uuid.dart';
 
 abstract class ASTNode {
-  final String id;
-
-  ASTNode() : id = Uuid().v4();
+  ASTNode();
 
   Map<String, dynamic> toJson() => {};
 

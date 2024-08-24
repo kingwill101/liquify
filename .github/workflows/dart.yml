@@ -27,9 +27,9 @@ jobs:
       - name: Install dependencies
         run: dart pub get
       
-      - run: dart --enable-experiment=macros format --output=none --set-exit-if-changed .
+      - run: dart format --output=none --set-exit-if-changed .
       
       - run: dart analyze
 
       - name: Run tests
-        run: dart --enable-experiment=macros test
+        run: dart test
