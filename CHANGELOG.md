@@ -1,3 +1,8 @@
+## 0.5.0
+
+- Filesystem lookup
+- render tag
+  
 ## 0.4.0
 
 - Drop support
