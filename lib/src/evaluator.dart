@@ -7,6 +7,11 @@ import 'ast.dart';
 import 'buffer.dart';
 import 'visitor.dart';
 
+/// The `Evaluator` class is responsible for evaluating Liquid templates.
+/// It provides methods to resolve and parse templates, as well as evaluate
+/// individual AST nodes and a list of nodes.
+/// The `Evaluator` class takes an `Environment` context and an optional `Buffer`
+/// instance, which are used during the evaluation process.
 class Evaluator implements ASTVisitor<dynamic> {
   final Environment context;
   Buffer buffer = Buffer();
@@ -14,23 +19,27 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   Evaluator(this.context);
 
+  /// Creates a new `Evaluator` instance with the provided `Environment` context and `Buffer`.
+  /// The `Buffer` is used to accumulate the output of the template evaluation.
   Evaluator.withBuffer(this.context, this.buffer);
 
+  /// Creates a new `Evaluator` instance with a cloned `Environment` context and the same `Buffer`.
+  /// This allows creating a nested `Evaluator` instance with its own context, while sharing the same output buffer.
   Evaluator createInnerEvaluator() {
     final innerContext = context.clone();
     return Evaluator.withBuffer(innerContext, buffer);
   }
 
-  String resolveTemplate(String templateName) {
-    final root = context.getRoot();
-    if (root == null) {
-      throw Exception('No root directory set for template resolution');
-    }
-
-    final source = root.resolve(templateName);
-    return source.content;
-  }
-
+  /// Resolves and parses the Liquid template with the given name.
+  ///
+  /// The template is resolved relative to the root directory set in the `Environment` context.
+  /// If no root directory is set, an exception is thrown.
+  ///
+  /// The content of the resolved template file is parsed into a list of `ASTNode` instances.
+  ///
+  /// @param templateName The name of the Liquid template to resolve and parse.
+  /// @return A list of `ASTNode` instances representing the parsed template.
+  /// @throws Exception if no root directory is set for template resolution.
   List<ASTNode> resolveAndParseTemplate(String templateName) {
     final root = context.getRoot();
     if (root == null) {
@@ -41,10 +50,28 @@ class Evaluator implements ASTVisitor<dynamic> {
     return parseInput(source.content);
   }
 
+  /// Evaluates the provided AST node by calling its `accept` method with this `Evaluator` instance.
+  ///
+  /// This method is used to evaluate individual AST nodes during the template evaluation process.
+  /// It delegates the evaluation of the node to the node's own `accept` method, passing in the current `Evaluator` instance.
+  ///
+  /// @param node The AST node to evaluate.
+  /// @return The result of evaluating the AST node.
   dynamic evaluate(ASTNode node) {
     return node.accept(this);
   }
 
+  /// Evaluates a list of AST nodes and writes the results to the buffer.
+  ///
+  /// This method iterates through the provided list of AST nodes and evaluates each one.
+  /// For `Assignment` nodes, the method simply continues to the next node.
+  /// For `Tag` nodes, the method calls the `accept` method on the node, allowing the node to handle its own evaluation.
+  /// For all other node types, the method writes the result of evaluating the node to the buffer.
+  ///
+  /// After evaluating all the nodes, the method returns the contents of the buffer as a string.
+  ///
+  /// @param nodes The list of AST nodes to evaluate.
+  /// @return The contents of the buffer as a string, representing the evaluated nodes.
   dynamic evaluateNodes(List<ASTNode> nodes) {
     for (final node in nodes) {
       if (node is Assignment) continue;
@@ -58,6 +85,13 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
+
+  /// Evaluates a literal AST node by returning its value.
+  ///
+  /// This method is part of the `Evaluator` class, which is responsible for evaluating the various types of AST nodes that represent a Liquid template. When the `Evaluator` encounters a `Literal` node, it simply returns the value of that node, as literals represent constant values in the template.
+  ///
+  /// @param node The `Literal` AST node to evaluate.
+  /// @return The value of the `Literal` node.
   dynamic visitLiteral(Literal node) {
     return node.value;
   }
