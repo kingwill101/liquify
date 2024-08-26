@@ -34,6 +34,8 @@ Then run `dart pub get` or `flutter pub get` to install the package.
 
 ## Usage
 
+For detailed usage examples, please refer to the [example directory](https://github.com/kingwill101/liquify/tree/main/example) in the repository. Here are some basic usage scenarios:
+
 ### Basic Template Rendering
 
 ```dart
@@ -55,70 +57,71 @@ void main() {
 }
 ```
 
-### Custom Tags
+### File System and Template Resolution
 
-Liquify allows you to create and use custom tags. Here's an example of a custom `reverse` tag:
+Liquify provides flexible ways to resolve and load templates from various sources. The `Root` class is the base for implementing template resolution strategies.
 
-```dart
-import 'package:liquify/liquify.dart';
+#### Using MapRoot for In-Memory Templates
 
-class ReverseTag extends AbstractTag with CustomTagParser {
-  ReverseTag(List<ASTNode> content, List<Filter> filters) : super(content, filters);
-
-  @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    String result = content.map((node) => evaluator.evaluate(node).toString()).join('').split('').reversed.join('');
-    buffer.write(result);
-  }
-
-  @override
-  Parser parser() {
-    return (tagStart() &
-            string('reverse').trim() &
-            tagEnd() &
-            any()
-                .starLazy(tagStart() & string('endreverse').trim() & tagEnd())
-                .flatten() &
-            tagStart() &
-            string('endreverse').trim() &
-            tagEnd())
-        .map((values) {
-      return Tag("reverse", [TextNode(values[3])]);
-    });
-  }
-}
-
-void main() {
-  // Register the custom tag
-  TagRegistry.register('reverse', (content, filters) => ReverseTag(content, filters));
-
-  // Use the custom tag
-  final result = Template.parse('{% reverse %}Hello, World!{% endreverse %}');
-  print(result);
-  // Output: !dlroW ,olleH
-}
-```
-
-### Custom Filters
-
-You can also create custom filters:
+`MapRoot` is a simple implementation of `Root` that stores templates in memory:
 
 ```dart
 import 'package:liquify/liquify.dart';
 
 void main() {
-  // Register a custom filter
-  FilterRegistry.register('multiply', (value, args, _) {
-    final multiplier = args.isNotEmpty ? args[0] as num : 2;
-    return (value as num) * multiplier;
+  final fs = MapRoot({
+    'resume.liquid': '''
+Name: {{ name }}
+Skills: {{ skills | join: ", " }}
+{% render 'greeting.liquid' with name: name, greeting: "Welcome" %}
+''',
+    'greeting.liquid': '{{ greeting }}, {{ name }}!',
   });
 
-  // Use the custom filter
-  final result = Template.parse('{{ price | multiply: 1.1 | round }}', data: {'price': 100});
-  print(result);
-  // Output: 110
+  final context = {
+    'name': 'Alice Johnson',
+    'skills': ['Dart', 'Flutter', 'Liquid'],
+  };
+
+  final template = Template.fromFile('resume.liquid', fs, data: context);
+  print(template.render());
 }
 ```
+
+#### Custom Template Resolution
+
+For more complex scenarios, such as loading templates from a file system or a database, you can create a custom subclass of `Root`:
+
+```dart
+class FileSystemRoot extends Root {
+  final String basePath;
+
+  FileSystemRoot(this.basePath);
+
+  @override
+  String? resolve(String path) {
+    final file = File('$basePath/$path');
+    if (file.existsSync()) {
+      return file.readAsStringSync();
+    }
+    return null;
+  }
+}
+
+void main() {
+  final fs = FileSystemRoot('/path/to/templates');
+  final template = Template.fromFile('resume.liquid', fs, data: context);
+  print(template.render());
+}
+```
+
+This approach allows you to implement custom logic for resolving and loading templates from any source, such as a file system, database, or network resource.
+
+The `render` tag uses this resolution mechanism to include and render other templates, allowing for modular and reusable template structures.
+
+### Custom Tags and Filters
+
+Liquify allows you to create custom tags and filters. For detailed examples, please refer to the [example directory](https://github.com/kingwill101/liquify/tree/main/example) in the repository.
 
 ## API Documentation
 
