@@ -24,7 +24,7 @@ void basicTemplateRendering() {
       'Hello, {{ name | upcase }}! Your items are: {% for item in items %}{{ item }}{% unless forloop.last %}, {% endunless %}{% endfor %}.',
       data: data);
 
-  print(result);
+  print(result.render());
   // Output: Hello, ALICE! Your items are: apple, banana, cherry.
 }
 
@@ -37,7 +37,7 @@ void customTagExample() {
 
   // Use the custom tag
   final result = Template.parse('{% reverse %}Hello, World!{% endreverse %}');
-  print(result);
+  print(result.render());
   // Output: !dlroW ,olleH
 }
 
@@ -53,7 +53,7 @@ void customFilterExample() {
   // Use the custom filter
   final result = Template.parse('{{ price | multiply: 1.1 | round }}',
       data: {'price': 100});
-  print(result);
+  print(result.render());
   // Output: 110
 }
 

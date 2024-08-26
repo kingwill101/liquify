@@ -3,7 +3,6 @@ import 'package:liquify/src/context.dart';
 import 'package:liquify/src/fs.dart';
 import 'package:liquify/src/evaluator.dart';
 
-
 class Template {
   final String _templateContent;
   final Evaluator _evaluator;
@@ -13,7 +12,8 @@ class Template {
   /// [templateName] is the name or path of the template to be rendered.
   /// [root] is the Root object used for resolving templates.
   /// [data] is an optional map of variables to be used in the template evaluation.
-  Template.fromFile(String templateName, Root root, {Map<String, dynamic> data = const {}})
+  Template.fromFile(String templateName, Root root,
+      {Map<String, dynamic> data = const {}})
       : _templateContent = root.resolve(templateName).content,
         _evaluator = Evaluator(Environment(data)..setRoot(root));
 
@@ -21,7 +21,8 @@ class Template {
   ///
   /// [input] is the string content of the template.
   /// [data] is an optional map of variables to be used in the template evaluation.
-  Template.parse(String input, {Map<String, dynamic> data = const {}, Evaluator? evaluator})
+  Template.parse(String input,
+      {Map<String, dynamic> data = const {}, Evaluator? evaluator})
       : _templateContent = input,
         _evaluator = evaluator ?? Evaluator(Environment(data));
 

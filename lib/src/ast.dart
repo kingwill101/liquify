@@ -149,7 +149,6 @@ class Literal extends ASTNode {
                 ? true
                 : false,
         LiteralType.array => _value as List,
-        // TODO: Handle this case.
         LiteralType.nil => null,
         LiteralType.empty => Empty(),
       };
