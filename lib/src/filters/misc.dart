@@ -1,6 +1,8 @@
 import 'package:liquify/src/filter_registry.dart';
 import 'dart:convert';
 
+import 'package:liquify/src/filters/module.dart';
+
 /// Returns the input value if it's not falsy, otherwise returns the default value.
 ///
 /// Arguments:
@@ -140,11 +142,14 @@ bool isFalsy(dynamic value) {
       (value is Iterable && value.isEmpty);
 }
 
-final Map<String, FilterFunction> filters = {
-  'default': defaultFilter,
-  'json': json,
-  'jsonify': json, // Alias for 'json'
-  'inspect': inspect,
-  'to_integer': toInteger,
-  'raw': raw,
-};
+class MiscModule extends Module {
+  @override
+  void register() {
+    filters['default'] = defaultFilter;
+    filters['json'] = json;
+    filters['jsonify'] = json; // Alias for 'json'
+    filters['inspect'] = inspect;
+    filters['to_integer'] = toInteger;
+    filters['raw'] = raw;
+  }
+}

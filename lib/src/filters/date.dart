@@ -1,3 +1,4 @@
+import 'package:liquify/src/filters/module.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/intl.dart';
@@ -159,11 +160,13 @@ String _getOrdinalDay(int day) {
   }
 }
 
-// Map of filter names to their corresponding functions
-Map<String, FilterFunction> filters = {
-  'date': date,
-  'date_to_xmlschema': dateToXmlschema,
-  'date_to_rfc822': dateToRfc822,
-  'date_to_string': dateToString,
-  'date_to_long_string': dateToLongString,
-};
+class DateModule extends Module {
+  @override
+  void register() {
+    filters['date'] = date;
+    filters['date_to_xmlschema'] = dateToXmlschema;
+    filters['date_to_rfc822'] = dateToRfc822;
+    filters['date_to_string'] = dateToString;
+    filters['date_to_long_string'] = dateToLongString;
+  }
+}

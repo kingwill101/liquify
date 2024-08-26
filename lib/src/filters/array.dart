@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/filters/module.dart';
 
 /// Converts the input value to uppercase.
 ///
@@ -175,19 +175,21 @@ dynamic slice(dynamic value, List<dynamic> arguments,
   }
 }
 
-// Filter registry
-final Map<String, FilterFunction> filters = {
-  'upper': upper,
-  'lower': lower,
-  'length': length,
-  'join': join,
-  'first': first,
-  'last': last,
-  'reverse': reverse,
-  'size': size,
-  'sort': sort,
-  'map': map,
-  'where': where,
-  'uniq': uniq,
-  'slice': slice,
-};
+class ArrayModule extends Module {
+  @override
+  void register() {
+    filters['upper'] = upper;
+    filters['lower'] = lower;
+    filters['length'] = length;
+    filters['join'] = join;
+    filters['first'] = first;
+    filters['last'] = last;
+    filters['reverse'] = reverse;
+    filters['size'] = size;
+    filters['sort'] = sort;
+    filters['map'] = map;
+    filters['where'] = where;
+    filters['uniq'] = uniq;
+    filters['slice'] = slice;
+  }
+}

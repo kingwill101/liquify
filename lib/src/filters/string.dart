@@ -1,4 +1,5 @@
 import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/filters/module.dart';
 
 /// Appends a string to the end of another string.
 ///
@@ -408,27 +409,17 @@ FilterFunction arrayToSentenceString = (dynamic value, List<dynamic> arguments,
   }
 };
 
-/// A map of all string filters, keyed by their names.
-final Map<String, FilterFunction> filters = {
-  'append': append,
-  'prepend': prepend,
-  'lstrip': lstrip,
-  'downcase': downcase,
-  'upcase': upcase,
-  'remove': remove,
-  'remove_first': removeFirst,
-  'remove_last': removeLast,
-  'rstrip': rstrip,
-  'split': split,
-  'strip': strip,
-  'strip_newlines': stripNewlines,
-  'capitalize': capitalize,
-  'replace': replace,
-  'replace_first': replaceFirst,
-  'replace_last': replaceLast,
-  'truncate': truncate,
-  'truncatewords': truncatewords,
-  'normalize_whitespace': normalizeWhitespace,
-  'number_of_words': numberOfWords,
-  'array_to_sentence_string': arrayToSentenceString,
-};
+class StringModule extends Module {
+  @override
+  void register() {
+    filters['capitalize'] = capitalize;
+    filters['replace'] = replace;
+    filters['replace_first'] = replaceFirst;
+    filters['replace_last'] = replaceLast;
+    filters['truncate'] = truncate;
+    filters['truncatewords'] = truncatewords;
+    filters['normalize_whitespace'] = normalizeWhitespace;
+    filters['number_of_words'] = numberOfWords;
+    filters['array_to_sentence_string'] = arrayToSentenceString;
+  }
+}

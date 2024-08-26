@@ -1,4 +1,5 @@
 import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/filters/module.dart';
 
 /// Converts any value to a string, returning an empty string for null values.
 ///
@@ -178,11 +179,13 @@ String removeAccents(String str) {
       .replaceAll('Þ', 'TH');
 }
 
-/// A map of URL-related filters for easy reference.
-final Map<String, FilterFunction> filters = {
-  'url_decode': urlDecode,
-  'url_encode': urlEncode,
-  'cgi_escape': cgiEscape,
-  'uri_escape': uriEscape,
-  'slugify': slugify,
-};
+class UrlModule extends Module {
+  @override
+  void register() {
+    filters['url_decode'] = urlDecode;
+    filters['url_encode'] = urlEncode;
+    filters['cgi_escape'] = cgiEscape;
+    filters['uri_escape'] = uriEscape;
+    filters['slugify'] = slugify;
+  }
+}

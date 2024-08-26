@@ -1,6 +1,8 @@
 import 'package:liquify/src/filter_registry.dart';
 import 'dart:math' as math;
 
+import 'package:liquify/src/filters/module.dart';
+
 /// Returns the absolute value of a number.
 ///
 /// [value]: The number to process.
@@ -190,17 +192,19 @@ FilterFunction plus = (dynamic value, List<dynamic> arguments,
   return (value as num) + (arguments[0] as num);
 };
 
-/// A map of all math filters, keyed by their names.
-final Map<String, FilterFunction> filters = {
-  'abs': abs,
-  'at_least': atLeast,
-  'at_most': atMost,
-  'ceil': ceil,
-  'divided_by': dividedBy,
-  'floor': floor,
-  'minus': minus,
-  'modulo': modulo,
-  'times': times,
-  'round': round,
-  'plus': plus,
-};
+class MathModule extends Module {
+  @override
+  void register() {
+    filters['abs'] = abs;
+    filters['at_least'] = atLeast;
+    filters['at_most'] = atMost;
+    filters['ceil'] = ceil;
+    filters['divided_by'] = dividedBy;
+    filters['floor'] = floor;
+    filters['minus'] = minus;
+    filters['modulo'] = modulo;
+    filters['times'] = times;
+    filters['round'] = round;
+    filters['plus'] = plus;
+  }
+}

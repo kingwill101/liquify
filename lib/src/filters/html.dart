@@ -1,4 +1,5 @@
 import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/filters/module.dart';
 
 final Map<String, String> _escapeMap = {
   '&': '&amp;',
@@ -116,12 +117,15 @@ FilterFunction stripNewlines = (dynamic value, List<dynamic> arguments,
 };
 
 /// Map of HTML filter names to their corresponding functions.
-final Map<String, FilterFunction> filters = {
-  'escape': escape,
-  'xml_escape': xmlEscape,
-  'unescape': unescape,
-  'escape_once': escapeOnce,
-  'newline_to_br': newlineToBr,
-  'strip_html': stripHtml,
-  'strip_newlines': stripNewlines,
-};
+class HtmlModule extends Module {
+  @override
+  void register() {
+    filters['escape'] = escape;
+    filters['xml_escape'] = xmlEscape;
+    filters['unescape'] = unescape;
+    filters['escape_once'] = escapeOnce;
+    filters['newline_to_br'] = newlineToBr;
+    filters['strip_html'] = stripHtml;
+    filters['strip_newlines'] = stripNewlines;
+  }
+}

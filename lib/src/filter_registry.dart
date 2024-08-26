@@ -1,4 +1,5 @@
-import 'package:liquify/src/filters/filters.dart' as filters;
+import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/filters/filters.dart';
 
 /// Represents a function that can be used as a filter in the Liquid template engine.
 ///
@@ -11,7 +12,16 @@ typedef FilterFunction = dynamic Function(dynamic value,
 /// A registry for storing and retrieving filter functions.
 class FilterRegistry {
   /// A map of filter names to their corresponding filter functions.
-  static final Map<String, FilterFunction> _filters = filters.builtInFilters;
+  static final Map<String, FilterFunction> _filters = {};
+  static final Map<String, Module> modules = {
+    'array': ArrayModule(),
+    'date': DateModule(),
+    'html': HtmlModule(),
+    'math': MathModule(),
+    'misc': MiscModule(),
+    'string': StringModule(),
+    'url': UrlModule(),
+  };
 
   /// Registers a new filter function with the given name.
   ///
@@ -27,6 +37,30 @@ class FilterRegistry {
   ///
   /// Returns the filter function if found, or null if not found.
   static FilterFunction? getFilter(String name) {
-    return _filters[name];
+    if (_filters.containsKey(name)) {
+      return _filters[name];
+    }
+    // search in modules first
+    for (var module in modules.values) {
+      if (module.filters.containsKey(name)) {
+        return module.filters[name];
+      }
+    }
+    return null;
+  }
+
+  /// Registers a new module with the given name.
+  ///
+  /// [name] The name of the module to be registered.
+  /// [module] The module to be associated with the given name.
+  static void registerModule(String name, Module module) {
+    module.register();
+    modules[name] = module;
+  }
+
+  static void initModules() {
+    for (var module in modules.values) {
+      module.register();
+    }
   }
 }
