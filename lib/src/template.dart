@@ -1,23 +1,43 @@
 import 'package:liquify/parser.dart' as parser;
 import 'package:liquify/src/context.dart';
+import 'package:liquify/src/fs.dart';
+import 'package:liquify/src/evaluator.dart';
 
-/// The Template class provides static methods for parsing and rendering Liquid templates.
+
 class Template {
-  /// Parses and evaluates a Liquid template string.
+  final String _templateContent;
+  final Evaluator _evaluator;
+
+  /// Creates a new Template instance from a file.
   ///
-  /// [input] is the Liquid template string to be parsed and evaluated.
+  /// [templateName] is the name or path of the template to be rendered.
+  /// [root] is the Root object used for resolving templates.
   /// [data] is an optional map of variables to be used in the template evaluation.
+  Template.fromFile(String templateName, Root root, {Map<String, dynamic> data = const {}})
+      : _templateContent = root.resolve(templateName).content,
+        _evaluator = Evaluator(Environment(data)..setRoot(root));
+
+  /// Creates a new Template instance from a string.
+  ///
+  /// [input] is the string content of the template.
+  /// [data] is an optional map of variables to be used in the template evaluation.
+  Template.parse(String input, {Map<String, dynamic> data = const {}, Evaluator? evaluator})
+      : _templateContent = input,
+        _evaluator = evaluator ?? Evaluator(Environment(data));
+
+  /// Renders the template with the current context.
   ///
   /// Returns the rendered output as a String.
-  static String parse(
-    String input, {
-    Map<String, dynamic> data = const {},
-    parser.Evaluator? evaluator,
-  }) {
-    parser.registerBuiltIns();
-    final parsed = parser.parseInput(input);
-    evaluator ??= parser.Evaluator(Environment(data));
-    evaluator.evaluateNodes(parsed);
-    return evaluator.buffer.toString();
+  String render() {
+    final parsed = parser.parseInput(_templateContent);
+    _evaluator.evaluateNodes(parsed);
+    return _evaluator.buffer.toString();
+  }
+
+  /// Updates the template context with new data.
+  ///
+  /// [newData] is a map of variables to be merged into the existing context.
+  void updateContext(Map<String, dynamic> newData) {
+    _evaluator.context.merge(newData);
   }
 }

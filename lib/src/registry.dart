@@ -41,12 +41,6 @@ class TagRegistry {
     return null;
   }
 
-  /// Checks if a tag with the given name has an end tag.
-  static bool hasEndTag(String name) {
-    final tag = _tags[name]?.call([], []);
-    return tag?.hasEndTag ?? false;
-  }
-
   /// Returns a list of all registered tag names.
   static get tags => _tags.keys.toList();
 }

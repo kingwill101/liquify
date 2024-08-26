@@ -46,6 +46,21 @@ abstract class Root {
   Source resolve(String relPath);
 }
 
+/// Represents a source path mapped to string content
+class MapRoot implements Root {
+  final Map<String, String> _templates;
+
+  MapRoot(this._templates);
+
+  @override
+  Source resolve(String path) {
+    if (_templates.containsKey(path)) {
+      return Source(null, _templates[path]!, this);
+    }
+    return Source(null, '', this);
+  }
+}
+
 /// Represents a source file or content, with an optional file URI and root directory.
 ///
 /// The `Source` class encapsulates the content of a file, along with its optional

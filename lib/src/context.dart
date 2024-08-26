@@ -146,4 +146,30 @@ class Environment {
     _variableStack.clear();
     _variableStack.add({});
   }
+
+  /// Merges new data into the current scope.
+  ///
+  /// This method takes a map of new data and merges it into the current scope.
+  /// If a variable with the same name already exists in the current scope,
+  /// its value will be overwritten with the new value.
+  ///
+  /// @param newData A map containing the new data to be merged.
+  void merge(Map<String, dynamic> newData) {
+    newData.forEach((key, value) {
+      setVariable(key, value);
+    });
+  }
+
+  /// Returns a map containing all variables in the current context.
+  ///
+  /// This method iterates through the variable stack and collects all the
+  /// variables defined in the current context, merging them into a single map.
+  /// The resulting map contains all the variables that are currently in scope.
+  Map<String, dynamic> all() {
+    Map<String, dynamic> result = {};
+    for (var scope in _variableStack) {
+      result.addAll(scope);
+    }
+    return result;
+  }
 }
