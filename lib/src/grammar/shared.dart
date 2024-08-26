@@ -98,7 +98,11 @@ Parser identifier() {
 }
 
 Parser literal() {
-  return ref0(booleanLiteral) | ref0(numericLiteral) | ref0(stringLiteral);
+  return ref0(nilLiteral) |
+      ref0(booleanLiteral) |
+      ref0(numericLiteral) |
+      ref0(emptyLiteral) |
+      ref0(stringLiteral);
 }
 
 Parser numericLiteral() {
@@ -125,6 +129,18 @@ Parser stringLiteral() {
 Parser booleanLiteral() {
   return (string('true') | string('false')).map((value) {
     return Literal(value == 'true', LiteralType.boolean);
+  });
+}
+
+Parser nilLiteral() {
+  return (string('nil')).map((value) {
+    return Literal(null, LiteralType.nil);
+  });
+}
+
+Parser emptyLiteral() {
+  return (string('empty')).map((value) {
+    return Literal('empty', LiteralType.empty);
   });
 }
 

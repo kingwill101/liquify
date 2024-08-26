@@ -115,6 +115,23 @@ class Identifier extends ASTNode {
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitIdentifier(this);
 }
 
+class Empty {
+  @override
+  bool operator ==(Object other) {
+    if (other is String) {
+      return other.isEmpty;
+    } else if (other is List) {
+      return other.isEmpty;
+    } else if (other is Empty) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => 0;
+}
+
 class Literal extends ASTNode {
   final dynamic _value;
   final LiteralType type;
@@ -132,6 +149,9 @@ class Literal extends ASTNode {
                 ? true
                 : false,
         LiteralType.array => _value as List,
+        // TODO: Handle this case.
+        LiteralType.nil => null,
+        LiteralType.empty => Empty(),
       };
 
   @override
@@ -145,7 +165,7 @@ class Literal extends ASTNode {
       };
 }
 
-enum LiteralType { string, number, boolean, array }
+enum LiteralType { string, number, boolean, array, nil, empty }
 
 class TextNode extends ASTNode {
   final String text;

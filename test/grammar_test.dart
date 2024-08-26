@@ -31,7 +31,16 @@ void main() {
         expect(tag.content.length, 1);
       });
     });
-
+    test('Parses empty literal', () {
+      testParser('{% assign my_variable = empty %}', (document) {
+        expect(document.children.length, 1);
+        final assignTag = document.children[0] as Tag;
+        expect(assignTag.name, 'assign');
+        final assignment = assignTag.content[0] as Assignment;
+        expect(assignment.value, isA<Literal>());
+        expect((assignment.value as Literal).value, Empty());
+      });
+    });
     test('Parses complex tags', () {
       testParser('''
 {% if user.logged_in %}

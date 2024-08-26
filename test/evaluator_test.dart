@@ -20,6 +20,24 @@ void main() {
       expect(evaluator.evaluate(Literal('hello', LiteralType.string)), 'hello');
     });
 
+    test('evaluates empty literals on strings', () {
+      expect(evaluator.evaluate(Literal('', LiteralType.string)), '');
+      expect(evaluator.evaluate(Literal('', LiteralType.string)).isEmpty, true);
+      expect(
+          evaluator.evaluate(Literal('not empty', LiteralType.string)).isEmpty,
+          false);
+    });
+
+    test('evaluates empty literals on arrays', () {
+      expect(evaluator.evaluate(Literal([], LiteralType.array)), []);
+      expect(evaluator.evaluate(Literal([], LiteralType.array)).isEmpty, true);
+      expect(
+          evaluator
+              .evaluate(Literal([1, 2, 3, 4, 5], LiteralType.array))
+              .isEmpty,
+          false);
+    });
+
     test('evaluates assignment with filtered expression', () {
       final assignment = Assignment(
         Identifier('uppercased_name'),
