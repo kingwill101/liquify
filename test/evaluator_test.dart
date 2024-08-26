@@ -49,6 +49,50 @@ void main() {
       expect(evaluator.evaluate(Identifier('uppercased_name')), 'John');
     });
 
+
+      test('evaluates assignment with literal value', () {
+        final assignment = Assignment(
+          Identifier('x'),
+          Literal(42, LiteralType.number),
+        );
+
+        evaluator.evaluate(assignment);
+        expect(evaluator.evaluate(Identifier('x')), 42);
+      });
+
+      test('evaluates assignment with identifier value', () {
+        // First, set up a variable in the context
+        evaluator.evaluate(Assignment(
+          Identifier('y'),
+          Literal(100, LiteralType.number),
+        ));
+
+        // Now, create an assignment that uses this identifier
+        final assignment = Assignment(
+          Identifier('z'),
+          Identifier('y'),
+        );
+
+        evaluator.evaluate(assignment);
+        expect(evaluator.evaluate(Identifier('z')), 100);
+      });
+
+      test('evaluates assignment with complex expression', () {
+        final complexAssignment = Assignment(
+          Identifier('result'),
+          BinaryOperation(
+            Literal(5, LiteralType.number),
+            '+',
+            Literal(3, LiteralType.number),
+          ),
+        );
+
+        evaluator.evaluate(complexAssignment);
+        expect(evaluator.evaluate(Identifier('result')), 8);
+
+        });
+   
+
     test('evaluates binary operations', () {
       final addition = BinaryOperation(
           Literal(2, LiteralType.number), '+', Literal(3, LiteralType.number));
@@ -138,4 +182,6 @@ void main() {
       expect(evaluator.evaluate(filteredExpression), 'hello');
     });
   });
-}
+
+
+ }

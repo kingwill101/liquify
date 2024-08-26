@@ -1,3 +1,7 @@
+## 0.6.3
+
+- filtered assignment fix
+
 ## 0.6.2
 
 - group filters into modules 

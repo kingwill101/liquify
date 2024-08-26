@@ -2,7 +2,7 @@ name: liquify
 description: >
   A powerful and extensible Liquid template engine for Dart.
   Supports full Liquid syntax, custom tags and filters, and high-performance parsing and rendering.
-version: 0.6.2
+version: 0.6.3
 repository: https://github.com/kingwill101/liquify
 
 topics:
