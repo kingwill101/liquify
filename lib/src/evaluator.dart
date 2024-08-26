@@ -239,8 +239,13 @@ class Evaluator implements ASTVisitor<dynamic> {
 
     if (node.expression is Assignment) {
       (node.expression as Assignment).value.accept(this);
-      value = context.getVariable(
-          ((node.expression as Assignment).value as Identifier).name);
+
+      if ((node.expression as Assignment).value is Literal) {
+        value = ((node.expression as Assignment).value as Literal).value;
+      } else {
+        value = context.getVariable(
+            ((node.expression as Assignment).value as Identifier).name);
+      }
     } else {
       value = node.expression.accept(this);
     }
