@@ -23,7 +23,6 @@
 ///    - [TagRegistry]: Central management system for Liquid template tags
 ///      - [TagRegistry.register]: Register new custom tags
 ///      - [TagRegistry.createTag]: Create instances of registered tags
-///      - [TagRegistry.hasEndTag]: Check if a tag has an end tag
 ///    - [registerBuiltIns]: Function to register all built-in Liquid tags
 ///
 /// 4. AST (Abstract Syntax Tree) (in `src/ast.dart`):

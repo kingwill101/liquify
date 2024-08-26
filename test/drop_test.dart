@@ -18,20 +18,23 @@ void main() {
 
   group('Drop', () {
     test('properties', () async {
-      expect(Template.parse('{{ name.lastName }}', evaluator: evaluator),
+      expect(
+          Template.parse('{{ name.lastName }}', evaluator: evaluator).render(),
           equals('Jones'));
     });
 
     test('nesting', () async {
       var template =
-          Template.parse('{{ name.address.country }}', evaluator: evaluator);
+          Template.parse('{{ name.address.country }}', evaluator: evaluator)
+              .render();
       expect(template, equals('U.S.A'));
     });
 
     test('invokable', () async {
       expect(
           Template.parse('{{ name.first }} {{ name.last }}',
-              evaluator: evaluator),
+                  evaluator: evaluator)
+              .render(),
           equals('John Jones'));
     });
   });
