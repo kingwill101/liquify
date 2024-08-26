@@ -1,5 +1,5 @@
 import 'package:liquify/src/grammar/shared.dart';
-import 'package:liquify/src/registry.dart';
+import 'package:liquify/src/tag_registry.dart';
 
 extension TagExtension on LiquidGrammar {
   Parser elseBlock() => seq2(

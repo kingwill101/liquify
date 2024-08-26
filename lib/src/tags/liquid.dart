@@ -1,4 +1,4 @@
-import 'package:liquify/src/registry.dart';
+import 'package:liquify/src/tag_registry.dart';
 import 'package:liquify/src/tag.dart';
 
 class LiquidTag extends AbstractTag with CustomTagParser {

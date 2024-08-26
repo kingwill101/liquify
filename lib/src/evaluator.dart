@@ -1,7 +1,7 @@
 import 'package:liquify/parser.dart' show parseInput;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
-import 'package:liquify/src/registry.dart';
+import 'package:liquify/src/tag_registry.dart';
 
 import 'ast.dart';
 import 'buffer.dart';

@@ -1,3 +1,7 @@
+## 0.6.2
+
+- group filters into modules 
+
 ## 0.6.0
 
 - empty type

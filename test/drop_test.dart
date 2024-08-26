@@ -1,5 +1,6 @@
 import 'package:liquify/liquify.dart';
 import 'package:liquify/parser.dart';
+import 'package:liquify/src/registry.dart';
 import 'package:test/test.dart';
 
 void main() {

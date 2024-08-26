@@ -1,7 +1,7 @@
-import 'package:liquify/liquify.dart';
 import 'package:liquify/src/ast.dart';
 export 'package:liquify/src/ast.dart';
 import 'package:liquify/src/grammar/grammar.dart';
+import 'package:liquify/src/registry.dart';
 import 'package:petitparser/petitparser.dart';
 export 'package:petitparser/petitparser.dart';
 

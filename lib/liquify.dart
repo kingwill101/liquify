@@ -44,5 +44,6 @@ library liquify;
 export 'package:liquify/src/fs.dart';
 export 'package:liquify/src/template.dart';
 export 'package:liquify/src/drop.dart';
-export 'package:liquify/src/registry.dart';
+export 'package:liquify/src/tag_registry.dart';
 export 'package:liquify/src/filter_registry.dart';
+export 'package:liquify/src/filters/module.dart';

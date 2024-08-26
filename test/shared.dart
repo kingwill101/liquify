@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:liquify/parser.dart';
 import 'package:liquify/src/grammar/grammar.dart';
+import 'package:liquify/src/registry.dart';
 import 'package:liquify/src/util.dart';
 import 'package:petitparser/debug.dart';
 import 'package:test/test.dart';
