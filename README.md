@@ -19,7 +19,7 @@ Add Liquify to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  liquify: ^0.6.3
+  liquify: ^0.6.4
 ```
 
 Or, for the latest development version:
@@ -52,7 +52,7 @@ void main() {
     data: data
   );
 
-  print(result);
+  print(result.render());
   // Output: Hello, ALICE! Your items are: apple, banana, cherry.
 }
 ```

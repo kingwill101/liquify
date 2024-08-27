@@ -1,40 +1,26 @@
 import 'package:liquify/liquify.dart';
-import 'package:liquify/parser.dart';
-import 'package:liquify/src/registry.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late Evaluator evaluator;
-
-  setUp(() {
-    registerBuiltIns();
-    evaluator = Evaluator(Environment());
-    evaluator.context
-        .setVariable('name', PersonDrop(firstName: "John", lastName: "Jones"));
-  });
-
-  tearDown(() {
-    evaluator.context.clear();
-  });
+  Map<String, dynamic> data = {
+    'name': PersonDrop(firstName: "John", lastName: "Jones"),
+  };
 
   group('Drop', () {
     test('properties', () async {
-      expect(
-          Template.parse('{{ name.lastName }}', evaluator: evaluator).render(),
+      expect(Template.parse('{{ name.lastName }}', data: data).render(),
           equals('Jones'));
     });
 
     test('nesting', () async {
       var template =
-          Template.parse('{{ name.address.country }}', evaluator: evaluator)
-              .render();
+          Template.parse('{{ name.address.country }}', data: data).render();
       expect(template, equals('U.S.A'));
     });
 
     test('invokable', () async {
       expect(
-          Template.parse('{{ name.first }} {{ name.last }}',
-                  evaluator: evaluator)
+          Template.parse('{{ name.first }} {{ name.last }}', data: data)
               .render(),
           equals('John Jones'));
     });

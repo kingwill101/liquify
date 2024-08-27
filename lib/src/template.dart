@@ -21,18 +21,28 @@ class Template {
   ///
   /// [input] is the string content of the template.
   /// [data] is an optional map of variables to be used in the template evaluation.
-  Template.parse(String input,
-      {Map<String, dynamic> data = const {}, Evaluator? evaluator})
-      : _templateContent = input,
-        _evaluator = evaluator ?? Evaluator(Environment(data));
+  /// [root] is an optional Root object used for resolving templates.
+  Template.parse(
+    String input, {
+    Map<String, dynamic> data = const {},
+    Root? root,
+  })  : _templateContent = input,
+        _evaluator = Evaluator(Environment(data)..setRoot(root));
 
   /// Renders the template with the current context.
   ///
   /// Returns the rendered output as a String.
-  String render() {
+  ///
+  /// [clearBuffer] determines whether to clear the evaluator's buffer after rendering.
+  /// If set to true (default), the buffer is cleared. If false, the buffer retains its content.
+  String render({bool clearBuffer = true}) {
     final parsed = parser.parseInput(_templateContent);
     _evaluator.evaluateNodes(parsed);
-    return _evaluator.buffer.toString();
+    final result = _evaluator.buffer.toString();
+    if (clearBuffer) {
+      _evaluator.buffer.clear();
+    }
+    return result;
   }
 
   /// Updates the template context with new data.
