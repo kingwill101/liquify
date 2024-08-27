@@ -179,4 +179,49 @@ void main() {
       expect(evaluator.evaluate(filteredExpression), 'hello');
     });
   });
+
+  group('Context data evaluation', () {
+    test('evaluates existing context data', () {
+      evaluator.context.setVariable('user', {'name': 'Alice', 'age': 30});
+      expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['name'])),
+          'Alice');
+      expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['age'])), 30);
+    });
+
+    test('returns null for missing top-level context data', () {
+      expect(evaluator.evaluate(Identifier('nonexistent')), null);
+    });
+
+    test('returns null for missing nested context data', () {
+      evaluator.context.setVariable('user', {'name': 'Bob'});
+      expect(
+          evaluator.evaluate(MemberAccess(Identifier('user'), ['age'])), null);
+    });
+
+    test('handles deep nested context data', () {
+      evaluator.context.setVariable('company', {
+        'departments': {
+          'engineering': {
+            'employees': [
+              {'name': 'Charlie', 'role': 'Developer'}
+            ]
+          }
+        }
+      });
+      expect(
+          evaluator.evaluate(MemberAccess(Identifier('company'),
+              ['departments', 'engineering', 'employees', '0', 'name'])),
+          'Charlie');
+    });
+
+    test('returns null for partially missing deep nested context data', () {
+      evaluator.context.setVariable('company', {
+        'departments': {'engineering': {}}
+      });
+      expect(
+          evaluator.evaluate(MemberAccess(Identifier('company'),
+              ['departments', 'engineering', 'employees', '0', 'name'])),
+          null);
+    });
+  });
 }

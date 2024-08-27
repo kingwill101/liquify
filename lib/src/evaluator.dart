@@ -262,14 +262,18 @@ class Evaluator implements ASTVisitor<dynamic> {
     var object = node.object;
     final objName = (object as Identifier).name;
 
-    if (context.getVariable(objName) == null) return null;
-
     var objectVal = context.getVariable(objName);
+
+    if (objectVal == null) return null;
 
     for (final member in node.members) {
       if (objectVal is Drop) {
         objectVal = objectVal(Symbol(member));
-      } else if (objectVal is Map && objectVal.containsKey(member)) {
+      } else if (objectVal is Map) {
+        if (!objectVal.containsKey(member)) {
+          return null;
+        }
+
         objectVal = objectVal[member];
       } else if (objectVal is List && int.tryParse(member) != null) {
         final index = int.parse(member);

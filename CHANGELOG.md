@@ -1,3 +1,7 @@
+## 0.6.5
+
+- member access fix
+  
 ## 0.6.3
 
 - filtered assignment fix
