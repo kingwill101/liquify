@@ -34,7 +34,7 @@ Then run `dart pub get` or `flutter pub get` to install the package.
 
 ## Usage
 
-For detailed usage examples, please refer to the [example directory](https://github.com/kingwill101/liquify/tree/main/example) in the repository. Here are some basic usage scenarios:
+For detailed usage examples, please refer to the [example directory](example) in the repository. Here are some basic usage scenarios:
 
 ### Basic Template Rendering
 
