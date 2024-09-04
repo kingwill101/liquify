@@ -222,6 +222,18 @@ void main() {
       });
     });
 
+    test('Parses another variable expression with dash character', () {
+      testParser('{{ user.first-name }}', (document) {
+        expect(document.children.length, 1);
+
+        final variable = document.children[0] as Variable;
+        expect(variable.name, 'user');
+        final memberAccess = variable.expression as MemberAccess;
+        expect((memberAccess.object as Identifier).name, 'user');
+        expect(memberAccess.members, ['first-name']);
+      });
+    });
+
     test('Parses member expression with more depth', () {
       testParser('{{- user.name.first -}}', (document) {
         expect(document.children.length, 1);
