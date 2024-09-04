@@ -182,10 +182,12 @@ void main() {
 
   group('Context data evaluation', () {
     test('evaluates existing context data', () {
-      evaluator.context.setVariable('user', {'name': 'Alice', 'age': 30, 'last-name': 'Doe'});
+      evaluator.context.setVariable(
+          'user', {'name': 'Alice', 'age': 30, 'last-name': 'Doe'});
       expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['name'])),
           'Alice');
-      expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['last-name'])),
+      expect(
+          evaluator.evaluate(MemberAccess(Identifier('user'), ['last-name'])),
           'Doe');
       expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['age'])), 30);
     });
