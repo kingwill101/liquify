@@ -91,7 +91,7 @@ Parser namedArgument() {
 }
 
 Parser identifier() {
-  return (letter() & word().star())
+  return (letter() & (word() | char('-')).star())
       .flatten()
       .where((name) => !['and', 'or', 'not', 'contains'].contains(name))
       .map((name) => Identifier(name));
