@@ -1,3 +1,7 @@
+## 0.6.6
+
+- allow identifiers with hyphens
+
 ## 0.6.5
 
 - member access fix
