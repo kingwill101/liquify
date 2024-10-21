@@ -52,7 +52,7 @@ extension FromBlockExtension on LiquidGrammar {
         ref0(forTag),
         ref0(element).starLazy(endForTag()),
         ref0(endForTag),
-      ).map((values) {
+      ).labeled('for block').map((values) {
         final forTag = values.$1;
         forTag.body = values.$2.cast<ASTNode>();
         return forTag as ASTNode;
