@@ -12,7 +12,6 @@ class IfTag extends AbstractTag {
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-
     conditionMet = isTruthy(evaluator.evaluate(content[0]));
 
     final elseBlock = body.where((ASTNode n) {

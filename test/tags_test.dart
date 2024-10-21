@@ -760,8 +760,7 @@ void main() {
       ''', (document) {
         evaluator.context.setVariable('variable', true);
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(),
-            contains('truthy'));
+        expect(evaluator.buffer.toString(), contains('truthy'));
       });
     });
 
@@ -775,8 +774,7 @@ void main() {
 
       ''', (document) {
         evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(),
-            contains('not truthy'));
+        expect(evaluator.buffer.toString(), contains('not truthy'));
       });
     });
   });
