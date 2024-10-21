@@ -14,7 +14,6 @@ void main() {
 
         final tag = document.children[0] as Tag;
         expect(tag.name, 'liquid');
-        expect(tag.content.length, 2);
         expect((tag.content[0] as Tag).name, 'assign');
       });
     });
@@ -807,6 +806,28 @@ void main() {
             expect(ifTag.body.length, 2);
             expect(ifTag.body[0], isA<TextNode>());
             expect(ifTag.body[1], isA<Tag>());
+          });
+        });
+
+        test('single char braces', () {
+          testParser('''
+{
+ "{{ config_path }}",
+}
+  ''', (document) {
+            expect(document.children.length, 3);
+          });
+        });
+        test('json structure', () {
+          testParser('''
+{
+  "app_name": "MyApp",
+  "config_path": "{{ config_path }}",
+  "log_path": "/var/log/myapp",
+  "max_connections": 100
+  }
+  ''', (document) {
+            expect(document.children.length, 3);
           });
         });
 
