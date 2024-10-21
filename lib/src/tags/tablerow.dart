@@ -212,7 +212,7 @@ class TableRowTag extends AbstractTag with CustomTagParser {
 
   @override
   Parser parser() {
-    return (ref0(tableRowTag).trim() &
+    return (ref0(tableRowTag) &
             any().plusLazy(endTableRowTag()) &
             endTableRowTag())
         .map((values) {

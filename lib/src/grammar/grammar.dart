@@ -106,18 +106,17 @@ class LiquidGrammar extends GrammarDefinition {
         return Document(collapsedElements);
       });
 
-  Parser element() =>
-      ref0(ifBlock) |
-      ref0(forBlock) |
-      ref0(caseBlock) |
-      ref0(elseBlock) |
-      ref0(whenBlock) |
-      ref0(breakTag) |
-      ref0(continueTag) |
-      ref0(TagRegistry.customParsers.isNotEmpty
-          ? TagRegistry.customParsers.map((p) => p.parser()).toChoiceParser
-          : epsilon) |
-      ref0(tag) |
-      ref0(variable) |
-      ref0(text);
+  Parser element() => [
+        ref0(ifBlock),
+        ref0(forBlock),
+        ref0(caseBlock),
+        ref0(elseBlock),
+        ref0(whenBlock),
+        ref0(breakTag),
+        ref0(continueTag),
+        ...TagRegistry.customParsers.map((p) => p.parser()),
+        ref0(tag),
+        ref0(variable),
+        ref0(text)
+      ].toChoiceParser();
 }
