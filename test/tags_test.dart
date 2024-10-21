@@ -248,7 +248,7 @@ void main() {
     test('basic row iteration', () {
       testParser('''<table>
 {% tablerow product in collection.products %}
-{{ product.title }}
+{{- product.title }}
 {% endtablerow %}
 </table>''', (document) {
         evaluator.evaluate(document);
@@ -283,7 +283,7 @@ void main() {
     test('with cols attribute', () {
       testParser('''<table>
 {% tablerow product in collection.products cols:2 %}
-{{ product.title }}
+{{- product.title }}
 {% endtablerow %}
 </table>''', (document) {
         evaluator.evaluate(document);
@@ -322,7 +322,7 @@ void main() {
     test('with limit and cols attributes', () {
       testParser('''<table>
 {% tablerow item in (1..6) cols:2 limit:4 %}
-  {{ item }}
+  {{- item }}
 {% endtablerow %}
 </table>''', (document) {
         evaluator.evaluate(document);
@@ -353,7 +353,7 @@ void main() {
     test('with offset and cols attributes', () {
       testParser('''<table>
 {% tablerow item in (1..6) cols:2 offset:3 %}
-    {{ item }}
+    {{- item }}
 {% endtablerow %}
 </table>''', (document) {
         evaluator.evaluate(document);
@@ -382,7 +382,7 @@ void main() {
     test('with limit, offset and cols attributes', () {
       testParser('''<table>
 {% tablerow item in (1..10) cols:3 limit:6 offset:2 %}
-  {{ item }}
+  {{- item }}
 {% endtablerow %}
 </table>''', (document) {
         evaluator.evaluate(document);
@@ -416,9 +416,9 @@ void main() {
 
     test('with range', () {
       testParser('''<table>
-{% assign num = 4 %}
+{% assign num = 4 -%}
 {% tablerow i in (1..num) %}
-  {{ i }}
+  {{- i }}
 {% endtablerow %}
 </table>''', (document) {
         evaluator.evaluate(document);

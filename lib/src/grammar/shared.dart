@@ -33,7 +33,9 @@ List<ASTNode> collapseTextNodes(List<ASTNode> elements) {
   return result;
 }
 
-Parser tagEnd() => string('-%}') | string('%}');
+Parser tagStart() => (string('{%-').trim() | string('{%')).labeled('tagStart');
+
+Parser tagEnd() => (string('-%}').trim() | string('%}')).labeled('tagEnd');
 
 Parser filter() {
   return (char('|').trim() &
@@ -87,9 +89,9 @@ Parser argument() {
   });
 }
 
-Parser varStart() => string('{{-') | string('{{');
+Parser varStart() => (string('{{-').trim() | string('{{')).labeled('varStart');
 
-Parser varEnd() => string('-}}') | string('}}');
+Parser varEnd() => (string('-}}').trim() | string('}}')).labeled('varEnd');
 
 Parser variable() =>
     (varStart() & ref0(expression).trim() & filter().star().trim() & varEnd())
