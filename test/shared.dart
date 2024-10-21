@@ -5,10 +5,17 @@ import 'package:liquify/src/grammar/grammar.dart';
 import 'package:liquify/src/registry.dart';
 import 'package:liquify/src/util.dart';
 import 'package:petitparser/debug.dart';
+import 'package:petitparser/reflection.dart';
 import 'package:test/test.dart';
 
-Result parse(String input, [bool enableTrace = false]) {
+Result parse(String input,
+    {bool enableTrace = false, bool shouldLint = false}) {
   final parser = LiquidGrammar().build();
+
+  if (shouldLint) {
+    print(linter(parser).join('\n\n'));
+  }
+
   if (enableTrace) {
     return trace(parser).parse(input);
   } else {

@@ -1,7 +1,9 @@
 import 'package:liquify/src/ast.dart';
 import 'package:liquify/src/grammar/grammar.dart';
 import 'package:liquify/src/registry.dart';
+import 'package:petitparser/debug.dart';
 import 'package:petitparser/petitparser.dart';
+import 'package:petitparser/reflection.dart';
 
 export 'package:liquify/src/ast.dart';
 export 'package:petitparser/petitparser.dart';
@@ -382,9 +384,28 @@ Parser<Tag> continueTag() =>
 
 Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
 
-List<ASTNode> parseInput(String input) {
+/// Parses the given input string and returns a list of [ASTNode] objects representing the parsed document.
+///
+/// If [enableTrace] is true, the parser will output trace information during parsing.
+/// If [shouldLint] is true, the parser will output lint information for the parsed grammar.
+///
+/// If the parsing is successful, the method returns the list of [ASTNode] objects representing the document.
+/// If the parsing fails, the method prints the error message and the input source, and returns an empty list.
+List<ASTNode> parseInput(String input,
+    {bool enableTrace = false, bool shouldLint = false}) {
   registerBuiltIns();
-  final result = LiquidGrammar().build().parse(input);
+  final parser = LiquidGrammar().build();
+
+  if (shouldLint) {
+    print(linter(parser).join('\n\n'));
+  }
+  Result result;
+
+  if (enableTrace) {
+    result = trace(parser).parse(input);
+  } else {
+    result = parser.parse(input);
+  }
 
   if (result is Success) {
     return (result.value as Document).children;
