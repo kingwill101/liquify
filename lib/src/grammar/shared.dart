@@ -5,7 +5,33 @@ import 'package:liquify/src/registry.dart';
 import 'package:petitparser/petitparser.dart';
 export 'package:petitparser/petitparser.dart';
 
-Parser tagStart() => string('{%-') | string('{%');
+List<ASTNode> collapseTextNodes(List<ASTNode> elements) {
+  List<ASTNode> result = [];
+  TextNode? currentTextNode;
+
+  for (var node in elements) {
+    if (node is TextNode) {
+      if (currentTextNode == null) {
+        currentTextNode = node;
+      } else {
+        currentTextNode = TextNode(currentTextNode.text + node.text);
+      }
+    } else {
+      if (currentTextNode != null) {
+        // Add the combined TextNode to the result
+        result.add(currentTextNode);
+        currentTextNode = null;
+      }
+      result.add(node);
+    }
+  }
+
+  if (currentTextNode != null) {
+    result.add(currentTextNode);
+  }
+
+  return result;
+}
 
 Parser tagEnd() => string('-%}') | string('%}');
 

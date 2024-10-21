@@ -101,9 +101,10 @@ class LiquidGrammar extends GrammarDefinition {
   @override
   Parser start() => ref0(document).end();
 
-  Parser document() => ref0(element)
-      .star()
-      .map((elements) => Document(elements.cast<ASTNode>()));
+  Parser<Document> document() => ref0(element).plus().map((elements) {
+        var collapsedElements = collapseTextNodes(elements.cast<ASTNode>());
+        return Document(collapsedElements);
+      });
 
   Parser element() =>
       ref0(ifBlock) |
