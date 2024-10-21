@@ -166,7 +166,13 @@ Parser memberAccess() =>
       return MemberAccess(object, members);
     });
 
-Parser text() => pattern('^{').plus().flatten().map((text) => TextNode(text));
+Parser text() {
+  return ((varStart() | tagStart()).neg() | any())
+      .labeled('text block')
+      .map((text) {
+    return TextNode(text);
+  });
+}
 
 Parser comparisonOperator() =>
     string('==').trim() |
