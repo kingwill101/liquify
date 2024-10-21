@@ -1,7 +1,12 @@
+
 ## 0.7.0
 - fix parse failure for single { character
 - better whitespace control handling
 - optional tracing and linting
+
+## 0.6.6
+
+- allow identifiers with hyphens
 
 ## 0.6.5
 
