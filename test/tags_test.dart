@@ -748,4 +748,36 @@ void main() {
       });
     });
   });
+
+  group('truthy', () {
+    test('variable', () {
+      testParser('''
+{% assign name = "Tobi" %}
+{% if name %}
+  truthy.
+{% endif %}
+
+      ''', (document) {
+        evaluator.context.setVariable('variable', true);
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(),
+            contains('truthy'));
+      });
+    });
+
+    test('variable', () {
+      testParser('''
+{% if false %}
+  falsy.
+{% else %}
+  not truthy 
+{% endif %}
+
+      ''', (document) {
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(),
+            contains('not truthy'));
+      });
+    });
+  });
 }

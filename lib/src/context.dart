@@ -18,11 +18,10 @@ class Environment {
   /// Parameters:
   /// - `data`: An optional map of initial variables and their values. Defaults to an empty map.
   Environment([Map<String, dynamic> data = const {}])
-      : _variableStack = [data] /*_filters = {}*/;
+      : _variableStack = [data];
 
   Environment._clone(
     this._variableStack,
-    /*this._filters*/
   );
 
   /// Creates a new [Environment] instance that is a deep copy of the current instance.
