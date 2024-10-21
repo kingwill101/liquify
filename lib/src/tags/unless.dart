@@ -25,9 +25,8 @@ class UnlessTag extends AbstractTag with CustomTagParser {
             any().plusLazy(endUnlessTag()) &
             endUnlessTag())
         .map((values) {
-      final tag = values[0] as Tag;
-      tag.body = parseInput((values[1] as List).join(''));
-      return tag;
+      return (values[0] as Tag)
+          .copyWith(body: parseInput((values[1] as List).join('')));
     });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:liquify/parser.dart';
 import 'package:liquify/src/visitor.dart';
 
 abstract class ASTNode {
@@ -25,16 +26,45 @@ class Document extends ASTNode {
 
 class Tag extends ASTNode {
   final String name;
-  final List<ASTNode> content;
-  List<ASTNode> body;
+  final List<ASTNode> _content;
+  final List<ASTNode> _body;
   final List<Filter> filters;
 
   Tag(
     this.name,
-    this.content, {
+    List<ASTNode>? content, {
     this.filters = const [],
-    this.body = const [],
-  });
+    List<ASTNode>? body,
+  })  : _body = body ?? [],
+        _content = content ?? [];
+
+  List<ASTNode> get body => collapseTextNodes(_body);
+
+  List<ASTNode> get content => collapseTextNodes(_content);
+
+  set body(List<ASTNode> value) {
+    _body.clear();
+    _body.addAll(collapseTextNodes(value));
+  }
+
+  set content(List<ASTNode> value) {
+    _content.clear();
+    _content.addAll(collapseTextNodes(value));
+  }
+
+  Tag copyWith({
+    String? name,
+    List<ASTNode>? content,
+    List<Filter>? filters,
+    List<ASTNode>? body,
+  }) {
+    return Tag(
+      name ?? this.name,
+      content ?? this.content,
+      filters: filters ?? this.filters,
+      body: body ?? this.body,
+    );
+  }
 
   @override
   Map<String, dynamic> toJson() => {

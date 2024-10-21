@@ -39,7 +39,7 @@
 ///
 /// For more detailed information on specific components, refer to the
 /// documentation of the individual exported classes and functions.
-library liquify;
+library;
 
 export 'package:liquify/src/fs.dart';
 export 'package:liquify/src/template.dart';

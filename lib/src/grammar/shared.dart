@@ -1,13 +1,44 @@
 import 'package:liquify/src/ast.dart';
-export 'package:liquify/src/ast.dart';
 import 'package:liquify/src/grammar/grammar.dart';
 import 'package:liquify/src/registry.dart';
+import 'package:petitparser/debug.dart';
 import 'package:petitparser/petitparser.dart';
+import 'package:petitparser/reflection.dart';
+
+export 'package:liquify/src/ast.dart';
 export 'package:petitparser/petitparser.dart';
 
-Parser tagStart() => string('{%-') | string('{%');
+List<ASTNode> collapseTextNodes(List<ASTNode> elements) {
+  List<ASTNode> result = [];
+  TextNode? currentTextNode;
 
-Parser tagEnd() => string('-%}') | string('%}');
+  for (var node in elements) {
+    if (node is TextNode) {
+      if (currentTextNode == null) {
+        currentTextNode = node;
+      } else {
+        currentTextNode = TextNode(currentTextNode.text + node.text);
+      }
+    } else {
+      if (currentTextNode != null) {
+        // Add the combined TextNode to the result
+        result.add(currentTextNode);
+        currentTextNode = null;
+      }
+      result.add(node);
+    }
+  }
+
+  if (currentTextNode != null) {
+    result.add(currentTextNode);
+  }
+
+  return result;
+}
+
+Parser tagStart() => (string('{%-').trim() | string('{%')).labeled('tagStart');
+
+Parser tagEnd() => (string('-%}').trim() | string('%}')).labeled('tagEnd');
 
 Parser filter() {
   return (char('|').trim() &
@@ -16,6 +47,7 @@ Parser filter() {
                   (ref0(namedArgument) | ref0(literal) | ref0(identifier))
                       .plusSeparated(char(',').trim()))
               .optional())
+      .labeled('filter')
       .map((values) {
     final filterName = values[1] as Identifier;
     final args = values[2] != null
@@ -27,7 +59,8 @@ Parser filter() {
 
 Parser filterArguments() => ref0(expression)
     .plusSeparated(char(',').trim())
-    .map((values) => values.elements);
+    .map((values) => values.elements)
+    .labeled('filterArguments');
 
 Parser assignment() {
   return (ref0(identifier).trim() &
@@ -50,7 +83,7 @@ Parser assignment() {
       (values[0] as Identifier),
       values[2] as ASTNode,
     );
-  });
+  }).labeled('assignment');
 }
 
 Parser argument() {
@@ -58,12 +91,12 @@ Parser argument() {
       .plusSeparated(char(',').optional().trim())
       .map((result) {
     return result.elements;
-  });
+  }).labeled('argument');
 }
 
-Parser varStart() => string('{{-') | string('{{');
+Parser varStart() => (string('{{-').trim() | string('{{')).labeled('varStart');
 
-Parser varEnd() => string('-}}') | string('}}');
+Parser varEnd() => (string('-}}').trim() | string('}}')).labeled('varEnd');
 
 Parser variable() =>
     (varStart() & ref0(expression).trim() & filter().star().trim() & varEnd())
@@ -82,27 +115,29 @@ Parser variable() =>
       }
 
       return Variable(name, expr);
-    });
+    }).labeled('variable');
 
 Parser namedArgument() {
   return (ref0(identifier) & char(':').trim() & ref0(expression)).map((values) {
     return NamedArgument(values[0] as Identifier, values[2] as ASTNode);
-  });
+  }).labeled('namedArgument');
 }
 
 Parser identifier() {
   return (letter() & (word() | char('-')).star())
       .flatten()
       .where((name) => !['and', 'or', 'not', 'contains'].contains(name))
-      .map((name) => Identifier(name));
+      .map((name) => Identifier(name))
+      .labeled('identifier');
 }
 
 Parser literal() {
-  return ref0(nilLiteral) |
-      ref0(booleanLiteral) |
-      ref0(numericLiteral) |
-      ref0(emptyLiteral) |
-      ref0(stringLiteral);
+  return (ref0(nilLiteral) |
+          ref0(booleanLiteral) |
+          ref0(numericLiteral) |
+          ref0(emptyLiteral) |
+          ref0(stringLiteral))
+      .labeled('literal');
 }
 
 Parser numericLiteral() {
@@ -115,47 +150,48 @@ Parser numericLiteral() {
     } else {
       return Literal(int.parse(value), LiteralType.number);
     }
-  });
+  }).labeled('numericLiteral');
 }
 
-Parser stringLiteral() {
-  return (char('"') & pattern('^"').star().flatten() & char('"') |
-          char("'") & pattern("^'").star().flatten() & char("'"))
+Parser<Literal> stringLiteral() {
+  return (char('"') & pattern('^"').starString() & char('"') |
+          char("'") & pattern("^'").starString() & char("'"))
       .map((values) {
     return Literal(values[1], LiteralType.string);
-  });
+  }).labeled('stringLiteral');
 }
 
-Parser booleanLiteral() {
+Parser<Literal> booleanLiteral() {
   return (string('true') | string('false')).map((value) {
     return Literal(value == 'true', LiteralType.boolean);
-  });
+  }).labeled('booleanLiteral');
 }
 
-Parser nilLiteral() {
+Parser<Literal> nilLiteral() {
   return (string('nil')).map((value) {
     return Literal(null, LiteralType.nil);
-  });
+  }).labeled('nilLiteral');
 }
 
 Parser emptyLiteral() {
   return (string('empty')).map((value) {
     return Literal('empty', LiteralType.empty);
-  });
+  }).labeled('emptyLiteral');
 }
 
 Parser expression() {
-  return ref0(logicalExpression)
-      .or(ref0(comparison))
-      .or(ref0(groupedExpression))
-      .or(ref0(arithmeticExpression))
-      .or(ref0(unaryOperation))
-      .or(ref0(memberAccess))
-      .or(ref0(assignment))
-      .or(ref0(namedArgument))
-      .or(ref0(literal))
-      .or(ref0(identifier))
-      .or(ref0(range));
+  return (ref0(logicalExpression)
+          .or(ref0(comparison))
+          .or(ref0(groupedExpression))
+          .or(ref0(arithmeticExpression))
+          .or(ref0(unaryOperation))
+          .or(ref0(memberAccess))
+          .or(ref0(assignment))
+          .or(ref0(namedArgument))
+          .or(ref0(literal))
+          .or(ref0(identifier))
+          .or(ref0(range)))
+      .labeled('expression');
 }
 
 Parser memberAccess() =>
@@ -164,21 +200,28 @@ Parser memberAccess() =>
       var members =
           (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
       return MemberAccess(object, members);
-    });
+    }).labeled('memberAccess');
 
-Parser text() => pattern('^{').plus().flatten().map((text) => TextNode(text));
+Parser text() {
+  return ((varStart() | tagStart()).neg() | any())
+      .labeled('text block')
+      .map((text) {
+    return TextNode(text);
+  });
+}
 
-Parser comparisonOperator() =>
-    string('==').trim() |
-    string('!=').trim() |
-    string('<=').trim() |
-    string('>=').trim() |
-    char('<').trim() |
-    char('>').trim() |
-    string('contains').trim() |
-    string('in').trim();
+Parser comparisonOperator() => (string('==').trim() |
+        string('!=').trim() |
+        string('<=').trim() |
+        string('>=').trim() |
+        char('<').trim() |
+        char('>').trim() |
+        string('contains').trim() |
+        string('in').trim())
+    .labeled('comparisonOperator');
 
-Parser logicalOperator() => string('and').trim() | string('or').trim();
+Parser logicalOperator() =>
+    (string('and').trim() | string('or').trim()).labeled('logicalOperator');
 
 Parser comparison() {
   return (ref0(memberAccess) |
@@ -192,7 +235,8 @@ Parser comparison() {
           ref0(literal) |
           ref0(groupedExpression) |
           ref0(range))
-      .map((values) => BinaryOperation(values[0], values[1], values[2]));
+      .map((values) => BinaryOperation(values[0], values[1], values[2]))
+      .labeled('comparison');
 }
 
 Parser logicalExpression() {
@@ -206,22 +250,24 @@ Parser logicalExpression() {
       expr = BinaryOperation(expr, op, right);
     }
     return expr;
-  });
+  }).labeled('logicalExpression');
 }
 
-Parser comparisonOrExpression() =>
-    ref0(groupedExpression) |
-    ref0(comparison) |
-    ref0(arithmeticExpression) |
-    ref0(unaryOperation) |
-    ref0(memberAccess) |
-    ref0(literal) |
-    ref0(identifier);
+Parser comparisonOrExpression() => (ref0(groupedExpression) |
+        ref0(comparison) |
+        ref0(arithmeticExpression) |
+        ref0(unaryOperation) |
+        ref0(memberAccess) |
+        ref0(literal) |
+        ref0(identifier))
+    .labeled('comparisonOrExpression');
 
-Parser unaryOperator() => (string('not').trim() | char('!').trim());
+Parser unaryOperator() =>
+    (string('not').trim() | char('!').trim()).labeled('unaryOperator');
 
 Parser unaryOperation() => (ref0(unaryOperator) & ref0(comparisonOrExpression))
-    .map((values) => UnaryOperation(values[0], values[1]));
+    .map((values) => UnaryOperation(values[0], values[1]))
+    .labeled('unaryOperation');
 
 Parser range() {
   return (char('(').trim() &
@@ -233,7 +279,7 @@ Parser range() {
     final start = values[1];
     final end = values[3];
     return BinaryOperation(start, '..', end);
-  });
+  }).labeled('range');
 }
 
 Parser arithmeticExpression() {
@@ -253,7 +299,7 @@ Parser arithmeticExpression() {
       .trim()
       .map((values) {
     return BinaryOperation(values[0], values[1], values[2]);
-  });
+  }).labeled('arithmeticExpression');
 }
 
 Parser groupedExpression() {
@@ -268,7 +314,8 @@ Parser groupedExpression() {
                   ref0(expression))
               .trim(),
           char(')').trim())
-      .map((values) => GroupedExpression(values.$2));
+      .map((values) => GroupedExpression(values.$2))
+      .labeled('groupedExpression');
 }
 
 Parser<Tag> someTag(String name,
@@ -296,7 +343,7 @@ Parser<Tag> someTag(String name,
     final tagFilters =
         values[3] is List ? (values[3] as List).cast<Filter>() : <Filter>[];
     return Tag(name, tagContent.cast(), filters: tagFilters);
-  });
+  }).labeled('someTag');
 }
 
 Parser tagContent() {
@@ -312,7 +359,7 @@ Parser tagContent() {
       }
     }
     return res.cast<ASTNode>();
-  });
+  }).labeled('tagContent');
 }
 
 Parser tag() => (tagStart() &
@@ -322,22 +369,43 @@ Parser tag() => (tagStart() &
             tagEnd())
         .map((values) {
       final name = (values[1] as Identifier).name;
-      final content = values[2] as List<ASTNode>? ?? [];
+      final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
       final nonFilterContent =
           content.where((node) => node is! Filter).toList();
       return Tag(name, nonFilterContent, filters: filters);
-    });
+    }).labeled('tag');
 
-Parser<Tag> breakTag() => someTag('break', hasContent: false);
+Parser<Tag> breakTag() =>
+    someTag('break', hasContent: false).labeled('breakTag');
 
-Parser<Tag> continueTag() => someTag('continue', hasContent: false);
+Parser<Tag> continueTag() =>
+    someTag('continue', hasContent: false).labeled('continueTag');
 
-Parser<Tag> elseTag() => someTag('else', hasContent: false);
+Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
 
-List<ASTNode> parseInput(String input) {
+/// Parses the given input string and returns a list of [ASTNode] objects representing the parsed document.
+///
+/// If [enableTrace] is true, the parser will output trace information during parsing.
+/// If [shouldLint] is true, the parser will output lint information for the parsed grammar.
+///
+/// If the parsing is successful, the method returns the list of [ASTNode] objects representing the document.
+/// If the parsing fails, the method prints the error message and the input source, and returns an empty list.
+List<ASTNode> parseInput(String input,
+    {bool enableTrace = false, bool shouldLint = false}) {
   registerBuiltIns();
-  final result = LiquidGrammar().build().parse(input);
+  final parser = LiquidGrammar().build();
+
+  if (shouldLint) {
+    print(linter(parser).join('\n\n'));
+  }
+  Result result;
+
+  if (enableTrace) {
+    result = trace(parser).parse(input);
+  } else {
+    result = parser.parse(input);
+  }
 
   if (result is Success) {
     return (result.value as Document).children;

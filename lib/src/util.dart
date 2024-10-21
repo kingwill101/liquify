@@ -68,35 +68,3 @@ void printAST(ASTNode node, int indent) {
     printAST(node.expression, indent + 2);
   }
 }
-
-(List<ASTNode>, int) findTagChildren(List<ASTNode> nodes, Tag startTag) {
-  final endTagName = 'end${startTag.name}';
-  var nestedCount = 0;
-  final startIndex = nodes.indexOf(startTag);
-  final children = <ASTNode>[];
-
-  for (int i = startIndex + 1; i < nodes.length; i++) {
-    final child = nodes[i];
-    if (child is Tag) {
-      if (child.name == startTag.name) {
-        nestedCount++;
-        children.add(child);
-      } else if (child.name == endTagName) {
-        if (nestedCount == 0) {
-          // We found the matching end tag
-          startTag.body = children;
-          return (children, i);
-        } else {
-          nestedCount--;
-          children.add(child);
-        }
-      } else {
-        children.add(child);
-      }
-    } else {
-      children.add(child);
-    }
-  }
-
-  throw Exception('Missing end tag: $endTagName');
-}

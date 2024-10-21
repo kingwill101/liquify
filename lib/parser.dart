@@ -88,7 +88,7 @@
 /// This library is used internally by the Liquify engine but can also be
 /// used directly for advanced customization of the Liquid parsing and
 /// evaluation process.
-library liquify_parser;
+library;
 
 export 'package:liquify/src/tag.dart';
 export 'package:liquify/src/tag_registry.dart';
