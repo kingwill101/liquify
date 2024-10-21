@@ -3,6 +3,7 @@ import 'package:liquify/src/buffer.dart';
 import 'package:liquify/src/evaluator.dart';
 import 'package:liquify/src/exceptions.dart';
 import 'package:liquify/src/tags/tag.dart';
+import 'package:liquify/src/util.dart';
 
 class IfTag extends AbstractTag {
   bool conditionMet = false;
@@ -11,7 +12,8 @@ class IfTag extends AbstractTag {
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    conditionMet = evaluator.evaluate(content[0]);
+    conditionMet = isTruthy(evaluator.evaluate(content[0]));
+
     final elseBlock = body.where((ASTNode n) {
       return n is Tag && n.name == 'else';
     }).firstOrNull;

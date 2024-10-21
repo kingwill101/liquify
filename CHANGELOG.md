@@ -1,33 +1,36 @@
+## 0.7.1
+- Better truthy check
+
 ## 0.7.0
-- fix parse failure for single { character
-- better whitespace control handling
-- optional tracing and linting
+- Fix parse failure for single { character
+- Better whitespace control handling
+- Optional tracing and linting
 
 ## 0.6.6
 
-- allow identifiers with hyphens
+- Allow identifiers with hyphens
 
 ## 0.6.5
 
-- member access fix
+- Member access fix
   
 ## 0.6.3
 
-- filtered assignment fix
+- Filtered assignment fix
 
 ## 0.6.2
 
-- group filters into modules 
+- Group filters into modules 
 
 ## 0.6.0
 
-- empty type
+- Empty type
 - MapRoot Root implementation
   
 ## 0.5.0
 
 - Filesystem lookup
-- render tag
+- Render tag
   
 ## 0.4.0
 
@@ -36,7 +39,7 @@
 ## 0.3.0
 
 - Support floating point numbers
-- Suuport negative numbers
+- Support negative numbers
 
 ## 0.2.0
 

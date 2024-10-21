@@ -1,4 +1,5 @@
 import 'package:liquify/src/tag.dart';
+import 'package:liquify/src/util.dart';
 
 class UnlessTag extends AbstractTag with CustomTagParser {
   bool conditionMet = false;
@@ -7,7 +8,7 @@ class UnlessTag extends AbstractTag with CustomTagParser {
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    conditionMet = evaluator.evaluate(content[0]);
+    conditionMet = isTruthy(evaluator.evaluate(content[0]));
     if (!conditionMet) {
       for (final subNode in body) {
         if (subNode is Tag) {

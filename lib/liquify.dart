@@ -42,6 +42,7 @@
 library;
 
 export 'package:liquify/src/fs.dart';
+export 'package:liquify/src/util.dart';
 export 'package:liquify/src/template.dart';
 export 'package:liquify/src/drop.dart';
 export 'package:liquify/src/tag_registry.dart';
