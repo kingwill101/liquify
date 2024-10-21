@@ -7,9 +7,7 @@ extension TagExtension on LiquidGrammar {
         ref0(element)
             .starLazy(ref0(endCaseTag).or(ref0(endIfTag)).or(ref0(endForTag))),
       ).map((values) {
-        final eTag = values.$1;
-        eTag.body = values.$2.cast<ASTNode>();
-        return eTag as ASTNode;
+        return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 }
 
@@ -19,9 +17,7 @@ extension IFBlockExtension on LiquidGrammar {
         ref0(element).starLazy(endIfTag()),
         ref0(endIfTag),
       ).map((values) {
-        final ifTag = values.$1 as Tag;
-        ifTag.body = values.$2.cast<ASTNode>();
-        return ifTag as ASTNode;
+        return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 
   Parser ifTag() => someTag("if");
@@ -38,7 +34,7 @@ extension IFBlockExtension on LiquidGrammar {
         final content = values[2] as List<ASTNode>? ?? [];
         final filters = (values[3] as List).cast<Filter>();
         final body = values[5].cast<ASTNode>();
-        return Tag('elseif', content, filters: filters)..body = body;
+        return Tag('elseif', content, filters: filters, body: body);
       });
 
   Parser endIfTag() =>
@@ -53,9 +49,7 @@ extension FromBlockExtension on LiquidGrammar {
         ref0(element).starLazy(endForTag()),
         ref0(endForTag),
       ).labeled('for block').map((values) {
-        final forTag = values.$1;
-        forTag.body = values.$2.cast<ASTNode>();
-        return forTag as ASTNode;
+        return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 
   Parser<Tag> forTag() => someTag('for');
@@ -72,9 +66,7 @@ extension CaseWhenTagExtension on LiquidGrammar {
         ref0(element).plusLazy(endCaseTag()),
         ref0(endCaseTag),
       ).map((values) {
-        final caseTag = values.$1;
-        caseTag.body = values.$2.cast<ASTNode>();
-        return caseTag as ASTNode;
+        return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 
   Parser<Tag> whenTag() => someTag('when');
@@ -91,9 +83,7 @@ extension CaseWhenTagExtension on LiquidGrammar {
         ref0(element)
             .starLazy(ref0(endCaseTag).or(ref0(elseTag).or(whenTag()))),
       ).map((values) {
-        final eTag = values.$1;
-        eTag.body = values.$2.cast<ASTNode>();
-        return eTag as ASTNode;
+        return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 }
 

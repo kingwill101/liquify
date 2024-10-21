@@ -81,7 +81,7 @@ class CycleTag extends AbstractTag with CustomTagParser {
     return seq3(
             ref0(stringLiteral), char(':').trim(), ref0(cycleSimpleArguments))
         .map((values) {
-      final name = values.$1 as Literal;
+      final name = values.$1;
       final args = (values.$3 as List).cast<ASTNode>();
       return NamedArgument(
           Identifier(name.value), Literal(args, LiteralType.array));

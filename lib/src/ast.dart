@@ -26,8 +26,8 @@ class Document extends ASTNode {
 
 class Tag extends ASTNode {
   final String name;
-  List<ASTNode> _content;
-  List<ASTNode> _body;
+  final List<ASTNode> _content;
+  final List<ASTNode> _body;
   final List<Filter> filters;
 
   Tag(
