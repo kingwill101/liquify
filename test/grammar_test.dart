@@ -269,7 +269,6 @@ void main() {
         expect(memberAccess.members.length, 2);
         expect((memberAccess.members[0] as Identifier).name, equals('name'));
         expect((memberAccess.members[1] as Identifier).name, equals('first'));
-
       });
     });
 

@@ -200,9 +200,7 @@ Parser memberAccess() => (ref0(identifier) &
         .map((values) {
       var object = values[0] as Identifier;
 
-      var members =
-          (values[1] as List).map((m) => m[1] as ASTNode).toList();
-
+      var members = (values[1] as List).map((m) => m[1] as ASTNode).toList();
 
       return MemberAccess(object, members);
     }).labeled('memberAccess');
