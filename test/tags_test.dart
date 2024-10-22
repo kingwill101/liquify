@@ -777,5 +777,53 @@ void main() {
         expect(evaluator.buffer.toString(), contains('not truthy'));
       });
     });
+
+    test('empty string', () {
+      testParser('''
+        {% assign name = "" %}
+        {% if name %}
+          truthy.
+        {% endif %}
+      ''', (document) {
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), contains('truthy'));
+      });
+    });
+
+    test('null', () {
+      testParser('''
+        {% assign name = null %}
+        {% if name %}
+          truthy.
+        {% endif %}
+      ''', (document) {
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), isNot(contains('truthy')));
+      });
+    });
+
+    test('binary operator and', () {
+      testParser('''
+        {% assign name = null %}
+        {% if name and "" %}
+          truthy.
+        {% endif %}
+      ''', (document) {
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), isNot(contains('truthy')));
+      });
+    });
+
+    test('binary operator or', () {
+      testParser('''
+        {% assign name = null %}
+        {% if name or "" %}
+          truthy.
+        {% endif %}
+      ''', (document) {
+        evaluator.evaluate(document);
+        expect(evaluator.buffer.toString(), contains('truthy'));
+      });
+    });
   });
 }
