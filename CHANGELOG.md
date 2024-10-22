@@ -1,5 +1,6 @@
 ## 0.7.1
 - Better truthy check
+- array support
 
 ## 0.7.0
 - Fix parse failure for single { character

@@ -123,11 +123,12 @@ void main() {
       evaluator.evaluate(Assignment(
           MemberAccess(
             Identifier('user'),
-            ['name'],
+            [Identifier('name')],
           ),
           Literal('John', LiteralType.string)));
 
-      final memberAccess = MemberAccess(Identifier('user'), ['name']);
+      final memberAccess =
+          MemberAccess(Identifier('user'), [Identifier('name')]);
       expect(evaluator.evaluate(memberAccess), 'John');
     });
 
@@ -184,12 +185,18 @@ void main() {
     test('evaluates existing context data', () {
       evaluator.context.setVariable(
           'user', {'name': 'Alice', 'age': 30, 'last-name': 'Doe'});
-      expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['name'])),
+      expect(
+          evaluator
+              .evaluate(MemberAccess(Identifier('user'), [Identifier('name')])),
           'Alice');
       expect(
-          evaluator.evaluate(MemberAccess(Identifier('user'), ['last-name'])),
+          evaluator.evaluate(
+              MemberAccess(Identifier('user'), [Identifier('last-name')])),
           'Doe');
-      expect(evaluator.evaluate(MemberAccess(Identifier('user'), ['age'])), 30);
+      expect(
+          evaluator
+              .evaluate(MemberAccess(Identifier('user'), [Identifier('age')])),
+          30);
     });
 
     test('returns null for missing top-level context data', () {
@@ -199,7 +206,9 @@ void main() {
     test('returns null for missing nested context data', () {
       evaluator.context.setVariable('user', {'name': 'Bob'});
       expect(
-          evaluator.evaluate(MemberAccess(Identifier('user'), ['age'])), null);
+          evaluator
+              .evaluate(MemberAccess(Identifier('user'), [Identifier('age')])),
+          null);
     });
 
     test('handles deep nested context data', () {
@@ -213,8 +222,13 @@ void main() {
         }
       });
       expect(
-          evaluator.evaluate(MemberAccess(Identifier('company'),
-              ['departments', 'engineering', 'employees', '0', 'name'])),
+          evaluator.evaluate(MemberAccess(Identifier('company'), [
+            Identifier('departments'),
+            Identifier('engineering'),
+            ArrayAccess(
+                Identifier('employees'), Literal(0, LiteralType.number)),
+            Identifier('name')
+          ])),
           'Charlie');
     });
 
@@ -223,9 +237,37 @@ void main() {
         'departments': {'engineering': {}}
       });
       expect(
-          evaluator.evaluate(MemberAccess(Identifier('company'),
-              ['departments', 'engineering', 'employees', '0', 'name'])),
+          evaluator.evaluate(MemberAccess(Identifier('company'), [
+            Identifier('departments'),
+            Identifier('engineering'),
+            ArrayAccess(
+              Identifier('employees'),
+              Literal(0, LiteralType.number),
+            ),
+            Identifier('name')
+          ])),
           null);
+    });
+
+    test('evaluate array int access', () {
+      evaluator.context.setVariable('numbers', [1, 2, 3, 4, 5]);
+      expect(
+          evaluator.evaluate(ArrayAccess(
+            Identifier('numbers'),
+            Literal(0, LiteralType.number),
+          )),
+          1);
+    });
+    test('evaluate array string access', () {
+      evaluator.context.setVariable('name', {
+        'first': 'John',
+      });
+      expect(
+          evaluator.evaluate(ArrayAccess(
+            Identifier('name'),
+            Literal('first', LiteralType.string),
+          )),
+          equals('John'));
     });
   });
 }
