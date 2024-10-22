@@ -1,5 +1,7 @@
+## 0.7.2
+- array support
+ 
 ## 0.7.1
-- Better truthy check
 - array support
 
 ## 0.7.0
