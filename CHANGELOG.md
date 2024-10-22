@@ -1,5 +1,8 @@
-## 0.7.2
-- array support
+## 0.7.3
+- Truthy support for binary operators
+ 
+ ## 0.7.2
+- Array support
  
 ## 0.7.1
 - array support

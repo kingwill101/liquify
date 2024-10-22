@@ -1,4 +1,4 @@
-# Liquify - Powerful Liquid Template Engine for Dart
+# Liquify - Liquid Template Engine for Dart
 
 [![GitHub release](https://img.shields.io/github/release/kingwill101/liquify?include_prereleases=&sort=semver&color=blue)](https://github.com/kingwill101/liquify/releases/)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kingwill101/liquify/.github%2Fworkflows%2Fdart.yml)
@@ -25,7 +25,7 @@ Add Liquify to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  liquify: ^0.7.2
+  liquify: ^0.7.3
 ```
 
 Or, for the latest development version:
