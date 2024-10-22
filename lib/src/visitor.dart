@@ -28,4 +28,6 @@ abstract class ASTVisitor<T> {
   T visitMemberAccess(MemberAccess node);
 
   T visitNamedArgument(NamedArgument node);
+
+  T visitArrayAccess(ArrayAccess arrayAccess);
 }

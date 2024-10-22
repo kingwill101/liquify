@@ -196,13 +196,14 @@ class Evaluator implements ASTVisitor<dynamic> {
       var objectVal = context(objName);
 
       for (var i = 0; i < memberAccess.members.length; i++) {
+        final name = (memberAccess.members[i] as Identifier).name;
         if (i == memberAccess.members.length - 1) {
-          objectVal[memberAccess.members[i]] = value;
+          objectVal[name] = value;
         } else {
           if (!(objectVal as Map).containsKey(memberAccess.members[i])) {
-            objectVal[memberAccess.members[i]] = {};
+            objectVal[name] = {};
           }
-          objectVal = objectVal[memberAccess.members[i]];
+          objectVal = objectVal[name];
         }
       }
     }
@@ -266,22 +267,37 @@ class Evaluator implements ASTVisitor<dynamic> {
 
     if (objectVal == null) return null;
 
+    //members can either be a Identifier or an ArrayAccess
     for (final member in node.members) {
-      if (objectVal is Drop) {
-        objectVal = objectVal(Symbol(member));
-      } else if (objectVal is Map) {
-        if (!objectVal.containsKey(member)) {
-          return null;
-        }
+      final keyName = member is Identifier
+          ? member.name
+          : ((member as ArrayAccess).array as Identifier).name;
+      final isArray = member is ArrayAccess;
 
-        objectVal = objectVal[member];
-      } else if (objectVal is List && int.tryParse(member) != null) {
-        final index = int.parse(member);
-        if (index >= 0 && index < objectVal.length) {
-          objectVal = objectVal[index];
+      if (isArray) {
+        final key = (member.array as Identifier).name;
+        final index = (member.key as Literal).value;
+        objectVal = objectVal[key];
+
+        if (objectVal == null) return;
+        if (objectVal is List) {
+          if (index >= 0 && index < objectVal.length) {
+            objectVal = objectVal[index];
+          } else {
+            return null;
+          }
         } else {
+          objectVal = objectVal[index];
+        }
+      } else if (objectVal is Drop) {
+        if (member is Identifier) {
+          objectVal = objectVal(Symbol(keyName));
+        }
+      } else if (objectVal is Map) {
+        if (!objectVal.containsKey(keyName)) {
           return null;
         }
+        objectVal = objectVal[keyName];
       } else if (objectVal == null) {
         return null;
       }
@@ -311,5 +327,20 @@ class Evaluator implements ASTVisitor<dynamic> {
   dynamic visitVariable(Variable node) {
     final value = node.expression.accept(this);
     return value;
+  }
+
+  @override
+  visitArrayAccess(ArrayAccess arrayAccess) {
+    final array = arrayAccess.array.accept(this);
+    final key = arrayAccess.key.accept(this);
+    if (array is List) {
+      final index = key is int ? key : int.parse(key);
+      if (index >= 0 && index < array.length) {
+        return array[index];
+      }
+    } else if (array is Map && array.containsKey(key)) {
+      return array[key];
+    }
+    return null;
   }
 }
