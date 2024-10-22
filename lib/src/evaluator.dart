@@ -2,6 +2,7 @@ import 'package:liquify/parser.dart' show parseInput;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
 import 'package:liquify/src/tag_registry.dart';
+import 'package:liquify/src/util.dart';
 
 import 'ast.dart';
 import 'buffer.dart';
@@ -139,10 +140,10 @@ class Evaluator implements ASTVisitor<dynamic> {
         result = left >= right;
         break;
       case 'and':
-        result = left && right;
+        result = isTruthy(left) && isTruthy(right);
         break;
       case 'or':
-        result = left || right;
+        result = isTruthy(left) || isTruthy(right);
         break;
       case '..':
         result = List.generate(right - left + 1, (index) => left + index);
