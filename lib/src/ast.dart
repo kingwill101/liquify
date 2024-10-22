@@ -143,6 +143,17 @@ class Identifier extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitIdentifier(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Identifier) {
+      return name == other.name;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => Object.hashAll(['name']);
 }
 
 class Empty {
@@ -192,6 +203,17 @@ class Literal extends ASTNode {
         'value': value,
         'literalType': type.toString().split('.').last,
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Literal) {
+      return value == other.value;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([value]);
 }
 
 enum LiteralType { string, number, boolean, array, nil, empty }
@@ -213,7 +235,7 @@ class TextNode extends ASTNode {
 
 class MemberAccess extends ASTNode {
   final ASTNode object;
-  final List<String> members;
+  final List<ASTNode> members;
 
   MemberAccess(this.object, this.members);
 
@@ -226,6 +248,23 @@ class MemberAccess extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitMemberAccess(this);
+}
+
+class ArrayAccess extends ASTNode {
+  final ASTNode array;
+  final ASTNode key;
+
+  ArrayAccess(this.array, this.key);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'ArrayAccess',
+        'array': array.toJson(),
+        'key': key.toJson(),
+      };
+
+  @override
+  T accept<T>(ASTVisitor<T> visitor) => visitor.visitArrayAccess(this);
 }
 
 class UnaryOperation extends ASTNode {

@@ -17,7 +17,6 @@ void main() {
         expect((tag.content[0] as Tag).name, 'assign');
       });
     });
-
     test('Parses raw tags', () {
       testParser('''
 {% raw %}
@@ -217,7 +216,7 @@ void main() {
         expect(variable.name, 'user');
         final memberAccess = variable.expression as MemberAccess;
         expect((memberAccess.object as Identifier).name, 'user');
-        expect(memberAccess.members, ['name']);
+        expect((memberAccess.members[0] as Identifier).name, equals('name'));
       });
     });
 
@@ -229,7 +228,8 @@ void main() {
         expect(variable.name, 'user');
         final memberAccess = variable.expression as MemberAccess;
         expect((memberAccess.object as Identifier).name, 'user');
-        expect(memberAccess.members, ['first-name']);
+        expect(
+            (memberAccess.members[0] as Identifier).name, equals('first-name'));
       });
     });
 
@@ -241,7 +241,9 @@ void main() {
         expect(variable.name, 'user');
         final memberAccess = variable.expression as MemberAccess;
         expect((memberAccess.object as Identifier).name, 'user');
-        expect(memberAccess.members, ['name', 'first']);
+
+        expect((memberAccess.members[0] as Identifier).name, equals('name'));
+        expect((memberAccess.members[1] as Identifier).name, equals('first'));
       });
     });
     test('Parses another variable expression', () {
@@ -252,7 +254,7 @@ void main() {
         final memberAccess = variable.expression as MemberAccess;
         expect((memberAccess.object as Identifier).name, 'user');
         expect(memberAccess.members.length, 1);
-        expect(memberAccess.members[0], 'name');
+        expect((memberAccess.members[0] as Identifier).name, equals('name'));
       });
     });
 
@@ -265,7 +267,9 @@ void main() {
         expect(variable.expression, isA<MemberAccess>());
         final memberAccess = variable.expression as MemberAccess;
         expect(memberAccess.members.length, 2);
-        expect(memberAccess.members, containsAll(const ['name', 'first']));
+        expect((memberAccess.members[0] as Identifier).name, equals('name'));
+        expect((memberAccess.members[1] as Identifier).name, equals('first'));
+
       });
     });
 
@@ -925,6 +929,111 @@ void main() {
             expect(forTag.body[1], isA<Variable>());
           });
         });
+      });
+    });
+  });
+
+  group('Array', () {
+    test('Parses arrays', () {
+      testParser('''
+{% assign page_1 = name[0] %}
+''', (document) {
+        final tag = document.children.whereType<Tag>().first;
+        final assignment = tag.content[0] as Assignment;
+        final variable = assignment.variable as Identifier;
+        final arrayAccess = assignment.value as ArrayAccess;
+        final array = arrayAccess.array as Identifier;
+        final key = arrayAccess.key as Literal;
+
+        expect(variable.name, 'page_1');
+        expect(array.name, 'name');
+        expect(key, isA<Literal>());
+        expect(key.type, LiteralType.number);
+        expect(key.value, 0);
+      });
+    });
+    test('simple with string keys', () {
+      testParser('''
+{% assign page_2 = pages["does-not-exist"] %}
+''', (document) {
+        final tag = document.children.whereType<Tag>().first;
+        final assignment = tag.content[0] as Assignment;
+        final variable = assignment.variable as Identifier;
+        final arrayAccess = assignment.value as ArrayAccess;
+        final array = arrayAccess.array as Identifier;
+        final key = arrayAccess.key as Literal;
+
+        expect(variable.name, 'page_2');
+        expect(array.name, 'pages');
+        expect(key, isA<Literal>());
+        expect(key.type, LiteralType.string);
+        expect(key.value, 'does-not-exist');
+      });
+    });
+
+    test('member access with array access', () {
+      testParser('''
+{% assign posts = pages.categories[0] %}
+''', (document) {
+        final tags = document.children.whereType<Tag>().toList();
+        final tag3 = tags[0];
+        expect(((tag3.content[0] as Assignment).variable as Identifier).name,
+            'posts');
+        expect(((tag3.content[0] as Assignment).value), isA<MemberAccess>());
+        expect(((tag3.content[0] as Assignment).value as MemberAccess).object,
+            isA<Identifier>());
+
+        expect(
+            (((tag3.content[0] as Assignment).value as MemberAccess).object
+                    as Identifier)
+                .name,
+            equals('pages'));
+        final members =
+            ((tag3.content[0] as Assignment).value as MemberAccess).members;
+        expect(members.length, 1);
+        expect(members[0], isA<ArrayAccess>());
+        expect((members[0] as ArrayAccess).key, isA<Literal>());
+        expect(((members[0] as ArrayAccess).key as Literal).value, equals(0));
+        expect(((members[0] as ArrayAccess).array as Identifier).name,
+            equals(equals('categories')));
+      });
+    });
+
+    test('complex structure, multiple member access and multiple array_access',
+        () {
+      testParser('''
+{% assign complex = pages.categories[0].tags[0].title %}
+''', (document) {
+        final tags = document.children.whereType<Tag>().toList();
+
+        final tag4 = tags[0];
+        expect(((tag4.content[0] as Assignment).variable as Identifier).name,
+            'complex');
+        expect((tag4.content[0] as Assignment).value, isA<MemberAccess>());
+
+        final memberAccess =
+            (tag4.content[0] as Assignment).value as MemberAccess;
+        expect(memberAccess.object, isA<Identifier>());
+        expect((memberAccess.object as Identifier).name, 'pages');
+
+        expect(memberAccess.members.length, 3);
+
+        final firstMember = memberAccess.members[0] as ArrayAccess;
+        expect(firstMember.array, isA<Identifier>());
+        expect((firstMember.array as Identifier).name, 'categories');
+        expect(firstMember.key, isA<Literal>());
+        expect((firstMember.key as Literal).type, LiteralType.number);
+        expect((firstMember.key as Literal).value, 0);
+
+        final secondMember = memberAccess.members[1] as ArrayAccess;
+        expect(secondMember.array, isA<Identifier>());
+        expect((secondMember.array as Identifier).name, 'tags');
+        expect(secondMember.key, isA<Literal>());
+        expect((secondMember.key as Literal).type, LiteralType.number);
+        expect((secondMember.key as Literal).value, 0);
+
+        final thirdMember = memberAccess.members[2] as Identifier;
+        expect(thirdMember.name, 'title');
       });
     });
   });

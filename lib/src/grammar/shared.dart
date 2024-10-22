@@ -185,6 +185,7 @@ Parser expression() {
           .or(ref0(groupedExpression))
           .or(ref0(arithmeticExpression))
           .or(ref0(unaryOperation))
+          .or(ref0(arrayAccess))
           .or(ref0(memberAccess))
           .or(ref0(assignment))
           .or(ref0(namedArgument))
@@ -194,13 +195,22 @@ Parser expression() {
       .labeled('expression');
 }
 
-Parser memberAccess() =>
-    (ref0(identifier) & (char('.') & ref0(identifier)).plus()).map((values) {
+Parser memberAccess() => (ref0(identifier) &
+            (char('.') & (ref0(arrayAccess) | ref0(identifier))).plus())
+        .map((values) {
       var object = values[0] as Identifier;
+
       var members =
-          (values[1] as List).map((m) => (m[1] as Identifier).name).toList();
+          (values[1] as List).map((m) => m[1] as ASTNode).toList();
+
+
       return MemberAccess(object, members);
     }).labeled('memberAccess');
+
+Parser arrayAccess() =>
+    seq4(ref0(identifier), char('['), ref0(literal), char(']')).map((array) {
+      return ArrayAccess(array.$1, array.$3);
+    });
 
 Parser text() {
   return ((varStart() | tagStart()).neg() | any())
