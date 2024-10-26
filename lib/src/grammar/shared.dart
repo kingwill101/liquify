@@ -401,6 +401,11 @@ Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
 /// If the parsing fails, the method prints the error message and the input source, and returns an empty list.
 List<ASTNode> parseInput(String input,
     {bool enableTrace = false, bool shouldLint = false}) {
+  //parser fails to handle empty input
+  if (input.isEmpty) {
+    return [];
+  }
+
   registerBuiltIns();
   final parser = LiquidGrammar().build();
 

@@ -17,6 +17,13 @@ void main() {
         expect((tag.content[0] as Tag).name, 'assign');
       });
     });
+
+    test('Parses empty input', () {
+      testParser('''''', (document) {
+        expect(document.children.length, 0);
+      });
+    });
+
     test('Parses raw tags', () {
       testParser('''
 {% raw %}
