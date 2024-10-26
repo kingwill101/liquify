@@ -392,6 +392,30 @@ Parser<Tag> continueTag() =>
 
 Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
 
+/// Represents an exception that occurred during parsing.
+///
+/// This exception is thrown when the parser encounters an error while parsing the input.
+/// It contains information about the error, including the error message, the source code,
+/// the line and column where the error occurred, and the offset of the error in the source code.
+class ParsingException implements Exception {
+  final String message;
+  final String source;
+  final int line;
+  final int column;
+  final int offset;
+
+  ParsingException(
+      this.message, this.source, this.line, this.column, this.offset);
+
+  @override
+  String toString() {
+    final lines = source.split('\n');
+    final errorLine = lines[line - 1];
+    final pointer = '${' ' * (column - 1)}^';
+    return 'ParsingException: $message @ line $line:$column\nsource: \n$errorLine\n$pointer';
+  }
+}
+
 /// Parses the given input string and returns a list of [ASTNode] objects representing the parsed document.
 ///
 /// If [enableTrace] is true, the parser will output trace information during parsing.
@@ -422,9 +446,9 @@ List<ASTNode> parseInput(String input,
 
   if (result is Success) {
     return (result.value as Document).children;
-  } else {
-    print("parseInput: ${result.message} @ ${result.toPositionString()}");
-    print("source: \n$input");
   }
-  return [];
+  final lineCol = Token.lineAndColumnOf(input, result.position);
+
+  throw ParsingException(
+      result.message, input, lineCol[0], lineCol[0], result.position);
 }
