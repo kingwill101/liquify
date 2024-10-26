@@ -1,3 +1,6 @@
+## 0.8.0
+- Start throwing exceptions when parsing fails
+
 ## 0.7.4
 - For tag: make sure iterable is not null before assignment
  
