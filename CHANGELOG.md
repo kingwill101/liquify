@@ -1,3 +1,6 @@
+## 0.7.4
+- For tag: make sure iterable is not null before assignment
+ 
 ## 0.7.3
 - Truthy support for binary operators
  

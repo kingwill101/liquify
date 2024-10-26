@@ -94,7 +94,7 @@ class ForTag extends AbstractTag {
       final end = evaluator.evaluate(right.right);
       iterable = List.generate(end - start + 1, (index) => start + index);
     } else {
-      iterable = evaluator.evaluate(right);
+      iterable = evaluator.evaluate(right) ?? [];
     }
 
     // Process filters for limit, offset, and reversed
