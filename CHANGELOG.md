@@ -1,3 +1,6 @@
+## 0.8.1
+- support elseif tags
+
 ## 0.8.0
 - Start throwing exceptions when parsing fails
 

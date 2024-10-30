@@ -20,22 +20,15 @@ extension IFBlockExtension on LiquidGrammar {
         return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 
+  Parser elseIfBlock() =>
+      seq2(ref0(elseifTag), ref0(element).starLazy((elseTag()).or(elseifTag())))
+          .map((values) {
+        return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+      });
+
   Parser ifTag() => someTag("if");
 
-  Parser elseifOrElse() => ref0(elseifTag) | ref0(elseTag);
-
-  Parser elseifTag() => (tagStart() &
-              string('elseif').trim() &
-              ref0(tagContent).optional().trim() &
-              ref0(filter).star().trim() &
-              tagEnd() &
-              ref0(element).starLazy(ref0(elseifOrElse).or(ref0(endIfTag))))
-          .map((values) {
-        final content = values[2] as List<ASTNode>? ?? [];
-        final filters = (values[3] as List).cast<Filter>();
-        final body = values[5].cast<ASTNode>();
-        return Tag('elseif', content, filters: filters, body: body);
-      });
+  Parser elseifTag() => someTag("elseif");
 
   Parser endIfTag() =>
       (tagStart() & string('endif').trim() & tagEnd()).map((values) {
@@ -98,6 +91,7 @@ class LiquidGrammar extends GrammarDefinition {
 
   Parser element() => [
         ref0(ifBlock),
+        ref0(elseIfBlock),
         ref0(forBlock),
         ref0(caseBlock),
         ref0(elseBlock),
