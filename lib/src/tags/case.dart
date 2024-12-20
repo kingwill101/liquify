@@ -9,25 +9,25 @@ class CaseTag extends AbstractTag {
   CaseTag(super.content, super.filters);
 
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty) {
       throw Exception('CaseTag requires a value to switch on.');
     }
-    caseValue = evaluator.evaluate(content[0]);
+    caseValue = await evaluator.evaluate(content[0]);
   }
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluateWithContext(
+      Evaluator evaluator, Buffer buffer) async {
     Tag? elseTag;
     bool matchFound = false;
 
     for (final node in body) {
       if (node is Tag) {
         if (node.name == 'when' && !matchFound) {
-          final whenValues =
-              node.content.map((e) => evaluator.evaluate(e)).toList();
+          final whenValues = node.content.map((e) async => await evaluator.evaluate(e));
           if (whenValues.contains(caseValue)) {
-            _evaluateBody(node.body, evaluator, buffer);
+            await _evaluateBody(node.body, evaluator, buffer);
             matchFound = true;
           }
         } else if (node.name == 'else') {
@@ -37,17 +37,17 @@ class CaseTag extends AbstractTag {
     }
 
     if (!matchFound && elseTag != null) {
-      _evaluateBody(elseTag.body, evaluator, buffer);
+      await _evaluateBody(elseTag.body, evaluator, buffer);
     }
   }
 
-  void _evaluateBody(
-      List<ASTNode> nodeBody, Evaluator evaluator, Buffer buffer) {
+  Future<void> _evaluateBody(
+      List<ASTNode> nodeBody, Evaluator evaluator, Buffer buffer) async {
     for (final subNode in nodeBody) {
       if (subNode is Tag) {
-        evaluator.evaluate(subNode);
+        await evaluator.evaluate(subNode);
       } else {
-        buffer.write(evaluator.evaluate(subNode));
+        buffer.write(await evaluator.evaluate(subNode));
       }
     }
   }

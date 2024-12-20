@@ -10,7 +10,7 @@ class IfTag extends AbstractTag {
 
   IfTag(super.content, super.filters);
 
-  renderBlock(Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
+  renderBlock(Evaluator evaluator, Buffer buffer, List<ASTNode> body) async {
     for (final subNode in body) {
       if (subNode is Tag && subNode.name == 'else') {
         continue;
@@ -20,9 +20,10 @@ class IfTag extends AbstractTag {
       }
       try {
         if (subNode is Tag) {
-          evaluator.evaluate(subNode);
+          await evaluator.evaluate(subNode);
         } else {
-          buffer.write(evaluator.evaluate(subNode));
+          final result = await evaluator.evaluate(subNode);
+          buffer.write(result);
         }
       } on BreakException {
         throw BreakException();
@@ -33,8 +34,9 @@ class IfTag extends AbstractTag {
   }
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    conditionMet = isTruthy(evaluator.evaluate(content[0]));
+  Future<dynamic> evaluateWithContext(
+      Evaluator evaluator, Buffer buffer) async {
+    conditionMet = isTruthy(await evaluator.evaluate(content[0]));
 
     final elseBlock = body.where((ASTNode n) {
       return n is Tag && n.name == 'else';
@@ -48,15 +50,15 @@ class IfTag extends AbstractTag {
         .cast();
 
     if (conditionMet) {
-      renderBlock(evaluator, buffer, body);
+      await renderBlock(evaluator, buffer, body);
       return;
     } else if (elseIfTags.isNotEmpty) {
       for (var elif in elseIfTags) {
         if (elif.content.isEmpty) continue;
         final elIfConditionMet =
-            isTruthy(evaluator.evaluate((elif).content[0]));
+            isTruthy(await evaluator.evaluate((elif).content[0]));
         if (elIfConditionMet) {
-          renderBlock(evaluator, buffer, elif.body);
+          await renderBlock(evaluator, buffer, elif.body);
           return;
         }
       }
@@ -66,9 +68,9 @@ class IfTag extends AbstractTag {
       for (final subNode in (elseBlock as Tag).body) {
         try {
           if (subNode is Tag) {
-            evaluator.evaluate(subNode);
+            await evaluator.evaluate(subNode);
           } else {
-            buffer.write(evaluator.evaluate(subNode));
+            buffer.write(await evaluator.evaluate(subNode));
           }
         } on BreakException {
           throw BreakException();

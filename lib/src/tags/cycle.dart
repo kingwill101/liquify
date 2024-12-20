@@ -7,7 +7,7 @@ class CycleTag extends AbstractTag with CustomTagParser {
   CycleTag(super.content, super.filters);
 
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty) {
       throw Exception('CycleTag requires at least one argument.');
     }
@@ -18,13 +18,15 @@ class CycleTag extends AbstractTag with CustomTagParser {
       groupName = firstNamedArg.identifier.name;
       items = ((firstNamedArg.value as Literal).value as List)
           .where((e) => e is! NamedArgument)
-          .map((e) => evaluator.evaluate(e))
+          .map((e) async => await evaluator.evaluate(e))
           .toList();
     } else {
-      items = content
-          .where((e) => e is Identifier || e is Literal)
-          .map((e) => evaluator.evaluate(e))
-          .toList();
+      items = [];
+      for (final arg in content) {
+        if (arg is Identifier || arg is Literal) {
+          items.add(await evaluator.evaluate(arg));
+        }
+      }
     }
 
     if (items.isEmpty) {
@@ -33,7 +35,7 @@ class CycleTag extends AbstractTag with CustomTagParser {
   }
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future evaluate(Evaluator evaluator, Buffer buffer) async {
     final cycleState = _getCycleState(evaluator);
     final currentIndex = cycleState['index'] as int;
     final currentItem = items[currentIndex];

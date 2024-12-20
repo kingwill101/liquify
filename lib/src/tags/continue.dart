@@ -7,7 +7,8 @@ class ContinueTag extends AbstractTag {
   ContinueTag(super.content, super.filters);
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluateWithContext(
+      Evaluator evaluator, Buffer buffer) async {
     throw ContinueException();
   }
 }

@@ -7,14 +7,15 @@ class UnlessTag extends AbstractTag with CustomTagParser {
   UnlessTag(super.content, super.filters);
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    conditionMet = isTruthy(evaluator.evaluate(content[0]));
+  Future<dynamic> evaluateWithContext(
+      Evaluator evaluator, Buffer buffer) async {
+    conditionMet = isTruthy(await evaluator.evaluate(content[0]));
     if (!conditionMet) {
       for (final subNode in body) {
         if (subNode is Tag) {
-          evaluator.evaluate(subNode);
+          await evaluator.evaluate(subNode);
         } else {
-          buffer.write(evaluator.evaluate(subNode));
+          buffer.write(await evaluator.evaluate(subNode));
         }
       }
     }

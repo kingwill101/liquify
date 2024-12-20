@@ -6,15 +6,15 @@ class RepeatTag extends AbstractTag {
   RepeatTag(super.content, super.filters);
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    super.evaluate(evaluator, buffer);
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
+    await super.evaluate(evaluator, buffer);
 
-    final times = int.parse(evaluator.evaluate(content.first));
+    final times = int.parse(await evaluator.evaluate(content.first));
     final repeatedContent = content.skip(1).toList();
     var value = List.generate(
         times,
         (_) => repeatedContent
-            .map((node) => evaluator.evaluate(node))
+            .map((node) async => await evaluator.evaluate(node))
             .join(' ')).join(' ');
     buffer.write(applyFilters(value, evaluator));
   }

@@ -7,11 +7,12 @@ class AssignTag extends AbstractTag {
   AssignTag(super.content, super.filters);
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(
+      Evaluator evaluator, Buffer buffer) async {
     final assignment = content.whereType<Assignment>().firstOrNull;
     if (assignment == null) {
       return;
     }
-    evaluator.evaluate(assignment);
+    await evaluator.evaluate(assignment);
   }
 }

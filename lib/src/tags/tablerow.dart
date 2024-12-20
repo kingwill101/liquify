@@ -95,7 +95,7 @@ class TableRowTag extends AbstractTag with CustomTagParser {
   TableRowTag(super.content, super.filters);
 
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty || content.first is! BinaryOperation) {
       throw Exception('TableRowTag requires a binary operation.');
     }
@@ -116,9 +116,9 @@ class TableRowTag extends AbstractTag with CustomTagParser {
     accessor = left;
 
     if (right is BinaryOperation && right.operator == '..') {
-      iterable = evaluator.evaluate(right);
+      iterable = await evaluator.evaluate(right);
     } else if (right is MemberAccess || right is Identifier) {
-      iterable = evaluator.evaluate(right) ?? [];
+      iterable = await evaluator.evaluate(right) ?? [];
     } else {
       throw Exception('Unsupported argument');
     }
@@ -126,11 +126,11 @@ class TableRowTag extends AbstractTag with CustomTagParser {
     // Process filters for limit, offset, cols, and reversed
     for (final arg in namedArgs) {
       if (arg.identifier.name == 'limit') {
-        limit = evaluator.evaluate(arg.value);
+        limit = await evaluator.evaluate(arg.value);
       } else if (arg.identifier.name == 'offset') {
-        offset = evaluator.evaluate(arg.value);
+        offset = await evaluator.evaluate(arg.value);
       } else if (arg.identifier.name == 'cols') {
-        cols = evaluator.evaluate(arg.value) as int;
+        cols = (await evaluator.evaluate(arg.value)) as int;
       }
     }
 
@@ -161,7 +161,8 @@ class TableRowTag extends AbstractTag with CustomTagParser {
   }
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluateWithContext(
+      Evaluator evaluator, Buffer buffer) async {
     if (iterable.isEmpty) return;
     final parentLoop =
         evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
@@ -183,7 +184,7 @@ class TableRowTag extends AbstractTag with CustomTagParser {
 
       String inner = '      ';
       for (final node in body) {
-        inner += evaluator.evaluate(node).toString();
+        inner += (await evaluator.evaluate(node)).toString();
       }
       buffer.write(inner);
       buffer.writeln('    </td>');

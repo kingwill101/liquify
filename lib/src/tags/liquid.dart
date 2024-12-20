@@ -5,8 +5,8 @@ class LiquidTag extends AbstractTag with CustomTagParser {
   LiquidTag(super.content, super.filters);
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    evaluator.evaluateNodes(content);
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
+    await evaluator.evaluateNodes(content);
   }
 
   @override

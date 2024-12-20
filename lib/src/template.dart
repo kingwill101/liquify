@@ -35,9 +35,9 @@ class Template {
   ///
   /// [clearBuffer] determines whether to clear the evaluator's buffer after rendering.
   /// If set to true (default), the buffer is cleared. If false, the buffer retains its content.
-  String render({bool clearBuffer = true}) {
+  Future<String> render({bool clearBuffer = true}) async{
     final parsed = parser.parseInput(_templateContent);
-    _evaluator.evaluateNodes(parsed);
+    await _evaluator.evaluateNodes(parsed);
     final result = _evaluator.buffer.toString();
     if (clearBuffer) {
       _evaluator.buffer.clear();

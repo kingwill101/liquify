@@ -4,10 +4,10 @@ class RawTag extends AbstractTag with CustomTagParser {
   RawTag(super.content, super.filters);
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
     for (final node in content) {
       if (node is TextNode) {
-        buffer.write(evaluator.evaluate(node));
+        buffer.write(await evaluator.evaluate(node));
       }
     }
   }

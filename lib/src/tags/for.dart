@@ -19,7 +19,8 @@ class ForLoopObject {
     this.parentloop,
     this.index = 1,
     this.index0 = 0,
-  })  : rindex = length,
+  })
+      : rindex = length,
         rindex0 = length - 1,
         first = true,
         last = length == 1;
@@ -60,16 +61,16 @@ class ForLoopObject {
 }
 
 class ForTag extends AbstractTag {
-  ForTag(super.content, super.filters);
-
-  late String variableName;
-  late List<dynamic> iterable;
+  String variableName = '';
+  List<dynamic> iterable = [];
   int? limit;
   int? offset;
   bool reversed = false;
 
+  ForTag(super.content, super.filters);
+
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty || content.first is! BinaryOperation) {
       throw Exception('ForTag requires a binary operation.');
     }
@@ -90,19 +91,19 @@ class ForTag extends AbstractTag {
     variableName = left.name;
 
     if (right is BinaryOperation && right.operator == '..') {
-      final start = evaluator.evaluate(right.left);
-      final end = evaluator.evaluate(right.right);
+      final start = await evaluator.evaluate(right.left);
+      final end = await evaluator.evaluate(right.right);
       iterable = List.generate(end - start + 1, (index) => start + index);
     } else {
-      iterable = evaluator.evaluate(right) ?? [];
+      iterable = await evaluator.evaluate(right) ?? [];
     }
 
     // Process filters for limit, offset, and reversed
     for (final arg in namedArgs) {
       if (arg.identifier.name == 'limit') {
-        limit = evaluator.evaluate(arg.value);
+        limit = await evaluator.evaluate(arg.value);
       } else if (arg.identifier.name == 'offset') {
-        offset = evaluator.evaluate(arg.value);
+        offset = await evaluator.evaluate(arg.value);
       }
     }
 
@@ -128,59 +129,65 @@ class ForTag extends AbstractTag {
     }
   }
 
-  @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    if (iterable.isEmpty) {
-      final elseBlock =
-          body.where((ASTNode node) => node is Tag && node.name == 'else');
+@override
+Future<dynamic> evaluateWithContext(Evaluator evaluator, Buffer buffer) async {
+  if (iterable.isEmpty) {
+    final elseBlock =
+    body.where((ASTNode node) => node is Tag && node.name == 'else');
 
-      if (elseBlock.isNotEmpty) {
-        final block = elseBlock.first as Tag;
-        for (final node in block.body) {
-          if (node is Tag) {
-            evaluator.evaluate(node);
-          } else {
-            buffer.write(evaluator.evaluate(node));
+    if (elseBlock.isNotEmpty) {
+      final block = elseBlock.first as Tag;
+      for (final node in block.body) {
+        if (node is Tag) {
+          await evaluator.evaluate(node);
+        } else {
+          final result = await evaluator.evaluate(node);
+          if (result != null) {
+            buffer.write(result);
           }
         }
       }
-    } else {
-      final parentForLoop =
-          evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
-      final forLoop = ForLoopObject(
-          length: iterable.length,
-          parentloop: parentForLoop == null
-              ? null
-              : ForLoopObject.fromJson(parentForLoop));
-
-      evaluator.context.pushScope();
-
-      for (final item in iterable) {
-        evaluator.context.setVariable('forloop', forLoop.toMap());
-        evaluator.context.setVariable(variableName, item);
-
-        try {
-          for (final node in body) {
-            if (node is Tag && node.name == 'else') {
-              break;
-            }
-            try {
-              buffer.write(evaluator.evaluate(node));
-            } on BreakException {
-              evaluator.context.popScope();
-              return;
-            } on ContinueException {
-              break;
-            }
-          }
-        } on ContinueException {
-          // Do nothing, just continue to the next iteration
-        }
-
-        forLoop.increment();
-      }
-
-      evaluator.context.popScope();
     }
+  } else {
+    final parentForLoop =
+    evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
+    final forLoop = ForLoopObject(
+        length: iterable.length,
+        parentloop: parentForLoop == null
+            ? null
+            : ForLoopObject.fromJson(parentForLoop));
+
+    evaluator.context.pushScope();
+
+    for (final item in iterable) {
+      evaluator.context.setVariable('forloop', forLoop.toMap());
+      evaluator.context.setVariable(variableName, item);
+
+      try {
+        for (final node in body) {
+          if (node is Tag && node.name == 'else') {
+            break;
+          }
+          try {
+            final result = await evaluator.evaluate(node);
+            if (result != null) {
+              buffer.write(result);
+            }
+          } on BreakException {
+            evaluator.context.popScope();
+            return null;
+          } on ContinueException {
+            break;
+          }
+        }
+      } on ContinueException {
+        // Do nothing, just continue to the next iteration
+      }
+
+      forLoop.increment();
+    }
+
+    evaluator.context.popScope();
   }
-}
+  return null;
+}}

@@ -25,33 +25,33 @@ abstract class AbstractTag {
   List<Identifier> get args => content.whereType<Identifier>().toList();
 
   /// Preprocesses the tag's content. Override this method for custom preprocessing.
-  void preprocess(Evaluator evaluator) {
-    // Default implementation does nothing
-  }
+  Future<void> preprocess(Evaluator evaluator) async {}
 
   /// Evaluates the tag's content and returns the result as a string.
-  dynamic evaluateContent(Evaluator evaluator) {
-    return content.map((node) => evaluator.evaluate(node)).join('');
+  Future<String> evaluateContent(Evaluator evaluator) async {
+    return content.map((node) async => await evaluator.evaluate(node)).join('');
   }
 
   /// Applies the tag's filters to the given value.
-  dynamic applyFilters(dynamic value, Evaluator evaluator) {
+
+  Future<dynamic> applyFilters(dynamic value, Evaluator evaluator) async {
     for (final filter in filters) {
       final filterFunction = evaluator.context.getFilter(filter.name.name);
       if (filterFunction == null) {
         throw Exception('Undefined filter: ${filter.name.name}');
       }
-      final args =
-          filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
-      value = filterFunction(value, args, {});
+      var args = [];
+
+      filter.arguments.map((arg) async => await evaluator.evaluate(arg));
+      value = await filterFunction(value, args, {});
     }
     return value;
   }
 
   /// Evaluates the tag, pushing a new scope before evaluation and popping it after.
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
     evaluator.context.pushScope();
-    final result = evaluateWithContext(
+    final result = await evaluateWithContext(
         evaluator.createInnerEvaluator()
           ..context.setRoot(evaluator.context.getRoot()),
         buffer);
@@ -60,5 +60,6 @@ abstract class AbstractTag {
   }
 
   /// Evaluates the tag within the given context. Override this method in subclasses.
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {}
+  Future<dynamic> evaluateWithContext(
+      Evaluator evaluator, Buffer buffer) async {}
 }

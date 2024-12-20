@@ -6,7 +6,7 @@ class DecrementTag extends AbstractTag {
   DecrementTag(super.content, super.filters);
 
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty) {
       throw Exception('DecrementTag requires a variable name.');
     }
@@ -20,7 +20,7 @@ class DecrementTag extends AbstractTag {
   }
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
     final stateKey = 'decrement:$variableName';
     var currentValue = evaluator.context.getVariable(stateKey) as int?;
 

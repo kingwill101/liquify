@@ -6,7 +6,7 @@ class CaptureTag extends AbstractTag with CustomTagParser {
   CaptureTag(super.content, super.filters);
 
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty || content.first is! Identifier) {
       throw Exception(
           'CaptureTag requires a variable name as the first argument.');
@@ -15,13 +15,17 @@ class CaptureTag extends AbstractTag with CustomTagParser {
   }
 
   @override
-  evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(
+      Evaluator evaluator, Buffer buffer) async {
     Buffer buf = Buffer();
     final variable = args.firstOrNull;
     if (variable == null) return;
     for (final node in body) {
       if (node is Tag) continue;
-      buf.write(evaluator.evaluate(node));
+      final result = await evaluator.evaluate(node);
+      if (result != null) {
+        buf.write(result);
+      }
     }
     evaluator.context.setVariable(variable.name, buf.toString());
   }

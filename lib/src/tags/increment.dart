@@ -6,7 +6,7 @@ class IncrementTag extends AbstractTag {
   IncrementTag(super.content, super.filters);
 
   @override
-  void preprocess(Evaluator evaluator) {
+  Future<void> preprocess(Evaluator evaluator) async {
     if (content.isEmpty) {
       throw Exception('IncrementTag requires a variable name.');
     }
@@ -20,7 +20,7 @@ class IncrementTag extends AbstractTag {
   }
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
     final stateKey = 'increment:$variableName';
     var currentValue = evaluator.context.getVariable(stateKey) as int?;
 

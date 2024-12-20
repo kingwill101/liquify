@@ -61,7 +61,7 @@ class ReverseTag extends AbstractTag with CustomTagParser {
   ReverseTag(super.content, super.filters);
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
     String result = content
         .map((node) => evaluator.evaluate(node).toString())
         .join('')

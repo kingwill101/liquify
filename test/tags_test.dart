@@ -19,8 +19,8 @@ void main() {
 
   group('ForTag', () {
     test('basic iteration', () {
-      testParser('{% for item in (1..3) %}{{ item }}{% endfor %}', (document) {
-        evaluator.evaluate(document);
+      testParser('{% for item in (1..3) %}{{ item }}{% endfor %}', (document) async {
+        await await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '123');
       });
     });
@@ -28,8 +28,8 @@ void main() {
     test('else block', () {
       testParser(
         '{% for item in (1..0) %}{{ item }}{% else %}No items{% endfor %}',
-        (document) {
-          evaluator.evaluate(document);
+        (document) async {
+          await evaluator.evaluate(document);
           expect(evaluator.buffer.toString(), 'No items');
         },
       );
@@ -42,8 +42,8 @@ void main() {
           '{% break %}'
           '{% endif %}'
           '{{ item }}'
-          '{% endfor %}', (document) {
-        evaluator.evaluate(document);
+          '{% endfor %}', (document) async {
+        await await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '12');
       });
     });
@@ -55,8 +55,8 @@ void main() {
           '{% continue %}'
           '{% endif %}'
           '{{ item }}'
-          '{% endfor %}', (document) {
-        evaluator.evaluate(document);
+          '{% endfor %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '1245');
       });
     });
@@ -65,8 +65,8 @@ void main() {
       testParser(
           '{% for item in (1..5) limit:3 %}'
           '{{ item }}'
-          '{% endfor %}', (document) {
-        evaluator.evaluate(document);
+          '{% endfor %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '123');
       });
     });
@@ -75,16 +75,16 @@ void main() {
       testParser(
           '{% for item in (1..5) offset:2 %}'
           '{{ item }}'
-          '{% endfor %}', (document) {
-        evaluator.evaluate(document);
+          '{% endfor %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '345');
       });
     });
 
     test('reversed filter', () {
       testParser('{% for item in (1..3) reversed %}{{ item }}{% endfor %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '321');
       });
     });
@@ -96,8 +96,8 @@ void main() {
     Last: {{ forloop.last }},
     Length: {{ forloop.length }}
     {% endfor %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(
             evaluator.buffer
                 .toString()
@@ -111,8 +111,8 @@ void main() {
       testParser('''{% for item in (1..3) %}RIndex: {{ forloop.rindex }},
               RIndex0: {{ forloop.rindex0 }}
             {% endfor %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' '),
             'RIndex: 3, RIndex0: 2 RIndex: 2, RIndex0: 1 RIndex: 1, RIndex0: 0 ');
       });
@@ -126,8 +126,8 @@ void main() {
     Inner Index: {{ forloop.index }}
     {% endfor %}
     {% endfor %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' '),
             'Outer: 1 Inner: 1, Outer Index: 1, Inner Index: 1 Inner: 2, Outer Index: 1, Inner Index: 2 Outer: 2 Inner: 1, Outer Index: 2, Inner Index: 1 Inner: 2, Outer Index: 2, Inner Index: 2 ');
       });
@@ -137,8 +137,8 @@ void main() {
       testParser('''
 {% for item in (1..10) limit:3 offset:2 %}
 {{ forloop.index }}: {{ item }}
-{% endfor %}''', (document) {
-        evaluator.evaluate(document);
+{% endfor %}''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '\n1: 3\n\n2: 4\n\n3: 5\n');
       });
     });
@@ -148,8 +148,8 @@ void main() {
     {% for item in (1..3) reversed %}
     {{ forloop.index }}: {{ item }}
     {% endfor %}
-          ''', (document) {
-        evaluator.evaluate(document);
+          ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' '),
             ' 1: 3 2: 2 3: 1 ');
       });
@@ -161,8 +161,8 @@ void main() {
       testParser(
           '{% if true %}'
           'True'
-          '{% endif %}', (document) {
-        evaluator.evaluate(document);
+          '{% endif %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'True');
       });
     });
@@ -173,8 +173,8 @@ void main() {
           'True'
           '{% else %}'
           'False'
-          '{% endif %}', (document) {
-        evaluator.evaluate(document);
+          '{% endif %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'False');
       });
     });
@@ -182,8 +182,8 @@ void main() {
     test('nested if statements', () {
       testParser(
           '{% if true %}{% if false %}Inner False{% else %}Inner True{% endif %}{% endif %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'Inner True');
       });
     });
@@ -191,8 +191,8 @@ void main() {
     test('if statement with break', () {
       testParser(
           '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '12');
       });
     });
@@ -200,8 +200,8 @@ void main() {
     test('if statement with continue', () {
       testParser(
           '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '1245');
       });
     });
@@ -213,8 +213,8 @@ void main() {
           '{% cycle "one", "two", "three" %}'
           '{% cycle "one", "two", "three" %}'
           '{% cycle "one", "two", "three" %}'
-          '{% cycle "one", "two", "three" %}', (document) {
-        evaluator.evaluate(document);
+          '{% cycle "one", "two", "three" %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'onetwothreeone');
       });
     });
@@ -224,8 +224,8 @@ void main() {
           '{% cycle "first": "one", "two", "three" %}'
           '{% cycle "second": "one", "two", "three" %}'
           '{% cycle "second": "one", "two", "three" %}'
-          '{% cycle "first": "one", "two", "three" %}', (document) {
-        evaluator.evaluate(document);
+          '{% cycle "first": "one", "two", "three" %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'oneonetwotwo');
       });
     });
@@ -250,8 +250,8 @@ void main() {
 {% tablerow product in collection.products %}
 {{- product.title }}
 {% endtablerow %}
-</table>''', (document) {
-        evaluator.evaluate(document);
+</table>''', (document) async {
+        await evaluator.evaluate(document);
 
         final expectedOutput = '''<table>
   <tr class="row1">
@@ -285,8 +285,8 @@ void main() {
 {% tablerow product in collection.products cols:2 %}
 {{- product.title }}
 {% endtablerow %}
-</table>''', (document) {
-        evaluator.evaluate(document);
+</table>''', (document) async {
+        await evaluator.evaluate(document);
 
         final expectedOutput = '''<table>
   <tr class="row1">
@@ -324,8 +324,8 @@ void main() {
 {% tablerow item in (1..6) cols:2 limit:4 %}
   {{- item }}
 {% endtablerow %}
-</table>''', (document) {
-        evaluator.evaluate(document);
+</table>''', (document) async {
+        await evaluator.evaluate(document);
 
         final expectedOutput = '''<table>
   <tr class="row1">
@@ -355,8 +355,8 @@ void main() {
 {% tablerow item in (1..6) cols:2 offset:3 %}
     {{- item }}
 {% endtablerow %}
-</table>''', (document) {
-        evaluator.evaluate(document);
+</table>''', (document) async {
+        await evaluator.evaluate(document);
 
         final expectedOutput = '''
 <table>
@@ -384,8 +384,8 @@ void main() {
 {% tablerow item in (1..10) cols:3 limit:6 offset:2 %}
   {{- item }}
 {% endtablerow %}
-</table>''', (document) {
-        evaluator.evaluate(document);
+</table>''', (document) async {
+        await evaluator.evaluate(document);
         final expectedOutput = '''<table>
   <tr class="row1">
     <td class="col1">
@@ -420,8 +420,8 @@ void main() {
 {% tablerow i in (1..num) %}
   {{- i }}
 {% endtablerow %}
-</table>''', (document) {
-        evaluator.evaluate(document);
+</table>''', (document) async {
+        await evaluator.evaluate(document);
         final expectedOutput = '''
 <table>
   <tr class="row1">
@@ -448,9 +448,9 @@ void main() {
     test('renders when false', () {
       testParser(
           '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
-          (document) {
+          (document) async {
         evaluator.context.setVariable('product', {'title': 'Terrible Shoes'});
-        evaluator.evaluate(document);
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'These shoes are not awesome.');
       });
     });
@@ -458,10 +458,10 @@ void main() {
     test('doesnt render when true', () {
       testParser(
           '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
-          (document) {
+          (document) async {
         evaluator.context
             .setVariable('product', {'title': 'These shoes are not awesome.'});
-        evaluator.evaluate(document);
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'These shoes are not awesome.');
       });
     });
@@ -471,8 +471,8 @@ void main() {
     test('outputs captured data', () {
       testParser(
           '{% capture my_variable %}I am being captured.{% endcapture %}{{ my_variable }}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'I am being captured.');
       });
     });
@@ -482,8 +482,8 @@ void main() {
     test('increments variable', () {
       testParser(
           '{% increment my_counter %}{% increment my_counter %}{% increment my_counter %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '012');
       });
     });
@@ -491,8 +491,8 @@ void main() {
     test('global variables are not affected by increment', () {
       testParser(
           '{% assign var = 10 %}{% increment var %}{% increment var %}{% increment var %}{{ var }}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '01210');
       });
     });
@@ -503,8 +503,8 @@ void main() {
       testParser('''
 {% decrement my_counter %}
 {% decrement my_counter %}
-{% decrement my_counter %}''', (document) {
-        evaluator.evaluate(document);
+{% decrement my_counter %}''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '-1\n-2\n-3');
       });
     });
@@ -514,8 +514,8 @@ void main() {
 {% decrement var %}
 {% decrement var %}
 {% decrement var %}
-{{ var }}''', (document) {
-        evaluator.evaluate(document);
+{{ var }}''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '\n-1\n-2\n-3\n10');
       });
     });
@@ -527,8 +527,8 @@ void main() {
 {% liquid
  assign my_variable = "string"
 %}
-''', (document) {
-        evaluator.evaluate(document);
+''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.context.getVariable('my_variable'), 'string');
       });
     });
@@ -539,8 +539,8 @@ void main() {
       testParser('''{% raw %}{% liquid
  assign my_variable = "string"
 %}
-{% endraw %}''', (document) {
-        evaluator.evaluate(document);
+{% endraw %}''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '''
 {% liquid
  assign my_variable = "string"
@@ -562,8 +562,8 @@ void main() {
         '{% else %}'
         'This is not a cake nor a cookie'
         '{% endcase %}',
-        (document) {
-          evaluator.evaluate(document);
+        (document) async {
+          await evaluator.evaluate(document);
           expect(evaluator.buffer.toString().trim(), 'This is a cake');
         },
       );
@@ -578,8 +578,8 @@ void main() {
           'This is a cookie or biscuit'
           '{% else %}'
           'This is something else'
-          '{% endcase %}', (document) {
-        evaluator.evaluate(document);
+          '{% endcase %}', (document) async {
+        await evaluator.evaluate(document);
         expect(
             evaluator.buffer.toString().trim(), 'This is a cookie or biscuit');
       });
@@ -596,8 +596,8 @@ void main() {
         'This is a cookie'
         '{% else %}'
         'This is neither a cake nor a cookie'
-        '{% endcase %}', (document) {
-      evaluator.evaluate(document);
+        '{% endcase %}', (document) async {
+      await evaluator.evaluate(document);
       expect(evaluator.buffer.toString().trim(),
           'This is neither a cake nor a cookie');
     });
@@ -611,8 +611,8 @@ void main() {
         'This is a cake'
         '{% when "cookie" %}'
         'This is a cookie'
-        '{% endcase %}', (document) {
-      evaluator.evaluate(document);
+        '{% endcase %}', (document) async {
+      await evaluator.evaluate(document);
       expect(evaluator.buffer.toString(), '');
     });
   });
@@ -645,8 +645,8 @@ void main() {
     });
 
     test('renders a simple template', () {
-      testParser('{% render "simple.liquid" name: "World" %}', (document) {
-        evaluator.evaluate(document);
+      testParser('{% render "simple.liquid" name: "World" %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'Hello, World!');
       });
     });
@@ -654,22 +654,22 @@ void main() {
     test('renders a template with variables', () {
       testParser(
           '{% render "with_vars.liquid" greeting: "Hi", person: "John" %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'Hi, John!');
       });
     });
 
     test('renders a template with a for loop', () {
-      testParser('{% render "for_loop.liquid" items: (1..3) %}', (document) {
-        evaluator.evaluate(document);
+      testParser('{% render "for_loop.liquid" items: (1..3) %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), '1 2 3 ');
       });
     });
 
     test('renders a nested template', () {
-      testParser('{% render "nested.liquid" %}', (document) {
-        evaluator.evaluate(document);
+      testParser('{% render "nested.liquid" %}', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'Hello, World!');
       });
     });
@@ -683,8 +683,8 @@ void main() {
     test('renders with "with" parameter', () {
       evaluator.context.setVariable('product', {'title': 'Awesome Shirt'});
       testParser('{% render "with_product.liquid" with product as product %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), 'Product: Awesome Shirt');
       });
     });
@@ -696,8 +696,8 @@ void main() {
         {'title': 'Hat'}
       ]);
       testParser('{% render "with_product.liquid" for products as product %}',
-          (document) {
-        evaluator.evaluate(document);
+          (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(),
             'Product: ShirtProduct: PantsProduct: Hat');
       });
@@ -709,8 +709,8 @@ void main() {
         Outside: {{ name }}
         {% render "simple.liquid" name: "Inside" %}
         Outside again: {{ name }}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(
             evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
             'Outside: Outside Hello, Inside! Outside again: Outside');
@@ -730,8 +730,8 @@ void main() {
         {% endif %}
         ''');
 
-      testParser('{% render "recursive.liquid" depth: 3 %}', (document) {
-        evaluator.evaluate(document);
+      testParser('{% render "recursive.liquid" depth: 3 %}', (document) async {
+        await evaluator.evaluate(document);
         expect(
             evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
             'Depth: 3 Depth: 2 Depth: 1 Bottom reached');
@@ -757,9 +757,9 @@ void main() {
   truthy.
 {% endif %}
 
-      ''', (document) {
+      ''', (document) async {
         evaluator.context.setVariable('variable', true);
-        evaluator.evaluate(document);
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), contains('truthy'));
       });
     });
@@ -772,8 +772,8 @@ void main() {
   not truthy 
 {% endif %}
 
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), contains('not truthy'));
       });
     });
@@ -784,8 +784,8 @@ void main() {
         {% if name %}
           truthy.
         {% endif %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), contains('truthy'));
       });
     });
@@ -796,8 +796,8 @@ void main() {
         {% if name %}
           truthy.
         {% endif %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), isNot(contains('truthy')));
       });
     });
@@ -808,8 +808,8 @@ void main() {
         {% if name and "" %}
           truthy.
         {% endif %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), isNot(contains('truthy')));
       });
     });
@@ -820,8 +820,8 @@ void main() {
         {% if name or "" %}
           truthy.
         {% endif %}
-      ''', (document) {
-        evaluator.evaluate(document);
+      ''', (document) async {
+        await evaluator.evaluate(document);
         expect(evaluator.buffer.toString(), contains('truthy'));
       });
     });
@@ -837,8 +837,8 @@ void main() {
          {% else %}
             didn't find it
         {% endif %}
-      ''', (document) {
-      evaluator.evaluate(document);
+      ''', (document) async {
+      await evaluator.evaluate(document);
       expect(evaluator.buffer.toString(), contains('num is 1'));
     });
 
@@ -851,8 +851,8 @@ void main() {
          {% else %}
             didn't find it
         {% endif %}
-      ''', (document) {
-      evaluator.evaluate(document);
+      ''', (document) async {
+      await evaluator.evaluate(document);
       expect(evaluator.buffer.toString(), contains('num is 2'));
     });
 
@@ -870,8 +870,8 @@ void main() {
               it is not greater than 2
             {% endif %}
         {% endif %}
-      ''', (document) {
-      evaluator.evaluate(document);
+      ''', (document) async {
+      await evaluator.evaluate(document);
       expect(evaluator.buffer.toString(), contains("didn't find it"));
       expect(evaluator.buffer.toString(), contains("it is greater than 2"));
     });
@@ -890,8 +890,8 @@ void main() {
               it is not greater than 5
             {% endif %}
         {% endif %}
-      ''', (document) {
-      evaluator.evaluate(document);
+      ''', (document) async {
+      await evaluator.evaluate(document);
       expect(evaluator.buffer.toString(), contains("didn't find it"));
       expect(evaluator.buffer.toString(), contains("it is not greater than 5"));
     });

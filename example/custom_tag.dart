@@ -52,16 +52,16 @@ class BoxTag extends AbstractTag with CustomTagParser {
   BoxTag(super.content, super.filters);
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    String content = evaluator.evaluate(body[0]).toString().trim();
+  Future<dynamic> evaluate(Evaluator evaluator, Buffer buffer) async {
+    String content = (await evaluator.evaluate(body[0])).toString().trim();
 
-    content = Template.parse(
+    content = await Template.parse(
       content,
       data: evaluator.context.all(),
     ).render();
 
     String boxChar = this.content.isNotEmpty
-        ? evaluator.evaluate(this.content[0]).toString()
+        ? (await evaluator.evaluate(this.content[0])).toString()
         : '+';
 
     List<String> lines = content.split('\n');

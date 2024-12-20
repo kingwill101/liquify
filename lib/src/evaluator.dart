@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:liquify/parser.dart' show parseInput;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
@@ -58,8 +60,8 @@ class Evaluator implements ASTVisitor<dynamic> {
   ///
   /// @param node The AST node to evaluate.
   /// @return The result of evaluating the AST node.
-  dynamic evaluate(ASTNode node) {
-    return node.accept(this);
+  Future<dynamic> evaluate(ASTNode node) async {
+    return await node.accept(this);
   }
 
   /// Evaluates a list of AST nodes and writes the results to the buffer.
@@ -73,13 +75,13 @@ class Evaluator implements ASTVisitor<dynamic> {
   ///
   /// @param nodes The list of AST nodes to evaluate.
   /// @return The contents of the buffer as a string, representing the evaluated nodes.
-  dynamic evaluateNodes(List<ASTNode> nodes) {
+  Future<dynamic> evaluateNodes(List<ASTNode> nodes) async {
     for (final node in nodes) {
       if (node is Assignment) continue;
       if (node is Tag) {
-        node.accept(this);
+        await node.accept(this);
       } else {
-        buffer.write(node.accept(this));
+        buffer.write(await node.accept(this));
       }
     }
     return buffer.toString();
@@ -93,20 +95,20 @@ class Evaluator implements ASTVisitor<dynamic> {
   ///
   /// @param node The `Literal` AST node to evaluate.
   /// @return The value of the `Literal` node.
-  dynamic visitLiteral(Literal node) {
+  Future<dynamic> visitLiteral(Literal node) async {
     return node.value;
   }
 
   @override
-  dynamic visitIdentifier(Identifier node) {
+  Future<dynamic> visitIdentifier(Identifier node) async {
     final value = context.getVariable(node.name);
     return value;
   }
 
   @override
-  dynamic visitBinaryOperation(BinaryOperation node) {
-    final left = node.left.accept(this);
-    final right = node.right.accept(this);
+  Future<dynamic> visitBinaryOperation(BinaryOperation node) async{
+    final left = await node.left.accept(this);
+    final right = await node.right.accept(this);
     dynamic result;
     switch (node.operator) {
       case '+':
@@ -161,8 +163,8 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  dynamic visitUnaryOperation(UnaryOperation node) {
-    final expr = node.expression.accept(this);
+  Future<dynamic> visitUnaryOperation(UnaryOperation node) async{
+    final expr = await node.expression.accept(this);
     dynamic result;
     switch (node.operator) {
       case 'not':
@@ -176,13 +178,13 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  dynamic visitGroupedExpression(GroupedExpression node) {
-    return node.expression.accept(this);
+  Future<dynamic> visitGroupedExpression(GroupedExpression node) async {
+    return await node.expression.accept(this);
   }
 
   @override
-  dynamic visitAssignment(Assignment node) {
-    final value = node.value.accept(this);
+  Future<dynamic> visitAssignment(Assignment node) async {
+    final value = await node.value.accept(this);
     if (node.variable is Identifier) {
       context.setVariable((node.variable as Identifier).name, value);
     } else if (node.variable is MemberAccess) {
@@ -194,8 +196,7 @@ class Evaluator implements ASTVisitor<dynamic> {
         context.setVariable(objName, {});
       }
 
-      var objectVal = context(objName);
-
+      var objectVal = context.getVariable(objName);
       for (var i = 0; i < memberAccess.members.length; i++) {
         final name = (memberAccess.members[i] as Identifier).name;
         if (i == memberAccess.members.length - 1) {
@@ -211,12 +212,12 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  dynamic visitDocument(Document node) {
-    return evaluateNodes(node.children);
+  Future<dynamic> visitDocument(Document node) async {
+    return await evaluateNodes(node.children);
   }
 
   @override
-  dynamic visitFilter(Filter node) {
+  Future<dynamic> visitFilter(Filter node) async {
     final filterFunction = context.getFilter(node.name.name);
     if (filterFunction == null) {
       throw Exception('Undefined filter: ${node.name.name}');
@@ -226,21 +227,21 @@ class Evaluator implements ASTVisitor<dynamic> {
 
     for (final arg in node.arguments) {
       if (arg is NamedArgument) {
-        namedArgs[arg.identifier.name] = arg.value.accept(this);
+        namedArgs[arg.identifier.name] = await arg.value.accept(this);
       } else {
-        args.add(arg.accept(this));
+        args.add(await arg.accept(this));
       }
     }
 
-    return (value) => filterFunction(value, args, namedArgs);
+    return (value) async => await filterFunction(value, args, namedArgs);
   }
 
   @override
-  dynamic visitFilterExpression(FilteredExpression node) {
+  Future<dynamic> visitFilterExpression(FilteredExpression node) async{
     dynamic value;
 
     if (node.expression is Assignment) {
-      (node.expression as Assignment).value.accept(this);
+      await (node.expression as Assignment).value.accept(this);
 
       if ((node.expression as Assignment).value is Literal) {
         value = ((node.expression as Assignment).value as Literal).value;
@@ -249,18 +250,18 @@ class Evaluator implements ASTVisitor<dynamic> {
             ((node.expression as Assignment).value as Identifier).name);
       }
     } else {
-      value = node.expression.accept(this);
+      value = await node.expression.accept(this);
     }
 
     for (final filter in node.filters) {
-      final filterFunction = filter.accept(this);
+      final filterFunction = await filter.accept(this);
       value = filterFunction(value);
     }
     return value;
   }
 
   @override
-  dynamic visitMemberAccess(MemberAccess node) {
+  Future<dynamic> visitMemberAccess(MemberAccess node)  async{
     var object = node.object;
     final objName = (object as Identifier).name;
 
@@ -307,33 +308,33 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  dynamic visitNamedArgument(NamedArgument node) {
-    return MapEntry(node.identifier.name, node.value.accept(this));
+  Future<dynamic> visitNamedArgument(NamedArgument node) async {
+    return MapEntry(node.identifier.name, await node.value.accept(this));
   }
 
   @override
-  dynamic visitTag(Tag node) {
+  Future<dynamic> visitTag(Tag node) async {
     final tag = TagRegistry.createTag(node.name, node.content, node.filters);
-    tag?.preprocess(this);
+    await tag?.preprocess(this);
     tag?.body = node.body;
-    tag?.evaluate(this, buffer);
+    return await (tag?.evaluate(this, buffer));
   }
 
   @override
-  dynamic visitTextNode(TextNode node) {
+  Future<dynamic> visitTextNode(TextNode node) async {
     return node.text;
   }
 
   @override
-  dynamic visitVariable(Variable node) {
-    final value = node.expression.accept(this);
+  Future<dynamic> visitVariable(Variable node) async {
+    final value = await node.expression.accept(this);
     return value;
   }
 
   @override
-  visitArrayAccess(ArrayAccess arrayAccess) {
-    final array = arrayAccess.array.accept(this);
-    final key = arrayAccess.key.accept(this);
+  Future<dynamic> visitArrayAccess(ArrayAccess arrayAccess) async {
+    final array = await arrayAccess.array.accept(this);
+    final key = await arrayAccess.key.accept(this);
     if (array is List) {
       final index = key is int ? key : int.parse(key);
       if (index >= 0 && index < array.length) {
