@@ -412,14 +412,27 @@ FilterFunction arrayToSentenceString = (dynamic value, List<dynamic> arguments,
 class StringModule extends Module {
   @override
   void register() {
-    filters['capitalize'] = capitalize;
-    filters['replace'] = replace;
-    filters['replace_first'] = replaceFirst;
-    filters['replace_last'] = replaceLast;
-    filters['truncate'] = truncate;
-    filters['truncatewords'] = truncatewords;
-    filters['normalize_whitespace'] = normalizeWhitespace;
-    filters['number_of_words'] = numberOfWords;
-    filters['array_to_sentence_string'] = arrayToSentenceString;
+  filters['append'] = append;
+  filters['prepend'] = prepend;
+  filters['lstrip'] = lstrip;
+  filters['downcase'] = downcase;
+  filters['upcase'] = upcase;
+  filters['remove'] = remove;
+  filters['remove_first'] = removeFirst;
+  filters['remove_last'] = removeLast;
+  filters['rstrip'] = rstrip;
+  filters['split'] = split;
+  filters['strip'] = strip;
+  filters['strip_newlines'] = stripNewlines;
+  filters['capitalize'] = capitalize;
+  filters['replace'] = replace;
+  filters['replace_first'] = replaceFirst;
+  filters['replace_last'] = replaceLast;
+  filters['truncate'] = truncate;
+  filters['truncatewords'] = truncatewords;
+  filters['normalize_whitespace'] = normalizeWhitespace;
+  filters['number_of_words'] = numberOfWords;
+  filters['array_to_sentence_string'] = arrayToSentenceString;
+
   }
 }

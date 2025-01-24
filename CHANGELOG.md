@@ -1,3 +1,6 @@
+## 0.8.2
+- Make sure we register all the missing string filters
+  
 ## 0.8.1
 - support elseif tags
 
