@@ -1,6 +1,6 @@
-import 'package:liquify/src/tag.dart';
+import '../../parser.dart';
 
-class CycleTag extends AbstractTag with CustomTagParser {
+class CycleTag extends AbstractTag with CustomTagParser, AsyncTag {
   late List<dynamic> items;
   String? groupName;
 
@@ -16,10 +16,14 @@ class CycleTag extends AbstractTag with CustomTagParser {
 
     if (firstNamedArg != null) {
       groupName = firstNamedArg.identifier.name;
-      items = ((firstNamedArg.value as Literal).value as List)
-          .where((e) => e is! NamedArgument)
-          .map((e) => evaluator.evaluate(e))
-          .toList();
+      final array = (firstNamedArg.value as Literal).value as List;
+      items = array.map((e) {
+        // Evaluate each literal in the array
+        if (e is Literal) {
+          return e.value;
+        }
+        return evaluator.evaluate(e);
+      }).toList();
     } else {
       items = content
           .where((e) => e is Identifier || e is Literal)
@@ -30,18 +34,6 @@ class CycleTag extends AbstractTag with CustomTagParser {
     if (items.isEmpty) {
       throw Exception('CycleTag requires at least one item to cycle through.');
     }
-  }
-
-  @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    final cycleState = _getCycleState(evaluator);
-    final currentIndex = cycleState['index'] as int;
-    final currentItem = items[currentIndex];
-
-    buffer.write(currentItem);
-
-    cycleState['index'] = (currentIndex + 1) % items.length;
-    _setCycleState(evaluator, cycleState);
   }
 
   Map<String, dynamic> _getCycleState(Evaluator evaluator) {
@@ -58,6 +50,31 @@ class CycleTag extends AbstractTag with CustomTagParser {
 
   String _getStateKey() {
     return groupName != null ? 'cycle:$groupName' : 'cycle:${items.join(",")}';
+  }
+
+  @override
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    final cycleState = _getCycleState(evaluator);
+    final currentIndex = cycleState['index'] as int;
+    final currentItem = items[currentIndex];
+
+    buffer.write(currentItem);
+
+    cycleState['index'] = (currentIndex + 1) % items.length;
+    _setCycleState(evaluator, cycleState);
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    final cycleState = _getCycleState(evaluator);
+    final currentIndex = cycleState['index'] as int;
+    final currentItem = items[currentIndex];
+
+    buffer.write(currentItem);
+
+    cycleState['index'] = (currentIndex + 1) % items.length;
+    _setCycleState(evaluator, cycleState);
   }
 
   @override
