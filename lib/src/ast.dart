@@ -7,6 +7,7 @@ abstract class ASTNode {
   Map<String, dynamic> toJson() => {};
 
   T accept<T>(ASTVisitor<T> visitor);
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor);
 }
 
 class Document extends ASTNode {
@@ -22,6 +23,10 @@ class Document extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitDocument(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitDocumentAsync(this);
 }
 
 class Tag extends ASTNode {
@@ -77,6 +82,10 @@ class Tag extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitTag(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitTagAsync(this);
 }
 
 class GroupedExpression extends ASTNode {
@@ -92,6 +101,10 @@ class GroupedExpression extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitGroupedExpression(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitGroupedExpressionAsync(this);
 }
 
 class Assignment extends ASTNode {
@@ -109,6 +122,10 @@ class Assignment extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitAssignment(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitAssignmentAsync(this);
 }
 
 class BinaryOperation extends ASTNode {
@@ -128,6 +145,10 @@ class BinaryOperation extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitBinaryOperation(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitBinaryOperationAsync(this);
 }
 
 class Identifier extends ASTNode {
@@ -143,6 +164,10 @@ class Identifier extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitIdentifier(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitIdentifierAsync(this);
 
   @override
   bool operator ==(Object other) {
@@ -198,6 +223,10 @@ class Literal extends ASTNode {
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitLiteral(this);
 
   @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitLiteralAsync(this);
+
+  @override
   Map<String, dynamic> toJson() => {
         'type': 'Literal',
         'value': value,
@@ -227,6 +256,10 @@ class TextNode extends ASTNode {
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitTextNode(this);
 
   @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitTextNodeAsync(this);
+
+  @override
   Map<String, dynamic> toJson() => {
         'type': 'TextNode',
         'text': text,
@@ -248,6 +281,10 @@ class MemberAccess extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitMemberAccess(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitMemberAccessAsync(this);
 }
 
 class ArrayAccess extends ASTNode {
@@ -265,6 +302,10 @@ class ArrayAccess extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitArrayAccess(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitArrayAccessAsync(this);
 }
 
 class UnaryOperation extends ASTNode {
@@ -275,6 +316,10 @@ class UnaryOperation extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitUnaryOperation(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitUnaryOperationAsync(this);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -299,6 +344,10 @@ class Variable extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitVariable(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitVariableAsync(this);
 }
 
 class FilteredExpression extends ASTNode {
@@ -316,6 +365,10 @@ class FilteredExpression extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitFilterExpression(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitFilterExpressionAsync(this);
 }
 
 class Filter extends ASTNode {
@@ -333,6 +386,10 @@ class Filter extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitFilter(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitFilterAsync(this);
 }
 
 class NamedArgument extends ASTNode {
@@ -343,6 +400,10 @@ class NamedArgument extends ASTNode {
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitNamedArgument(this);
+
+  @override
+  Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
+      visitor.visitNamedArgumentAsync(this);
 
   @override
   Map<String, dynamic> toJson() => {
