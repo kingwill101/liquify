@@ -69,7 +69,7 @@ class RenderTag extends AbstractTag with AsyncTag {
 
   Future<void> _renderTemplateAsync(String template, Evaluator evaluator,
       Buffer buffer, Map<String, dynamic> localVariables) async {
-    final templateNodes = evaluator.resolveAndParseTemplate(template);
+    final templateNodes = await evaluator.resolveAndParseTemplateAsync(template);
     var env = Environment();
     final currentRoot = evaluator.context.getRoot();
 

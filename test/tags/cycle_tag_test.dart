@@ -19,11 +19,10 @@ void main() {
     group('sync evaluation', () {
       test('basic cycling through values', () async {
         await testParser(
-            '{% cycle "one", "two", "three" %}' 
-            '{% cycle "one", "two", "three" %}' 
-            '{% cycle "one", "two", "three" %}' 
-            '{% cycle "one", "two", "three" %}',
-            (document) {
+            '{% cycle "one", "two", "three" %}'
+            '{% cycle "one", "two", "three" %}'
+            '{% cycle "one", "two", "three" %}'
+            '{% cycle "one", "two", "three" %}', (document) {
           evaluator.evaluateNodes(document.children);
           expect(evaluator.buffer.toString(), 'onetwothreeone');
         });
@@ -31,11 +30,10 @@ void main() {
 
       test('cycling with named groups', () async {
         await testParser(
-            '{% cycle "group1": "one", "two", "three" %}' 
-            '{% cycle "group2": "a", "b", "c" %}' 
-            '{% cycle "group1": "one", "two", "three" %}' 
-            '{% cycle "group2": "a", "b", "c" %}',
-            (document) {
+            '{% cycle "group1": "one", "two", "three" %}'
+            '{% cycle "group2": "a", "b", "c" %}'
+            '{% cycle "group1": "one", "two", "three" %}'
+            '{% cycle "group2": "a", "b", "c" %}', (document) {
           evaluator.evaluateNodes(document.children);
           expect(evaluator.buffer.toString(), 'oneatwob');
         });
@@ -43,12 +41,11 @@ void main() {
 
       test('cycling with variables', () async {
         await testParser(
-            '{% assign var1 = "first" %}' 
-            '{% assign var2 = "second" %}' 
-            '{% cycle var1, var2 %}' 
-            '{% cycle var1, var2 %}' 
-            '{% cycle var1, var2 %}',
-            (document) {
+            '{% assign var1 = "first" %}'
+            '{% assign var2 = "second" %}'
+            '{% cycle var1, var2 %}'
+            '{% cycle var1, var2 %}'
+            '{% cycle var1, var2 %}', (document) {
           evaluator.evaluateNodes(document.children);
           expect(evaluator.buffer.toString(), 'firstsecondfirst');
         });
@@ -58,11 +55,10 @@ void main() {
     group('async evaluation', () {
       test('basic cycling through values', () async {
         await testParser(
-            '{% cycle "one", "two", "three" %}' 
-            '{% cycle "one", "two", "three" %}' 
-            '{% cycle "one", "two", "three" %}' 
-            '{% cycle "one", "two", "three" %}',
-            (document) async {
+            '{% cycle "one", "two", "three" %}'
+            '{% cycle "one", "two", "three" %}'
+            '{% cycle "one", "two", "three" %}'
+            '{% cycle "one", "two", "three" %}', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(evaluator.buffer.toString(), 'onetwothreeone');
         });
@@ -70,11 +66,10 @@ void main() {
 
       test('cycling with named groups', () async {
         await testParser(
-            '{% cycle "group1": "one", "two", "three" %}' 
-            '{% cycle "group2": "a", "b", "c" %}' 
-            '{% cycle "group1": "one", "two", "three" %}' 
-            '{% cycle "group2": "a", "b", "c" %}',
-            (document) async {
+            '{% cycle "group1": "one", "two", "three" %}'
+            '{% cycle "group2": "a", "b", "c" %}'
+            '{% cycle "group1": "one", "two", "three" %}'
+            '{% cycle "group2": "a", "b", "c" %}', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(evaluator.buffer.toString(), 'oneatwob');
         });
@@ -82,12 +77,11 @@ void main() {
 
       test('cycling with variables', () async {
         await testParser(
-            '{% assign var1 = "first" %}' 
-            '{% assign var2 = "second" %}' 
-            '{% cycle var1, var2 %}' 
-            '{% cycle var1, var2 %}' 
-            '{% cycle var1, var2 %}',
-            (document) async {
+            '{% assign var1 = "first" %}'
+            '{% assign var2 = "second" %}'
+            '{% cycle var1, var2 %}'
+            '{% cycle var1, var2 %}'
+            '{% cycle var1, var2 %}', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(evaluator.buffer.toString(), 'firstsecondfirst');
         });

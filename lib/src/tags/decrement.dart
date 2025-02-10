@@ -14,11 +14,12 @@ class DecrementTag extends AbstractTag with AsyncTag {
     return 'counter:${(content.first as Identifier).name}';
   }
 
-  Future<dynamic> _evaluateDecrement(Evaluator evaluator, Buffer buffer, {bool isAsync = false}) async {
+  Future<dynamic> _evaluateDecrement(Evaluator evaluator, Buffer buffer,
+      {bool isAsync = false}) async {
     final stateKey = _getStateKey();
     final currentValue = evaluator.context.getVariable(stateKey) ?? 0;
     final newValue = currentValue - 1;
-    
+
     buffer.write(newValue);
     evaluator.context.setVariable(stateKey, newValue);
   }
@@ -29,7 +30,8 @@ class DecrementTag extends AbstractTag with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
     return _evaluateDecrement(evaluator, buffer, isAsync: true);
   }
 }

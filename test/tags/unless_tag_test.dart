@@ -45,12 +45,11 @@ void main() {
             {% endunless %}
           {% endunless %}
         ''', (document) {
-          evaluator.context.setVariable('product', {
-            'title': 'Terrible Shoes',
-            'price': 50
-          });
+          evaluator.context
+              .setVariable('product', {'title': 'Terrible Shoes', 'price': 50});
           evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), 'Affordable non-awesome shoes!');
+          expect(evaluator.buffer.toString().trim(),
+              'Affordable non-awesome shoes!');
         });
       });
     });
@@ -84,12 +83,11 @@ void main() {
             {% endunless %}
           {% endunless %}
         ''', (document) async {
-          evaluator.context.setVariable('product', {
-            'title': 'Terrible Shoes',
-            'price': 50
-          });
+          evaluator.context
+              .setVariable('product', {'title': 'Terrible Shoes', 'price': 50});
           await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), 'Affordable non-awesome shoes!');
+          expect(evaluator.buffer.toString().trim(),
+              'Affordable non-awesome shoes!');
         });
       });
     });

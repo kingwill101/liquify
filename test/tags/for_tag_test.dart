@@ -19,16 +19,16 @@ void main() {
     group('sync evaluation', () {
       test('basic iteration', () async {
         await testParser('{% for item in (1..3) %}{{ item }}{% endfor %}',
-                (document) {
-              evaluator.evaluateNodes(document.children);
-              expect(evaluator.buffer.toString(), '123');
-            });
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '123');
+        });
       });
 
       test('else block', () async {
         await testParser(
           '{% for item in (1..0) %}{{ item }}{% else %}No items{% endfor %}',
-              (document) {
+          (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), 'No items');
           },
@@ -38,46 +38,46 @@ void main() {
       test('break tag', () async {
         await testParser(
             '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
-                (document) {
-              evaluator.evaluateNodes(document.children);
-              expect(evaluator.buffer.toString(), '12');
-            });
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '12');
+        });
       });
 
       test('continue tag', () async {
         await testParser(
             '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
-                (document) {
-              evaluator.evaluateNodes(document.children);
-              expect(evaluator.buffer.toString(), '1245');
-            });
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '1245');
+        });
       });
 
       test('limit filter', () async {
         await testParser(
             '{% for item in (1..5) limit:3 %}{{ item }}{% endfor %}',
-                (document) {
-              evaluator.evaluateNodes(document.children);
-              expect(evaluator.buffer.toString(), '123');
-            });
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '123');
+        });
       });
 
       test('offset filter', () async {
         await testParser(
             '{% for item in (1..5) offset:2 %}{{ item }}{% endfor %}',
-                (document) {
-              evaluator.evaluateNodes(document.children);
-              expect(evaluator.buffer.toString(), '345');
-            });
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '345');
+        });
       });
 
       test('reversed filter', () async {
         await testParser(
             '{% for item in (1..3) reversed %}{{ item }}{% endfor %}',
-                (document) {
-              evaluator.evaluateNodes(document.children);
-              expect(evaluator.buffer.toString(), '321');
-            });
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '321');
+        });
       });
 
       test('forloop basic properties', () async {
@@ -91,7 +91,10 @@ void main() {
           {% endfor %}''', (document) {
           evaluator.evaluateNodes(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Index:1, Index0:0, First:true, Last:false, Length:3 Index:2, Index0:1, First:false, Last:false, Length:3 Index:3, Index0:2, First:false, Last:true, Length:3');
         });
       });
@@ -106,7 +109,10 @@ void main() {
           {% endfor %}''', (document) {
           evaluator.evaluateNodes(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Outer:1, Inner:1 Outer:1, Inner:2 Outer:2, Inner:1 Outer:2, Inner:2');
         });
       });
@@ -115,16 +121,16 @@ void main() {
     group('async evaluation', () {
       test('basic iteration', () async {
         await testParser('{% for item in (1..3) %}{{ item }}{% endfor %}',
-                (document) async {
-              await evaluator.evaluateNodesAsync(document.children);
-              expect(evaluator.buffer.toString(), '123');
-            });
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '123');
+        });
       });
 
       test('else block', () async {
         await testParser(
           '{% for item in (1..0) %}{{ item }}{% else %}No items{% endfor %}',
-              (document) async {
+          (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), 'No items');
           },
@@ -134,46 +140,46 @@ void main() {
       test('break tag', () async {
         await testParser(
             '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
-                (document) async {
-              await evaluator.evaluateNodesAsync(document.children);
-              expect(evaluator.buffer.toString(), '12');
-            });
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '12');
+        });
       });
 
       test('continue tag', () async {
         await testParser(
             '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
-                (document) async {
-              await evaluator.evaluateNodesAsync(document.children);
-              expect(evaluator.buffer.toString(), '1245');
-            });
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '1245');
+        });
       });
 
       test('limit filter', () async {
         await testParser(
             '{% for item in (1..5) limit:3 %}{{ item }}{% endfor %}',
-                (document) async {
-              await evaluator.evaluateNodesAsync(document.children);
-              expect(evaluator.buffer.toString(), '123');
-            });
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '123');
+        });
       });
 
       test('offset filter', () async {
         await testParser(
             '{% for item in (1..5) offset:2 %}{{ item }}{% endfor %}',
-                (document) async {
-              await evaluator.evaluateNodesAsync(document.children);
-              expect(evaluator.buffer.toString(), '345');
-            });
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '345');
+        });
       });
 
       test('reversed filter', () async {
         await testParser(
             '{% for item in (1..3) reversed %}{{ item }}{% endfor %}',
-                (document) async {
-              await evaluator.evaluateNodesAsync(document.children);
-              expect(evaluator.buffer.toString(), '321');
-            });
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '321');
+        });
       });
 
       test('forloop basic properties', () async {
@@ -187,7 +193,10 @@ void main() {
           {% endfor %}''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Index:1, Index0:0, First:true, Last:false, Length:3 Index:2, Index0:1, First:false, Last:false, Length:3 Index:3, Index0:2, First:false, Last:true, Length:3');
         });
       });
@@ -202,7 +211,10 @@ void main() {
           {% endfor %}''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Outer:1, Inner:1 Outer:1, Inner:2 Outer:2, Inner:1 Outer:2, Inner:2');
         });
       });

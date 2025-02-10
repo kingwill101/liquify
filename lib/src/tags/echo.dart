@@ -5,7 +5,6 @@ import 'package:liquify/src/tags/tag.dart';
 class EchoTag extends AbstractTag with AsyncTag {
   EchoTag(super.content, super.filters);
 
-
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     var value = evaluateContent(evaluator);

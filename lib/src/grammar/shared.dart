@@ -413,8 +413,6 @@ Parser elseIfBlock() =>
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
     });
 
-
-
 Parser elseifTag() => someTag("elseif");
 
 Parser endIfTag() =>

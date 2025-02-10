@@ -7,7 +7,8 @@ class UnlessTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   UnlessTag(super.content, super.filters);
 
-  void _renderBlockSync(Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
+  void _renderBlockSync(
+      Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
     for (final subNode in body) {
       try {
         if (subNode is Tag) {
@@ -23,7 +24,8 @@ class UnlessTag extends AbstractTag with CustomTagParser, AsyncTag {
     }
   }
 
-  Future<void> _renderBlockAsync(Evaluator evaluator, Buffer buffer, List<ASTNode> body) async {
+  Future<void> _renderBlockAsync(
+      Evaluator evaluator, Buffer buffer, List<ASTNode> body) async {
     for (final subNode in body) {
       try {
         if (subNode is Tag) {
@@ -48,7 +50,8 @@ class UnlessTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
     conditionMet = isTruthy(await evaluator.evaluateAsync(content[0]));
     if (!conditionMet) {
       await _renderBlockAsync(evaluator, buffer, body);

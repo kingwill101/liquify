@@ -44,8 +44,8 @@ void main() {
             'This is something else'
             '{% endcase %}', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(
-              evaluator.buffer.toString().trim(), 'This is a cookie or biscuit');
+          expect(evaluator.buffer.toString().trim(),
+              'This is a cookie or biscuit');
         });
       });
 
@@ -110,8 +110,8 @@ void main() {
             'This is something else'
             '{% endcase %}', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(
-              evaluator.buffer.toString().trim(), 'This is a cookie or biscuit');
+          expect(evaluator.buffer.toString().trim(),
+              'This is a cookie or biscuit');
         });
       });
 

@@ -1,7 +1,5 @@
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
-import 'package:liquify/src/fs.dart';
-import 'package:file/memory.dart';
 import 'package:test/test.dart';
 
 import '../shared.dart';

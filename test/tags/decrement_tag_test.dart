@@ -31,10 +31,8 @@ void main() {
           {% decrement counter %}
         ''', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '-1-2-3'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '-1-2-3');
         });
       });
 
@@ -45,10 +43,8 @@ void main() {
           {{ counter }}
         ''', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '-142'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '-142');
         });
       });
 
@@ -59,10 +55,8 @@ void main() {
           {% increment counter %}
         ''', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '0-10'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '0-10');
         });
       });
 
@@ -74,10 +68,8 @@ void main() {
           {% decrement counter2 %}
         ''', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '-1-1-2-2'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '-1-1-2-2');
         });
       });
     });
@@ -97,10 +89,8 @@ void main() {
           {% decrement counter %}
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '-1-2-3'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '-1-2-3');
         });
       });
 
@@ -111,10 +101,8 @@ void main() {
           {{ counter }}
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '-142'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '-142');
         });
       });
 
@@ -125,10 +113,8 @@ void main() {
           {% increment counter %}
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '0-10'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '0-10');
         });
       });
 
@@ -140,10 +126,8 @@ void main() {
           {% decrement counter2 %}
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '-1-1-2-2'
-          );
+          expect(evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '-1-1-2-2');
         });
       });
     });

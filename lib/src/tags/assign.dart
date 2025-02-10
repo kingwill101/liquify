@@ -14,9 +14,10 @@ class AssignTag extends AbstractTag with AsyncTag {
 
   Identifier get variable => assignment?.variable as Identifier;
 
-  Future<dynamic> _evaluateAssignment(Evaluator evaluator, {bool isAsync = false}) async {
+  Future<dynamic> _evaluateAssignment(Evaluator evaluator,
+      {bool isAsync = false}) async {
     if (assignmentIsVariable()) {
-      final value = isAsync 
+      final value = isAsync
           ? await evaluator.evaluateAsync(assignment!.value)
           : evaluator.evaluate(assignment!.value);
       _setVar(evaluator, value);

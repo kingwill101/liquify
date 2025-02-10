@@ -54,7 +54,8 @@ abstract class AbstractTag {
       if (filterFunction == null) {
         throw Exception('Undefined filter: ${filter.name.name}');
       }
-      final args = filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
+      final args =
+          filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
       result = filterFunction(result, args, {});
     }
     return result;
@@ -92,7 +93,7 @@ abstract class AbstractTag {
     return result;
   }
 
-  dynamic evaluate(Evaluator evaluator, Buffer buffer)  {
+  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     evaluator.context.pushScope();
 
     final innerEvaluator = evaluator.createInnerEvaluator()

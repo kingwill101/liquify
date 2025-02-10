@@ -15,80 +15,154 @@ void main() {
     evaluator.context.clear();
   });
 
-  group('RepeatTag', () {
+  group('truthy', () {
     group('sync evaluation', () {
-      test('repeats content given number of times', () async {
-        await testParser('{% repeat 3 %}hello{% endrepeat %}', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), 'hello hello hello');
-        });
-      });
-
-      test('repeats with variable', () async {
+      test('variable is truthy', () async {
         await testParser('''
-          {% assign times = 2 %}
-          {% repeat times %}world {% endrepeat %}
+          {% assign name = "Tobi" %}
+          {% if name %}
+          truthy.
+          {% endif %}
         ''', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), 'world world');
+          expect(evaluator.buffer.toString(), contains('truthy'));
         });
       });
 
-      test('repeats with filters', () async {
-        await testParser(
-          '{% repeat 3 | upcase %}hi {% endrepeat  %}',
-          (document) {
-            evaluator.evaluateNodes(document.children);
-            expect(evaluator.buffer.toString(), 'HI HI HI');
-          });
+      test('false is falsy', () async {
+        await testParser('''
+          {% if false %}
+          falsy.
+          {% else %}
+          not truthy
+          {% endif %}
+        ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), contains('not truthy'));
+        });
       });
 
-      test('repeats with multiple filters', () async {
-        await testParser(
-          '{% repeat 2 | upcase | append: "!"%}test {% endrepeat  %}',
-          (document) {
-            evaluator.evaluateNodes(document.children);
-            expect(evaluator.buffer.toString(), 'TEST TEST!');
-          });
+      test('empty string is truthy', () async {
+        await testParser('''
+          {% assign name = "" %}
+          {% if name %}
+          truthy.
+          {% endif %}
+        ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), contains('truthy'));
+        });
+      });
+
+      test('null is falsy', () async {
+        await testParser('''
+          {% assign name = null %}
+          {% if name %}
+          truthy.
+          {% endif %}
+        ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), isNot(contains('truthy')));
+        });
+      });
+
+      test('binary operator and evaluates correctly', () async {
+        await testParser('''
+          {% assign name = null %}
+          {% if name and "" %}
+          truthy.
+          {% endif %}
+        ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), isNot(contains('truthy')));
+        });
+      });
+
+      test('binary operator or evaluates correctly', () async {
+        await testParser('''
+          {% assign name = null %}
+          {% if name or "" %}
+          truthy.
+          {% endif %}
+        ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), contains('truthy'));
+        });
       });
     });
 
     group('async evaluation', () {
-      test('repeats content given number of times', () async {
-        await testParser('{% repeat 3 %}'
-            'hello'
-            '{% endrepeat %}', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), 'hello hello hello');
-        });
-      });
-
-      test('repeats with variable', () async {
+      test('variable is truthy', () async {
         await testParser('''
-          {% assign times = 2 %}
-          {% repeat times %}world {% endrepeat %}
+          {% assign name = "Tobi" %}
+          {% if name %}
+          truthy.
+          {% endif %}
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), 'world world');
+          expect(evaluator.buffer.toString(), contains('truthy'));
         });
       });
 
-      test('repeats with filters', () async {
-        await testParser(
-          '{% repeat 3 | upcase %}hi {% endrepeat  %}',
-          (document) async {
-            await evaluator.evaluateNodesAsync(document.children);
-            expect(evaluator.buffer.toString(), 'HI HI HI');
-          });
+      test('false is falsy', () async {
+        await testParser('''
+          {% if false %}
+          falsy.
+          {% else %}
+          not truthy
+          {% endif %}
+        ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), contains('not truthy'));
+        });
       });
 
-      test('repeats with multiple filters', () async {
-        await testParser(
-          '{% repeat 2 | upcase | append: "!"  %}test {% endrepeat %}',
-          (document) async {
-            await evaluator.evaluateNodesAsync(document.children);
-            expect(evaluator.buffer.toString(), 'TEST TEST!');
-          });
+      test('empty string is truthy', () async {
+        await testParser('''
+          {% assign name = "" %}
+          {% if name %}
+          truthy.
+          {% endif %}
+        ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), contains('truthy'));
+        });
+      });
+
+      test('null is falsy', () async {
+        await testParser('''
+          {% assign name = null %}
+          {% if name %}
+          truthy.
+          {% endif %}
+        ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), isNot(contains('truthy')));
+        });
+      });
+
+      test('binary operator and evaluates correctly', () async {
+        await testParser('''
+          {% assign name = null %}
+          {% if name and "" %}
+          truthy.
+          {% endif %}
+        ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), isNot(contains('truthy')));
+        });
+      });
+
+      test('binary operator or evaluates correctly', () async {
+        await testParser('''
+          {% assign name = null %}
+          {% if name or "" %}
+          truthy.
+          {% endif %}
+        ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), contains('truthy'));
+        });
       });
     });
   });

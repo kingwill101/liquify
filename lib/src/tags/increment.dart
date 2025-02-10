@@ -14,11 +14,12 @@ class IncrementTag extends AbstractTag with AsyncTag {
     return 'counter:${(content.first as Identifier).name}';
   }
 
-  Future<dynamic> _evaluateIncrement(Evaluator evaluator, Buffer buffer, {bool isAsync = false}) async {
+  Future<dynamic> _evaluateIncrement(Evaluator evaluator, Buffer buffer,
+      {bool isAsync = false}) async {
     final stateKey = _getStateKey();
     final currentValue = evaluator.context.getVariable(stateKey) ?? -1;
     final newValue = currentValue + 1;
-    
+
     buffer.write(newValue);
     evaluator.context.setVariable(stateKey, newValue);
   }
@@ -29,7 +30,8 @@ class IncrementTag extends AbstractTag with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
     return _evaluateIncrement(evaluator, buffer, isAsync: true);
   }
 }

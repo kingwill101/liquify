@@ -75,7 +75,8 @@ void main() {
 
       test('throws exception for non-existent template', () async {
         await testParser('{% render "non_existent.liquid" %}', (document) {
-          expect(() => evaluator.evaluateNodes(document.children), throwsException);
+          expect(() => evaluator.evaluateNodes(document.children),
+              throwsException);
         });
       });
 
@@ -113,7 +114,10 @@ void main() {
         ''', (document) {
           evaluator.evaluateNodes(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Outside: Outside Hello, Inside! Outside again: Outside');
         });
       });
@@ -135,7 +139,10 @@ void main() {
             (document) {
           evaluator.evaluateNodes(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Depth: 3 Depth: 2 Depth: 1 Bottom reached');
         });
       });
@@ -175,8 +182,10 @@ void main() {
       });
 
       test('throws exception for non-existent template', () async {
-        await testParser('{% render "non_existent.liquid" %}', (document) async {
-          expect(() => evaluator.evaluateNodesAsync(document.children), throwsException);
+        await testParser('{% render "non_existent.liquid" %}',
+            (document) async {
+          expect(() => evaluator.evaluateNodesAsync(document.children),
+              throwsException);
         });
       });
 
@@ -214,7 +223,10 @@ void main() {
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Outside: Outside Hello, Inside! Outside again: Outside');
         });
       });
@@ -236,7 +248,10 @@ void main() {
             (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(
-              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim(),
+              evaluator.buffer
+                  .toString()
+                  .replaceAll(RegExp(r'\s+'), ' ')
+                  .trim(),
               'Depth: 3 Depth: 2 Depth: 1 Bottom reached');
         });
       });

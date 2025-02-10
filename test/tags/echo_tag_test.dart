@@ -23,7 +23,8 @@ void main() {
           {% echo username | append: ", welcome to LiquidJS!" %}
         ''', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), 'Bob, welcome to LiquidJS!');
+          expect(
+              evaluator.buffer.toString().trim(), 'Bob, welcome to LiquidJS!');
         });
       });
 
@@ -54,7 +55,8 @@ void main() {
           {% echo username | append: ", welcome to LiquidJS!" %}
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), 'Bob, welcome to LiquidJS!');
+          expect(
+              evaluator.buffer.toString().trim(), 'Bob, welcome to LiquidJS!');
         });
       });
 

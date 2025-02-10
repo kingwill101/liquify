@@ -14,7 +14,8 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
     variableName = (content.first as Identifier).name;
   }
 
-  Future<dynamic> _evaluateCapture(Evaluator evaluator, Buffer buffer, {bool isAsync = false}) async {
+  Future<dynamic> _evaluateCapture(Evaluator evaluator, Buffer buffer,
+      {bool isAsync = false}) async {
     Buffer buf = Buffer();
     final variable = args.firstOrNull;
     if (variable == null) {
@@ -23,7 +24,7 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
 
     for (final node in body) {
       if (node is Tag) continue;
-      final value = isAsync 
+      final value = isAsync
           ? await evaluator.evaluateAsync(node)
           : evaluator.evaluate(node);
       buf.write(value);
@@ -37,7 +38,8 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
     return _evaluateCapture(evaluator, buffer, isAsync: true);
   }
 

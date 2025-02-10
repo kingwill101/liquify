@@ -89,7 +89,8 @@ void main() {
         ''', (document) {
           evaluator.evaluateNodes(document.children);
           expect(evaluator.buffer.toString(), contains("didn't find it"));
-          expect(evaluator.buffer.toString(), contains("it is not greater than 5"));
+          expect(evaluator.buffer.toString(),
+              contains("it is not greater than 5"));
         });
       });
     });
@@ -167,7 +168,8 @@ void main() {
         ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(evaluator.buffer.toString(), contains("didn't find it"));
-          expect(evaluator.buffer.toString(), contains("it is not greater than 5"));
+          expect(evaluator.buffer.toString(),
+              contains("it is not greater than 5"));
         });
       });
     });

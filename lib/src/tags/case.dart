@@ -15,7 +15,8 @@ class CaseTag extends AbstractTag with AsyncTag {
     }
   }
 
-  void _evaluateBody(List<ASTNode> nodeBody, Evaluator evaluator, Buffer buffer) {
+  void _evaluateBody(
+      List<ASTNode> nodeBody, Evaluator evaluator, Buffer buffer) {
     for (final subNode in nodeBody) {
       if (subNode is Tag) {
         evaluator.evaluate(subNode);
@@ -25,7 +26,8 @@ class CaseTag extends AbstractTag with AsyncTag {
     }
   }
 
-  Future<void> _evaluateBodyAsync(List<ASTNode> nodeBody, Evaluator evaluator, Buffer buffer) async {
+  Future<void> _evaluateBodyAsync(
+      List<ASTNode> nodeBody, Evaluator evaluator, Buffer buffer) async {
     for (final subNode in nodeBody) {
       if (subNode is Tag) {
         await evaluator.evaluateAsync(subNode);
@@ -44,7 +46,8 @@ class CaseTag extends AbstractTag with AsyncTag {
     for (final node in body) {
       if (node is Tag) {
         if (node.name == 'when' && !matchFound) {
-          final whenValues = node.content.map((e) => evaluator.evaluate(e)).toList();
+          final whenValues =
+              node.content.map((e) => evaluator.evaluate(e)).toList();
           if (whenValues.contains(caseValue)) {
             _evaluateBody(node.body, evaluator, buffer);
             matchFound = true;
@@ -61,7 +64,8 @@ class CaseTag extends AbstractTag with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
     caseValue = await evaluator.evaluateAsync(content[0]);
     Tag? elseTag;
     bool matchFound = false;

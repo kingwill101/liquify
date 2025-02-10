@@ -1,13 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:liquify/liquify.dart';
 import 'package:liquify/parser.dart';
-import 'package:liquify/src/util.dart';
 
-void testParser(String source, void Function(Document document) testFunction) {
+FutureOr<void> testParser(String source,
+    FutureOr<void> Function(Document document) testFunction) async {
   try {
     final document = Document(parseInput(source));
     try {
-      testFunction(document);
+      await testFunction(document);
     } catch (e) {
       print('Error: $e');
       printAST(document, 0);
@@ -16,7 +18,7 @@ void testParser(String source, void Function(Document document) testFunction) {
       final encoded = encoder.convert(document);
       print(encoded);
 
-      return;
+      rethrow;
     }
   } catch (e) {
     rethrow;

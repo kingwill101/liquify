@@ -26,7 +26,8 @@ class RepeatTag extends AbstractTag with AsyncTag, CustomTagParser {
 
   @override
   Future<dynamic> evaluateAsync(Evaluator evaluator, Buffer buffer) async {
-    final times = int.parse((await evaluator.evaluateAsync(content.first)).toString());
+    final times =
+        int.parse((await evaluator.evaluateAsync(content.first)).toString());
     final contentNodes = List<ASTNode>.from(body);
 
     final buffers = await Future.wait(List.generate(times, (_) async {
