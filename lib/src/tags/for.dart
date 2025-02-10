@@ -128,21 +128,29 @@ class ForTag extends AbstractTag {
     }
   }
 
-  @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+  Future<void> _evaluateNodes(List<ASTNode> nodes, Evaluator evaluator, Buffer buffer, {bool isAsync = false}) async {
+    for (final node in nodes) {
+      if (node is Tag) {
+        isAsync 
+            ? await evaluator.evaluateAsync(node)
+            : evaluator.evaluate(node);
+      } else {
+        final value = isAsync 
+            ? await evaluator.evaluateAsync(node)
+            : evaluator.evaluate(node);
+        buffer.write(value);
+      }
+    }
+  }
+
+  Future<dynamic> _evaluateFor(Evaluator evaluator, Buffer buffer, {bool isAsync = false}) async {
     if (iterable.isEmpty) {
       final elseBlock =
           body.where((ASTNode node) => node is Tag && node.name == 'else');
 
       if (elseBlock.isNotEmpty) {
         final block = elseBlock.first as Tag;
-        for (final node in block.body) {
-          if (node is Tag) {
-            evaluator.evaluate(node);
-          } else {
-            buffer.write(evaluator.evaluate(node));
-          }
-        }
+        await _evaluateNodes(block.body, evaluator, buffer, isAsync: isAsync);
       }
     } else {
       final parentForLoop =
@@ -165,7 +173,11 @@ class ForTag extends AbstractTag {
               break;
             }
             try {
-              buffer.write(evaluator.evaluate(node));
+              if (isAsync) {
+                buffer.write(await evaluator.evaluateAsync(node));
+              } else {
+                buffer.write(evaluator.evaluate(node));
+              }
             } on BreakException {
               evaluator.context.popScope();
               return;
@@ -182,5 +194,16 @@ class ForTag extends AbstractTag {
 
       evaluator.context.popScope();
     }
+  }
+
+  @override
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    return _evaluateFor(evaluator, buffer, isAsync: false);
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    return _evaluateFor(evaluator, buffer, isAsync: true);
   }
 }
