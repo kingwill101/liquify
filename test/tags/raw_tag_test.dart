@@ -14,20 +14,56 @@ void main() {
   tearDown(() {
     evaluator.context.clear();
   });
+
   group('Raw Tag', () {
-    test('shows raw text', () {
-      testParser('''{% raw %}{% liquid
-  assign my_variable = "string"
-  %}
-  {% endraw %}''', (document) {
-        evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), '''
-  {% liquid
-  assign my_variable = "string"
-  %}
-  ''');
+    group('sync evaluation', () {
+      test('shows raw text', () async {
+        await testParser('''{% raw %}{% liquid
+assign my_variable = "string"
+%}{% endraw %}''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '''{% liquid
+assign my_variable = "string"
+%}''');
+        });
+      });
+
+      test('preserves liquid tags', () async {
+        await testParser('''{% raw %}
+{% if user %}
+  Hello {{ user.name }}!
+{% endif %}{% endraw %}''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString().trim(), '''{% if user %}
+  Hello {{ user.name }}!
+{% endif %}''');
+        });
+      });
+    });
+
+    group('async evaluation', () {
+      test('shows raw text', () async {
+        await testParser('''{% raw %}{% liquid
+assign my_variable = "string"
+%}{% endraw %}''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '''{% liquid
+assign my_variable = "string"
+%}''');
+        });
+      });
+
+      test('preserves liquid tags', () async {
+        await testParser('''{% raw %}
+{% if user %}
+  Hello {{ user.name }}!
+{% endif %}{% endraw %}''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString().trim(), '''{% if user %}
+  Hello {{ user.name }}!
+{% endif %}''');
+        });
       });
     });
   });
 }
-
