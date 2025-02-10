@@ -15,14 +15,57 @@ void main() {
     evaluator.context.clear();
   });
   group('Liquid Tag', () {
-    test('assigns variable', () {
-      testParser('''
-  {% liquid
-  assign my_variable = "string"
-  %}
-  ''', (document) {
-        evaluator.evaluate(document);
-        expect(evaluator.context.getVariable('my_variable'), 'string');
+    group('sync evaluation', () {
+      test('assigns variable', () async {
+        await testParser('''
+    {% liquid
+    assign my_variable = "string"
+    %}
+    ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.context.getVariable('my_variable'), 'string');
+        });
+      });
+
+      test('multiple operations', () async {
+        await testParser('''
+    {% liquid
+    assign x = 5
+    assign y = x | plus: 3
+    assign z = y | times: 2
+    %}
+    {{ z }}
+    ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString().trim(), '16');
+        });
+      });
+    });
+
+    group('async evaluation', () {
+      test('assigns variable', () async {
+        await testParser('''
+    {% liquid
+    assign my_variable = "string"
+    %}
+    ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.context.getVariable('my_variable'), 'string');
+        });
+      });
+
+      test('multiple operations', () async {
+        await testParser('''
+    {% liquid
+    assign x = 5
+    assign y = x | plus: 3
+    assign z = y | times: 2
+    %}
+    {{ z }}
+    ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString().trim(), '16');
+        });
       });
     });
   });

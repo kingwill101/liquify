@@ -1,12 +1,33 @@
-import 'package:liquify/src/tag_registry.dart';
 import 'package:liquify/src/tag.dart';
+import 'package:liquify/src/tag_registry.dart';
 
-class LiquidTag extends AbstractTag with CustomTagParser {
+class LiquidTag extends AbstractTag with CustomTagParser, AsyncTag {
   LiquidTag(super.content, super.filters);
 
+  Future<dynamic> _evaluateLiquid(Evaluator evaluator,
+      {bool isAsync = false}) async {
+    Evaluator innerEvaluator = evaluator.createInnerEvaluator()
+      ..context.setRoot(evaluator.context.getRoot());
+
+    if (isAsync) {
+      await innerEvaluator.evaluateNodesAsync(content);
+    } else {
+      innerEvaluator.evaluateNodes(content);
+    }
+
+    evaluator.context.merge(innerEvaluator.context.all());
+    return null;
+  }
+
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    evaluator.evaluateNodes(content);
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    return _evaluateLiquid(evaluator, isAsync: false);
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    return _evaluateLiquid(evaluator, isAsync: true);
   }
 
   @override
@@ -31,7 +52,6 @@ class LiquidTag extends AbstractTag with CustomTagParser {
       }
     }
 
-    return parseInput(
-        buffer.toString()); // Return a list or a specific node type
+    return parseInput(buffer.toString());
   }
 }
