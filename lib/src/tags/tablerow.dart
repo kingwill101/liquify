@@ -1,3 +1,4 @@
+import 'package:liquify/src/exceptions.dart';
 import 'package:liquify/src/tag.dart';
 
 class TableRowLoopObject {
@@ -37,7 +38,6 @@ class TableRowLoopObject {
     index0++;
     rindex--;
     rindex0--;
-
     first = false;
     last = index == length;
 
@@ -84,7 +84,7 @@ class TableRowLoopObject {
         colLast = json['col_last'];
 }
 
-class TableRowTag extends AbstractTag with CustomTagParser {
+class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
   late Identifier accessor;
   late List<dynamic> iterable;
   int? limit;
@@ -123,7 +123,6 @@ class TableRowTag extends AbstractTag with CustomTagParser {
       throw Exception('Unsupported argument');
     }
 
-    // Process filters for limit, offset, cols, and reversed
     for (final arg in namedArgs) {
       if (arg.identifier.name == 'limit') {
         limit = evaluator.evaluate(arg.value);
@@ -134,27 +133,14 @@ class TableRowTag extends AbstractTag with CustomTagParser {
       }
     }
 
-    for (final arg in args) {
-      if (arg.name == 'reversed') {
-        reversed = true;
-      }
-    }
-
-    // Apply offset
     if (offset != null) {
       iterable = iterable.skip(offset!).toList();
     }
 
-    // Apply limit
     if (limit != null) {
       iterable = iterable.take(limit!).toList();
     }
 
-    // Apply reversed
-    if (reversed) {
-      iterable = iterable.reversed.toList();
-    }
-    // If cols is not set, default to the length of the iterable
     if (cols == 0) {
       cols = iterable.length;
     }
@@ -163,51 +149,132 @@ class TableRowTag extends AbstractTag with CustomTagParser {
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     if (iterable.isEmpty) return;
+
     final parentLoop =
         evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
     final tableRowLoop = TableRowLoopObject(
         length: iterable.length,
         cols: cols,
-        parentloop: parentLoop == null
-            ? null
-            : TableRowLoopObject.fromJson(parentLoop));
+        parentloop: parentLoop != null
+            ? TableRowLoopObject.fromJson(parentLoop)
+            : null);
 
     evaluator.context.pushScope();
 
-    buffer.writeln('  <tr class="row${tableRowLoop.row}">');
-    for (var i = 0; i < iterable.length; i++) {
-      final item = iterable[i];
-      evaluator.context.setVariable('tablerowloop', tableRowLoop.toMap());
-      evaluator.context.setVariable(accessor.name, item);
-      buffer.writeln('    <td class="col${tableRowLoop.col}">');
+    try {
+      buffer.writeln('  <tr class="row${tableRowLoop.row}">');
 
-      String inner = '      ';
-      for (final node in body) {
-        inner += evaluator.evaluate(node).toString();
-      }
-      buffer.write(inner);
-      buffer.writeln('    </td>');
+      for (var i = 0; i < iterable.length; i++) {
+        final item = iterable[i];
+        evaluator.context.setVariable('tablerowloop', tableRowLoop.toMap());
+        evaluator.context.setVariable(accessor.name, item);
 
-      if (tableRowLoop.col == cols) {
-        // End of row
-        buffer.write('  </tr>');
-        if (i < iterable.length - 1) {
-          // If not the last item, start a new row
-          tableRowLoop.row++;
-          buffer.writeln('\n  <tr class="row${tableRowLoop.row}">');
+        buffer.writeln('    <td class="col${tableRowLoop.col}">');
+
+        var cellBuffer = Buffer();
+        for (final node in body) {
+          try {
+            if (node is Tag) {
+              evaluator.evaluate(node);
+            } else {
+              cellBuffer.write(evaluator.evaluate(node));
+            }
+          } on BreakException {
+            buffer.writeln('    </td>');
+            buffer.writeln('  </tr>');
+            return;
+          } on ContinueException {
+            continue;
+          }
         }
 
-        tableRowLoop.col = 0; // Reset column index
+        buffer.writeln('      ${cellBuffer.toString().trim()}');
+        buffer.writeln('    </td>');
+
+        if (tableRowLoop.col == cols) {
+          buffer.write('  </tr>');
+          if (i < iterable.length - 1) {
+            tableRowLoop.row++;
+            buffer.writeln('\n  <tr class="row${tableRowLoop.row}">');
+          }
+          tableRowLoop.col = 0;
+        }
+
+        tableRowLoop.increment();
       }
-      tableRowLoop.increment();
-    }
 
-    if (tableRowLoop.col != 1) {
-      // Close the last row if it's not already closed
-      buffer.write('  </tr>');
+      if (tableRowLoop.col != 1) {
+        buffer.write('  </tr>');
+      }
+    } finally {
+      evaluator.context.popScope();
     }
+  }
 
-    evaluator.context.popScope();
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    if (iterable.isEmpty) return;
+
+    final parentLoop =
+        evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
+    final tableRowLoop = TableRowLoopObject(
+        length: iterable.length,
+        cols: cols,
+        parentloop: parentLoop != null
+            ? TableRowLoopObject.fromJson(parentLoop)
+            : null);
+
+    evaluator.context.pushScope();
+
+    try {
+      buffer.writeln('  <tr class="row${tableRowLoop.row}">');
+
+      for (var i = 0; i < iterable.length; i++) {
+        final item = iterable[i];
+        evaluator.context.setVariable('tablerowloop', tableRowLoop.toMap());
+        evaluator.context.setVariable(accessor.name, item);
+
+        buffer.writeln('    <td class="col${tableRowLoop.col}">');
+
+        var cellBuffer = Buffer();
+        for (final node in body) {
+          try {
+            if (node is Tag) {
+              await evaluator.evaluateAsync(node);
+            } else {
+              cellBuffer.write(await evaluator.evaluateAsync(node));
+            }
+          } on BreakException {
+            buffer.writeln('    </td>');
+            buffer.writeln('  </tr>');
+            return;
+          } on ContinueException {
+            continue;
+          }
+        }
+
+        buffer.writeln('      ${cellBuffer.toString().trim()}');
+        buffer.writeln('    </td>');
+
+        if (tableRowLoop.col == cols) {
+          buffer.write('  </tr>');
+          if (i < iterable.length - 1) {
+            tableRowLoop.row++;
+            buffer.writeln('\n  <tr class="row${tableRowLoop.row}">');
+          }
+          tableRowLoop.col = 0;
+        }
+
+        tableRowLoop.increment();
+      }
+
+      if (tableRowLoop.col != 1) {
+        buffer.write('  </tr>');
+      }
+    } finally {
+      evaluator.context.popScope();
+    }
   }
 
   @override
