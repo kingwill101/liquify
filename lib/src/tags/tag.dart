@@ -79,7 +79,7 @@ abstract class AbstractTag {
     final innerEvaluator = evaluator.createInnerEvaluator()
       ..context.setRoot(evaluator.context.getRoot());
 
-    var result = await evaluateWithContext(innerEvaluator, buffer);
+    var result = await evaluateWithContextAsync(innerEvaluator, buffer);
 
     // Store the variables from the current scope before popping it
     final currentScopeVariables = innerEvaluator.context.all();
