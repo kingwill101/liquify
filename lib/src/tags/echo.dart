@@ -1,6 +1,5 @@
 import 'package:liquify/src/buffer.dart';
 import 'package:liquify/src/evaluator.dart';
-import 'package:liquify/src/grammar/shared.dart';
 import 'package:liquify/src/tags/tag.dart';
 
 class EchoTag extends AbstractTag with AsyncTag {
