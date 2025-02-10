@@ -5,24 +5,42 @@ import 'package:liquify/src/exceptions.dart';
 import 'package:liquify/src/tags/tag.dart';
 import 'package:liquify/src/util.dart';
 
-class IfTag extends AbstractTag {
+class IfTag extends AbstractTag with AsyncTag {
   bool conditionMet = false;
 
   IfTag(super.content, super.filters);
 
-  renderBlock(Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
+  void _renderBlockSync(Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
     for (final subNode in body) {
-      if (subNode is Tag && subNode.name == 'else') {
+      if (subNode is Tag && (subNode.name == 'else' || subNode.name == 'elseif')) {
         continue;
       }
-      if (subNode is Tag && subNode.name == 'elseif') {
-        continue;
-      }
+
       try {
         if (subNode is Tag) {
           evaluator.evaluate(subNode);
         } else {
           buffer.write(evaluator.evaluate(subNode));
+        }
+      } on BreakException {
+        throw BreakException();
+      } on ContinueException {
+        throw ContinueException();
+      }
+    }
+  }
+
+  Future<void> _renderBlockAsync(Evaluator evaluator, Buffer buffer, List<ASTNode> body) async {
+    for (final subNode in body) {
+      if (subNode is Tag && (subNode.name == 'else' || subNode.name == 'elseif')) {
+        continue;
+      }
+
+      try {
+        if (subNode is Tag) {
+          await evaluator.evaluateAsync(subNode);
+        } else {
+          buffer.write(await evaluator.evaluateAsync(subNode));
         }
       } on BreakException {
         throw BreakException();
@@ -48,34 +66,55 @@ class IfTag extends AbstractTag {
         .cast();
 
     if (conditionMet) {
-      renderBlock(evaluator, buffer, body);
+      _renderBlockSync(evaluator, buffer, body);
       return;
     } else if (elseIfTags.isNotEmpty) {
       for (var elif in elseIfTags) {
         if (elif.content.isEmpty) continue;
-        final elIfConditionMet =
-            isTruthy(evaluator.evaluate((elif).content[0]));
+        final elIfConditionMet = isTruthy(evaluator.evaluate(elif.content[0]));
         if (elIfConditionMet) {
-          renderBlock(evaluator, buffer, elif.body);
+          _renderBlockSync(evaluator, buffer, elif.body);
           return;
         }
       }
     }
 
     if (elseBlock != null) {
-      for (final subNode in (elseBlock as Tag).body) {
-        try {
-          if (subNode is Tag) {
-            evaluator.evaluate(subNode);
-          } else {
-            buffer.write(evaluator.evaluate(subNode));
-          }
-        } on BreakException {
-          throw BreakException();
-        } on ContinueException {
-          throw ContinueException();
+      _renderBlockSync(evaluator, buffer, (elseBlock as Tag).body);
+    }
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+    conditionMet = isTruthy(await evaluator.evaluateAsync(content[0]));
+
+    final elseBlock = body.where((ASTNode n) {
+      return n is Tag && n.name == 'else';
+    }).firstOrNull;
+
+    final List<Tag> elseIfTags = body
+        .where((ASTNode n) {
+          return n is Tag && n.name == "elseif";
+        })
+        .toList()
+        .cast();
+
+    if (conditionMet) {
+      await _renderBlockAsync(evaluator, buffer, body);
+      return;
+    } else if (elseIfTags.isNotEmpty) {
+      for (var elif in elseIfTags) {
+        if (elif.content.isEmpty) continue;
+        final elIfConditionMet = isTruthy(await evaluator.evaluateAsync(elif.content[0]));
+        if (elIfConditionMet) {
+          await _renderBlockAsync(evaluator, buffer, elif.body);
+          return;
         }
       }
+    }
+
+    if (elseBlock != null) {
+      await _renderBlockAsync(evaluator, buffer, (elseBlock as Tag).body);
     }
   }
 }
