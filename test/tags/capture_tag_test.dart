@@ -15,12 +15,43 @@ void main() {
     evaluator.context.clear();
   });
   group('Capture Tag', () {
-    test('outputs captured data', () {
-      testParser(
-          '{% capture my_variable %}I am being captured.{% endcapture %}{{ my_variable }}',
-          (document) {
-        evaluator.evaluate(document);
-        expect(evaluator.buffer.toString(), 'I am being captured.');
+    group('sync evaluation', () {
+      test('outputs captured data', () async {
+        await testParser(
+            '{% capture my_variable %}I am being captured.{% endcapture %}{{ my_variable }}',
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), 'I am being captured.');
+        });
+      });
+
+      test('captures with filters', () async {
+        await testParser(
+            '{% capture my_variable %}Hello {{ "World" | upcase }}{% endcapture %}{{ my_variable }}',
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), 'Hello WORLD');
+        });
+      });
+    });
+
+    group('async evaluation', () {
+      test('outputs captured data', () async {
+        await testParser(
+            '{% capture my_variable %}I am being captured.{% endcapture %}{{ my_variable }}',
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), 'I am being captured.');
+        });
+      });
+
+      test('captures with filters', () async {
+        await testParser(
+            '{% capture my_variable %}Hello {{ "World" | upcase }}{% endcapture %}{{ my_variable }}',
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), 'Hello WORLD');
+        });
       });
     });
   });
