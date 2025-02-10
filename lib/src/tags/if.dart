@@ -52,69 +52,69 @@ class IfTag extends AbstractTag with AsyncTag {
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    // Get main condition result
     conditionMet = isTruthy(evaluator.evaluate(content[0]));
 
-    final elseBlock = body.where((ASTNode n) {
-      return n is Tag && n.name == 'else';
-    }).firstOrNull;
+    // Get all else/elif blocks
+    final elseBlock = body.where((n) => n is Tag && n.name == 'else').firstOrNull as Tag?;
+    final elseIfTags = body.where((n) => n is Tag && (n.name == 'elseif' || n.name == 'elif')).cast<Tag>().toList();
 
-    final List<Tag> elseIfTags = body
-        .where((ASTNode n) {
-          return n is Tag && n.name == "elseif";
-        })
-        .toList()
-        .cast();
-
+    // Main if condition
     if (conditionMet) {
-      _renderBlockSync(evaluator, buffer, body);
+      // Filter out else/elif nodes from main body evaluation
+      final mainBody = body.where((n) => !(n is Tag && (n.name == 'else' || n.name == 'elseif' || n.name == 'elif'))).toList();
+      _renderBlockSync(evaluator, buffer, mainBody);
       return;
-    } else if (elseIfTags.isNotEmpty) {
-      for (var elif in elseIfTags) {
-        if (elif.content.isEmpty) continue;
-        final elIfConditionMet = isTruthy(evaluator.evaluate(elif.content[0]));
-        if (elIfConditionMet) {
-          _renderBlockSync(evaluator, buffer, elif.body);
-          return;
-        }
+    }
+
+    // Try elseif/elif conditions in order
+    for (var elif in elseIfTags) {
+      if (elif.content.isEmpty) continue;
+      
+      final elIfConditionMet = isTruthy(evaluator.evaluate(elif.content[0]));
+      if (elIfConditionMet) {
+        _renderBlockSync(evaluator, buffer, elif.body);
+        return;
       }
     }
 
+    // Fallback to else block
     if (elseBlock != null) {
-      _renderBlockSync(evaluator, buffer, (elseBlock as Tag).body);
+      _renderBlockSync(evaluator, buffer, elseBlock.body);
     }
   }
 
   @override
   Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
+    // Get main condition result
     conditionMet = isTruthy(await evaluator.evaluateAsync(content[0]));
 
-    final elseBlock = body.where((ASTNode n) {
-      return n is Tag && n.name == 'else';
-    }).firstOrNull;
+    // Get all else/elif blocks  
+    final elseBlock = body.where((n) => n is Tag && n.name == 'else').firstOrNull as Tag?;
+    final elseIfTags = body.where((n) => n is Tag && (n.name == 'elseif' || n.name == 'elif')).cast<Tag>().toList();
 
-    final List<Tag> elseIfTags = body
-        .where((ASTNode n) {
-          return n is Tag && n.name == "elseif";
-        })
-        .toList()
-        .cast();
-
+    // Main if condition
     if (conditionMet) {
-      await _renderBlockAsync(evaluator, buffer, body);
+      // Filter out else/elif nodes from main body evaluation
+      final mainBody = body.where((n) => !(n is Tag && (n.name == 'else' || n.name == 'elseif' || n.name == 'elif'))).toList();
+      await _renderBlockAsync(evaluator, buffer, mainBody);
       return;
-    } else if (elseIfTags.isNotEmpty) {
-      for (var elif in elseIfTags) {
-        if (elif.content.isEmpty) continue;
-        final elIfConditionMet = isTruthy(await evaluator.evaluateAsync(elif.content[0]));
-        if (elIfConditionMet) {
-          await _renderBlockAsync(evaluator, buffer, elif.body);
-          return;
-        }
+    }
+
+    // Try elseif/elif conditions in order
+    for (var elif in elseIfTags) {
+      if (elif.content.isEmpty) continue;
+      
+      final elIfConditionMet = isTruthy(await evaluator.evaluateAsync(elif.content[0]));
+      if (elIfConditionMet) {
+        await _renderBlockAsync(evaluator, buffer, elif.body);
+        return;
       }
     }
 
+    // Fallback to else block
     if (elseBlock != null) {
-      await _renderBlockAsync(evaluator, buffer, (elseBlock as Tag).body);
+      await _renderBlockAsync(evaluator, buffer, elseBlock.body);
     }
   }
 }
