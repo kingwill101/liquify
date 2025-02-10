@@ -48,15 +48,16 @@ abstract class AbstractTag {
 
   /// Applies the tag's filters to the given value.
   dynamic applyFilters(dynamic value, Evaluator evaluator) {
+    var result = value;
     for (final filter in filters) {
       final filterFunction = evaluator.context.getFilter(filter.name.name);
       if (filterFunction == null) {
         throw Exception('Undefined filter: ${filter.name.name}');
       }
-      final args =
-          filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
-      return filterFunction(value, args, {});
+      final args = filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
+      result = filterFunction(result, args, {});
     }
+    return result;
   }
 
   Future<dynamic> applyFiltersAsync(dynamic value, Evaluator evaluator) async {
