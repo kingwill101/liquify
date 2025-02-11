@@ -1,4 +1,5 @@
 import 'package:liquify/src/fs.dart';
+
 import 'filter_registry.dart';
 
 /// Represents the execution environment for a code context.
@@ -6,8 +7,28 @@ import 'filter_registry.dart';
 /// The `Environment` class manages the variable stack and filters used within a
 /// code context. It provides methods for pushing and popping scopes, as well as
 /// accessing and modifying variables within the current scope.
+enum BlockMode {
+  output, // Normal template rendering
+  store // Store blocks for layout
+}
+
 class Environment {
   final List<Map<String, dynamic>> _variableStack;
+  final Map<String, dynamic> _registers;
+
+  void setRegister(String key, dynamic value) {
+    _registers[key] = value;
+  }
+
+  void removeRegister(String s) {
+    _registers.remove(s);
+  }
+
+  get registers => _registers;
+
+  dynamic getRegister(String key) {
+    return _registers[key];
+  }
 
   /// Constructs a new `Environment` instance with the provided initial data.
   ///
@@ -17,11 +38,12 @@ class Environment {
   ///
   /// Parameters:
   /// - `data`: An optional map of initial variables and their values. Defaults to an empty map.
-  Environment([Map<String, dynamic> data = const {}]) : _variableStack = [data];
+  Environment(
+      [Map<String, dynamic> data = const {}, Map<String, dynamic>? register])
+      : _variableStack = [data],
+        _registers = register ?? {};
 
-  Environment._clone(
-    this._variableStack,
-  );
+  Environment._clone(this._variableStack, this._registers);
 
   /// Creates a new [Environment] instance that is a deep copy of the current instance.
   ///
@@ -38,7 +60,9 @@ class Environment {
         .toList();
     // Shallow copy the filters (assuming filters are immutable)
     // final clonedFilters = Map<String, FilterFunction>.from(_filters);
-    return Environment._clone(clonedVariableStack /*, clonedFilters*/);
+    final cloned = Environment._clone(clonedVariableStack, _registers);
+    cloned._root = _root;
+    return cloned;
   }
 
   Root? _root;

@@ -13,6 +13,91 @@ void main() {
     evaluator = Evaluator(Environment());
   });
 
+  group('Dot notation filters', () {
+    group("dot notation filters sync", () {
+      test('first, last and size', () {
+        evaluator.context.setVariable('company', {
+          'departments': {
+            'engineering': {
+              'employees': [
+                {'name': 'Charlie', 'role': 'Developer'},
+                {'name': 'Alice', 'role': 'Manager'},
+                {'name': 'Bob', 'role': 'Designer'}
+              ]
+            }
+          }
+        });
+        expect(
+            evaluator.evaluate(MemberAccess(Identifier('company'), [
+              Identifier('departments'),
+              Identifier('engineering'),
+              Identifier('employees'),
+              Identifier('first'),
+              Identifier('name'),
+            ])),
+            'Charlie');
+        expect(
+            evaluator.evaluate(MemberAccess(Identifier('company'), [
+              Identifier('departments'),
+              Identifier('engineering'),
+              Identifier('employees'),
+              Identifier('last'),
+              Identifier('name'),
+            ])),
+            'Bob');
+        expect(
+            evaluator.evaluate(MemberAccess(Identifier('company'), [
+              Identifier('departments'),
+              Identifier('engineering'),
+              Identifier('employees'),
+              Identifier('size'),
+            ])),
+            3);
+      });
+    });
+
+    group("dot notation filters async", () {
+      test('first, last and size async', () async {
+        evaluator.context.setVariable('company', {
+          'departments': {
+            'engineering': {
+              'employees': [
+                {'name': 'Charlie', 'role': 'Developer'},
+                {'name': 'Alice', 'role': 'Manager'},
+                {'name': 'Bob', 'role': 'Designer'}
+              ]
+            }
+          }
+        });
+        expect(
+            await evaluator.evaluateAsync(MemberAccess(Identifier('company'), [
+              Identifier('departments'),
+              Identifier('engineering'),
+              Identifier('employees'),
+              Identifier('first'),
+              Identifier('name'),
+            ])),
+            'Charlie');
+        expect(
+            await evaluator.evaluateAsync(MemberAccess(Identifier('company'), [
+              Identifier('departments'),
+              Identifier('engineering'),
+              Identifier('employees'),
+              Identifier('last'),
+              Identifier('name'),
+            ])),
+            'Bob');
+        expect(
+            await evaluator.evaluateAsync(MemberAccess(Identifier('company'), [
+              Identifier('departments'),
+              Identifier('engineering'),
+              Identifier('employees'),
+              Identifier('size'),
+            ])),
+            3);
+      });
+    });
+  });
   group('Evaluator', () {
     test('evaluates literals', () {
       expect(evaluator.evaluate(Literal(5, LiteralType.number)), 5);

@@ -86,6 +86,11 @@ class Tag extends ASTNode {
   @override
   Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
       visitor.visitTagAsync(this);
+
+  @override
+  String toString() {
+    return 'Tag(name: $name, content: $content, body: $body, filters: $filters)';
+  }
 }
 
 class GroupedExpression extends ASTNode {
@@ -258,6 +263,10 @@ class TextNode extends ASTNode {
   @override
   Future<T> acceptAsync<T>(ASTVisitor<T> visitor) =>
       visitor.visitTextNodeAsync(this);
+  @override
+  String toString() {
+    return text;
+  }
 
   @override
   Map<String, dynamic> toJson() => {

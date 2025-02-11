@@ -1,14 +1,18 @@
+## 1.0.0-dev.2
+- **Template Enhancements:**
+  - Added layout tag support with title filter.
+  - Implemented template analyzer and resolver.
+
+- **Analyzer Improvements:**
+  - Initial support for a static analyzer.
+  - Extensive testing and improvements in static analysis.
+  - Enhanced resolver and analyzer integration.
+
+- **Filter Enhancements:**
+  - Enabled dot notation for array filters.
+
 ## 1.0.0-dev.1
-
-### Async Support
-- async evaluation support for all builtin tags
-- Add async filesystem support for template loading
-- Add async render function
-### Other Changes
-- Decouple parsers for better maintainability
-- Improve template resolution and rendering
-- Separate evaluation logic for sync and async operations
-
+- layout tag support
 
 ## 0.8.2
 - Make sure we register all the missing string filters
