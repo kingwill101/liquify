@@ -11,13 +11,15 @@ Liquify is a comprehensive Dart implementation of the Liquid template language, 
 ## Features
 
 - Full support for standard Liquid syntax and semantics
-- Extensible architecture for custom tags and filters
+- Synchronous and asynchronous rendering
+- Extensible architecture for custom tags and filters (both sync and async)
 - High-performance parsing and rendering
 - Strong typing and null safety
 - Comprehensive error handling and reporting
 - Support for complex data structures and nested objects
 - Easy integration with Dart and Flutter projects
 - Extensive set of built-in filters ported from LiquidJS
+- File system abstraction for template resolution
 
 ## Installation
 
@@ -44,23 +46,50 @@ For detailed usage examples, please refer to the [example directory](example) in
 
 ### Basic Template Rendering
 
+Templates can be rendered both synchronously and asynchronously:
+
 ```dart
 import 'package:liquify/liquify.dart';
 
-void main() {
+void main() async {
   final data = {
     'name': 'Alice',
     'items': ['apple', 'banana', 'cherry']
   };
 
-  final result = Template.parse(
+  final template = Template.parse(
     'Hello, {{ name | upcase }}! Your items are: {% for item in items %}{{ item }}{% unless forloop.last %}, {% endunless %}{% endfor %}.',
     data: data
   );
+  
+  // Synchronous rendering
+  final syncResult = template.render();
+  print(syncResult);
+  // Output: Hello, ALICE! Your items are: apple, banana, cherry.
 
-  print(result.render());
+  // Asynchronous rendering (useful for async filters or includes)
+  final asyncResult = await template.renderAsync();
+  print(asyncResult);
   // Output: Hello, ALICE! Your items are: apple, banana, cherry.
 }
+```
+
+You can also update the template context between renders:
+
+```dart
+final template = Template.parse('{{ greeting }} {{ name }}!');
+
+// Update context
+template.updateContext({
+  'greeting': 'Hello',
+  'name': 'World'
+});
+
+print(await template.renderAsync()); // "Hello World!"
+
+// Update context again
+template.updateContext({'greeting': 'Goodbye'});
+print(await template.renderAsync()); // "Goodbye World!"
 ```
 
 ### File System and Template Resolution
@@ -103,7 +132,7 @@ class FileSystemRoot extends Root {
   final String basePath;
 
   FileSystemRoot(this.basePath);
-
+  
   @override
   String? resolve(String path) {
     final file = File('$basePath/$path');
@@ -114,12 +143,39 @@ class FileSystemRoot extends Root {
   }
 }
 
-void main() {
+void main() async {
   final fs = FileSystemRoot('/path/to/templates');
   final template = Template.fromFile('resume.liquid', fs, data: context);
+  
+  // Sync rendering
   print(template.render());
+  
+  // Async rendering (recommended for templates with includes or async filters)
+  print(await template.renderAsync());
+}
+
+// Example with async template resolution
+class AsyncFileSystemRoot extends Root {
+  final String basePath;
+
+  AsyncFileSystemRoot(this.basePath);
+  
+  @override
+  Future<String?> resolveAsync(String path) async {
+    final file = File('$basePath/$path');
+    if (await file.exists()) {
+      return await file.readAsString();
+    }
+    return null;
+  }
 }
 ```
+
+The async support is particularly useful when:
+- Loading templates from remote sources
+- Using async filters or tags
+- Processing large templates with many includes
+- Implementing database-backed template storage
 
 This approach allows you to implement custom logic for resolving and loading templates from any source, such as a file system, database, or network resource.
 

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:intl/intl.dart';
+import 'package:liquify/src/filter_registry.dart';
 import 'package:liquify/src/filters/array.dart';
 import 'package:liquify/src/filters/date.dart';
 import 'package:liquify/src/filters/html.dart' as html;
@@ -16,6 +19,38 @@ void main() {
   });
 
   group('Array Filters', () {
+    group('Async Filters', () {
+      setUp(() {
+        FilterRegistry.register('fetchData', (value, args, namedArgs) async {
+          await Future.delayed(Duration(milliseconds: 100));
+          return 'data-$value';
+        });
+
+        FilterRegistry.register('slowMultiply', (value, args, namedArgs) async {
+          await Future.delayed(Duration(milliseconds: 50));
+          final multiplier = args.isNotEmpty ? args[0] : 2;
+          return value * multiplier;
+        });
+      });
+
+      test('handles single async filter', () async {
+        final result =
+            await FilterRegistry.getFilter('fetchData')!('123', [], {});
+        expect(result, equals('data-123'));
+      });
+
+      test('handles async filter with arguments', () async {
+        final result =
+            await FilterRegistry.getFilter('slowMultiply')!(5, [3], {});
+        expect(result, equals(15));
+      });
+
+      test('registered async filter preserves Future return type', () {
+        final filter = FilterRegistry.getFilter('fetchData')!;
+        final result = filter('test', [], {});
+        expect(result, isA<Future>());
+      });
+    });
     test('join', () {
       expect(join([1, 2, 3], [', '], {}), equals('1, 2, 3'));
       expect(

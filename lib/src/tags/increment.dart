@@ -1,36 +1,37 @@
 import 'package:liquify/src/tag.dart';
 
-class IncrementTag extends AbstractTag {
-  late String variableName;
-
+class IncrementTag extends AbstractTag with AsyncTag {
   IncrementTag(super.content, super.filters);
 
   @override
   void preprocess(Evaluator evaluator) {
-    if (content.isEmpty) {
-      throw Exception('IncrementTag requires a variable name.');
+    if (content.isEmpty || content.first is! Identifier) {
+      throw Exception('IncrementTag requires a variable name as argument.');
     }
+  }
 
-    final arg = content.first;
-    if (arg is! Identifier) {
-      throw Exception('IncrementTag argument must be an identifier.');
-    }
+  String _getStateKey() {
+    return 'counter:${(content.first as Identifier).name}';
+  }
 
-    variableName = arg.name;
+  Future<dynamic> _evaluateIncrement(Evaluator evaluator, Buffer buffer,
+      {bool isAsync = false}) async {
+    final stateKey = _getStateKey();
+    final currentValue = evaluator.context.getVariable(stateKey) ?? -1;
+    final newValue = currentValue + 1;
+
+    buffer.write(newValue);
+    evaluator.context.setVariable(stateKey, newValue);
   }
 
   @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
-    final stateKey = 'increment:$variableName';
-    var currentValue = evaluator.context.getVariable(stateKey) as int?;
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    return _evaluateIncrement(evaluator, buffer, isAsync: false);
+  }
 
-    if (currentValue == null) {
-      currentValue = 0;
-    } else {
-      currentValue += 1;
-    }
-
-    evaluator.context.setVariable(stateKey, currentValue);
-    buffer.write(currentValue.toString());
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    return _evaluateIncrement(evaluator, buffer, isAsync: true);
   }
 }

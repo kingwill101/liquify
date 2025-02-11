@@ -1,7 +1,14 @@
+import 'dart:async';
+
 import 'package:liquify/src/ast.dart';
 import 'package:liquify/src/buffer.dart';
 
 import '../evaluator.dart';
+
+/// Marker mixin for tags that support async operations
+mixin AsyncTag {
+  bool get isAsync => true;
+}
 
 /// Abstract base class for all Liquid tags.
 abstract class AbstractTag {
@@ -34,8 +41,14 @@ abstract class AbstractTag {
     return content.map((node) => evaluator.evaluate(node)).join('');
   }
 
+  dynamic evaluateContentAsync(Evaluator eval) {
+    return Future.wait(content.map((node) => eval.evaluateAsync(node)))
+        .then((results) => results.join(''));
+  }
+
   /// Applies the tag's filters to the given value.
   dynamic applyFilters(dynamic value, Evaluator evaluator) {
+    var result = value;
     for (final filter in filters) {
       final filterFunction = evaluator.context.getFilter(filter.name.name);
       if (filterFunction == null) {
@@ -43,22 +56,63 @@ abstract class AbstractTag {
       }
       final args =
           filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
+      result = filterFunction(result, args, {});
+    }
+    return result;
+  }
+
+  Future<dynamic> applyFiltersAsync(dynamic value, Evaluator evaluator) async {
+    for (final filter in filters) {
+      final filterFunction = evaluator.context.getFilter(filter.name.name);
+      if (filterFunction == null) {
+        throw Exception('Undefined filter: ${filter.name.name}');
+      }
+      final args = await Future.wait(
+          filter.arguments.map((arg) => evaluator.evaluateAsync(arg)));
       value = filterFunction(value, args, {});
     }
     return value;
   }
 
-  /// Evaluates the tag, pushing a new scope before evaluation and popping it after.
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  /// Evaluates the tag with proper scope management
+  FutureOr<dynamic> evaluateAsync(Evaluator evaluator, Buffer buffer) async {
     evaluator.context.pushScope();
-    final result = evaluateWithContext(
-        evaluator.createInnerEvaluator()
-          ..context.setRoot(evaluator.context.getRoot()),
-        buffer);
+
+    final innerEvaluator = evaluator.createInnerEvaluator()
+      ..context.setRoot(evaluator.context.getRoot());
+
+    var result = await evaluateWithContextAsync(innerEvaluator, buffer);
+
+    // Store the variables from the current scope before popping it
+    final currentScopeVariables = innerEvaluator.context.all();
     evaluator.context.popScope();
+
+    // Merge the stored variables back into the previous scope
+    evaluator.context.merge(currentScopeVariables);
+
     return result;
   }
 
-  /// Evaluates the tag within the given context. Override this method in subclasses.
+  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+    evaluator.context.pushScope();
+
+    final innerEvaluator = evaluator.createInnerEvaluator()
+      ..context.setRoot(evaluator.context.getRoot());
+
+    var result = evaluateWithContext(innerEvaluator, buffer);
+
+    // Store the variables from the current scope before popping it
+    final currentScopeVariables = innerEvaluator.context.all();
+    evaluator.context.popScope();
+
+    // Merge the stored variables back into the previous scope
+    evaluator.context.merge(currentScopeVariables);
+
+    return result;
+  }
+
+  /// Override this method in subclasses to implement tag behavior
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {}
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {}
 }

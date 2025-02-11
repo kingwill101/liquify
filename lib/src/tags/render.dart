@@ -1,7 +1,8 @@
-import 'package:liquify/parser.dart';
+import 'package:liquify/src/context.dart';
+import 'package:liquify/src/tag.dart';
 import 'package:liquify/src/tags/for.dart';
 
-class RenderTag extends AbstractTag {
+class RenderTag extends AbstractTag with AsyncTag {
   late String templateName;
   late Map<String, dynamic> variables;
   bool hasFor = false;
@@ -44,9 +45,9 @@ class RenderTag extends AbstractTag {
     }
   }
 
-  void renderTemplate(
-      Evaluator evaluator, Buffer buffer, Map<String, dynamic> localVariables) {
-    final templateNodes = evaluator.resolveAndParseTemplate(templateName);
+  void _renderTemplateSync(String template, Evaluator evaluator, Buffer buffer,
+      Map<String, dynamic> localVariables) {
+    final templateNodes = evaluator.resolveAndParseTemplate(template);
     var env = Environment();
     final currentRoot = evaluator.context.getRoot();
 
@@ -66,8 +67,31 @@ class RenderTag extends AbstractTag {
     innerEvaluator.context.popScope();
   }
 
+  Future<void> _renderTemplateAsync(String template, Evaluator evaluator,
+      Buffer buffer, Map<String, dynamic> localVariables) async {
+    final templateNodes =
+        await evaluator.resolveAndParseTemplateAsync(template);
+    var env = Environment();
+    final currentRoot = evaluator.context.getRoot();
+
+    if (currentRoot != null) {
+      env.setRoot(currentRoot);
+    }
+
+    final innerEvaluator = Evaluator(env);
+    innerEvaluator.context.pushScope();
+
+    for (final entry in localVariables.entries) {
+      innerEvaluator.context.setVariable(entry.key, entry.value);
+    }
+
+    await innerEvaluator.evaluateNodesAsync(templateNodes);
+    buffer.write(innerEvaluator.buffer.toString());
+    innerEvaluator.context.popScope();
+  }
+
   @override
-  evaluate(Evaluator evaluator, Buffer buffer) {
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     if (hasFor) {
       if (args.length != 4 || args[2].name != 'as') {
         throw Exception(
@@ -78,13 +102,37 @@ class RenderTag extends AbstractTag {
       for (var i = 0; i < enumerable.length; i++) {
         final localVariables = Map<String, dynamic>.from(variables);
         localVariables['forloop'] =
-            ForLoopObject(index: i, length: enumerable.length);
+            ForLoopObject(index: i, length: enumerable.length).toMap();
         localVariables[args[3].name] = enumerable[i];
 
-        renderTemplate(evaluator, buffer, localVariables);
+        _renderTemplateSync(templateName, evaluator, buffer, localVariables);
       }
     } else {
-      renderTemplate(evaluator, buffer, variables);
+      _renderTemplateSync(templateName, evaluator, buffer, variables);
+    }
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    if (hasFor) {
+      if (args.length != 4 || args[2].name != 'as') {
+        throw Exception(
+            'RenderTag with "for" requires "as" and a variable name.');
+      }
+
+      final enumerable = await evaluator.evaluateAsync(args[1]);
+      for (var i = 0; i < enumerable.length; i++) {
+        final localVariables = Map<String, dynamic>.from(variables);
+        localVariables['forloop'] =
+            ForLoopObject(index: i, length: enumerable.length).toMap();
+        localVariables[args[3].name] = enumerable[i];
+
+        await _renderTemplateAsync(
+            templateName, evaluator, buffer, localVariables);
+      }
+    } else {
+      await _renderTemplateAsync(templateName, evaluator, buffer, variables);
     }
   }
 }

@@ -1,15 +1,29 @@
 import 'package:liquify/src/tag.dart';
 
-class RawTag extends AbstractTag with CustomTagParser {
+class RawTag extends AbstractTag with CustomTagParser, AsyncTag {
   RawTag(super.content, super.filters);
 
-  @override
-  dynamic evaluate(Evaluator evaluator, Buffer buffer) {
+  Future<dynamic> _evaluateRaw(Evaluator evaluator, Buffer buffer,
+      {bool isAsync = false}) async {
     for (final node in content) {
       if (node is TextNode) {
-        buffer.write(evaluator.evaluate(node));
+        final value = isAsync
+            ? await evaluator.evaluateAsync(node)
+            : evaluator.evaluate(node);
+        buffer.write(value);
       }
     }
+  }
+
+  @override
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    return _evaluateRaw(evaluator, buffer, isAsync: false);
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+      Evaluator evaluator, Buffer buffer) async {
+    return _evaluateRaw(evaluator, buffer, isAsync: true);
   }
 
   @override

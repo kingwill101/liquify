@@ -1,8 +1,7 @@
-import 'package:liquify/src/ast.dart';
+import 'package:liquify/parser.dart';
 import 'package:liquify/src/grammar/grammar.dart';
 import 'package:liquify/src/registry.dart';
 import 'package:petitparser/debug.dart';
-import 'package:petitparser/petitparser.dart';
 import 'package:petitparser/reflection.dart';
 
 export 'package:liquify/src/ast.dart';
@@ -391,6 +390,94 @@ Parser<Tag> continueTag() =>
     someTag('continue', hasContent: false).labeled('continueTag');
 
 Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
+
+Parser elseBlock() => seq2(
+      ref0(elseTag),
+      ref0(element)
+          .starLazy(ref0(endCaseTag).or(ref0(endIfTag)).or(ref0(endForTag))),
+    ).map((values) {
+      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+    });
+Parser ifTag() => someTag("if");
+Parser ifBlock() => seq3(
+      ref0(ifTag),
+      ref0(element).starLazy(endIfTag()),
+      ref0(endIfTag),
+    ).map((values) {
+      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+    });
+
+Parser elseIfBlock() =>
+    seq2(ref0(elseifTag), ref0(element).starLazy((elseTag()).or(elseifTag())))
+        .map((values) {
+      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+    });
+
+Parser elseifTag() => someTag("elseif");
+
+Parser endIfTag() =>
+    (tagStart() & string('endif').trim() & tagEnd()).map((values) {
+      return Tag('endif', []);
+    });
+
+Parser forBlock() => seq3(
+      ref0(forTag),
+      ref0(element).starLazy(endForTag()),
+      ref0(endForTag),
+    ).labeled('for block').map((values) {
+      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+    });
+
+Parser<Tag> forTag() => someTag('for');
+
+Parser endForTag() =>
+    (tagStart() & string('endfor').trim() & tagEnd()).map((values) {
+      return Tag('endfor', []);
+    });
+
+Parser caseBlock() => seq3(
+      ref0(caseTag),
+      ref0(element).plusLazy(endCaseTag()),
+      ref0(endCaseTag),
+    ).map((values) {
+      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+    });
+
+Parser<Tag> whenTag() => someTag('when');
+
+Parser<Tag> caseTag() => someTag('case');
+
+Parser endCaseTag() =>
+    (tagStart() & string('endcase').trim() & tagEnd()).map((values) {
+      return Tag('endcase', []);
+    });
+
+Parser whenBlock() => seq2(
+      ref0(whenTag),
+      ref0(element).starLazy(ref0(endCaseTag).or(ref0(elseTag).or(whenTag()))),
+    ).map((values) {
+      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+    });
+
+Parser element() => [
+      ref0(ifBlock),
+      ref0(elseIfBlock),
+      ref0(forBlock),
+      ref0(caseBlock),
+      ref0(elseBlock),
+      ref0(whenBlock),
+      ref0(breakTag),
+      ref0(continueTag),
+      ...TagRegistry.customParsers.map((p) => p.parser()),
+      ref0(tag),
+      ref0(variable),
+      ref0(text)
+    ].toChoiceParser();
+
+Parser<Document> document() => ref0(element).plus().map((elements) {
+      var collapsedElements = collapseTextNodes(elements.cast<ASTNode>());
+      return Document(collapsedElements);
+    });
 
 /// Represents an exception that occurred during parsing.
 ///
