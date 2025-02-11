@@ -1,44 +1,96 @@
 /// Liquify: Core components for Liquid template parsing and rendering in Dart
 ///
-/// This library exports the essential classes and functions needed for working
-/// with Liquid templates in Dart applications. It provides access to the main
-/// parsing and rendering functionality, as well as registries for tags and filters.
+/// This library provides a comprehensive implementation of the Liquid template language
+/// for Dart applications, supporting both synchronous and asynchronous rendering,
+/// custom tags, filters, and file system integration.
 ///
-/// Key components:
+/// Key Components:
 ///
-/// 1. [Template]: Provides methods for parsing and rendering Liquid templates.
-///    Use this class as the main entry point for template processing.
+/// 1. [Template]: The main entry point for template processing. Supports both string
+///    and file-based templates with sync/async rendering:
+///    ```dart
+///    // String-based template
+///    final template = Template.parse('Hello {{ name }}!', data: {'name': 'World'});
 ///
-/// 2. [TagRegistry]: Manages the registration and creation of custom Liquid tags.
-///    This allows you to extend the template engine with new tag functionality.
+///    // Sync rendering
+///    print(template.render()); // Output: Hello World!
 ///
-/// 3. [FilterRegistry]: Handles the registration and retrieval of custom filters.
-///    Use this to add new filters or access existing ones for template rendering.
+///    // Async rendering
+///    print(await template.renderAsync()); // Output: Hello World!
 ///
-/// Usage:
-/// To use the core Liquify functionality in your Dart project, import this library:
+///    // File-based template with custom root
+///    final root = Root.memory({'header.liquid': 'Welcome {{ user }}!'});
+///    final fileTemplate = Template.fromFile('header.liquid', root);
+///    ```
 ///
+/// 2. [TagRegistry]: Registry for custom Liquid tags. Supports both sync and async tags:
+///    ```dart
+///    // Register a custom tag
+///    TagRegistry.register('mytag', (content, filters) {
+///      return MyCustomTag(content, filters);
+///    });
+///    ```
+///
+/// 3. [FilterRegistry]: Registry for custom filters. Supports both sync and async filters:
+///    ```dart
+///    // Register a sync filter
+///    FilterRegistry.register('uppercase', (input) => input.toString().toUpperCase());
+///
+///    // Register an async filter
+///    FilterRegistry.register('fetchData', (input) async =>
+///      await someAsyncOperation(input));
+///    ```
+///
+/// 4. [Root]: File system abstraction for template resolution:
+///    ```dart
+///    // Create an in-memory file system
+///    final root = Root.memory({
+///      'layout.liquid': '{% include "header.liquid" %}{{ content }}',
+///      'header.liquid': 'Header: {{ title }}'
+///    });
+///
+///    // Or use the actual file system
+///    final root = Root.fs('/path/to/templates');
+///    ```
+///
+/// Advanced Usage Example:
 /// ```dart
-/// import 'package:liquify/liquify.dart';
-/// ```
+/// Future<void> main() async {
+///   // Setup template environment
+///   final root = Root.memory({
+///     'layout.liquid': '''
+///       {% include "header.liquid" %}
+///       {{ content | uppercase }}
+///       {% for item in items %}
+///         - {{ item }}
+///       {% endfor %}
+///     '''
+///   });
 ///
-/// Example:
-/// ```dart
-/// void main() {
-///   // Parse and render a simple template
-///   String result = Template.parse("Hello, {{ name }}!", data: {"name": "World"});
-///   print(result); // Output: Hello, World!
+///   // Create and configure template
+///   final template = Template.fromFile('layout.liquid', root)
+///     ..updateContext({
+///       'title': 'Welcome',
+///       'content': 'Main content',
+///       'items': ['a', 'b', 'c']
+///     });
 ///
-///   // Register a custom tag (if needed)
-///   TagRegistry.register('mytag', (content, filters) => MyCustomTag(content, filters));
-///
-///   // Register a custom filter (if needed)
-///   FilterRegistry.register('myfilter', myFilterFunction);
+///   // Render asynchronously
+///   final result = await template.renderAsync();
+///   print(result);
 /// }
 /// ```
 ///
-/// For more detailed information on specific components, refer to the
-/// documentation of the individual exported classes and functions.
+/// Features:
+/// - Sync and async rendering support
+/// - File system abstraction for template resolution
+/// - Custom tags and filters (both sync and async)
+/// - Context management with nested scopes
+/// - Full Liquid syntax support including control flow and iteration
+/// - Drop interface for custom object behavior
+///
+/// For detailed API documentation, see the individual class and function
+/// documentation.
 library;
 
 export 'package:liquify/src/fs.dart';
