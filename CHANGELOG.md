@@ -1,3 +1,15 @@
+## 1.0.0-dev.1
+
+### Async Support
+- async evaluation support for all builtin tags
+- Add async filesystem support for template loading
+- Add async render function
+### Other Changes
+- Decouple parsers for better maintainability
+- Improve template resolution and rendering
+- Separate evaluation logic for sync and async operations
+
+
 ## 0.8.2
 - Make sure we register all the missing string filters
   
