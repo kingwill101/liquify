@@ -8,11 +8,20 @@ import 'ast.dart';
 import 'buffer.dart';
 import 'visitor.dart';
 
-/// The `Evaluator` class is responsible for evaluating Liquid templates.
-/// It provides methods to resolve and parse templates, as well as evaluate
-/// individual AST nodes and a list of nodes.
-/// The `Evaluator` class takes an `Environment` context and an optional `Buffer`
-/// instance, which are used during the evaluation process.
+/// Evaluates Liquid templates by traversing and executing AST nodes.
+///
+/// The evaluator maintains a [context] for variable storage and a [buffer] for
+/// accumulating output during template rendering. It implements the visitor pattern
+/// through [ASTVisitor] to evaluate different types of AST nodes.
+///
+/// Example:
+/// ```dart
+/// final evaluator = Evaluator(Environment());
+/// final nodes = parseInput('Hello {{ name }}!');
+/// evaluator.context.setVariable('name', 'World');
+/// final result = evaluator.evaluateNodes(nodes);
+/// print(result); // Prints: Hello World!
+/// ```
 class Evaluator implements ASTVisitor<dynamic> {
   final Environment context;
   Buffer buffer = Buffer();
@@ -27,6 +36,20 @@ class Evaluator implements ASTVisitor<dynamic> {
   /// Creates a new `Evaluator` instance with a cloned `Environment` context and the same `Buffer`.
   /// This allows creating a nested `Evaluator` instance with its own context, while sharing the same output buffer.
   Evaluator createInnerEvaluator() {
+    final innerContext = context.clone();
+    return Evaluator.withBuffer(innerContext, buffer);
+  }
+
+  /// Creates a nested evaluator with a cloned context and the given [buffer].
+  ///
+  /// Useful for evaluating nested templates that need their own variable scope
+  /// while sharing the same output buffer.
+  ///
+  /// ```dart
+  /// final inner = evaluator.createInnerEvaluatorWithBuffer(Buffer());
+  /// inner.context.setVariable('x', 123); // Won't affect parent context
+  /// ```
+  Evaluator createInnerEvaluatorWithBuffer(Buffer buffer) {
     final innerContext = context.clone();
     return Evaluator.withBuffer(innerContext, buffer);
   }
@@ -48,6 +71,20 @@ class Evaluator implements ASTVisitor<dynamic> {
     }
 
     final source = root.resolve(templateName);
+    return parseInput(source.content);
+  }
+
+  /// Resolves and parses a template asynchronously.
+  ///
+  /// Use this instead of [resolveAndParseTemplate] when loading templates from
+  /// remote sources or slow storage. Throws if no root directory is set.
+  Future<List<ASTNode>> resolveAndParseTemplateAsync(
+      String templateName) async {
+    final root = context.getRoot();
+    if (root == null) {
+      throw Exception('No root directory set for template resolution');
+    }
+    final source = await root.resolveAsync(templateName);
     return parseInput(source.content);
   }
 
@@ -121,12 +158,9 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
 
-  /// Evaluates a literal AST node by returning its value.
+  /// Returns the raw value stored in the [Literal] node.
   ///
-  /// This method is part of the `Evaluator` class, which is responsible for evaluating the various types of AST nodes that represent a Liquid template. When the `Evaluator` encounters a `Literal` node, it simply returns the value of that node, as literals represent constant values in the template.
-  ///
-  /// @param node The `Literal` AST node to evaluate.
-  /// @return The value of the `Literal` node.
+  /// Values can be strings, numbers, booleans, null, etc.
   dynamic visitLiteral(Literal node) {
     return node.value;
   }

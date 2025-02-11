@@ -2,12 +2,16 @@ import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:path/path.dart' as path;
 
-/// Represents a root file system that can resolve relative paths to [Source] objects.
+/// A file system implementation that resolves template paths relative to a base directory.
 ///
-/// The [FileSystemRoot] class provides a way to access files in a file system
-/// by resolving relative paths to [Source] objects. It uses a [FileSystem]
-/// implementation to interact with the underlying file system, and a base
-/// directory to resolve relative paths.
+/// Uses a [FileSystem] to interact with the underlying storage and resolves all paths
+/// relative to [baseDir].
+///
+/// ```dart
+/// final root = FileSystemRoot('/templates');
+/// final source = root.resolve('header.liquid');
+/// print(source.content); // Contents of /templates/header.liquid
+/// ```
 class FileSystemRoot implements Root {
   final FileSystem fileSystem;
   final Directory baseDir;
@@ -16,17 +20,6 @@ class FileSystemRoot implements Root {
       : fileSystem = fileSystem ?? LocalFileSystem(),
         baseDir = (fileSystem ?? LocalFileSystem()).directory(basePath);
 
-  /// Resolves a relative file path to a [Source] object.
-  ///
-  /// Given a relative file path [relPath], this method will resolve the path
-  /// relative to the [baseDir] directory of this [FileSystemRoot] instance.
-  /// If the file exists, it will read the file contents and return a [Source]
-  /// object representing the file. If the file does not exist, it will throw
-  /// an [Exception].
-  ///
-  /// @param relPath The relative file path to resolve.
-  /// @return A [Source] object representing the resolved file.
-  /// @throws Exception if the file does not exist.
   @override
   Source resolve(String relPath) {
     final file = baseDir.childFile(path.normalize(relPath));
@@ -36,17 +29,45 @@ class FileSystemRoot implements Root {
     final content = file.readAsStringSync();
     return Source(file.uri, content, this);
   }
+
+  @override
+  Future<Source> resolveAsync(String relPath) async {
+    final file = baseDir.childFile(path.normalize(relPath));
+    if (!await file.exists()) {
+      throw Exception('Template file not found: $relPath');
+    }
+    final content = await file.readAsString();
+    return Source(file.uri, content, this);
+  }
 }
 
-/// Represents a root file system that can resolve relative paths to [Source] objects.
+/// Base interface for template resolution systems.
 ///
-/// The `Root` interface provides a way to access files in a file system
-/// by resolving relative paths to `Source` objects.
+/// Implementations can load templates from different storage systems like
+/// file systems, memory maps, or remote servers.
 abstract class Root {
+  /// Synchronously resolves a template path to a Source
   Source resolve(String relPath);
+
+  /// Asynchronously resolves a template path to a Source
+  ///
+  /// Default implementation calls sync resolve, but implementations
+  /// should override this for true async operation when needed.
+  Future<Source> resolveAsync(String relPath) async {
+    return resolve(relPath);
+  }
 }
 
-/// Represents a source path mapped to string content
+/// An in-memory implementation of [Root] that stores templates in a [Map].
+///
+/// Useful for testing or small template sets that can be stored in memory.
+///
+/// ```dart
+/// final root = MapRoot({
+///   'greeting': 'Hello {{name}}!',
+///   'footer': '© {{year}}'
+/// });
+/// ```
 class MapRoot implements Root {
   final Map<String, String> _templates;
 
@@ -59,14 +80,28 @@ class MapRoot implements Root {
     }
     return Source(null, '', this);
   }
+
+  @override
+  Future<Source> resolveAsync(String path) async {
+    if (_templates.containsKey(path)) {
+      return Source(null, _templates[path]!, this);
+    }
+    return Source(null, '', this);
+  }
 }
 
-/// Represents a source file or content, with an optional file URI and root directory.
+/// A resolved template's content and metadata.
 ///
-/// The `Source` class encapsulates the content of a file, along with its optional
-/// file URI and the root directory it belongs to. This class is used to represent
-/// the source of a file or content that can be resolved relative to a file system
-/// root.
+/// Contains the template [content] along with optional [file] location and [root]
+/// reference. Created by [Root] implementations when resolving templates.
+///
+/// ```dart
+/// // Create a simple source from a string
+/// final source = Source.fromString('Hello {{name}}!');
+///
+/// // Create from async content
+/// final source = await Source.fromAsync(fetchRemoteTemplate());
+/// ```
 class Source {
   final Uri? file;
   final String content;
@@ -75,4 +110,14 @@ class Source {
   Source(this.file, this.content, this.root);
 
   Source.fromString(String content) : this(null, content, null);
+
+  /// Creates a Source from an async content provider
+  static Future<Source> fromAsync(
+    Future<String> contentFuture, {
+    Uri? file,
+    Root? root,
+  }) async {
+    final content = await contentFuture;
+    return Source(file, content, root);
+  }
 }
