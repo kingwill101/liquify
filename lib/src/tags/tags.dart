@@ -15,3 +15,6 @@ export 'raw.dart' show RawTag;
 export 'render.dart' show RenderTag;
 export 'increment.dart' show IncrementTag;
 export 'decrement.dart' show DecrementTag;
+export 'block.dart' show BlockTag;
+export 'layout.dart' show LayoutTag;
+export 'super_tag.dart' show SuperTag;

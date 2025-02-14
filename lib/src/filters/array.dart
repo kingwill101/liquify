@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/filter_registry.dart';
 
 /// Converts the input value to uppercase.
 ///
@@ -182,14 +183,16 @@ class ArrayModule extends Module {
     filters['lower'] = lower;
     filters['length'] = length;
     filters['join'] = join;
-    filters['first'] = first;
-    filters['last'] = last;
     filters['reverse'] = reverse;
-    filters['size'] = size;
     filters['sort'] = sort;
     filters['map'] = map;
     filters['where'] = where;
     filters['uniq'] = uniq;
     filters['slice'] = slice;
+
+    // Register dot notation support for array methods
+    FilterRegistry.register('first', first, dotNotation: true);
+    FilterRegistry.register('last', last, dotNotation: true);
+    FilterRegistry.register('size', size, dotNotation: true);
   }
 }

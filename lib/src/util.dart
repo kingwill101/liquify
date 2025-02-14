@@ -17,6 +17,19 @@ void printAST(ASTNode node, int indent) {
       printAST(child, indent + 1);
     }
   } else if (node is Tag) {
+    if (node.name == "layout") {
+      print('$indentStr  Name: ${node.name}');
+      print('$indentStr  Content:');
+      for (final child in node.content) {
+        printAST(child, indent + 2);
+      }
+      print('$indentStr  Body:');
+      for (final child in node.body) {
+        printAST(child, indent + 2);
+      }
+      return;
+    }
+
     print('$indentStr  Name: ${node.name}');
     print('$indentStr  Content:');
     for (final child in node.content) {
@@ -92,4 +105,117 @@ bool isTruthy(dynamic data) {
       ((data is Literal) &&
           data.type != LiteralType.boolean &&
           data.value != false);
+}
+
+/// Recursively converts an [ASTNode] to a JSON-compatible map.
+dynamic astToJson(ASTNode node) {
+  if (node is TextNode) {
+    return {
+      'type': 'TextNode',
+      'text': node.text,
+    };
+  } else if (node is Tag) {
+    return {
+      'type': 'Tag',
+      'name': node.name,
+      'content': node.content.map((child) => astToJson(child)).toList(),
+      'body': node.body.map((child) => astToJson(child)).toList(),
+    };
+  } else {
+    // Fallback: return the runtime type.
+    return {'type': node.runtimeType.toString()};
+  }
+}
+
+/// Converts a list of AST nodes to a JSON-compatible list.
+List<dynamic> mergedAstToJson(List<ASTNode> ast) =>
+    ast.map((node) => astToJson(node)).toList();
+
+class Logger {
+  final String context;
+  static final Map<String, bool> _enabledContexts = {
+    'Analyzer': true,
+    'Resolver': true,
+  };
+  static final Map<String, int> _indentLevels = {};
+  static const String _indentChar = "│ ";
+  static const String _branchChar = "├─";
+  static const String _lastBranchChar = "└─";
+
+  Logger(this.context);
+
+  String _getIndentation([bool isLast = false]) {
+    final level = _indentLevels[context] ?? 0;
+    if (level == 0) return '';
+
+    final mainIndent = List.filled(level - 1, _indentChar).join('');
+    final branchIndicator = isLast ? _lastBranchChar : _branchChar;
+    return '$mainIndent$branchIndicator ';
+  }
+
+  void startScope(String message) {
+    if (_enabledContexts[context] ?? false) {
+      _indentLevels[context] = (_indentLevels[context] ?? 0) + 1;
+      if (_indentLevels[context] == 1) {
+        print('[$context]');
+      }
+      print(_getIndentation() + message);
+    }
+  }
+
+  void endScope([String? message]) {
+    if (_enabledContexts[context] ?? false) {
+      if (message != null) {
+        print(_getIndentation(true) + message);
+      }
+      _indentLevels[context] = (_indentLevels[context] ?? 1) - 1;
+    }
+  }
+
+  void info(String message) {
+    if (_enabledContexts[context] ?? false) {
+      if (_indentLevels[context] == 0) {
+        print('[$context]');
+      }
+      print(_getIndentation(true) + message);
+    }
+  }
+
+  void warn(String message) {
+    if (_enabledContexts[context] ?? false) {
+      if (_indentLevels[context] == 0) {
+        print('[$context]');
+      }
+      print('${_getIndentation(true)}WARN: $message');
+    }
+  }
+
+  void error(String message) {
+    if (_enabledContexts[context] ?? false) {
+      if (_indentLevels[context] == 0) {
+        print('[$context]');
+      }
+      print('${_getIndentation(true)}ERROR: $message');
+    }
+  }
+
+  static void enableContext(String context) {
+    _enabledContexts[context] = true;
+    _indentLevels[context] = 0;
+  }
+
+  static void disableContext(String context) {
+    _enabledContexts[context] = false;
+    _indentLevels.remove(context);
+  }
+
+  static void enableAllContexts() {
+    _enabledContexts.updateAll((_, __) => true);
+    _indentLevels.clear();
+  }
+
+  static void disableAllContexts() {
+    _enabledContexts.updateAll((_, __) => false);
+    _indentLevels.clear();
+  }
 }

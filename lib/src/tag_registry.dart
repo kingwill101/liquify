@@ -48,6 +48,12 @@ class TagRegistry {
 /// Registers all built-in Liquid tags.
 void registerBuiltInTags() {
   TagRegistry.register(
+      'layout', (content, filters) => tags.LayoutTag(content, filters));
+  TagRegistry.register(
+      'super', (content, filters) => tags.SuperTag(content, filters));
+  TagRegistry.register(
+      'block', (content, filters) => tags.BlockTag(content, filters));
+  TagRegistry.register(
       'echo', (content, filters) => tags.EchoTag(content, filters));
   TagRegistry.register(
       'assign', (content, filters) => tags.AssignTag(content, filters));

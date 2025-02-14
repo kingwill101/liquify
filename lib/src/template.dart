@@ -1,6 +1,5 @@
 import 'package:liquify/parser.dart' as parser;
-import 'package:liquify/src/context.dart';
-import 'package:liquify/src/evaluator.dart';
+import 'package:liquify/parser.dart';
 import 'package:liquify/src/fs.dart';
 
 class Template {

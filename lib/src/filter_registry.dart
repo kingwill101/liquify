@@ -27,8 +27,25 @@ class FilterRegistry {
   ///
   /// [name] The name of the filter to be registered.
   /// [function] The filter function to be associated with the given name.
-  static void register(String name, FilterFunction function) {
+  /// [dotNotation] If true, the filter can be used with dot notation.
+  static void register(String name, FilterFunction function,
+      {bool dotNotation = false}) {
     _filters[name] = function;
+    if (dotNotation) {
+      _dotNotationFilters.add(name);
+    }
+  }
+
+  /// List of filters that can be used with dot notation.
+  static final Set<String> _dotNotationFilters = {};
+
+  /// Checks if a filter can be used with dot notation.
+  ///
+  /// [name] The name of the filter to check.
+  ///
+  /// Returns true if the filter can be used with dot notation, false otherwise.
+  static bool isDotNotationFilter(String name) {
+    return _dotNotationFilters.contains(name);
   }
 
   /// Retrieves a filter function by its name.
