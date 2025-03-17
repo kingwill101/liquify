@@ -1,3 +1,7 @@
+## 1.0.0
+- Layout tag support
+- Async rendering support
+
 ## 1.0.0-dev.2
 - **Template Enhancements:**
   - Added layout tag support with title filter.
