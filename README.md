@@ -27,7 +27,7 @@ Add Liquify to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  liquify: ^0.8.1
+  liquify: ^1.0.0
 ```
 
 Or, for the latest development version:
@@ -91,6 +91,86 @@ print(await template.renderAsync()); // "Hello World!"
 template.updateContext({'greeting': 'Goodbye'});
 print(await template.renderAsync()); // "Goodbye World!"
 ```
+
+### Layout Support
+
+Liquify provides powerful template inheritance through the `layout` tag, allowing you to create reusable base templates and override specific sections using blocks. This feature is particularly useful for maintaining consistent page structures while allowing customization of specific sections.
+
+#### Basic Layout Usage
+
+Here's a simple example of using layouts:
+
+```liquid
+// layouts/base.liquid
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}Default Title{% endblock %}</title>
+</head>
+<body>
+  {% block content %}Default content{% endblock %}
+</body>
+</html>
+```
+
+```liquid
+// page.liquid
+{% layout "layouts/base.liquid" %}
+{% block title %}My Page Title{% endblock %}
+{% block content %}
+  <h1>Welcome to my page!</h1>
+  <p>This is custom content.</p>
+{% endblock %}
+```
+
+#### Passing Variables to Layouts
+
+You can pass variables from your template to the layout:
+
+```liquid
+{% assign page_title = "Welcome" %}
+{% layout "layouts/base.liquid", title: page_title, year: 2024 %}
+```
+
+#### Multiple Named Blocks
+
+Layouts can define multiple named blocks that can be selectively overridden:
+
+```liquid
+// layouts/post.liquid
+{% layout "layouts/base.liquid" %}
+
+{% block meta %}
+  <meta name="author" content="{{ post.author }}">
+{% endblock %}
+
+{% block content %}
+  <article>
+    <h1>{{ post.title }}</h1>
+    {% block post_content %}{% endblock %}
+  </article>
+{% endblock %}
+```
+
+```liquid
+// blog-post.liquid
+{% layout "layouts/post.liquid", post: post %}
+{% block post_content %}
+  {{ post.body }}
+{% endblock %}
+```
+
+#### Default Block Contents
+
+Blocks in layouts can include default content that will be used if not overridden:
+
+```liquid
+{% block footer %}
+  <footer>&copy; {{ year }} Default Footer</footer>
+{% endblock %}
+```
+
+For more complex layout examples and advanced usage, please refer to the [example directory](example) in the repository.
 
 ### File System and Template Resolution
 
@@ -183,7 +263,7 @@ The `render` tag uses this resolution mechanism to include and render other temp
 
 ### Custom Tags and Filters
 
-Liquify allows you to create custom tags and filters. For detailed examples, please refer to the [example directory](https://github.com/kingwill101/liquify/tree/main/example) in the repository.
+Liquify allows you to create custom tags and filters. For detailed examples, please refer to the [example directory](example) in the repository.
 
 ## API Documentation
 

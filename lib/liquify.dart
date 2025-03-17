@@ -23,7 +23,34 @@
 ///    final fileTemplate = Template.fromFile('header.liquid', root);
 ///    ```
 ///
-/// 2. [TagRegistry]: Registry for custom Liquid tags. Supports both sync and async tags:
+/// 2. [Layout]: Template inheritance system for creating reusable base templates:
+///    ```dart
+///    // Define a base layout (base.liquid)
+///    final root = Root.memory({
+///      'layouts/base.liquid': '''
+///        <!DOCTYPE html>
+///        <html>
+///          <head>
+///            <title>{% block title %}Default Title{% endblock %}</title>
+///          </head>
+///          <body>
+///            {% block content %}{% endblock %}
+///          </body>
+///        </html>
+///      ''',
+///      'page.liquid': '''
+///        {% layout "layouts/base.liquid" %}
+///        {% block title %}My Page{% endblock %}
+///        {% block content %}
+///          <h1>Welcome!</h1>
+///        {% endblock %}
+///      '''
+///    });
+///
+///    final template = Template.fromFile('page.liquid', root);
+///    ```
+///
+/// 3. [TagRegistry]: Registry for custom Liquid tags. Supports both sync and async tags:
 ///    ```dart
 ///    // Register a custom tag
 ///    TagRegistry.register('mytag', (content, filters) {
@@ -31,7 +58,7 @@
 ///    });
 ///    ```
 ///
-/// 3. [FilterRegistry]: Registry for custom filters. Supports both sync and async filters:
+/// 4. [FilterRegistry]: Registry for custom filters. Supports both sync and async filters:
 ///    ```dart
 ///    // Register a sync filter
 ///    FilterRegistry.register('uppercase', (input) => input.toString().toUpperCase());
@@ -41,7 +68,7 @@
 ///      await someAsyncOperation(input));
 ///    ```
 ///
-/// 4. [Root]: File system abstraction for template resolution:
+/// 5. [Root]: File system abstraction for template resolution:
 ///    ```dart
 ///    // Create an in-memory file system
 ///    final root = Root.memory({
@@ -53,26 +80,48 @@
 ///    final root = Root.fs('/path/to/templates');
 ///    ```
 ///
-/// Advanced Usage Example:
+/// Advanced Usage Example with Layouts:
 /// ```dart
 /// Future<void> main() async {
-///   // Setup template environment
+///   // Setup template environment with layouts
 ///   final root = Root.memory({
-///     'layout.liquid': '''
-///       {% include "header.liquid" %}
-///       {{ content | uppercase }}
-///       {% for item in items %}
-///         - {{ item }}
-///       {% endfor %}
+///     'layouts/base.liquid': '''
+///       <!DOCTYPE html>
+///       <html>
+///         <head>
+///           <title>{% block title %}{% endblock %}</title>
+///           {% block meta %}{% endblock %}
+///         </head>
+///         <body>
+///           {% block content %}{% endblock %}
+///         </body>
+///       </html>
+///     ''',
+///     'layouts/post.liquid': '''
+///       {% layout "layouts/base.liquid" %}
+///       {% block content %}
+///         <article>
+///           <h1>{{ post.title }}</h1>
+///           {% block post_content %}{% endblock %}
+///         </article>
+///       {% endblock %}
+///     ''',
+///     'blog-post.liquid': '''
+///       {% layout "layouts/post.liquid", post: post %}
+///       {% block title %}{{ post.title }} - Blog{% endblock %}
+///       {% block post_content %}
+///         {{ post.body }}
+///       {% endblock %}
 ///     '''
 ///   });
 ///
 ///   // Create and configure template
-///   final template = Template.fromFile('layout.liquid', root)
+///   final template = Template.fromFile('blog-post.liquid', root)
 ///     ..updateContext({
-///       'title': 'Welcome',
-///       'content': 'Main content',
-///       'items': ['a', 'b', 'c']
+///       'post': {
+///         'title': 'Hello World',
+///         'body': 'Welcome to my blog!'
+///       }
 ///     });
 ///
 ///   // Render asynchronously
@@ -83,6 +132,8 @@
 ///
 /// Features:
 /// - Sync and async rendering support
+/// - Template inheritance through layouts
+/// - Named block support with default content
 /// - File system abstraction for template resolution
 /// - Custom tags and filters (both sync and async)
 /// - Context management with nested scopes
