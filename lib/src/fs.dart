@@ -1,6 +1,5 @@
 import 'package:file/file.dart';
 import 'package:file/local.dart';
-import 'package:path/path.dart' as path;
 
 /// A file system implementation that resolves template paths relative to a base directory.
 ///
@@ -18,11 +17,12 @@ class FileSystemRoot implements Root {
 
   FileSystemRoot(String basePath, {FileSystem? fileSystem})
       : fileSystem = fileSystem ?? LocalFileSystem(),
-        baseDir = (fileSystem ?? LocalFileSystem()).directory(basePath);
+        baseDir = (fileSystem ?? LocalFileSystem())
+            .directory(fileSystem!.path.normalize(basePath));
 
   @override
   Source resolve(String relPath) {
-    final file = baseDir.childFile(path.normalize(relPath));
+    final file = baseDir.childFile(fileSystem.path.normalize(relPath));
     if (!file.existsSync()) {
       throw Exception('Template file not found: $relPath');
     }
@@ -32,7 +32,7 @@ class FileSystemRoot implements Root {
 
   @override
   Future<Source> resolveAsync(String relPath) async {
-    final file = baseDir.childFile(path.normalize(relPath));
+    final file = baseDir.childFile(fileSystem.path.normalize(relPath));
     if (!await file.exists()) {
       throw Exception('Template file not found: $relPath');
     }
