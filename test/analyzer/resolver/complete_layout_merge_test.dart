@@ -13,7 +13,7 @@ void main() {
     setUp(() {
       // Configure logging - enable only resolver logs
       Logger.disableAllContexts();
-      Logger.enableContext('Resolver');
+      // Logger.enableContext('Resolver');
       root = TestRoot();
       analyzer = TemplateAnalyzer(root);
 
@@ -164,10 +164,10 @@ void main() {
           ]));
 
       // For debugging purposes, print the merged AST
-      print('Merged AST nodes:');
-      for (var node in mergedAst) {
-        print('  ${node.runtimeType}: $node');
-      }
+      // print('Merged AST nodes:');
+      // for (var node in mergedAst) {
+      //   print('  ${node.runtimeType}: $node');
+      // }
     });
   });
 }

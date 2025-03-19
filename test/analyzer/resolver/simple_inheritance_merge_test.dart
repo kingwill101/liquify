@@ -12,7 +12,7 @@ void main() {
     setUp(() {
       // Configure logging - enable only resolver logs
       Logger.disableAllContexts();
-      Logger.enableContext('Resolver');
+      // Logger.enableContext('Resolver');
       root = TestRoot();
       analyzer = TemplateAnalyzer(root);
 

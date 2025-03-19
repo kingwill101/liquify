@@ -12,7 +12,7 @@ void main() {
     setUp(() {
       // Configure logging - enable only analyzer logs
       Logger.disableAllContexts();
-      Logger.enableContext('Analyzer');
+      // Logger.enableContext('Analyzer');
       root = TestRoot();
       analyzer = TemplateAnalyzer(root);
 

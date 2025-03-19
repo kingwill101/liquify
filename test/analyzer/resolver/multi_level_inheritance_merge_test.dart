@@ -14,7 +14,7 @@ void main() {
     setUp(() {
       // Disable analyzer logging and enable only resolver logging
       Logger.disableAllContexts();
-      Logger.enableContext('Resolver');
+      // Logger.enableContext('Resolver');
       root = TestRoot();
       analyzer = TemplateAnalyzer(root);
 
