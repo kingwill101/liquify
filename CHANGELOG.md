@@ -1,3 +1,6 @@
+## 1.0.1
+- Disable internal resolver/analyzer logging
+
 ## 1.0.0
 - Layout tag support
 - Async rendering support
