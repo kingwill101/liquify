@@ -134,8 +134,8 @@ List<dynamic> mergedAstToJson(List<ASTNode> ast) =>
 class Logger {
   final String context;
   static final Map<String, bool> _enabledContexts = {
-    'Analyzer': true,
-    'Resolver': true,
+    'Analyzer': false,
+    'Resolver': false,
   };
   static final Map<String, int> _indentLevels = {};
   static const String _indentChar = "│ ";
