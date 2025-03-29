@@ -1,6 +1,11 @@
 # Liquify - Liquid Template Engine for Dart
 
+<p align="center">
+  <img src="assets/logo.png" alt="Liquify Logo" width="200">
+</p>
+
 [![GitHub release](https://img.shields.io/github/release/kingwill101/liquify?include_prereleases=&sort=semver&color=blue)](https://github.com/kingwill101/liquify/releases/)
+[![Pub Version](https://img.shields.io/pub/v/liquify)](https://pub.dev/packages/liquify)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kingwill101/liquify/.github%2Fworkflows%2Fdart.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue)](#license)
 [![issues - liquify](https://img.shields.io/github/issues/kingwill101/liquify)](https://github.com/kingwill101/liquify/issues)
