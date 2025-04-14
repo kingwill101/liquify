@@ -116,6 +116,27 @@ void main() {
               'Outer:1, Inner:1 Outer:1, Inner:2 Outer:2, Inner:1 Outer:2, Inner:2');
         });
       });
+
+      test('iterates over map key/value pairs', () async {
+        evaluator.context.setVariable('metadata', {
+          'description': 'A website description',
+          'author': 'John Doe',
+          'keywords': 'test, liquid, template'
+        });
+
+        await testParser(
+            '{% for pair in metadata %}{{ pair[0] }}:{{ pair[1] }}{% unless forloop.last %},{% endunless %}{% endfor %}',
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          final result = evaluator.buffer.toString();
+
+          expect(result, contains('description:A website description'));
+          expect(result, contains('author:John Doe'));
+          expect(result, contains('keywords:test, liquid, template'));
+
+          expect(result.split(',').length, equals(5));
+        });
+      });
     });
 
     group('async evaluation', () {

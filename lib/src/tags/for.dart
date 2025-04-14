@@ -94,7 +94,11 @@ class ForTag extends AbstractTag with AsyncTag {
       final end = evaluator.evaluate(right.right);
       iterable = List.generate(end - start + 1, (index) => start + index);
     } else {
-      iterable = evaluator.evaluate(right) ?? [];
+      final evaluated = evaluator.evaluate(right);
+      // Convert Map to a list of [key, value] pairs for iteration
+      iterable = (evaluated is Map)
+          ? evaluated.entries.map((e) => [e.key, e.value]).toList()
+          : evaluated ?? [];
     }
 
     for (final arg in namedArgs) {
