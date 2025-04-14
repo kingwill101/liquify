@@ -1,3 +1,6 @@
+## 1.0.2
+- allow iterating over key value pairs in for tags
+
 ## 1.0.1
 - Disable internal resolver/analyzer logging
 
