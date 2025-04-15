@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 import 'shared.dart';
 
-void main(){
+void main() {
   late Evaluator evaluator;
 
   setUp(() {
@@ -23,7 +23,8 @@ These shoes are awesome! {{name}}
 {% endif %}
     ''', (document) {
       evaluator.evaluateNodes(document.children);
-      expect(evaluator.buffer.toString().trim(), equals('These shoes are awesome! hello'));
+      expect(evaluator.buffer.toString().trim(),
+          equals('These shoes are awesome! hello'));
     });
   });
 }

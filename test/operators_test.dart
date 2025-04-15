@@ -364,7 +364,6 @@ void main() {
   });
 
   group('Complex operator expressions', () {
-
     test('Mixed operator types', () async {
       await testParser('{% assign x = 5 %}{{ x > 3 and x < 10 }}', (document) {
         evaluator.evaluateNodes(document.children);
@@ -380,7 +379,6 @@ void main() {
         expect(evaluator.buffer.toString(), 'Infinity');
       });
     });
-
   });
 
   group('Operator chaining', () {
