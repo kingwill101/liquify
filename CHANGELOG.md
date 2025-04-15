@@ -1,3 +1,6 @@
+## 1.0.3
+- Fix contains operator 
+
 ## 1.0.2
 - allow iterating over key value pairs in for tags
 

@@ -67,6 +67,9 @@ class Evaluator implements ASTVisitor<dynamic> {
   dynamic _binaryOp(left, operator, right) {
     switch (operator) {
       case '+':
+        if (left is String || right is String) {
+          return '${left ?? ''}${(right ?? '')}';
+        }
         return (left ?? 0) + (right ?? 0);
       case '-':
         return (left ?? 0) - (right ?? 0);
@@ -98,6 +101,14 @@ class Evaluator implements ASTVisitor<dynamic> {
           throw Exception('Right side of "in" operator must be iterable.');
         }
         return right.contains(left);
+      case 'contains':
+        if (left is String && right is String) {
+          return left.contains(right);
+        } else if (left is Iterable && right is String) {
+          return left.contains(right);
+        }
+        throw Exception(
+            'contains operator requires string or iterable on left side and string on right side');
       default:
         throw UnsupportedError('Unsupported operator: $operator');
     }
