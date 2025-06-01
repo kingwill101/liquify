@@ -42,9 +42,7 @@ Parser tagEnd() => (string('-%}').trim() | string('%}')).labeled('tagEnd');
 Parser filter() {
   return (char('|').trim() &
           ref0(identifier).trim() &
-          (char(':').trim() &
-                  ref0(expression)
-                      .plusSeparated(char(',').trim()))
+          (char(':').trim() & ref0(expression).plusSeparated(char(',').trim()))
               .optional())
       .labeled('filter')
       .map((values) {

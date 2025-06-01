@@ -153,17 +153,41 @@ void main() {
       expect(compact([], [], {}), equals([]));
       expect(compact('not a list', [], {}), equals('not a list'));
       // Note: compact only removes null values, not empty strings or false
-      expect(compact([1, '', false, 0, null], [], {}), equals([1, '', false, 0]));
+      expect(
+          compact([1, '', false, 0, null], [], {}), equals([1, '', false, 0]));
     });
 
     test('concat', () {
-      expect(concat([1, 2], [[3, 4]], {}), equals([1, 2, 3, 4]));
-      expect(concat(['a', 'b'], [['c', 'd']], {}), equals(['a', 'b', 'c', 'd']));
-      expect(concat([], [[1, 2]], {}), equals([1, 2]));
+      expect(
+          concat([
+            1,
+            2
+          ], [
+            [3, 4]
+          ], {}),
+          equals([1, 2, 3, 4]));
+      expect(
+          concat([
+            'a',
+            'b'
+          ], [
+            ['c', 'd']
+          ], {}),
+          equals(['a', 'b', 'c', 'd']));
+      expect(
+          concat([], [
+            [1, 2]
+          ], {}),
+          equals([1, 2]));
       expect(concat([1, 2], [[]], {}), equals([1, 2]));
       expect(concat([1, 2], [], {}), equals([1, 2])); // no argument
-      expect(concat('not a list', [[1, 2]], {}), equals('not a list'));
-      expect(concat([1, 2], ['not a list'], {}), equals([1, 2])); // invalid argument
+      expect(
+          concat('not a list', [
+            [1, 2]
+          ], {}),
+          equals('not a list'));
+      expect(concat([1, 2], ['not a list'], {}),
+          equals([1, 2])); // invalid argument
     });
 
     test('reject', () {
@@ -179,7 +203,7 @@ void main() {
             {'type': 'living', 'name': 'Couch'},
             {'type': 'bedroom', 'name': 'Bed'}
           ]));
-      
+
       // Test rejecting truthy values
       var truthyInput = [
         {'available': true, 'name': 'Item1'},
@@ -196,9 +220,10 @@ void main() {
             {'available': '', 'name': 'Item4'},
             {'available': 0, 'name': 'Item5'}
           ]));
-      
+
       expect(reject([], ['type', 'kitchen'], {}), equals([]));
-      expect(reject('not a list', ['type', 'kitchen'], {}), equals('not a list'));
+      expect(
+          reject('not a list', ['type', 'kitchen'], {}), equals('not a list'));
       expect(reject(input, [], {}), equals(input)); // no property specified
     });
 
@@ -238,14 +263,17 @@ void main() {
         {'name': 'Bob', 'age': 25, 'active': false},
         {'name': 'Charlie', 'age': 35, 'active': true}
       ];
-      
-      expect(find(input, ['name', 'Bob'], {}), equals({'name': 'Bob', 'age': 25, 'active': false}));
-      expect(find(input, ['age', 30], {}), equals({'name': 'Alice', 'age': 30, 'active': true}));
+
+      expect(find(input, ['name', 'Bob'], {}),
+          equals({'name': 'Bob', 'age': 25, 'active': false}));
+      expect(find(input, ['age', 30], {}),
+          equals({'name': 'Alice', 'age': 30, 'active': true}));
       expect(find(input, ['name', 'David'], {}), equals(null)); // not found
-      
+
       // Test finding first truthy value
-      expect(find(input, ['active'], {}), equals({'name': 'Alice', 'age': 30, 'active': true}));
-      
+      expect(find(input, ['active'], {}),
+          equals({'name': 'Alice', 'age': 30, 'active': true}));
+
       expect(find([], ['name', 'Bob'], {}), equals(null));
       expect(find('not a list', ['name', 'Bob'], {}), equals(null));
       expect(find(input, [], {}), equals(null)); // no property specified
@@ -257,14 +285,14 @@ void main() {
         {'name': 'Bob', 'age': 25, 'active': false},
         {'name': 'Charlie', 'age': 35, 'active': true}
       ];
-      
+
       expect(findIndex(input, ['name', 'Bob'], {}), equals(1));
       expect(findIndex(input, ['age', 30], {}), equals(0));
       expect(findIndex(input, ['name', 'David'], {}), equals(-1)); // not found
-      
+
       // Test finding first truthy value index
       expect(findIndex(input, ['active'], {}), equals(0));
-      
+
       expect(findIndex([], ['name', 'Bob'], {}), equals(-1));
       expect(findIndex('not a list', ['name', 'Bob'], {}), equals(-1));
       expect(findIndex(input, [], {}), equals(-1)); // no property specified
@@ -275,8 +303,9 @@ void main() {
       expect(sum([1, 2, 3, 4], [], {}), equals(10));
       expect(sum([1.5, 2.5, 3.0], [], {}), equals(7.0));
       expect(sum([], [], {}), equals(0));
-      expect(sum([1, 'not a number', 3], [], {}), equals(4)); // ignores non-numbers
-      
+      expect(sum([1, 'not a number', 3], [], {}),
+          equals(4)); // ignores non-numbers
+
       // Test summing property values
       var input = [
         {'price': 10, 'name': 'Item1'},
@@ -284,33 +313,40 @@ void main() {
         {'price': 15, 'name': 'Item3'}
       ];
       expect(sum(input, ['price'], {}), equals(45));
-      
+
       var mixedInput = [
         {'price': 10, 'name': 'Item1'},
         {'price': 'invalid', 'name': 'Item2'},
         {'price': 15, 'name': 'Item3'}
       ];
-      expect(sum(mixedInput, ['price'], {}), equals(25)); // ignores invalid prices
-      
+      expect(
+          sum(mixedInput, ['price'], {}), equals(25)); // ignores invalid prices
+
       expect(sum('not a list', [], {}), equals(0));
-      expect(sum(input, ['nonexistent'], {}), equals(0)); // property doesn't exist
+      expect(
+          sum(input, ['nonexistent'], {}), equals(0)); // property doesn't exist
     });
 
     test('sortNatural', () {
       // Test natural sorting with numbers
-      expect(sortNatural(['item10', 'item2', 'item1'], [], {}), equals(['item1', 'item2', 'item10']));
-      expect(sortNatural(['file1.txt', 'file10.txt', 'file2.txt'], [], {}), equals(['file1.txt', 'file2.txt', 'file10.txt']));
-      
+      expect(sortNatural(['item10', 'item2', 'item1'], [], {}),
+          equals(['item1', 'item2', 'item10']));
+      expect(sortNatural(['file1.txt', 'file10.txt', 'file2.txt'], [], {}),
+          equals(['file1.txt', 'file2.txt', 'file10.txt']));
+
       // Test regular string sorting fallback
-      expect(sortNatural(['apple', 'banana', 'cherry'], [], {}), equals(['apple', 'banana', 'cherry']));
-      expect(sortNatural(['zebra', 'apple', 'banana'], [], {}), equals(['apple', 'banana', 'zebra']));
-      
+      expect(sortNatural(['apple', 'banana', 'cherry'], [], {}),
+          equals(['apple', 'banana', 'cherry']));
+      expect(sortNatural(['zebra', 'apple', 'banana'], [], {}),
+          equals(['apple', 'banana', 'zebra']));
+
       // Test mixed content
-      expect(sortNatural(['test', 'test1', 'test10', 'test2'], [], {}), equals(['test', 'test1', 'test2', 'test10']));
-      
+      expect(sortNatural(['test', 'test1', 'test10', 'test2'], [], {}),
+          equals(['test', 'test1', 'test2', 'test10']));
+
       // Test with numbers
       expect(sortNatural([3, 1, 2], [], {}), equals([1, 2, 3]));
-      
+
       expect(sortNatural([], [], {}), equals([]));
       expect(sortNatural('not a list', [], {}), equals('not a list'));
     });
@@ -321,7 +357,7 @@ void main() {
         {'position': 'Salesman', 'name': 'Adam'},
         {'position': 'Accountant', 'name': 'Angela'}
       ];
-      
+
       var expected = [
         {
           'name': 'Accountant',
@@ -337,7 +373,7 @@ void main() {
           ]
         }
       ];
-      
+
       expect(groupBy(input, ['position'], {}), equals(expected));
       expect(groupBy([], ['position'], {}), equals([]));
       expect(groupBy('not a list', ['position'], {}), equals('not a list'));
@@ -350,23 +386,23 @@ void main() {
         {'active': false, 'name': 'Item2'},
         {'inactive': true, 'name': 'Item3'}
       ];
-      
+
       expect(has(input, ['active', true], {}), equals(true));
       expect(has(input, ['active', false], {}), equals(true));
       expect(has(input, ['active', 'missing'], {}), equals(false));
       expect(has(input, ['missing', true], {}), equals(false));
-      
+
       // Test checking for truthy values
       expect(has(input, ['active'], {}), equals(true));
       expect(has(input, ['inactive'], {}), equals(true));
-      
+
       var emptyInput = [
         {'active': null, 'name': 'Item1'},
         {'active': '', 'name': 'Item2'},
         {'active': 0, 'name': 'Item3'}
       ];
       expect(has(emptyInput, ['active'], {}), equals(false)); // all falsy
-      
+
       expect(has([], ['active', true], {}), equals(false));
       expect(has('not a list', ['active', true], {}), equals(false));
       expect(has(input, [], {}), equals(false)); // no property specified
@@ -376,11 +412,11 @@ void main() {
       // Test with strings
       expect(length('hello', [], {}), equals(5));
       expect(length('', [], {}), equals(0));
-      
+
       // Test with arrays
       expect(length([1, 2, 3], [], {}), equals(3));
       expect(length([], [], {}), equals(0));
-      
+
       // Test with other types
       expect(length(123, [], {}), equals(0));
       expect(length(null, [], {}), equals(0));
@@ -393,7 +429,7 @@ void main() {
         {'type': 'kitchen', 'name': 'Fork', 'price': 5},
         {'type': 'bedroom', 'name': 'Bed', 'price': 800}
       ];
-      
+
       // Test equality comparison
       expect(
           whereExp(input, ['item', 'item.type == "kitchen"'], {}),
@@ -401,7 +437,7 @@ void main() {
             {'type': 'kitchen', 'name': 'Spatula', 'price': 10},
             {'type': 'kitchen', 'name': 'Fork', 'price': 5}
           ]));
-      
+
       // Test numeric comparison
       expect(
           whereExp(input, ['item', 'item.price > 100'], {}),
@@ -409,15 +445,16 @@ void main() {
             {'type': 'living', 'name': 'Couch', 'price': 500},
             {'type': 'bedroom', 'name': 'Bed', 'price': 800}
           ]));
-      
+
       // Test simple property access (truthy)
-      expect(
-          whereExp(input, ['item', 'item.type'], {}),
+      expect(whereExp(input, ['item', 'item.type'], {}),
           equals(input)); // all have truthy type
-      
+
       expect(whereExp([], ['item', 'item.type == "kitchen"'], {}), equals([]));
-      expect(whereExp('not a list', ['item', 'item.type == "kitchen"'], {}), equals('not a list'));
-      expect(whereExp(input, ['item'], {}), equals(input)); // incomplete arguments
+      expect(whereExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals('not a list'));
+      expect(
+          whereExp(input, ['item'], {}), equals(input)); // incomplete arguments
     });
 
     test('findExp', () {
@@ -426,25 +463,28 @@ void main() {
         {'type': 'living', 'name': 'Couch', 'active': false},
         {'type': 'kitchen', 'name': 'Fork', 'active': true}
       ];
-      
+
       // Test equality comparison
-      expect(findExp(input, ['item', 'item.type == "living"'], {}), 
-             equals({'type': 'living', 'name': 'Couch', 'active': false}));
-      
+      expect(findExp(input, ['item', 'item.type == "living"'], {}),
+          equals({'type': 'living', 'name': 'Couch', 'active': false}));
+
       // Test boolean comparison
-      expect(findExp(input, ['item', 'item.active == true'], {}), 
-             equals({'type': 'kitchen', 'name': 'Spatula', 'active': true}));
-      
+      expect(findExp(input, ['item', 'item.active == true'], {}),
+          equals({'type': 'kitchen', 'name': 'Spatula', 'active': true}));
+
       // Test not found
-      expect(findExp(input, ['item', 'item.type == "bathroom"'], {}), equals(null));
-      
+      expect(findExp(input, ['item', 'item.type == "bathroom"'], {}),
+          equals(null));
+
       // Test simple property access
-      expect(findExp(input, ['item', 'item.active'], {}), 
-             equals({'type': 'kitchen', 'name': 'Spatula', 'active': true}));
-      
+      expect(findExp(input, ['item', 'item.active'], {}),
+          equals({'type': 'kitchen', 'name': 'Spatula', 'active': true}));
+
       expect(findExp([], ['item', 'item.type == "kitchen"'], {}), equals(null));
-      expect(findExp('not a list', ['item', 'item.type == "kitchen"'], {}), equals(null));
-      expect(findExp(input, ['item'], {}), equals(null)); // incomplete arguments
+      expect(findExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals(null));
+      expect(
+          findExp(input, ['item'], {}), equals(null)); // incomplete arguments
     });
 
     test('findIndexExp', () {
@@ -453,20 +493,27 @@ void main() {
         {'type': 'living', 'name': 'Couch'},
         {'type': 'kitchen', 'name': 'Fork'}
       ];
-      
+
       // Test equality comparison
-      expect(findIndexExp(input, ['item', 'item.type == "living"'], {}), equals(1));
-      expect(findIndexExp(input, ['item', 'item.name == "Fork"'], {}), equals(2));
-      
+      expect(findIndexExp(input, ['item', 'item.type == "living"'], {}),
+          equals(1));
+      expect(
+          findIndexExp(input, ['item', 'item.name == "Fork"'], {}), equals(2));
+
       // Test not found
-      expect(findIndexExp(input, ['item', 'item.type == "bathroom"'], {}), equals(-1));
-      
+      expect(findIndexExp(input, ['item', 'item.type == "bathroom"'], {}),
+          equals(-1));
+
       // Test simple property access
-      expect(findIndexExp(input, ['item', 'item.type'], {}), equals(0)); // first truthy
-      
-      expect(findIndexExp([], ['item', 'item.type == "kitchen"'], {}), equals(-1));
-      expect(findIndexExp('not a list', ['item', 'item.type == "kitchen"'], {}), equals(-1));
-      expect(findIndexExp(input, ['item'], {}), equals(-1)); // incomplete arguments
+      expect(findIndexExp(input, ['item', 'item.type'], {}),
+          equals(0)); // first truthy
+
+      expect(
+          findIndexExp([], ['item', 'item.type == "kitchen"'], {}), equals(-1));
+      expect(findIndexExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals(-1));
+      expect(findIndexExp(input, ['item'], {}),
+          equals(-1)); // incomplete arguments
     });
 
     test('groupByExp', () {
@@ -476,12 +523,12 @@ void main() {
         {'graduation_year': 2009, 'name': 'Jack'},
         {'graduation_year': 2013, 'name': 'Jane'}
       ];
-      
+
       // Test simple property grouping
       var result = groupByExp(input, ['item', 'item.graduation_year'], {});
       expect(result, isA<List>());
       expect(result.length, equals(3)); // 2013, 2014, 2009
-      
+
       // Check that groups are formed correctly
       var groups = <String, List>{};
       for (var group in result) {
@@ -489,14 +536,16 @@ void main() {
           groups[group['name'].toString()] = group['items'] as List;
         }
       }
-      
+
       expect(groups['2013']?.length, equals(2)); // Jay and Jane
       expect(groups['2014']?.length, equals(1)); // John
       expect(groups['2009']?.length, equals(1)); // Jack
-      
+
       expect(groupByExp([], ['item', 'item.graduation_year'], {}), equals([]));
-      expect(groupByExp('not a list', ['item', 'item.graduation_year'], {}), equals('not a list'));
-      expect(groupByExp(input, ['item'], {}), equals(input)); // incomplete arguments
+      expect(groupByExp('not a list', ['item', 'item.graduation_year'], {}),
+          equals('not a list'));
+      expect(groupByExp(input, ['item'], {}),
+          equals(input)); // incomplete arguments
     });
 
     test('hasExp', () {
@@ -505,23 +554,26 @@ void main() {
         {'active': false, 'name': 'Item2', 'price': 20},
         {'inactive': true, 'name': 'Item3', 'price': 30}
       ];
-      
+
       // Test equality comparison
       expect(hasExp(input, ['item', 'item.active == true'], {}), equals(true));
       expect(hasExp(input, ['item', 'item.active == false'], {}), equals(true));
-      expect(hasExp(input, ['item', 'item.active == "missing"'], {}), equals(false));
-      
+      expect(hasExp(input, ['item', 'item.active == "missing"'], {}),
+          equals(false));
+
       // Test numeric comparison
       expect(hasExp(input, ['item', 'item.price > 15'], {}), equals(true));
       expect(hasExp(input, ['item', 'item.price > 50'], {}), equals(false));
-      
+
       // Test simple property access
       expect(hasExp(input, ['item', 'item.active'], {}), equals(true));
       expect(hasExp(input, ['item', 'item.missing'], {}), equals(false));
-      
+
       expect(hasExp([], ['item', 'item.active == true'], {}), equals(false));
-      expect(hasExp('not a list', ['item', 'item.active == true'], {}), equals(false));
-      expect(hasExp(input, ['item'], {}), equals(false)); // incomplete arguments
+      expect(hasExp('not a list', ['item', 'item.active == true'], {}),
+          equals(false));
+      expect(
+          hasExp(input, ['item'], {}), equals(false)); // incomplete arguments
     });
 
     test('rejectExp', () {
@@ -531,7 +583,7 @@ void main() {
         {'type': 'kitchen', 'name': 'Fork', 'taxable': true},
         {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
       ];
-      
+
       // Test equality comparison
       expect(
           rejectExp(input, ['item', 'item.type == "kitchen"'], {}),
@@ -539,7 +591,7 @@ void main() {
             {'type': 'living', 'name': 'Couch', 'taxable': false},
             {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
           ]));
-      
+
       // Test boolean comparison
       expect(
           rejectExp(input, ['item', 'item.taxable == true'], {}),
@@ -547,7 +599,7 @@ void main() {
             {'type': 'living', 'name': 'Couch', 'taxable': false},
             {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
           ]));
-      
+
       // Test simple property access (reject truthy)
       expect(
           rejectExp(input, ['item', 'item.taxable'], {}),
@@ -555,10 +607,12 @@ void main() {
             {'type': 'living', 'name': 'Couch', 'taxable': false},
             {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
           ]));
-      
+
       expect(rejectExp([], ['item', 'item.type == "kitchen"'], {}), equals([]));
-      expect(rejectExp('not a list', ['item', 'item.type == "kitchen"'], {}), equals('not a list'));
-      expect(rejectExp(input, ['item'], {}), equals(input)); // incomplete arguments
+      expect(rejectExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals('not a list'));
+      expect(rejectExp(input, ['item'], {}),
+          equals(input)); // incomplete arguments
     });
   });
 
@@ -1039,7 +1093,7 @@ void main() {
       final map = {'name': 'John', 'age': 30};
       final result = json(map, [], {});
       expect(result, equals('{"name":"John","age":30}'));
-      
+
       // Test with indentation
       final indentedResult = json(map, [2], {});
       expect(indentedResult, contains('{\n  "name"'));
@@ -1060,14 +1114,13 @@ void main() {
     });
 
     test('unescape', () {
-      expect(html.unescape('&lt;p&gt;Hello &amp; welcome&lt;/p&gt;', [], {}), 
-             equals('<p>Hello & welcome</p>'));
-      expect(html.unescape('&amp;quot;Hello&amp;quot;', [], {}), 
-             equals('&quot;Hello&quot;')); // Only unescapes known entities
-      expect(html.unescape('&#39;Hello&#39;', [], {}), 
-             equals("'Hello'"));
-      expect(html.unescape('No entities here', [], {}), 
-             equals('No entities here'));
+      expect(html.unescape('&lt;p&gt;Hello &amp; welcome&lt;/p&gt;', [], {}),
+          equals('<p>Hello & welcome</p>'));
+      expect(html.unescape('&amp;quot;Hello&amp;quot;', [], {}),
+          equals('&quot;Hello&quot;')); // Only unescapes known entities
+      expect(html.unescape('&#39;Hello&#39;', [], {}), equals("'Hello'"));
+      expect(html.unescape('No entities here', [], {}),
+          equals('No entities here'));
       expect(html.unescape('', [], {}), equals(''));
     });
   });

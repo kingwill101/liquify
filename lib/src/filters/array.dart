@@ -30,7 +30,7 @@ dynamic lower(dynamic value, List<dynamic> arguments,
 /// Example: {{ "hello" | length }} => 5
 /// Example: {{ [1, 2, 3] | length }} => 3
 dynamic length(dynamic value, List<dynamic> arguments,
-        Map<String, dynamic> namedArguments) {
+    Map<String, dynamic> namedArguments) {
   if (value is String) return value.length;
   if (value is List) return value.length;
   return 0;
@@ -224,10 +224,10 @@ dynamic reject(dynamic value, List<dynamic> arguments,
     final itemValue = item[property];
     if (expected == null) {
       // Reject truthy values
-      return itemValue == null || 
-             itemValue == false || 
-             (itemValue is String && itemValue.isEmpty) ||
-             (itemValue is num && itemValue == 0);
+      return itemValue == null ||
+          itemValue == false ||
+          (itemValue is String && itemValue.isEmpty) ||
+          (itemValue is num && itemValue == 0);
     } else {
       return itemValue != expected;
     }
@@ -294,14 +294,14 @@ dynamic find(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.isEmpty) return null;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
-  
+
   for (final item in value) {
     if (item is! Map) continue;
     final itemValue = item[property];
     if (expected == null) {
       // Find first truthy value
-      if (itemValue != null && 
-          itemValue != false && 
+      if (itemValue != null &&
+          itemValue != false &&
           !(itemValue is String && itemValue.isEmpty) &&
           !(itemValue is num && itemValue == 0)) {
         return item;
@@ -327,15 +327,15 @@ dynamic findIndex(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.isEmpty) return -1;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
-  
+
   for (int i = 0; i < value.length; i++) {
     final item = value[i];
     if (item is! Map) continue;
     final itemValue = item[property];
     if (expected == null) {
       // Find first truthy value
-      if (itemValue != null && 
-          itemValue != false && 
+      if (itemValue != null &&
+          itemValue != false &&
           !(itemValue is String && itemValue.isEmpty) &&
           !(itemValue is num && itemValue == 0)) {
         return i;
@@ -359,7 +359,7 @@ dynamic findIndex(dynamic value, List<dynamic> arguments,
 dynamic sum(dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (value is! List) return 0;
-  
+
   if (arguments.isNotEmpty) {
     // Sum property values
     final property = arguments[0].toString();
@@ -394,40 +394,40 @@ dynamic sortNatural(dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (value is! List) return value;
   final sorted = List.from(value);
-  
+
   // Natural sort comparison function
   int naturalCompare(dynamic a, dynamic b) {
     String aStr = a.toString();
     String bStr = b.toString();
-    
+
     // Extract numeric parts for natural comparison
     final aMatch = RegExp(r'^(.*?)(\d+)(.*)$').firstMatch(aStr);
     final bMatch = RegExp(r'^(.*?)(\d+)(.*)$').firstMatch(bStr);
-    
+
     if (aMatch != null && bMatch != null) {
       String aPrefix = aMatch.group(1) ?? '';
       String bPrefix = bMatch.group(1) ?? '';
-      
+
       // Compare prefixes first
       int prefixComparison = aPrefix.compareTo(bPrefix);
       if (prefixComparison != 0) return prefixComparison;
-      
+
       // Compare numeric parts as numbers
       int aNum = int.tryParse(aMatch.group(2) ?? '0') ?? 0;
       int bNum = int.tryParse(bMatch.group(2) ?? '0') ?? 0;
       int numComparison = aNum.compareTo(bNum);
       if (numComparison != 0) return numComparison;
-      
+
       // Compare suffixes
       String aSuffix = aMatch.group(3) ?? '';
       String bSuffix = bMatch.group(3) ?? '';
       return aSuffix.compareTo(bSuffix);
     }
-    
+
     // Fallback to regular string comparison
     return aStr.compareTo(bStr);
   }
-  
+
   sorted.sort(naturalCompare);
   return sorted;
 }
@@ -443,23 +443,22 @@ dynamic groupBy(dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (value is! List || arguments.isEmpty) return value;
   final property = arguments[0].toString();
-  
+
   Map<String, List<dynamic>> groups = {};
-  
+
   for (final item in value) {
     if (item is! Map) continue;
     final groupKey = item[property]?.toString() ?? '';
-    
+
     if (!groups.containsKey(groupKey)) {
       groups[groupKey] = [];
     }
     groups[groupKey]!.add(item);
   }
-  
-  return groups.entries.map((entry) => {
-    'name': entry.key,
-    'items': entry.value
-  }).toList();
+
+  return groups.entries
+      .map((entry) => {'name': entry.key, 'items': entry.value})
+      .toList();
 }
 
 /// Checks if an array contains items with a certain property value.
@@ -474,15 +473,15 @@ dynamic has(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.isEmpty) return false;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
-  
+
   for (final item in value) {
     if (item is! Map) continue;
     final itemValue = item[property];
-    
+
     if (expected == null) {
       // Check for truthy value
-      if (itemValue != null && 
-          itemValue != false && 
+      if (itemValue != null &&
+          itemValue != false &&
           !(itemValue is String && itemValue.isEmpty) &&
           !(itemValue is num && itemValue == 0)) {
         return true;
@@ -508,7 +507,7 @@ dynamic whereExp(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.length < 2) return value;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
-  
+
   return value.where((item) {
     final result = _evaluateLiquidExpression(item, itemName, expression);
     return result is bool ? result : false;
@@ -527,7 +526,7 @@ dynamic findExp(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.length < 2) return null;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
-  
+
   for (final item in value) {
     final result = _evaluateLiquidExpression(item, itemName, expression);
     if (result is bool && result) {
@@ -549,7 +548,7 @@ dynamic findIndexExp(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.length < 2) return -1;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
-  
+
   for (int i = 0; i < value.length; i++) {
     final result = _evaluateLiquidExpression(value[i], itemName, expression);
     if (result is bool && result) {
@@ -571,22 +570,24 @@ dynamic groupByExp(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.length < 2) return value;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
-  
+
   Map<String, List<dynamic>> groups = {};
-  
+
   for (final item in value) {
-    final groupKey = _evaluateLiquidExpression(item, itemName, expression, returnValue: true)?.toString() ?? '';
-    
+    final groupKey =
+        _evaluateLiquidExpression(item, itemName, expression, returnValue: true)
+                ?.toString() ??
+            '';
+
     if (!groups.containsKey(groupKey)) {
       groups[groupKey] = [];
     }
     groups[groupKey]!.add(item);
   }
-  
-  return groups.entries.map((entry) => {
-    'name': entry.key,
-    'items': entry.value
-  }).toList();
+
+  return groups.entries
+      .map((entry) => {'name': entry.key, 'items': entry.value})
+      .toList();
 }
 
 /// Checks if an array contains items that match a Liquid expression.
@@ -601,7 +602,7 @@ dynamic hasExp(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.length < 2) return false;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
-  
+
   for (final item in value) {
     final result = _evaluateLiquidExpression(item, itemName, expression);
     if (result is bool && result) {
@@ -623,7 +624,7 @@ dynamic rejectExp(dynamic value, List<dynamic> arguments,
   if (value is! List || arguments.length < 2) return value;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
-  
+
   return value.where((item) {
     final result = _evaluateLiquidExpression(item, itemName, expression);
     return result is bool ? !result : true;
@@ -632,16 +633,18 @@ dynamic rejectExp(dynamic value, List<dynamic> arguments,
 
 /// Helper function to evaluate Liquid expressions using the proper parser and evaluator.
 /// This creates a proper Liquid expression and evaluates it with the item as context.
-dynamic _evaluateLiquidExpression(dynamic item, String itemName, String expression, {bool returnValue = false}) {
+dynamic _evaluateLiquidExpression(
+    dynamic item, String itemName, String expression,
+    {bool returnValue = false}) {
   try {
     // Create a complete Liquid expression by wrapping it in {{ }}
     final liquidExpression = '{{ $expression }}';
-    
+
     // Parse the expression using the existing Liquid parser
     final parsed = parseInput(liquidExpression);
-    
+
     if (parsed.isEmpty) return returnValue ? null : false;
-    
+
     // Create an evaluator with the item as context
     final context = Environment();
     if (item is Map) {
@@ -655,16 +658,16 @@ dynamic _evaluateLiquidExpression(dynamic item, String itemName, String expressi
     } else {
       context.setVariable(itemName, item);
     }
-    
+
     final evaluator = Evaluator(context);
-    
+
     // Evaluate the parsed expression
     final result = evaluator.evaluate(parsed.first);
-    
+
     if (returnValue) {
       return result;
     }
-    
+
     // For boolean context, check if the result is truthy
     return _isTruthy(result);
   } catch (e) {

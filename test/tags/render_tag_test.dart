@@ -87,10 +87,10 @@ Parameters:
 
       test('throws exception for non-existent template', () async {
         // Create a root that throws on missing templates
-        final throwingRoot = FileSystemRoot('/templates', 
+        final throwingRoot = FileSystemRoot('/templates',
             fileSystem: fileSystem, throwOnMissing: true);
         evaluator.context.setRoot(throwingRoot);
-        
+
         await testParser('{% render "non_existent.liquid" %}', (document) {
           expect(() => evaluator.evaluateNodes(document.children),
               throwsException);
@@ -164,8 +164,7 @@ Parameters:
         });
       });
 
-      test('render tag does not render render tags in comment tags',
-          () async {
+      test('render tag does not render render tags in comment tags', () async {
         await testParser(
             '{% render "components/navigation.liquid" current_page: "posts" %}',
             (document) {
@@ -176,7 +175,7 @@ Parameters:
           expect(result, isEmpty);
         });
       });
- });
+    });
 
     group('async evaluation', () {
       test('renders a simple template', () async {
@@ -213,11 +212,12 @@ Parameters:
 
       test('throws exception for non-existent template', () async {
         // Create a root that throws on missing templates
-        final throwingRoot = FileSystemRoot('/templates', 
+        final throwingRoot = FileSystemRoot('/templates',
             fileSystem: fileSystem, throwOnMissing: true);
         evaluator.context.setRoot(throwingRoot);
-        
-        await testParser('{% render "non_existent.liquid" %}', (document) async {
+
+        await testParser('{% render "non_existent.liquid" %}',
+            (document) async {
           expect(() => evaluator.evaluateNodesAsync(document.children),
               throwsException);
         });
@@ -290,8 +290,7 @@ Parameters:
         });
       });
 
-      test('render tag does not render render tags in comment tags',
-          () async {
+      test('render tag does not render render tags in comment tags', () async {
         await testParser(
             '{% render "components/navigation.liquid" current_page: "posts" %}',
             (document) async {
@@ -302,6 +301,6 @@ Parameters:
           expect(result, isEmpty);
         });
       });
-});
+    });
   });
 }
