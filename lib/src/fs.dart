@@ -6,22 +6,37 @@ import 'package:file/local.dart';
 /// Uses a [FileSystem] to interact with the underlying storage and resolves all paths
 /// relative to [baseDir].
 ///
-/// ```dart
+///
 /// final root = FileSystemRoot('/templates');
 /// final source = root.resolve('header.liquid');
 /// print(source.content); // Contents of /templates/header.liquid
-/// ```
+///
 class FileSystemRoot implements Root {
   final FileSystem fileSystem;
   final Directory baseDir;
+  final List<String> _extensions;
 
-  FileSystemRoot(String basePath, {FileSystem? fileSystem})
-      : fileSystem = fileSystem ?? LocalFileSystem(),
+  FileSystemRoot(String basePath,
+      {FileSystem? fileSystem, List<String>? extensions})
+      : _extensions = extensions ?? ['.liquid', '.html'],
+        fileSystem = fileSystem ?? LocalFileSystem(),
         baseDir = (fileSystem ?? LocalFileSystem()).directory(
             (fileSystem ?? LocalFileSystem()).path.normalize(basePath));
 
   @override
   Source resolve(String relPath) {
+    if (fileSystem.path.extension(relPath).isEmpty) {
+      for (final ext in _extensions) {
+        final file =
+            baseDir.childFile(fileSystem.path.normalize('$relPath$ext'));
+        if (file.existsSync()) {
+          final content = file.readAsStringSync();
+          return Source(file.uri, content, this);
+        }
+      }
+      throw Exception('Template file not found: $relPath');
+    }
+
     final file = baseDir.childFile(fileSystem.path.normalize(relPath));
     if (!file.existsSync()) {
       throw Exception('Template file not found: $relPath');
@@ -32,6 +47,18 @@ class FileSystemRoot implements Root {
 
   @override
   Future<Source> resolveAsync(String relPath) async {
+    if (fileSystem.path.extension(relPath).isEmpty) {
+      for (final ext in _extensions) {
+        final file =
+            baseDir.childFile(fileSystem.path.normalize('$relPath$ext'));
+        if (await file.exists()) {
+          final content = await file.readAsString();
+          return Source(file.uri, content, this);
+        }
+      }
+      throw Exception('Template file not found: $relPath');
+    }
+
     final file = baseDir.childFile(fileSystem.path.normalize(relPath));
     if (!await file.exists()) {
       throw Exception('Template file not found: $relPath');

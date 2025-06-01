@@ -49,5 +49,33 @@ void main() {
       expect(source.content, equals('Header content'));
       expect(source.file?.path, contains('header.liquid'));
     });
+
+    test('resolves template with extension fallback', () {
+      // Only create a file with .liquid extension in tempDir
+      final fallbackFile = File('${tempDir.path}/fallback.liquid');
+      fallbackFile.writeAsStringSync('Fallback content');
+      // Try resolving without extension, should find fallback.liquid
+      final source = root.resolve('fallback');
+      expect(source.content, equals('Fallback content'));
+      expect(source.file?.path, contains('fallback.liquid'));
+    });
+
+    test('throws if no extension match is found', () {
+      // Ensure no file with the name or extension exists in tempDir
+      expect(() => root.resolve('doesnotexist'), throwsException);
+    });
+
+    test('resolves template with extension fallback asynchronously', () async {
+      final fallbackFile = File('${tempDir.path}/fallback_async.liquid');
+      fallbackFile.writeAsStringSync('Async fallback content');
+      final source = await root.resolveAsync('fallback_async');
+      expect(source.content, equals('Async fallback content'));
+      expect(source.file?.path, contains('fallback_async.liquid'));
+    });
+
+    test('throws if no extension match is found asynchronously', () async {
+      // Ensure no file with the name or extension exists in tempDir
+      expect(() => root.resolveAsync('doesnotexist_async'), throwsException);
+    });
   });
 }
