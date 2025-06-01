@@ -7,6 +7,9 @@
 - FileSystemRoot and MapRoot now has extensions and throwOnError
 - Add comment tag
 - Fix filter arguments to support member access expressions (e.g., `append: features.size`)
+- Fix math filters to handle null values gracefully (null values treated as 0, prevents runtime type cast errors)
+
+- Add parse_json filter
 
 ## 1.0.4
 - Fix FileSystemRoot to handle null fileSystem argument safely and consistently fallback to LocalFileSystem

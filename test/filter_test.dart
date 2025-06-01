@@ -819,6 +819,51 @@ void main() {
       expect(json(42, [], {}), equals('42'));
     });
 
+    test('parse_json', () {
+      // Basic object parsing
+      expect(parseJson('{"a":1,"b":2}', [], {}), equals({'a': 1, 'b': 2}));
+
+      // Array parsing
+      expect(parseJson('[1,2,3]', [], {}), equals([1, 2, 3]));
+
+      // String parsing
+      expect(parseJson('"hello"', [], {}), equals('hello'));
+
+      // Number parsing
+      expect(parseJson('42', [], {}), equals(42));
+      expect(parseJson('3.14', [], {}), equals(3.14));
+
+      // Boolean parsing
+      expect(parseJson('true', [], {}), equals(true));
+      expect(parseJson('false', [], {}), equals(false));
+
+      // Null parsing
+      expect(parseJson('null', [], {}), equals(null));
+
+      // Complex nested object
+      expect(
+          parseJson(
+              '{"users":[{"name":"John","age":30},{"name":"Jane","age":25}]}',
+              [],
+              {}),
+          equals({
+            'users': [
+              {'name': 'John', 'age': 30},
+              {'name': 'Jane', 'age': 25}
+            ]
+          }));
+
+      // Whitespace handling
+      expect(parseJson('  { "key" : "value" }  ', [], {}),
+          equals({'key': 'value'}));
+
+      // Error cases
+      expect(() => parseJson(null, [], {}), throwsArgumentError);
+      expect(() => parseJson('invalid json', [], {}), throwsFormatException);
+      expect(() => parseJson('{invalid}', [], {}), throwsFormatException);
+      expect(() => parseJson('{"incomplete":', [], {}), throwsFormatException);
+    });
+
     test('inspect with circular references', () {
       var nestedCircular = <String, dynamic>{
         'a': <String, dynamic>{'b': <String, dynamic>{}}
