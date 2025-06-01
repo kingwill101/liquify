@@ -1,3 +1,6 @@
+## 1.0.5-wip
+- FileSystemRoot and MapRoot now has extensions and throwOnError
+
 ## 1.0.4
 - Fix FileSystemRoot to handle null fileSystem argument safely and consistently fallback to LocalFileSystem
 - Add tests for FileSystemRoot null fileSystem behavior
