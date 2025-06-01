@@ -4,7 +4,6 @@ import 'package:liquify/src/fs.dart';
 import 'package:file/local.dart';
 
 void main() {
-  
   group('FileSystemRoot', () {
     late Directory tempDir;
     late FileSystemRoot root;
