@@ -1,4 +1,9 @@
 ## 1.0.5-wip
+- Add complete expression-based filters (where_exp, find_exp, group_by_exp, etc.) with proper Liquid expression evaluation
+- Fix boolean literal parsing in comparison operations (true/false now parsed as literals instead of identifiers)
+- Add missing array manipulation filters: compact, concat, push, pop, shift, unshift, reject, sum, sort_natural, group_by, has
+- Complete test coverage for all implemented filters (100% filter test coverage)
+- Add regression tests for boolean literal parsing
 - FileSystemRoot and MapRoot now has extensions and throwOnError
 - Add comment tag
 
