@@ -1,3 +1,7 @@
+## 1.0.4
+- Fix FileSystemRoot to handle null fileSystem argument safely and consistently fallback to LocalFileSystem
+- Add tests for FileSystemRoot null fileSystem behavior
+
 ## 1.0.3
 - Fix contains operator 
 
