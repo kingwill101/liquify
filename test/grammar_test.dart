@@ -18,6 +18,47 @@ void main() {
       });
     });
 
+    test('Parses member access expressions in filter arguments', () {
+      testParser('''
+{% assign stats = stats | push: '{"value": ' | append: features.size | append: ', "label": "Features", "color": "purple"}' %}
+        ''', (document) {
+        final assignTags = document.children.whereType<Tag>().toList();
+        expect(assignTags.length, 1);
+        final assignment = assignTags[0].content[0] as Assignment;
+        expect((assignment.variable as Identifier).name, 'stats');
+        expect(assignment.value, isA<FilteredExpression>());
+        final filtered = assignment.value as FilteredExpression;
+        expect(filtered.filters.length, 3);
+        expect(filtered.filters[0].name.name, 'push');
+        expect(filtered.filters[1].name.name, 'append');
+        expect(filtered.filters[2].name.name, 'append');
+        
+        // Verify the nested assignment structure  
+        expect(filtered.expression, isA<Assignment>());
+        final innerAssignment = filtered.expression as Assignment;
+        expect((innerAssignment.variable as Identifier).name, 'stats');
+        expect((innerAssignment.value as Identifier).name, 'stats');
+        
+        // Verify push filter argument
+        expect(filtered.filters[0].arguments.length, 1);
+        expect(filtered.filters[0].arguments[0], isA<Literal>());
+        expect((filtered.filters[0].arguments[0] as Literal).value, '{"value": ');
+        
+        // Verify first append filter argument - this should be a MemberAccess (features.size)
+        expect(filtered.filters[1].arguments.length, 1);
+        expect(filtered.filters[1].arguments[0], isA<MemberAccess>());
+        final memberAccess = filtered.filters[1].arguments[0] as MemberAccess;
+        expect((memberAccess.object as Identifier).name, 'features');
+        expect(memberAccess.members.length, 1);
+        expect((memberAccess.members[0] as Identifier).name, 'size');
+        
+        // Verify second append filter argument - this should be a literal string
+        expect(filtered.filters[2].arguments.length, 1);
+        expect(filtered.filters[2].arguments[0], isA<Literal>());
+        expect((filtered.filters[2].arguments[0] as Literal).value, ', "label": "Features", "color": "purple"}');
+      });
+    });
+
     test('Parses empty input', () {
       testParser('''''', (document) {
         expect(document.children.length, 0);

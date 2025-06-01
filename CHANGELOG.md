@@ -6,6 +6,7 @@
 - Add regression tests for boolean literal parsing
 - FileSystemRoot and MapRoot now has extensions and throwOnError
 - Add comment tag
+- Fix filter arguments to support member access expressions (e.g., `append: features.size`)
 
 ## 1.0.4
 - Fix FileSystemRoot to handle null fileSystem argument safely and consistently fallback to LocalFileSystem

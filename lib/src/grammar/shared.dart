@@ -43,7 +43,7 @@ Parser filter() {
   return (char('|').trim() &
           ref0(identifier).trim() &
           (char(':').trim() &
-                  (ref0(namedArgument) | ref0(literal) | ref0(identifier))
+                  ref0(expression)
                       .plusSeparated(char(',').trim()))
               .optional())
       .labeled('filter')
