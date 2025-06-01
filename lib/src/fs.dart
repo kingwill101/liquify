@@ -6,18 +6,29 @@ import 'package:file/local.dart';
 /// Uses a [FileSystem] to interact with the underlying storage and resolves all paths
 /// relative to [baseDir].
 ///
+/// Supports extension fallback: if the requested template path has no extension,
+/// [FileSystemRoot] will try appending each extension in [extensions] (default: ['.liquid', '.html'])
+/// until a file is found.
 ///
+/// By default, if a template is missing, [FileSystemRoot] returns an empty [Source].
+/// If [throwOnMissing] is set to true, it throws a [TemplateNotFoundException] instead.
+///
+/// Example:
+/// 
 /// final root = FileSystemRoot('/templates');
-/// final source = root.resolve('header.liquid');
-/// print(source.content); // Contents of /templates/header.liquid
-///
+/// final source = root.resolve('header'); // will resolve to header.liquid or header.html if present
+/// print(source.content);
+/// 
 class FileSystemRoot implements Root {
   final FileSystem fileSystem;
   final Directory baseDir;
   final List<String> _extensions;
+  final bool throwOnMissing;
 
   FileSystemRoot(String basePath,
-      {FileSystem? fileSystem, List<String>? extensions})
+      {FileSystem? fileSystem,
+      List<String>? extensions,
+      this.throwOnMissing = false})
       : _extensions = extensions ?? ['.liquid', '.html'],
         fileSystem = fileSystem ?? LocalFileSystem(),
         baseDir = (fileSystem ?? LocalFileSystem()).directory(
@@ -34,12 +45,20 @@ class FileSystemRoot implements Root {
           return Source(file.uri, content, this);
         }
       }
-      throw Exception('Template file not found: $relPath');
+      if (throwOnMissing) {
+        throw TemplateNotFoundException(relPath);
+      } else {
+        return Source(null, '', this);
+      }
     }
 
     final file = baseDir.childFile(fileSystem.path.normalize(relPath));
     if (!file.existsSync()) {
-      throw Exception('Template file not found: $relPath');
+      if (throwOnMissing) {
+        throw TemplateNotFoundException(relPath);
+      } else {
+        return Source(null, '', this);
+      }
     }
     final content = file.readAsStringSync();
     return Source(file.uri, content, this);
@@ -56,12 +75,20 @@ class FileSystemRoot implements Root {
           return Source(file.uri, content, this);
         }
       }
-      throw Exception('Template file not found: $relPath');
+      if (throwOnMissing) {
+        throw TemplateNotFoundException(relPath);
+      } else {
+        return Source(null, '', this);
+      }
     }
 
     final file = baseDir.childFile(fileSystem.path.normalize(relPath));
     if (!await file.exists()) {
-      throw Exception('Template file not found: $relPath');
+      if (throwOnMissing) {
+        throw TemplateNotFoundException(relPath);
+      } else {
+        return Source(null, '', this);
+      }
     }
     final content = await file.readAsString();
     return Source(file.uri, content, this);
@@ -89,62 +116,83 @@ abstract class Root {
 ///
 /// Useful for testing or small template sets that can be stored in memory.
 ///
-/// ```dart
+/// Supports extension fallback: if the requested template path has no extension,
+/// [MapRoot] will try appending each extension in [extensions] (default: ['.liquid', '.html'])
+/// until a template is found.
+///
+/// By default, if a template is missing, [MapRoot] returns an empty [Source].
+/// If [throwOnMissing] is set to true, it throws a [TemplateNotFoundException] instead.
+///
+/// Example:
+/// 
 /// final root = MapRoot({
-///   'greeting': 'Hello {{name}}!',
-///   'footer': '© {{year}}'
-/// });
-/// ```
+///   'greeting.liquid': 'Hello {{name}}!',
+///   'footer.html': '© {{year}}'
+/// }, throwOnMissing: true);
+/// final source = root.resolve('greeting'); // will resolve to greeting.liquid
+/// print(source.content);
+/// 
 class MapRoot implements Root {
   final Map<String, String> _templates;
+  final bool throwOnMissing;
+  final List<String> _extensions;
 
-  MapRoot(this._templates);
+  MapRoot(this._templates,
+      {this.throwOnMissing = false, List<String>? extensions})
+      : _extensions = extensions ?? ['.liquid', '.html'];
 
   @override
-  Source resolve(String path) {
-    if (_templates.containsKey(path)) {
-      return Source(null, _templates[path]!, this);
+  Source resolve(String relPath) {
+    if (relPath.isEmpty) return Source(null, '', this);
+    
+    // Check for exact match first
+    if (_templates.containsKey(relPath)) {
+      return Source(null, _templates[relPath]!, this);
     }
-    return Source(null, '', this);
+
+    // Check with extensions if no extension is present
+    if (LocalFileSystem().path.extension(relPath).isEmpty) {
+      for (final ext in _extensions) {
+        final keyWithExt = LocalFileSystem().path.normalize('$relPath$ext');
+        if (_templates.containsKey(keyWithExt)) {
+          return Source(null, _templates[keyWithExt]!, this);
+        }
+      }
+    }
+
+    // Template not found
+    if (throwOnMissing) {
+      throw TemplateNotFoundException(relPath);
+    } else {
+      return Source(null, '', this);
+    }
   }
 
   @override
-  Future<Source> resolveAsync(String path) async {
-    if (_templates.containsKey(path)) {
-      return Source(null, _templates[path]!, this);
-    }
-    return Source(null, '', this);
+  Future<Source> resolveAsync(String relPath) async {
+    return Future.sync(() => resolve(relPath));
   }
 }
 
-/// A resolved template's content and metadata.
+/// Exception thrown when a template is not found.
 ///
-/// Contains the template [content] along with optional [file] location and [root]
-/// reference. Created by [Root] implementations when resolving templates.
+/// Contains the [path] that was attempted to be resolved.
+class TemplateNotFoundException implements Exception {
+  final String path;
+
+  TemplateNotFoundException(this.path);
+
+  @override
+  String toString() => 'TemplateNotFoundException: $path';
+}
+
+/// Represents a resolved template source.
 ///
-/// ```dart
-/// // Create a simple source from a string
-/// final source = Source.fromString('Hello {{name}}!');
-///
-/// // Create from async content
-/// final source = await Source.fromAsync(fetchRemoteTemplate());
-/// ```
+/// Contains the [file] of the template, its [content], and the [Root] that resolved it.
 class Source {
   final Uri? file;
   final String content;
-  final Root? root;
+  final Root root;
 
   Source(this.file, this.content, this.root);
-
-  Source.fromString(String content) : this(null, content, null);
-
-  /// Creates a Source from an async content provider
-  static Future<Source> fromAsync(
-    Future<String> contentFuture, {
-    Uri? file,
-    Root? root,
-  }) async {
-    final content = await contentFuture;
-    return Source(file, content, root);
-  }
 }
