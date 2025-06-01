@@ -1,4 +1,4 @@
-## 1.0.5-wip
+## 1.1.0
 - Add complete expression-based filters (where_exp, find_exp, group_by_exp, etc.) with proper Liquid expression evaluation
 - Fix boolean literal parsing in comparison operations (true/false now parsed as literals instead of identifiers)
 - Add missing array manipulation filters: compact, concat, push, pop, shift, unshift, reject, sum, sort_natural, group_by, has
