@@ -14,11 +14,11 @@ import 'package:file/local.dart';
 /// If [throwOnMissing] is set to true, it throws a [TemplateNotFoundException] instead.
 ///
 /// Example:
-/// 
+///
 /// final root = FileSystemRoot('/templates');
 /// final source = root.resolve('header'); // will resolve to header.liquid or header.html if present
 /// print(source.content);
-/// 
+///
 class FileSystemRoot implements Root {
   final FileSystem fileSystem;
   final Directory baseDir;
@@ -124,14 +124,14 @@ abstract class Root {
 /// If [throwOnMissing] is set to true, it throws a [TemplateNotFoundException] instead.
 ///
 /// Example:
-/// 
+///
 /// final root = MapRoot({
 ///   'greeting.liquid': 'Hello {{name}}!',
 ///   'footer.html': '© {{year}}'
 /// }, throwOnMissing: true);
 /// final source = root.resolve('greeting'); // will resolve to greeting.liquid
 /// print(source.content);
-/// 
+///
 class MapRoot implements Root {
   final Map<String, String> _templates;
   final bool throwOnMissing;
@@ -144,7 +144,7 @@ class MapRoot implements Root {
   @override
   Source resolve(String relPath) {
     if (relPath.isEmpty) return Source(null, '', this);
-    
+
     // Check for exact match first
     if (_templates.containsKey(relPath)) {
       return Source(null, _templates[relPath]!, this);
