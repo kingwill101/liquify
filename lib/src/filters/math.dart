@@ -3,9 +3,9 @@ import 'dart:math' as math;
 
 import 'package:liquify/src/filters/module.dart';
 
-/// Returns the absolute value of a number.
+/// Returns the absolute value of the input.
 ///
-/// [value]: The number to process.
+/// [value]: The number to process. If null, returns 0.
 ///
 /// Example:
 /// ```
@@ -14,12 +14,13 @@ import 'package:liquify/src/filters/module.dart';
 /// Output: 5
 FilterFunction abs = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
+  if (value == null) return 0;
   return (value as num).abs();
 };
 
 /// Returns the maximum of the input value and the argument.
 ///
-/// [value]: The first number to compare.
+/// [value]: The first number to compare. If null, treated as 0.
 /// [arguments]: A list containing the second number to compare.
 ///
 /// Example:
@@ -30,12 +31,14 @@ FilterFunction abs = (dynamic value, List<dynamic> arguments,
 FilterFunction atLeast = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (arguments.isEmpty) throw ArgumentError('at_least expects 1 argument');
-  return math.max(value as num, arguments[0] as num);
+  num val = value == null ? 0 : value as num;
+  num arg = arguments[0] == null ? 0 : arguments[0] as num;
+  return math.max(val, arg);
 };
 
 /// Returns the minimum of the input value and the argument.
 ///
-/// [value]: The first number to compare.
+/// [value]: The first number to compare. If null, treated as 0.
 /// [arguments]: A list containing the second number to compare.
 ///
 /// Example:
@@ -46,12 +49,14 @@ FilterFunction atLeast = (dynamic value, List<dynamic> arguments,
 FilterFunction atMost = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (arguments.isEmpty) throw ArgumentError('at_most expects 1 argument');
-  return math.min(value as num, arguments[0] as num);
+  num val = value == null ? 0 : value as num;
+  num arg = arguments[0] == null ? 0 : arguments[0] as num;
+  return math.min(val, arg);
 };
 
 /// Returns the smallest integer greater than or equal to the input value.
 ///
-/// [value]: The number to process.
+/// [value]: The number to process. If null, returns 0.
 ///
 /// Example:
 /// ```
@@ -60,12 +65,13 @@ FilterFunction atMost = (dynamic value, List<dynamic> arguments,
 /// Output: 6
 FilterFunction ceil = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
+  if (value == null) return 0;
   return (value as num).ceil();
 };
 
 /// Divides the input value by the argument.
 ///
-/// [value]: The dividend.
+/// [value]: The dividend. If null, treated as 0.
 /// [arguments]: A list containing the divisor and an optional boolean for integer arithmetic.
 ///
 /// Examples:
@@ -83,15 +89,19 @@ FilterFunction dividedBy = (dynamic value, List<dynamic> arguments,
   if (arguments.isEmpty) {
     throw ArgumentError('divided_by expects at least 1 argument');
   }
-  num dividend = value as num;
-  num divisor = arguments[0] as num;
+  num dividend = value == null ? 0 : value as num;
+  num divisor = arguments[0] == null ? 1 : arguments[0] as num;
   bool integerArithmetic = arguments.length > 1 ? arguments[1] as bool : false;
+
+  // Prevent division by zero
+  if (divisor == 0) return 0;
+
   return integerArithmetic ? (dividend / divisor).floor() : dividend / divisor;
 };
 
 /// Returns the largest integer less than or equal to the input value.
 ///
-/// [value]: The number to process.
+/// [value]: The number to process. If null, returns 0.
 ///
 /// Example:
 /// ```
@@ -100,12 +110,13 @@ FilterFunction dividedBy = (dynamic value, List<dynamic> arguments,
 /// Output: 5
 FilterFunction floor = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
+  if (value == null) return 0;
   return (value as num).floor();
 };
 
 /// Subtracts the argument from the input value.
 ///
-/// [value]: The minuend.
+/// [value]: The minuend. If null, treated as 0.
 /// [arguments]: A list containing the subtrahend.
 ///
 /// Example:
@@ -116,12 +127,14 @@ FilterFunction floor = (dynamic value, List<dynamic> arguments,
 FilterFunction minus = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (arguments.isEmpty) throw ArgumentError('minus expects 1 argument');
-  return (value as num) - (arguments[0] as num);
+  num val = value == null ? 0 : value as num;
+  num arg = arguments[0] == null ? 0 : arguments[0] as num;
+  return val - arg;
 };
 
 /// Returns the remainder of dividing the input value by the argument.
 ///
-/// [value]: The dividend.
+/// [value]: The dividend. If null, treated as 0.
 /// [arguments]: A list containing the divisor.
 ///
 /// Example:
@@ -132,14 +145,18 @@ FilterFunction minus = (dynamic value, List<dynamic> arguments,
 FilterFunction modulo = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (arguments.isEmpty) throw ArgumentError('modulo expects 1 argument');
-  num a = value as num;
-  num b = arguments[0] as num;
+  num a = value == null ? 0 : value as num;
+  num b = arguments[0] == null ? 1 : arguments[0] as num;
+
+  // Prevent modulo by zero
+  if (b == 0) return 0;
+
   return ((a % b) + b) % b; // This ensures the result is always positive
 };
 
 /// Multiplies the input value by the argument.
 ///
-/// [value]: The first factor.
+/// [value]: The first factor. If null, treated as 0.
 /// [arguments]: A list containing the second factor.
 ///
 /// Example:
@@ -150,12 +167,14 @@ FilterFunction modulo = (dynamic value, List<dynamic> arguments,
 FilterFunction times = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (arguments.isEmpty) throw ArgumentError('times expects 1 argument');
-  return (value as num) * (arguments[0] as num);
+  num val = value == null ? 0 : value as num;
+  num arg = arguments[0] == null ? 0 : arguments[0] as num;
+  return val * arg;
 };
 
 /// Rounds the input value to the specified number of decimal places.
 ///
-/// [value]: The number to round.
+/// [value]: The number to round. If null, returns 0.
 /// [arguments]: An optional list containing the number of decimal places.
 ///
 /// Examples:
@@ -170,6 +189,7 @@ FilterFunction times = (dynamic value, List<dynamic> arguments,
 /// Output: 5.68
 FilterFunction round = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
+  if (value == null) return 0;
   num v = value as num;
   int arg = arguments.isNotEmpty ? arguments[0] as int : 0;
   double amp = math.pow(10, arg).toDouble();
@@ -178,7 +198,7 @@ FilterFunction round = (dynamic value, List<dynamic> arguments,
 
 /// Adds the argument to the input value.
 ///
-/// [value]: The first addend.
+/// [value]: The first addend. If null, treated as 0.
 /// [arguments]: A list containing the second addend.
 ///
 /// Example:
@@ -189,7 +209,9 @@ FilterFunction round = (dynamic value, List<dynamic> arguments,
 FilterFunction plus = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   if (arguments.isEmpty) throw ArgumentError('plus expects 1 argument');
-  return (value as num) + (arguments[0] as num);
+  num val = value == null ? 0 : value as num;
+  num arg = arguments[0] == null ? 0 : arguments[0] as num;
+  return val + arg;
 };
 
 class MathModule extends Module {

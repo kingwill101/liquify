@@ -87,7 +87,8 @@ void registerBuiltInTags() {
       'case', (content, filters) => tags.CaseTag(content, filters));
   TagRegistry.register(
       'raw', (content, filters) => tags.RawTag(content, filters));
-
+  TagRegistry.register(
+      'comment', (content, filters) => tags.CommentTag(content, filters));
   TagRegistry.register(
       'render', (content, filters) => tags.RenderTag(content, filters));
 }

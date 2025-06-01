@@ -200,9 +200,11 @@ class Evaluator implements ASTVisitor<dynamic> {
       (node.expression as Assignment).value.accept(this);
       if ((node.expression as Assignment).value is Literal) {
         value = ((node.expression as Assignment).value as Literal).value;
-      } else {
+      } else if ((node.expression as Assignment).value is Identifier) {
         value = context.getVariable(
             ((node.expression as Assignment).value as Identifier).name);
+      } else {
+        value = (node.expression as Assignment).value.accept(this);
       }
     } else {
       value = node.expression.accept(this);
@@ -388,9 +390,11 @@ class Evaluator implements ASTVisitor<dynamic> {
       await (node.expression as Assignment).value.acceptAsync(this);
       if ((node.expression as Assignment).value is Literal) {
         value = ((node.expression as Assignment).value as Literal).value;
-      } else {
+      } else if ((node.expression as Assignment).value is Identifier) {
         value = context.getVariable(
             ((node.expression as Assignment).value as Identifier).name);
+      } else {
+        value = await (node.expression as Assignment).value.acceptAsync(this);
       }
     } else {
       value = await node.expression.acceptAsync(this);
