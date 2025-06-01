@@ -17,8 +17,8 @@ class FileSystemRoot implements Root {
 
   FileSystemRoot(String basePath, {FileSystem? fileSystem})
       : fileSystem = fileSystem ?? LocalFileSystem(),
-        baseDir = (fileSystem ?? LocalFileSystem())
-            .directory((fileSystem ?? LocalFileSystem()).path.normalize(basePath));
+        baseDir = (fileSystem ?? LocalFileSystem()).directory(
+            (fileSystem ?? LocalFileSystem()).path.normalize(basePath));
 
   @override
   Source resolve(String relPath) {
