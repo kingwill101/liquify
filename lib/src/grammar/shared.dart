@@ -232,14 +232,14 @@ Parser logicalOperator() =>
 
 Parser comparison() {
   return (ref0(memberAccess) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(groupedExpression) |
           ref0(range))
       .seq(ref0(comparisonOperator))
       .seq(ref0(memberAccess) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(groupedExpression) |
           ref0(range))
       .map((values) => BinaryOperation(values[0], values[1], values[2]))
@@ -278,9 +278,9 @@ Parser unaryOperation() => (ref0(unaryOperator) & ref0(comparisonOrExpression))
 
 Parser range() {
   return (char('(').trim() &
-          (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+          (ref0(memberAccess) | ref0(literal) | ref0(identifier)) &
           string('..') &
-          (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+          (ref0(memberAccess) | ref0(literal) | ref0(identifier)) &
           char(')').trim())
       .map((values) {
     final start = values[1];
@@ -291,8 +291,8 @@ Parser range() {
 
 Parser arithmeticExpression() {
   return (ref0(groupedExpression) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(range))
       .trim()
       .seq(char('+').trim() |
@@ -300,8 +300,8 @@ Parser arithmeticExpression() {
           char('*').trim() |
           char('/').trim())
       .seq(ref0(groupedExpression) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(range))
       .trim()
       .map((values) {
