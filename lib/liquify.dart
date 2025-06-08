@@ -19,14 +19,14 @@
 ///    print(await template.renderAsync()); // Output: Hello World!
 ///
 ///    // File-based template with custom root
-///    final root = Root.memory({'header.liquid': 'Welcome {{ user }}!'});
+///    final root = MapRoot({'header.liquid': 'Welcome {{ user }}!'});
 ///    final fileTemplate = Template.fromFile('header.liquid', root);
 ///    ```
 ///
 /// 2. [Layout]: Template inheritance system for creating reusable base templates:
 ///    ```dart
 ///    // Define a base layout (base.liquid)
-///    final root = Root.memory({
+///    final root = MapRoot({
 ///      'layouts/base.liquid': '''
 ///        <!DOCTYPE html>
 ///        <html>
@@ -71,7 +71,7 @@
 /// 5. [Root]: File system abstraction for template resolution:
 ///    ```dart
 ///    // Create an in-memory file system
-///    final root = Root.memory({
+///    final root = MapRoot({
 ///      'layout.liquid': '{% include "header.liquid" %}{{ content }}',
 ///      'header.liquid': 'Header: {{ title }}'
 ///    });
@@ -84,7 +84,7 @@
 /// ```dart
 /// Future<void> main() async {
 ///   // Setup template environment with layouts
-///   final root = Root.memory({
+///   final root = MapRoot({
 ///     'layouts/base.liquid': '''
 ///       <!DOCTYPE html>
 ///       <html>
