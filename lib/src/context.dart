@@ -24,7 +24,7 @@ class Environment {
     _registers.remove(s);
   }
 
-  get registers => _registers;
+  Map<String, dynamic> get registers => _registers;
 
   dynamic getRegister(String key) {
     return _registers[key];
@@ -75,7 +75,7 @@ class Environment {
     return _root;
   }
 
-  call(String key) {
+  dynamic call(String key) {
     return getVariable(key);
   }
 

@@ -25,4 +25,4 @@ class DocTag extends AbstractTag with CustomTagParser, AsyncTag {
       return Tag("doc", [TextNode(values[3])]);
     });
   }
-} 
+}

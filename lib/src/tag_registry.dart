@@ -42,7 +42,7 @@ class TagRegistry {
   }
 
   /// Returns a list of all registered tag names.
-  static get tags => _tags.keys.toList();
+  static List<String> get tags => _tags.keys.toList();
 }
 
 /// Registers all built-in Liquid tags.

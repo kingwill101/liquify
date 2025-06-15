@@ -36,12 +36,12 @@ class Evaluator implements ASTVisitor<dynamic> {
     return Evaluator.withBuffer(innerContext, buffer);
   }
 
-  tmpResult(List<ASTNode> nodes) {
+  String tmpResult(List<ASTNode> nodes) {
     final innerContext = context.clone();
     return Evaluator.withBuffer(innerContext, Buffer()).evaluateNodes(nodes);
   }
 
-  tmpResultAsync(List<ASTNode> nodes) async {
+  Future tmpResultAsync(List<ASTNode> nodes) async {
     final innerContext = context.clone();
     return await Evaluator.withBuffer(innerContext, Buffer())
         .evaluateNodesAsync(nodes);
@@ -64,8 +64,8 @@ class Evaluator implements ASTVisitor<dynamic> {
     return value;
   }
 
-  dynamic _binaryOp(left, operator, right) {
-    switch (operator) {
+  dynamic _binaryOp(dynamic left, String op, dynamic right) {
+    switch (op) {
       case '+':
         if (left is String || right is String) {
           return '${left ?? ''}${(right ?? '')}';
@@ -110,7 +110,7 @@ class Evaluator implements ASTVisitor<dynamic> {
         throw Exception(
             'contains operator requires string or iterable on left side and string on right side');
       default:
-        throw UnsupportedError('Unsupported operator: $operator');
+        throw UnsupportedError('Unsupported operator: $op');
     }
   }
 

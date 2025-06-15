@@ -20,7 +20,8 @@
 - **Complete**: 100% filter test coverage with comprehensive regression tests
 
 ### 🏷️ Tags
-- **NEW**: Add comment tag implementation
+- **NEW**: comment
+- **NEW**: doc
 
 ### 🧪 Testing
 - Complete test coverage for all implemented filters

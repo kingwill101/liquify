@@ -10,7 +10,7 @@ class AssignTag extends AbstractTag with AsyncTag {
 
   Assignment? get assignment => content.whereType<Assignment>().firstOrNull;
 
-  assignmentIsVariable() => assignment?.variable is Identifier;
+  bool assignmentIsVariable() => assignment?.variable is Identifier;
 
   Identifier get variable => assignment?.variable as Identifier;
 
@@ -35,7 +35,7 @@ class AssignTag extends AbstractTag with AsyncTag {
     return _evaluateAssignment(evaluator, isAsync: true);
   }
 
-  _setVar(Evaluator e, dynamic value) {
+  void _setVar(Evaluator e, dynamic value) {
     e.context.setVariable(variable.name, value);
   }
 }
