@@ -351,6 +351,15 @@ Parser<Tag> someTag(String name,
   }).labeled('someTag');
 }
 
+Parser hashBlockComment() => (tagStart() &
+        pattern(' \t\n\r').star() &
+        char('#') &
+        any().starLazy(tagEnd()).flatten() &
+        tagEnd())
+    .map((values) {
+      return TextNode(''); // Return an empty TextNode to signify it's ignored content
+    }).labeled('hashBlockComment');
+
 Parser tagContent() {
   return (ref0(assignment) | ref0(argument) | ref0(expression))
       .star()
@@ -466,6 +475,7 @@ Parser element() => [
       ref0(whenBlock),
       ref0(breakTag),
       ref0(continueTag),
+      ref0(hashBlockComment),
       ...TagRegistry.customParsers.map((p) => p.parser()),
       ref0(tag),
       ref0(variable),
