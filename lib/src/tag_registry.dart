@@ -90,5 +90,7 @@ void registerBuiltInTags() {
   TagRegistry.register(
       'comment', (content, filters) => tags.CommentTag(content, filters));
   TagRegistry.register(
+      'doc', (content, filters) => tags.DocTag(content, filters));
+  TagRegistry.register(
       'render', (content, filters) => tags.RenderTag(content, filters));
 }

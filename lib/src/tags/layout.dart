@@ -76,7 +76,8 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
     });
   }
 
-  FutureOr<void> buildLayout(Evaluator evaluator, String layoutName, [bool isAsync = false]) async {
+  FutureOr<void> buildLayout(Evaluator evaluator, String layoutName,
+      [bool isAsync = false]) async {
     final layoutEvaluator =
         evaluator.createInnerEvaluatorWithBuffer(evaluator.buffer);
     layoutEvaluator.context.setRoot(evaluator.context.getRoot());

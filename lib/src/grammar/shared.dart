@@ -352,12 +352,12 @@ Parser<Tag> someTag(String name,
 }
 
 Parser hashBlockComment() => (tagStart() &
-        pattern(' \t\n\r').star() &
-        char('#') &
-        any().starLazy(tagEnd()).flatten() &
-        tagEnd())
-    .map((values) {
-      return TextNode(''); // Return an empty TextNode to signify it's ignored content
+            pattern(' \t\n\r').star() &
+            char('#') &
+            any().starLazy(tagEnd()).flatten() &
+            tagEnd())
+        .map((values) {
+      return TextNode('');
     }).labeled('hashBlockComment');
 
 Parser tagContent() {
