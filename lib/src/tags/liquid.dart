@@ -43,6 +43,9 @@ class LiquidTag extends AbstractTag with CustomTagParser, AsyncTag {
     final lines = content.split('\n').map((line) => line.trim()).toList();
     StringBuffer buffer = StringBuffer();
     for (var line in lines) {
+      if (line.startsWith('{#')) {
+        continue;
+      }
       final firstWord = line.split(' ').first;
 
       if (tagRegistry.contains(firstWord)) {

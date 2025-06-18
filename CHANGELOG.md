@@ -1,3 +1,33 @@
+## 1.1.0
+
+### 📚 Documentation
+- **Complete documentation overhaul**: Added comprehensive documentation system 
+- **Examples documentation**: Added 5 detailed example guides covering basic usage, layouts, custom tags, drop objects, and file system integration  
+- **Tags documentation**: Complete reference for all 21 tags with usage patterns and examples
+- **Filters documentation**: Comprehensive documentation for 68+ filters across 7 categories (array, string, math, date, HTML, URL, misc)
+- **API documentation**: Structured documentation hub with cross-references and navigation
+
+### 🧮 Filters  
+- **NEW**: Add `parse_json` filter for parsing JSON strings into Dart objects
+- **Enhancement**: Math filters now handle null values gracefully (null treated as 0, prevents runtime type cast errors)
+- **Enhancement**: Complete expression-based filters (where_exp, find_exp, group_by_exp, etc.) with proper Liquid expression evaluation
+- **Enhancement**: Add missing array manipulation filters: compact, concat, push, pop, shift, unshift, reject, sum, sort_natural, group_by, has
+- **Fix**: Filter arguments now support member access expressions (e.g., `append: features.size`)
+
+### 🏗️ Core Improvements
+- **Fix**: Boolean literal parsing in comparison operations (true/false now parsed as literals instead of identifiers)
+- **Enhancement**: FileSystemRoot and MapRoot now have extensions and throwOnError support
+- **Complete**: 100% filter test coverage with comprehensive regression tests
+
+### 🏷️ Tags
+- **NEW**: comment
+- **NEW**: doc
+
+### 🧪 Testing
+- Complete test coverage for all implemented filters
+- Add regression tests for boolean literal parsing
+- Enhanced render tag tests
+
 ## 1.0.4
 - Fix FileSystemRoot to handle null fileSystem argument safely and consistently fallback to LocalFileSystem
 - Add tests for FileSystemRoot null fileSystem behavior

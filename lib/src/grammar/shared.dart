@@ -42,9 +42,7 @@ Parser tagEnd() => (string('-%}').trim() | string('%}')).labeled('tagEnd');
 Parser filter() {
   return (char('|').trim() &
           ref0(identifier).trim() &
-          (char(':').trim() &
-                  (ref0(namedArgument) | ref0(literal) | ref0(identifier))
-                      .plusSeparated(char(',').trim()))
+          (char(':').trim() & ref0(expression).plusSeparated(char(',').trim()))
               .optional())
       .labeled('filter')
       .map((values) {
@@ -232,14 +230,14 @@ Parser logicalOperator() =>
 
 Parser comparison() {
   return (ref0(memberAccess) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(groupedExpression) |
           ref0(range))
       .seq(ref0(comparisonOperator))
       .seq(ref0(memberAccess) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(groupedExpression) |
           ref0(range))
       .map((values) => BinaryOperation(values[0], values[1], values[2]))
@@ -278,9 +276,9 @@ Parser unaryOperation() => (ref0(unaryOperator) & ref0(comparisonOrExpression))
 
 Parser range() {
   return (char('(').trim() &
-          (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+          (ref0(memberAccess) | ref0(literal) | ref0(identifier)) &
           string('..') &
-          (ref0(memberAccess) | ref0(identifier) | ref0(literal)) &
+          (ref0(memberAccess) | ref0(literal) | ref0(identifier)) &
           char(')').trim())
       .map((values) {
     final start = values[1];
@@ -291,8 +289,8 @@ Parser range() {
 
 Parser arithmeticExpression() {
   return (ref0(groupedExpression) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(range))
       .trim()
       .seq(char('+').trim() |
@@ -300,8 +298,8 @@ Parser arithmeticExpression() {
           char('*').trim() |
           char('/').trim())
       .seq(ref0(groupedExpression) |
-          ref0(identifier) |
           ref0(literal) |
+          ref0(identifier) |
           ref0(range))
       .trim()
       .map((values) {
@@ -352,6 +350,15 @@ Parser<Tag> someTag(String name,
     return Tag(name, tagContent.cast(), filters: tagFilters);
   }).labeled('someTag');
 }
+
+Parser hashBlockComment() => (tagStart() &
+            pattern(' \t\n\r').star() &
+            char('#') &
+            any().starLazy(tagEnd()).flatten() &
+            tagEnd())
+        .map((values) {
+      return TextNode('');
+    }).labeled('hashBlockComment');
 
 Parser tagContent() {
   return (ref0(assignment) | ref0(argument) | ref0(expression))
@@ -468,6 +475,7 @@ Parser element() => [
       ref0(whenBlock),
       ref0(breakTag),
       ref0(continueTag),
+      ref0(hashBlockComment),
       ...TagRegistry.customParsers.map((p) => p.parser()),
       ref0(tag),
       ref0(variable),

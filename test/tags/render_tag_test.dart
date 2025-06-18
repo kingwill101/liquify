@@ -33,6 +33,18 @@ void main() {
     fileSystem.file('/templates/with_product.liquid')
       ..createSync(recursive: true)
       ..writeAsStringSync('Product: {{ product.title }}');
+
+    // Add navigation component template
+    fileSystem.file('/templates/components/navigation.liquid')
+      ..createSync(recursive: true)
+      ..writeAsStringSync('''{% comment %}Navigation Component
+Usage:
+{% render 'components/navigation' %}
+{% render 'components/navigation', current_page: 'posts' %}
+Parameters:
+- current_page: Optional current page for highlighting active nav items
+{% endcomment %}
+''');
   });
 
   tearDown(() {
@@ -74,6 +86,11 @@ void main() {
       });
 
       test('throws exception for non-existent template', () async {
+        // Create a root that throws on missing templates
+        final throwingRoot = FileSystemRoot('/templates',
+            fileSystem: fileSystem, throwOnMissing: true);
+        evaluator.context.setRoot(throwingRoot);
+
         await testParser('{% render "non_existent.liquid" %}', (document) {
           expect(() => evaluator.evaluateNodes(document.children),
               throwsException);
@@ -146,6 +163,18 @@ void main() {
               'Depth: 3 Depth: 2 Depth: 1 Bottom reached');
         });
       });
+
+      test('render tag does not render render tags in comment tags', () async {
+        await testParser(
+            '{% render "components/navigation.liquid" current_page: "posts" %}',
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          final result = evaluator.buffer.toString().trim();
+
+          // Verify basic navigation structure
+          expect(result, isEmpty);
+        });
+      });
     });
 
     group('async evaluation', () {
@@ -182,6 +211,11 @@ void main() {
       });
 
       test('throws exception for non-existent template', () async {
+        // Create a root that throws on missing templates
+        final throwingRoot = FileSystemRoot('/templates',
+            fileSystem: fileSystem, throwOnMissing: true);
+        evaluator.context.setRoot(throwingRoot);
+
         await testParser('{% render "non_existent.liquid" %}',
             (document) async {
           expect(() => evaluator.evaluateNodesAsync(document.children),
@@ -253,6 +287,18 @@ void main() {
                   .replaceAll(RegExp(r'\s+'), ' ')
                   .trim(),
               'Depth: 3 Depth: 2 Depth: 1 Bottom reached');
+        });
+      });
+
+      test('render tag does not render render tags in comment tags', () async {
+        await testParser(
+            '{% render "components/navigation.liquid" current_page: "posts" %}',
+            (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          final result = evaluator.buffer.toString().trim();
+
+          // Verify basic navigation structure
+          expect(result, isEmpty);
         });
       });
     });

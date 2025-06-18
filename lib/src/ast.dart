@@ -209,7 +209,7 @@ class Literal extends ASTNode {
 
   Literal(this._value, this.type);
 
-  get value => switch (type) {
+  dynamic get value => switch (type) {
         LiteralType.string => _value.toString(),
         LiteralType.number => _value is num || _value is int || _value is double
             ? _value

@@ -159,15 +159,45 @@ void main() {
           false);
     });
 
-    test('evaluates assignment with filtered expression', () {
-      final assignment = Assignment(
-        Identifier('uppercased_name'),
-        FilteredExpression(Literal('john', LiteralType.string),
-            [Filter(Identifier('capitalize'), [])]),
+    test('evaluates nested assignment with filtered expression', () {
+      // Set up context data
+      evaluator.context.setVariable('paginator', {'current_page': 5});
+
+      final nestedAssignment = Assignment(
+        Identifier('start_page'),
+        FilteredExpression(
+            Assignment(
+                Identifier('start_page'),
+                MemberAccess(
+                    Identifier('paginator'), [Identifier('current_page')])),
+            [
+              Filter(Identifier('minus'), [Literal(2, LiteralType.number)])
+            ]),
       );
 
-      evaluator.evaluate(assignment);
-      expect(evaluator.evaluate(Identifier('uppercased_name')), 'John');
+      evaluator.evaluate(nestedAssignment);
+      expect(evaluator.evaluate(Identifier('start_page')), 3);
+    });
+
+    test('evaluates nested assignment with filtered expression asynchronously',
+        () async {
+      // Set up context data
+      evaluator.context.setVariable('paginator', {'current_page': 5});
+
+      final nestedAssignment = Assignment(
+        Identifier('start_page'),
+        FilteredExpression(
+            Assignment(
+                Identifier('start_page'),
+                MemberAccess(
+                    Identifier('paginator'), [Identifier('current_page')])),
+            [
+              Filter(Identifier('minus'), [Literal(2, LiteralType.number)])
+            ]),
+      );
+
+      await evaluator.evaluateAsync(nestedAssignment);
+      expect(await evaluator.evaluateAsync(Identifier('start_page')), 3);
     });
 
     test('evaluates assignment with filtered expression asynchronously',

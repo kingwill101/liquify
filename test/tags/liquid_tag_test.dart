@@ -27,6 +27,18 @@ void main() {
         });
       });
 
+      test('ignores single-line comment', () async {
+        await testParser('''
+    {% liquid
+    {# This is a single-line comment #}
+    assign my_variable = "string"
+    %}
+    ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.context.getVariable('my_variable'), 'string');
+        });
+      });
+
       test('multiple operations', () async {
         await testParser('''
     {% liquid
@@ -38,6 +50,21 @@ void main() {
     ''', (document) {
           evaluator.evaluateNodes(document.children);
           expect(evaluator.buffer.toString().trim(), '16');
+        });
+      });
+
+      test('ignores multi-line comment', () async {
+        await testParser('''
+    {% liquid
+    ###############################
+    # This is a comment
+    # across multiple lines
+    ###############################
+    assign my_variable = "string"
+    %}
+    ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.context.getVariable('my_variable'), 'string');
         });
       });
     });
@@ -65,6 +92,32 @@ void main() {
     ''', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(evaluator.buffer.toString().trim(), '16');
+        });
+      });
+
+      test('ignores single-line comment', () async {
+        await testParser('''
+    {% liquid
+    # This is a single-line comment 
+    assign my_variable = "string"
+    %}
+    ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.context.getVariable('my_variable'), 'string');
+        });
+      });
+
+      test('ignores multi-line comment', () async {
+        await testParser('''
+    {% 
+    ###############################
+    # This is a comment
+    # across multiple lines
+    ###############################
+    %}
+    ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString().trim(), '');
         });
       });
     });
