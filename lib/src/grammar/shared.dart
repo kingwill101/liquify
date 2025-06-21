@@ -225,9 +225,9 @@ Parser comparisonOperator() => (string('==').trim() |
         (string('in') & word().not()).pick(0).trim())
     .labeled('comparisonOperator');
 
-Parser logicalOperator() =>
-    ((string('and') & word().not()).pick(0).trim() | 
-     (string('or') & word().not()).pick(0).trim()).labeled('logicalOperator');
+Parser logicalOperator() => ((string('and') & word().not()).pick(0).trim() |
+        (string('or') & word().not()).pick(0).trim())
+    .labeled('logicalOperator');
 
 Parser comparison() {
   return (ref0(memberAccess) |
@@ -269,7 +269,8 @@ Parser comparisonOrExpression() => (ref0(groupedExpression) |
     .labeled('comparisonOrExpression');
 
 Parser unaryOperator() =>
-    ((string('not') & word().not()).pick(0).trim() | char('!').trim()).labeled('unaryOperator');
+    ((string('not') & word().not()).pick(0).trim() | char('!').trim())
+        .labeled('unaryOperator');
 
 Parser unaryOperation() => (ref0(unaryOperator) & ref0(comparisonOrExpression))
     .map((values) => UnaryOperation(values[0], values[1]))

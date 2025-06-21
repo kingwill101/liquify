@@ -279,7 +279,7 @@ class Evaluator implements ASTVisitor<dynamic> {
   dynamic visitTag(Tag node) {
     // First try environment-scoped tags, then fall back to global registry
     final tagCreator = context.getTag(node.name);
-    final tag = tagCreator != null 
+    final tag = tagCreator != null
         ? tagCreator(node.content, node.filters)
         : TagRegistry.createTag(node.name, node.content, node.filters);
     tag?.preprocess(this);
@@ -488,7 +488,7 @@ class Evaluator implements ASTVisitor<dynamic> {
   Future<dynamic> visitTagAsync(Tag node) async {
     // First try environment-scoped tags, then fall back to global registry
     final tagCreator = context.getTag(node.name);
-    final tag = tagCreator != null 
+    final tag = tagCreator != null
         ? tagCreator(node.content, node.filters)
         : TagRegistry.createTag(node.name, node.content, node.filters);
     tag?.preprocess(this);

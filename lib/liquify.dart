@@ -20,16 +20,16 @@
 ///      data: {'name': 'World'},
 ///      environmentSetup: (env) {
 ///        // Register custom filters and tags for this template only
-///        env.registerLocalFilter('emphasize', (value, args, namedArgs) => 
+///        env.registerLocalFilter('emphasize', (value, args, namedArgs) =>
 ///          '***${value.toString().toUpperCase()}***');
-///        env.registerLocalTag('custom_tag', (content, filters) => 
+///        env.registerLocalTag('custom_tag', (content, filters) =>
 ///          MyCustomTag(content, filters));
 ///      },
 ///    );
 ///
 ///    // Secure template with strict mode (blocks global registry access)
 ///    final secureEnv = Environment.withStrictMode();
-///    secureEnv.registerLocalFilter('safe', (value, args, namedArgs) => 
+///    secureEnv.registerLocalFilter('safe', (value, args, namedArgs) =>
 ///      sanitize(value.toString()));
 ///    final secureTemplate = Template.parse(
 ///      'Safe: {{ userInput | safe }}',
@@ -81,12 +81,12 @@
 ///
 ///    // Register environment-scoped filters (preferred for security)
 ///    final env = Environment();
-///    env.registerLocalFilter('sanitize', (value, args, namedArgs) => 
+///    env.registerLocalFilter('sanitize', (value, args, namedArgs) =>
 ///      sanitizeHtml(value.toString()));
 ///    env.registerLocalFilter('truncate', (value, args, namedArgs) {
 ///      final maxLen = args.isNotEmpty ? args[0] as int : 50;
-///      return value.toString().length > maxLen 
-///        ? '${value.toString().substring(0, maxLen)}...' 
+///      return value.toString().length > maxLen
+///        ? '${value.toString().substring(0, maxLen)}...'
 ///        : value.toString();
 ///    });
 ///    ```

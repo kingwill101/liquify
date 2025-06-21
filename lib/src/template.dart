@@ -18,7 +18,9 @@ class Template {
       Environment? environment,
       void Function(Environment)? environmentSetup})
       : _templateContent = root.resolve(templateName).content,
-        _evaluator = Evaluator(_createEnvironment(data, environment, environmentSetup)..setRoot(root));
+        _evaluator = Evaluator(
+            _createEnvironment(data, environment, environmentSetup)
+              ..setRoot(root));
 
   /// Creates a new Template instance from a string.
   ///
@@ -34,7 +36,9 @@ class Template {
     Environment? environment,
     void Function(Environment)? environmentSetup,
   })  : _templateContent = input,
-        _evaluator = Evaluator(_createEnvironment(data, environment, environmentSetup)..setRoot(root));
+        _evaluator = Evaluator(
+            _createEnvironment(data, environment, environmentSetup)
+              ..setRoot(root));
 
   /// Renders the template with the current context.
   ///
@@ -92,7 +96,7 @@ class Template {
     void Function(Environment)? environmentSetup,
   ) {
     Environment env;
-    
+
     if (environment != null) {
       // Use the provided environment, merge in any data
       env = environment.clone();
@@ -101,12 +105,12 @@ class Template {
       // Create a new environment with the data
       env = Environment(data);
     }
-    
+
     // Apply any environment setup callback
     if (environmentSetup != null) {
       environmentSetup(env);
     }
-    
+
     return env;
   }
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:liquify/liquify.dart';
 import 'package:liquify/parser.dart';
 
-
 void main() async {
   print('=== Environment-Scoped Registry Examples ===\n');
 
@@ -52,7 +51,8 @@ void main() async {
     'Template A: {{ value | format }}',
     data: {'value': 'test'},
     environmentSetup: (env) {
-      env.registerLocalFilter('format', (value, args, namedArgs) => 'FORMAT_A:$value');
+      env.registerLocalFilter(
+          'format', (value, args, namedArgs) => 'FORMAT_A:$value');
     },
   );
 
@@ -60,7 +60,8 @@ void main() async {
     'Template B: {{ value | format }}',
     data: {'value': 'test'},
     environmentSetup: (env) {
-      env.registerLocalFilter('format', (value, args, namedArgs) => 'FORMAT_B:$value');
+      env.registerLocalFilter(
+          'format', (value, args, namedArgs) => 'FORMAT_B:$value');
     },
   );
 
@@ -77,36 +78,43 @@ void main() async {
   );
 
   // Register initial filter
-  dynamicTemplate.environment.registerLocalFilter('transform', (value, args, namedArgs) {
+  dynamicTemplate.environment.registerLocalFilter('transform',
+      (value, args, namedArgs) {
     return 'INITIAL:$value';
   });
 
   final resultBefore = await dynamicTemplate.renderAsync(clearBuffer: false);
-  
+
   // Change the filter behavior
-  dynamicTemplate.environment.registerLocalFilter('transform', (value, args, namedArgs) {
+  dynamicTemplate.environment.registerLocalFilter('transform',
+      (value, args, namedArgs) {
     return 'UPDATED:$value';
   });
 
-  final resultAfter = dynamicTemplate.renderAsync(clearBuffer: true);
-  print('Combined output:\n${await resultAfter}\n');
+  final resultAfter = await dynamicTemplate.renderAsync(clearBuffer: true);
+  print('Combined output: $resultBefore\n$resultAfter\n');
 
   // Example 5: Complex nested environment with cloning
   print('5. Complex nested environment with cloning:');
   final baseEnv = Environment();
-  baseEnv.registerLocalFilter('base_filter', (value, args, namedArgs) => 'BASE:$value');
-  baseEnv.registerLocalTag('base_tag', (content, filters) => BaseTag(content, filters));
+  baseEnv.registerLocalFilter(
+      'base_filter', (value, args, namedArgs) => 'BASE:$value');
+  baseEnv.registerLocalTag(
+      'base_tag', (content, filters) => BaseTag(content, filters));
 
   final childEnv = baseEnv.clone();
-  childEnv.registerLocalFilter('child_filter', (value, args, namedArgs) => 'CHILD:$value');
-  childEnv.registerLocalTag('child_tag', (content, filters) => ChildTag(content, filters));
+  childEnv.registerLocalFilter(
+      'child_filter', (value, args, namedArgs) => 'CHILD:$value');
+  childEnv.registerLocalTag(
+      'child_tag', (content, filters) => ChildTag(content, filters));
 
   final complexTemplate = Template.parse(
     '''
 Base: {{ text | base_filter }}
 Child: {{ text | child_filter }}
 {% base_tag %}{% child_tag %}
-    '''.trim(),
+    '''
+        .trim(),
     data: {'text': 'test'},
     environment: childEnv,
   );
@@ -158,4 +166,4 @@ class ChildTag extends AbstractTag {
   FutureOr evaluateAsync(Evaluator evaluator, Buffer buffer) {
     return evaluate(evaluator, buffer);
   }
-} 
+}
