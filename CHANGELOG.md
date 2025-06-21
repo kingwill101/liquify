@@ -1,3 +1,26 @@
+## 1.2.0
+
+### 🔒 Environment-Scoped Registry
+- Add environment-scoped filter and tag registration
+- Add strict mode for security sandboxing
+- Add `Environment.withStrictMode()` constructor
+- Add Template API support for custom environments
+- Add environment cloning with local registrations
+
+### 🔧 Parser Improvements
+- Fix operators to prevent invalid matches with adjacent words
+- Enhance comparison, logical, and unary operator parsing
+- Improve operator precedence handling
+
+### 🏷️ Render Tag Fixes
+- Fix variable scope isolation in render tags
+- Prevent variable leakage to parent scope
+- Add comprehensive scope isolation tests
+
+### 📚 Documentation
+- Add environment-scoped registry documentation
+
+
 ## 1.1.0
 
 ### 📚 Documentation

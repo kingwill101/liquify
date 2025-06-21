@@ -80,4 +80,20 @@ class FilterRegistry {
       module.register();
     }
   }
+
+  /// Returns a list of all registered filter names from the global registry.
+  /// This includes both directly registered filters and module filters.
+  static List<String> getRegisteredFilterNames() {
+    final filters = <String>{};
+    
+    // Add directly registered filters
+    filters.addAll(_filters.keys);
+    
+    // Add module filters
+    for (var module in modules.values) {
+      filters.addAll(module.filters.keys);
+    }
+    
+    return filters.toList();
+  }
 }

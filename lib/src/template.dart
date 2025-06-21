@@ -11,22 +11,30 @@ class Template {
   /// [templateName] is the name or path of the template to be rendered.
   /// [root] is the Root object used for resolving templates.
   /// [data] is an optional map of variables to be used in the template evaluation.
+  /// [environment] is an optional custom Environment instance to use.
+  /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
   Template.fromFile(String templateName, Root root,
-      {Map<String, dynamic> data = const {}})
+      {Map<String, dynamic> data = const {},
+      Environment? environment,
+      void Function(Environment)? environmentSetup})
       : _templateContent = root.resolve(templateName).content,
-        _evaluator = Evaluator(Environment(data)..setRoot(root));
+        _evaluator = Evaluator(_createEnvironment(data, environment, environmentSetup)..setRoot(root));
 
   /// Creates a new Template instance from a string.
   ///
   /// [input] is the string content of the template.
   /// [data] is an optional map of variables to be used in the template evaluation.
   /// [root] is an optional Root object used for resolving templates.
+  /// [environment] is an optional custom Environment instance to use.
+  /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
   Template.parse(
     String input, {
     Map<String, dynamic> data = const {},
     Root? root,
+    Environment? environment,
+    void Function(Environment)? environmentSetup,
   })  : _templateContent = input,
-        _evaluator = Evaluator(Environment(data)..setRoot(root));
+        _evaluator = Evaluator(_createEnvironment(data, environment, environmentSetup)..setRoot(root));
 
   /// Renders the template with the current context.
   ///
@@ -69,5 +77,36 @@ class Template {
   /// [newData] is a map of variables to be merged into the existing context.
   void updateContext(Map<String, dynamic> newData) {
     _evaluator.context.merge(newData);
+  }
+
+  /// Gets the current environment used by this template.
+  ///
+  /// This allows access to the environment for registering additional
+  /// filters or tags after template creation.
+  Environment get environment => _evaluator.context;
+
+  /// Helper method to create an environment based on the provided parameters.
+  static Environment _createEnvironment(
+    Map<String, dynamic> data,
+    Environment? environment,
+    void Function(Environment)? environmentSetup,
+  ) {
+    Environment env;
+    
+    if (environment != null) {
+      // Use the provided environment, merge in any data
+      env = environment.clone();
+      env.merge(data);
+    } else {
+      // Create a new environment with the data
+      env = Environment(data);
+    }
+    
+    // Apply any environment setup callback
+    if (environmentSetup != null) {
+      environmentSetup(env);
+    }
+    
+    return env;
   }
 }

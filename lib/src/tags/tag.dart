@@ -5,6 +5,8 @@ import 'package:liquify/src/buffer.dart';
 
 import '../evaluator.dart';
 
+typedef TagCreator = Function(List<ASTNode>, List<Filter>);
+
 /// Marker mixin for tags that support async operations
 mixin AsyncTag {
   bool get isAsync => true;
