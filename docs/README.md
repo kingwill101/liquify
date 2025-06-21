@@ -28,6 +28,9 @@ A comprehensive Dart implementation of the Liquid template language with support
 - **[Drop Objects](examples/drop-objects.md)** - Custom object model integration
 - **[File System Integration](examples/file-system.md)** - Template loading and organization
 
+### 🔒 [Advanced Features](/)
+- **[Environment-Scoped Registry](environment-scoped-registry.md)** - Security, isolation, and multi-tenancy
+
 ## Quick Start
 
 ### Basic Variable Output
@@ -67,6 +70,8 @@ A comprehensive Dart implementation of the Liquid template language with support
 - ✅ **Async support** - Both synchronous and asynchronous evaluation
 - ✅ **Comprehensive filters** - 70+ built-in filters across 7 categories
 - ✅ **Rich tag library** - 20+ tags for control flow, iteration, and layout
+- ✅ **Environment-scoped registry** - Security isolation and multi-tenancy support
+- ✅ **Strict mode** - Security sandboxing for untrusted templates
 - ✅ **Error handling** - Detailed error messages and exception handling
 - ✅ **Extensible** - Easy to add custom filters and tags
 - ✅ **Well-tested** - Extensive test coverage with real-world examples

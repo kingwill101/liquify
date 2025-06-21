@@ -17,6 +17,9 @@ Liquify is a comprehensive Dart implementation of the Liquid template language, 
 
 - Full support for standard Liquid syntax and semantics
 - Synchronous and asynchronous rendering
+- **🔒 Environment-scoped filters and tags** for security and isolation
+- **🛡️ Strict mode** for security sandboxing (blocks global registry access)
+- **⚡ Template-level customization** via environment setup callbacks
 - Extensible architecture for custom tags and filters (both sync and async)
 - High-performance parsing and rendering
 - Strong typing and null safety
@@ -25,6 +28,7 @@ Liquify is a comprehensive Dart implementation of the Liquid template language, 
 - Easy integration with Dart and Flutter projects
 - Extensive set of built-in filters ported from LiquidJS
 - File system abstraction for template resolution
+- Environment cloning for inheritance patterns
 
 ## Installation
 
@@ -32,7 +36,7 @@ Add Liquify to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  liquify: ^1.1.0
+  liquify: ^1.2.0
 ```
 
 Or, for the latest development version:
@@ -95,6 +99,28 @@ print(await template.renderAsync()); // "Hello World!"
 // Update context again
 template.updateContext({'greeting': 'Goodbye'});
 print(await template.renderAsync()); // "Goodbye World!"
+```
+
+### Secure Template Rendering with Environment Scoping
+
+For applications requiring security isolation or multi-tenancy:
+
+```dart
+// Create a secure template with custom filters
+final secureTemplate = Template.parse(
+  'Welcome {{ username | sanitize }}! You have {{ messages | size }} messages.',
+  data: {'username': '<script>alert("xss")</script>John', 'messages': ['msg1', 'msg2']},
+  environmentSetup: (env) {
+    // Register only safe, sanitized filters
+    env.registerLocalFilter('sanitize', (value, args, namedArgs) => 
+      value.toString().replaceAll(RegExp(r'[<>]'), ''));
+    env.registerLocalFilter('size', (value, args, namedArgs) => 
+      (value as List).length);
+  },
+);
+
+print(await secureTemplate.renderAsync());
+// Output: Welcome scriptalert("xss")John! You have 2 messages.
 ```
 
 ### Layout Support
@@ -265,6 +291,175 @@ The async support is particularly useful when:
 This approach allows you to implement custom logic for resolving and loading templates from any source, such as a file system, database, or network resource.
 
 The `render` tag uses this resolution mechanism to include and render other templates, allowing for modular and reusable template structures.
+
+### Environment-Scoped Registry (Advanced Security & Isolation)
+
+Liquify provides powerful environment-scoped filters and tags that allow you to create isolated template execution contexts. This feature is particularly useful for multi-tenant applications, security sandboxing, and plugin systems.
+
+#### Basic Environment Usage
+
+```dart
+import 'package:liquify/liquify.dart';
+
+void main() async {
+  // Template with environment setup callback
+  final template = Template.parse(
+    'Hello {{ name | emphasize }}! {% custom_greeting %}',
+    data: {'name': 'World'},
+    environmentSetup: (env) {
+      // Register custom filters and tags for this template only
+      env.registerLocalFilter('emphasize', (value, args, namedArgs) => 
+        '***${value.toString().toUpperCase()}***');
+      env.registerLocalTag('custom_greeting', (content, filters) => 
+        CustomGreetingTag(content, filters));
+    },
+  );
+
+  print(await template.renderAsync());
+  // Output: Hello ***WORLD***! 🎉 Welcome! 🎉
+}
+```
+
+#### Security Sandboxing with Strict Mode
+
+```dart
+void main() async {
+  // Create a secure environment that blocks global registry access
+  final secureEnv = Environment.withStrictMode();
+  
+  // Only register safe, sanitized filters
+  secureEnv.registerLocalFilter('sanitize', (value, args, namedArgs) {
+    return value.toString()
+      .replaceAll(RegExp(r'<[^>]*>'), '') // Remove HTML tags
+      .replaceAll(RegExp(r'[<>"\']'), ''); // Remove dangerous characters
+  });
+  
+  secureEnv.registerLocalFilter('truncate', (value, args, namedArgs) {
+    final maxLen = args.isNotEmpty ? args[0] as int : 50;
+    final str = value.toString();
+    return str.length > maxLen ? '${str.substring(0, maxLen)}...' : str;
+  });
+
+  final secureTemplate = Template.parse(
+    'Safe content: {{ userInput | sanitize | truncate: 20 }}',
+    data: {'userInput': '<script>alert("XSS")</script>This is user input'},
+    environment: secureEnv,
+  );
+
+  print(await secureTemplate.renderAsync());
+  // Output: Safe content: scriptalert("XSS")Th...
+  
+  // Attempting to use global filters will return null in strict mode
+  print(secureEnv.getFilter('dangerous_global_filter')); // null
+}
+```
+
+#### Environment Isolation Between Templates
+
+```dart
+void main() async {
+  // Template A with specific formatting
+  final templateA = Template.parse(
+    'Result: {{ value | format }}',
+    data: {'value': 'test'},
+    environmentSetup: (env) {
+      env.registerLocalFilter('format', (value, args, namedArgs) => 
+        'TEMPLATE_A_FORMAT:$value');
+    },
+  );
+
+  // Template B with different formatting
+  final templateB = Template.parse(
+    'Result: {{ value | format }}',
+    data: {'value': 'test'},
+    environmentSetup: (env) {
+      env.registerLocalFilter('format', (value, args, namedArgs) => 
+        'TEMPLATE_B_FORMAT:$value');
+    },
+  );
+
+  print(await templateA.renderAsync()); // Result: TEMPLATE_A_FORMAT:test
+  print(await templateB.renderAsync()); // Result: TEMPLATE_B_FORMAT:test
+}
+```
+
+#### Environment Cloning and Inheritance
+
+```dart
+void main() async {
+  // Create a base environment with common filters
+  final baseEnv = Environment();
+  baseEnv.registerLocalFilter('base_format', (value, args, namedArgs) => 
+    'BASE:$value');
+  baseEnv.registerLocalTag('base_tag', (content, filters) => 
+    BaseTag(content, filters));
+
+  // Clone and extend for specific use cases
+  final childEnv = baseEnv.clone();
+  childEnv.registerLocalFilter('child_format', (value, args, namedArgs) => 
+    'CHILD:$value');
+  childEnv.registerLocalTag('child_tag', (content, filters) => 
+    ChildTag(content, filters));
+
+  final template = Template.parse(
+    '''
+    Base: {{ text | base_format }}
+    Child: {{ text | child_format }}
+    {% base_tag %}{% child_tag %}
+    ''',
+    data: {'text': 'test'},
+    environment: childEnv,
+  );
+
+  print(await template.renderAsync());
+  // Output:
+  // Base: BASE:test
+  // Child: CHILD:test
+  // [BASE_TAG][CHILD_TAG]
+}
+```
+
+#### Dynamic Environment Modification
+
+```dart
+void main() async {
+  final template = Template.parse(
+    'Filtered: {{ message | transform }}',
+    data: {'message': 'hello'},
+  );
+
+  // Register initial filter
+  template.environment.registerLocalFilter('transform', (value, args, namedArgs) => 
+    'INITIAL:$value');
+
+  print(await template.renderAsync()); // Filtered: INITIAL:hello
+
+  // Dynamically change the filter behavior
+  template.environment.registerLocalFilter('transform', (value, args, namedArgs) => 
+    'UPDATED:$value');
+
+  print(await template.renderAsync()); // Filtered: UPDATED:hello
+}
+```
+
+#### Use Cases for Environment-Scoped Registry
+
+1. **Multi-tenant Applications**: Each tenant gets their own isolated environment
+2. **Security Sandboxing**: Restrict template capabilities for untrusted content
+3. **Plugin Systems**: Plugins can register their own filters/tags without conflicts
+4. **API Versioning**: Different API versions with different template capabilities
+5. **Theme Systems**: Different themes with custom visual filters
+6. **Content Management**: Different content types with specialized processing
+
+#### Priority System
+
+The environment-scoped registry follows a clear priority system:
+
+1. **Local filters/tags** (registered via `registerLocalFilter`/`registerLocalTag`)
+2. **Global filters/tags** (registered via `FilterRegistry.register`/`TagRegistry.register`)
+3. **Strict mode** blocks access to global registries entirely
+
+This ensures predictable behavior while maintaining flexibility.
 
 ### Custom Tags and Filters
 

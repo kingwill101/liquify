@@ -205,7 +205,7 @@ Parser memberAccess() => (ref0(identifier) &
 Parser arrayAccess() =>
     seq4(ref0(identifier), char('['), ref0(literal), char(']')).map((array) {
       return ArrayAccess(array.$1, array.$3);
-    });
+    }).labeled('arrayAccess');
 
 Parser text() {
   return ((varStart() | tagStart()).neg() | any())
@@ -221,12 +221,13 @@ Parser comparisonOperator() => (string('==').trim() |
         string('>=').trim() |
         char('<').trim() |
         char('>').trim() |
-        string('contains').trim() |
-        string('in').trim())
+        (string('contains') & word().not()).pick(0).trim() |
+        (string('in') & word().not()).pick(0).trim())
     .labeled('comparisonOperator');
 
-Parser logicalOperator() =>
-    (string('and').trim() | string('or').trim()).labeled('logicalOperator');
+Parser logicalOperator() => ((string('and') & word().not()).pick(0).trim() |
+        (string('or') & word().not()).pick(0).trim())
+    .labeled('logicalOperator');
 
 Parser comparison() {
   return (ref0(memberAccess) |
@@ -268,7 +269,8 @@ Parser comparisonOrExpression() => (ref0(groupedExpression) |
     .labeled('comparisonOrExpression');
 
 Parser unaryOperator() =>
-    (string('not').trim() | char('!').trim()).labeled('unaryOperator');
+    ((string('not') & word().not()).pick(0).trim() | char('!').trim())
+        .labeled('unaryOperator');
 
 Parser unaryOperation() => (ref0(unaryOperator) & ref0(comparisonOrExpression))
     .map((values) => UnaryOperation(values[0], values[1]))
@@ -404,28 +406,28 @@ Parser elseBlock() => seq2(
           .starLazy(ref0(endCaseTag).or(ref0(endIfTag)).or(ref0(endForTag))),
     ).map((values) {
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
-Parser ifTag() => someTag("if");
+    }).labeled('elseBlock');
+Parser ifTag() => someTag("if").labeled('ifTag');
 Parser ifBlock() => seq3(
       ref0(ifTag),
       ref0(element).starLazy(endIfTag()),
       ref0(endIfTag),
     ).map((values) {
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
+    }).labeled('ifBlock');
 
 Parser elseIfBlock() =>
     seq2(ref0(elseifTag), ref0(element).starLazy((elseTag()).or(elseifTag())))
         .map((values) {
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
+    }).labeled('elseIfBlock');
 
-Parser elseifTag() => someTag("elseif");
+Parser elseifTag() => someTag("elseif").labeled('elseifTag');
 
 Parser endIfTag() =>
     (tagStart() & string('endif').trim() & tagEnd()).map((values) {
       return Tag('endif', []);
-    });
+    }).labeled('endIfTag');
 
 Parser forBlock() => seq3(
       ref0(forTag),
@@ -435,12 +437,12 @@ Parser forBlock() => seq3(
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
     });
 
-Parser<Tag> forTag() => someTag('for');
+Parser<Tag> forTag() => someTag('for').labeled('forTag');
 
 Parser endForTag() =>
     (tagStart() & string('endfor').trim() & tagEnd()).map((values) {
       return Tag('endfor', []);
-    });
+    }).labeled('endForTag');
 
 Parser caseBlock() => seq3(
       ref0(caseTag),
@@ -448,23 +450,23 @@ Parser caseBlock() => seq3(
       ref0(endCaseTag),
     ).map((values) {
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
+    }).labeled('caseBlock');
 
-Parser<Tag> whenTag() => someTag('when');
+Parser<Tag> whenTag() => someTag('when').labeled('whenTag');
 
-Parser<Tag> caseTag() => someTag('case');
+Parser<Tag> caseTag() => someTag('case').labeled('caseTag');
 
 Parser endCaseTag() =>
     (tagStart() & string('endcase').trim() & tagEnd()).map((values) {
       return Tag('endcase', []);
-    });
+    }).labeled('endCaseTag');
 
 Parser whenBlock() => seq2(
       ref0(whenTag),
       ref0(element).starLazy(ref0(endCaseTag).or(ref0(elseTag).or(whenTag()))),
     ).map((values) {
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
+    }).labeled('whenBlock');
 
 Parser element() => [
       ref0(ifBlock),
@@ -480,12 +482,12 @@ Parser element() => [
       ref0(tag),
       ref0(variable),
       ref0(text)
-    ].toChoiceParser();
+    ].toChoiceParser().labeled('element');
 
 Parser<Document> document() => ref0(element).plus().map((elements) {
       var collapsedElements = collapseTextNodes(elements.cast<ASTNode>());
       return Document(collapsedElements);
-    });
+    }).labeled('document');
 
 /// Represents an exception that occurred during parsing.
 ///

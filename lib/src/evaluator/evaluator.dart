@@ -128,7 +128,7 @@ class Evaluator implements ASTVisitor<dynamic> {
     switch (node.operator) {
       case 'not':
       case '!':
-        return !expr;
+        return !isTruthy(expr);
       default:
         throw UnsupportedError('Unsupported operator: ${node.operator}');
     }
@@ -277,7 +277,11 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   dynamic visitTag(Tag node) {
-    final tag = TagRegistry.createTag(node.name, node.content, node.filters);
+    // First try environment-scoped tags, then fall back to global registry
+    final tagCreator = context.getTag(node.name);
+    final tag = tagCreator != null
+        ? tagCreator(node.content, node.filters)
+        : TagRegistry.createTag(node.name, node.content, node.filters);
     tag?.preprocess(this);
     tag?.body = node.body;
     tag?.evaluate(this, buffer);
@@ -482,7 +486,11 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   Future<dynamic> visitTagAsync(Tag node) async {
-    final tag = TagRegistry.createTag(node.name, node.content, node.filters);
+    // First try environment-scoped tags, then fall back to global registry
+    final tagCreator = context.getTag(node.name);
+    final tag = tagCreator != null
+        ? tagCreator(node.content, node.filters)
+        : TagRegistry.createTag(node.name, node.content, node.filters);
     tag?.preprocess(this);
     tag?.body = node.body;
     await tag?.evaluateAsync(this, buffer);
@@ -499,7 +507,7 @@ class Evaluator implements ASTVisitor<dynamic> {
     switch (node.operator) {
       case 'not':
       case '!':
-        return !expr;
+        return !isTruthy(expr);
       default:
         throw UnsupportedError('Unsupported operator: ${node.operator}');
     }
