@@ -128,7 +128,7 @@ class Evaluator implements ASTVisitor<dynamic> {
     switch (node.operator) {
       case 'not':
       case '!':
-        return !expr;
+        return !isTruthy(expr);
       default:
         throw UnsupportedError('Unsupported operator: ${node.operator}');
     }
@@ -499,7 +499,7 @@ class Evaluator implements ASTVisitor<dynamic> {
     switch (node.operator) {
       case 'not':
       case '!':
-        return !expr;
+        return !isTruthy(expr);
       default:
         throw UnsupportedError('Unsupported operator: ${node.operator}');
     }
