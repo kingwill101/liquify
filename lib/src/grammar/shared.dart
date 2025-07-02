@@ -445,9 +445,23 @@ Parser whenBlock() => seq2(
       ref0(whenTag),
       ref0(element).starLazy(ref0(endCaseTag).or(ref0(elseTag).or(whenTag()))),
     ).map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+      return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
     }).labeled('whenBlock');
 
+Parser elseBlockForCase() => seq2(
+      ref0(elseTag),
+      ref0(element).starLazy(ref0(endCaseTag)), 
+    ).map((values) {
+      return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
+    }).labeled('elseBlockForCase');
+
+Parser caseBlock() => seq3(
+      ref0(caseTag),
+      ref0(element).starLazy(endCaseTag()), 
+      ref0(endCaseTag),
+    ).map((values) {
+      return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
+    }).labeled('caseBlock');
 
 Parser ifBranchContent() => ref0(element).starLazy(
       ref0(elsifTag)
