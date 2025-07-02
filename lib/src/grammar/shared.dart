@@ -416,13 +416,13 @@ Parser ifBlock() => seq3(
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
     }).labeled('ifBlock');
 
-Parser elseIfBlock() =>
-    seq2(ref0(elseifTag), ref0(element).starLazy((elseTag()).or(elseifTag())))
+Parser elsifBlock() =>
+    seq2(ref0(elsifTag), ref0(element).starLazy((elseTag()).or(elsifTag())))
         .map((values) {
       return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    }).labeled('elseIfBlock');
+    }).labeled('elsifBlock');
 
-Parser elseifTag() => someTag("elseif").labeled('elseifTag');
+Parser elsifTag() => someTag("elsif").labeled('elsifTag');
 
 Parser endIfTag() =>
     (tagStart() & string('endif').trim() & tagEnd()).map((values) {
@@ -470,7 +470,7 @@ Parser whenBlock() => seq2(
 
 Parser element() => [
       ref0(ifBlock),
-      ref0(elseIfBlock),
+      ref0(elsifBlock),
       ref0(forBlock),
       ref0(caseBlock),
       ref0(elseBlock),

@@ -68,7 +68,7 @@ void registerBuiltInTags() {
   TagRegistry.register(
       'if', (content, filters) => tags.IfTag(content, filters));
   TagRegistry.register(
-      'elseif', (content, filters) => tags.IfTag(content, filters));
+        'elsif', (content, filters) => tags.IfTag(content, filters));
   TagRegistry.register(
       'continue', (content, filters) => tags.ContinueTag(content, filters));
   TagRegistry.register(

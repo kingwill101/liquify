@@ -15,14 +15,14 @@ void main() {
     evaluator.context.clear();
   });
 
-  group('if/elif/elseif tag', () {
+  group('if/elsif tag', () {
     group('sync evaluation', () {
-      test('handles elseif with first condition false', () async {
+      test('handles elsif with first condition false', () async {
         await testParser('''
           {% assign num = 1 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -38,7 +38,7 @@ void main() {
           {% assign num = 2 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -54,7 +54,7 @@ void main() {
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -76,7 +76,7 @@ void main() {
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -96,12 +96,12 @@ void main() {
     });
 
     group('async evaluation', () {
-      test('handles elseif with first condition false', () async {
+      test('handles elsif with first condition false', () async {
         await testParser('''
           {% assign num = 1 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -117,7 +117,7 @@ void main() {
           {% assign num = 2 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -133,7 +133,7 @@ void main() {
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
@@ -155,7 +155,7 @@ void main() {
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
-          {% elseif num == 1 %}
+          {% elsif num == 1 %}
             num is 1
           {% else %}
             didn't find it
