@@ -172,6 +172,9 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
         buffer.writeln('    <td class="col${tableRowLoop.col}">');
 
         var cellBuffer = Buffer();
+        final originalBuffer = evaluator.buffer;
+        evaluator.buffer = cellBuffer;
+
         for (final node in body) {
           try {
             if (node is Tag) {
@@ -180,13 +183,17 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
               cellBuffer.write(evaluator.evaluate(node));
             }
           } on BreakException {
+            evaluator.buffer = originalBuffer;
             buffer.writeln('    </td>');
             buffer.writeln('  </tr>');
             return;
           } on ContinueException {
+            evaluator.buffer = originalBuffer;
             continue;
           }
         }
+
+        evaluator.buffer = originalBuffer;
 
         buffer.writeln('      ${cellBuffer.toString().trim()}');
         buffer.writeln('    </td>');
@@ -238,6 +245,9 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
         buffer.writeln('    <td class="col${tableRowLoop.col}">');
 
         var cellBuffer = Buffer();
+        final originalBuffer = evaluator.buffer;
+        evaluator.buffer = cellBuffer;
+
         for (final node in body) {
           try {
             if (node is Tag) {
@@ -246,13 +256,17 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
               cellBuffer.write(await evaluator.evaluateAsync(node));
             }
           } on BreakException {
+            evaluator.buffer = originalBuffer;
             buffer.writeln('    </td>');
             buffer.writeln('  </tr>');
             return;
           } on ContinueException {
+            evaluator.buffer = originalBuffer;
             continue;
           }
         }
+
+        evaluator.buffer = originalBuffer;
 
         buffer.writeln('      ${cellBuffer.toString().trim()}');
         buffer.writeln('    </td>');
