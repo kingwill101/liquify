@@ -42,7 +42,8 @@ void main() {
           evaluator.evaluateNodes(document.children);
           expect(
             evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '<table>  <tr class="row1">    <td class="col1">      <span>Hi</span><sup>1</sup>    </td>    <td class="col2">      <span>Bye</span><sup>1</sup>    </td>    <td class="col3">      <span>Yes</span><sup>2</sup>    </td>    <td class="col4">      <span>No</span>    </td>  </tr></table>'.replaceAll(RegExp(r'\s+'), ''),
+            '<table>  <tr class="row1">    <td class="col1">      <span>Hi</span><sup>1</sup>    </td>    <td class="col2">      <span>Bye</span><sup>1</sup>    </td>    <td class="col3">      <span>Yes</span><sup>2</sup>    </td>    <td class="col4">      <span>No</span>    </td>  </tr></table>'
+                .replaceAll(RegExp(r'\s+'), ''),
           );
         });
       });
