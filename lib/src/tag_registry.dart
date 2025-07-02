@@ -42,7 +42,7 @@ class TagRegistry {
   }
 
   /// Returns a list of all registered tag names.
-  static get tags => _tags.keys.toList();
+  static List<String> get tags => _tags.keys.toList();
 }
 
 /// Registers all built-in Liquid tags.
@@ -87,7 +87,10 @@ void registerBuiltInTags() {
       'case', (content, filters) => tags.CaseTag(content, filters));
   TagRegistry.register(
       'raw', (content, filters) => tags.RawTag(content, filters));
-
+  TagRegistry.register(
+      'comment', (content, filters) => tags.CommentTag(content, filters));
+  TagRegistry.register(
+      'doc', (content, filters) => tags.DocTag(content, filters));
   TagRegistry.register(
       'render', (content, filters) => tags.RenderTag(content, filters));
 }

@@ -18,3 +18,5 @@ export 'decrement.dart' show DecrementTag;
 export 'block.dart' show BlockTag;
 export 'layout.dart' show LayoutTag;
 export 'super_tag.dart' show SuperTag;
+export 'comment.dart' show CommentTag;
+export 'doc_tag.dart' show DocTag;

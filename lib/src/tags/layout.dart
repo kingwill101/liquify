@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' show Random;
 
 import 'package:liquify/parser.dart';
@@ -28,7 +29,7 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
     layoutName = (evaluator.evaluate(content.first));
     layoutName = evaluator.tmpResult(parseInput(layoutName));
 
-    return buildLayout(evaluator, layoutName.trim());
+    return buildLayout(evaluator, layoutName.trim(), false);
   }
 
   @override
@@ -42,7 +43,7 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
     }
 
     layoutName = await evaluator.tmpResultAsync(parseInput(layoutName));
-    return buildLayout(evaluator, layoutName.trim());
+    return await buildLayout(evaluator, layoutName.trim(), true);
   }
 
   @override
@@ -75,7 +76,8 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
     });
   }
 
-  buildLayout(Evaluator evaluator, String layoutName) {
+  FutureOr<void> buildLayout(Evaluator evaluator, String layoutName,
+      [bool isAsync = false]) async {
     final layoutEvaluator =
         evaluator.createInnerEvaluatorWithBuffer(evaluator.buffer);
     layoutEvaluator.context.setRoot(evaluator.context.getRoot());
@@ -125,7 +127,12 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
     // Evaluate the merged AST
     _logger.info('Evaluating merged AST');
     for (final node in mergedAst) {
-      final result = layoutEvaluator.evaluate(node);
+      dynamic result;
+      if (isAsync) {
+        result = await layoutEvaluator.evaluateAsync(node);
+      } else {
+        result = layoutEvaluator.evaluate(node);
+      }
       if (result != null) {
         evaluator.buffer.write(result);
       }

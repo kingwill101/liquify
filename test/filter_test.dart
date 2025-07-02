@@ -145,6 +145,475 @@ void main() {
       expect(slice([1, 2, 3], [-5, 2], {}),
           equals([1, 2])); // negative index beyond start
     });
+
+    test('compact', () {
+      expect(compact([1, null, 2, null, 3], [], {}), equals([1, 2, 3]));
+      expect(compact([null, null], [], {}), equals([]));
+      expect(compact([1, 2, 3], [], {}), equals([1, 2, 3]));
+      expect(compact([], [], {}), equals([]));
+      expect(compact('not a list', [], {}), equals('not a list'));
+      // Note: compact only removes null values, not empty strings or false
+      expect(
+          compact([1, '', false, 0, null], [], {}), equals([1, '', false, 0]));
+    });
+
+    test('concat', () {
+      expect(
+          concat([
+            1,
+            2
+          ], [
+            [3, 4]
+          ], {}),
+          equals([1, 2, 3, 4]));
+      expect(
+          concat([
+            'a',
+            'b'
+          ], [
+            ['c', 'd']
+          ], {}),
+          equals(['a', 'b', 'c', 'd']));
+      expect(
+          concat([], [
+            [1, 2]
+          ], {}),
+          equals([1, 2]));
+      expect(concat([1, 2], [[]], {}), equals([1, 2]));
+      expect(concat([1, 2], [], {}), equals([1, 2])); // no argument
+      expect(
+          concat('not a list', [
+            [1, 2]
+          ], {}),
+          equals('not a list'));
+      expect(concat([1, 2], ['not a list'], {}),
+          equals([1, 2])); // invalid argument
+    });
+
+    test('reject', () {
+      var input = [
+        {'type': 'kitchen', 'name': 'Spatula'},
+        {'type': 'living', 'name': 'Couch'},
+        {'type': 'kitchen', 'name': 'Fork'},
+        {'type': 'bedroom', 'name': 'Bed'}
+      ];
+      expect(
+          reject(input, ['type', 'kitchen'], {}),
+          equals([
+            {'type': 'living', 'name': 'Couch'},
+            {'type': 'bedroom', 'name': 'Bed'}
+          ]));
+
+      // Test rejecting truthy values
+      var truthyInput = [
+        {'available': true, 'name': 'Item1'},
+        {'available': false, 'name': 'Item2'},
+        {'available': null, 'name': 'Item3'},
+        {'available': '', 'name': 'Item4'},
+        {'available': 0, 'name': 'Item5'}
+      ];
+      expect(
+          reject(truthyInput, ['available'], {}),
+          equals([
+            {'available': false, 'name': 'Item2'},
+            {'available': null, 'name': 'Item3'},
+            {'available': '', 'name': 'Item4'},
+            {'available': 0, 'name': 'Item5'}
+          ]));
+
+      expect(reject([], ['type', 'kitchen'], {}), equals([]));
+      expect(
+          reject('not a list', ['type', 'kitchen'], {}), equals('not a list'));
+      expect(reject(input, [], {}), equals(input)); // no property specified
+    });
+
+    test('push', () {
+      expect(push([1, 2], [3], {}), equals([1, 2, 3]));
+      expect(push([], ['item'], {}), equals(['item']));
+      expect(push(['a', 'b'], ['c'], {}), equals(['a', 'b', 'c']));
+      expect(push([1, 2], [], {}), equals([1, 2])); // no argument
+      expect(push('not a list', [3], {}), equals('not a list'));
+    });
+
+    test('pop', () {
+      expect(pop([1, 2, 3], [], {}), equals([1, 2]));
+      expect(pop([1], [], {}), equals([]));
+      expect(pop([], [], {}), equals([]));
+      expect(pop('not a list', [], {}), equals('not a list'));
+    });
+
+    test('shift', () {
+      expect(shift([1, 2, 3], [], {}), equals([2, 3]));
+      expect(shift([1], [], {}), equals([]));
+      expect(shift([], [], {}), equals([]));
+      expect(shift('not a list', [], {}), equals('not a list'));
+    });
+
+    test('unshift', () {
+      expect(unshift([2, 3], [1], {}), equals([1, 2, 3]));
+      expect(unshift([], ['item'], {}), equals(['item']));
+      expect(unshift(['b', 'c'], ['a'], {}), equals(['a', 'b', 'c']));
+      expect(unshift([1, 2], [], {}), equals([1, 2])); // no argument
+      expect(unshift('not a list', [1], {}), equals('not a list'));
+    });
+
+    test('find', () {
+      var input = [
+        {'name': 'Alice', 'age': 30, 'active': true},
+        {'name': 'Bob', 'age': 25, 'active': false},
+        {'name': 'Charlie', 'age': 35, 'active': true}
+      ];
+
+      expect(find(input, ['name', 'Bob'], {}),
+          equals({'name': 'Bob', 'age': 25, 'active': false}));
+      expect(find(input, ['age', 30], {}),
+          equals({'name': 'Alice', 'age': 30, 'active': true}));
+      expect(find(input, ['name', 'David'], {}), equals(null)); // not found
+
+      // Test finding first truthy value
+      expect(find(input, ['active'], {}),
+          equals({'name': 'Alice', 'age': 30, 'active': true}));
+
+      expect(find([], ['name', 'Bob'], {}), equals(null));
+      expect(find('not a list', ['name', 'Bob'], {}), equals(null));
+      expect(find(input, [], {}), equals(null)); // no property specified
+    });
+
+    test('findIndex', () {
+      var input = [
+        {'name': 'Alice', 'age': 30, 'active': true},
+        {'name': 'Bob', 'age': 25, 'active': false},
+        {'name': 'Charlie', 'age': 35, 'active': true}
+      ];
+
+      expect(findIndex(input, ['name', 'Bob'], {}), equals(1));
+      expect(findIndex(input, ['age', 30], {}), equals(0));
+      expect(findIndex(input, ['name', 'David'], {}), equals(-1)); // not found
+
+      // Test finding first truthy value index
+      expect(findIndex(input, ['active'], {}), equals(0));
+
+      expect(findIndex([], ['name', 'Bob'], {}), equals(-1));
+      expect(findIndex('not a list', ['name', 'Bob'], {}), equals(-1));
+      expect(findIndex(input, [], {}), equals(-1)); // no property specified
+    });
+
+    test('sum', () {
+      // Test summing array values
+      expect(sum([1, 2, 3, 4], [], {}), equals(10));
+      expect(sum([1.5, 2.5, 3.0], [], {}), equals(7.0));
+      expect(sum([], [], {}), equals(0));
+      expect(sum([1, 'not a number', 3], [], {}),
+          equals(4)); // ignores non-numbers
+
+      // Test summing property values
+      var input = [
+        {'price': 10, 'name': 'Item1'},
+        {'price': 20, 'name': 'Item2'},
+        {'price': 15, 'name': 'Item3'}
+      ];
+      expect(sum(input, ['price'], {}), equals(45));
+
+      var mixedInput = [
+        {'price': 10, 'name': 'Item1'},
+        {'price': 'invalid', 'name': 'Item2'},
+        {'price': 15, 'name': 'Item3'}
+      ];
+      expect(
+          sum(mixedInput, ['price'], {}), equals(25)); // ignores invalid prices
+
+      expect(sum('not a list', [], {}), equals(0));
+      expect(
+          sum(input, ['nonexistent'], {}), equals(0)); // property doesn't exist
+    });
+
+    test('sortNatural', () {
+      // Test natural sorting with numbers
+      expect(sortNatural(['item10', 'item2', 'item1'], [], {}),
+          equals(['item1', 'item2', 'item10']));
+      expect(sortNatural(['file1.txt', 'file10.txt', 'file2.txt'], [], {}),
+          equals(['file1.txt', 'file2.txt', 'file10.txt']));
+
+      // Test regular string sorting fallback
+      expect(sortNatural(['apple', 'banana', 'cherry'], [], {}),
+          equals(['apple', 'banana', 'cherry']));
+      expect(sortNatural(['zebra', 'apple', 'banana'], [], {}),
+          equals(['apple', 'banana', 'zebra']));
+
+      // Test mixed content
+      expect(sortNatural(['test', 'test1', 'test10', 'test2'], [], {}),
+          equals(['test', 'test1', 'test2', 'test10']));
+
+      // Test with numbers
+      expect(sortNatural([3, 1, 2], [], {}), equals([1, 2, 3]));
+
+      expect(sortNatural([], [], {}), equals([]));
+      expect(sortNatural('not a list', [], {}), equals('not a list'));
+    });
+
+    test('groupBy', () {
+      var input = [
+        {'position': 'Accountant', 'name': 'Ann'},
+        {'position': 'Salesman', 'name': 'Adam'},
+        {'position': 'Accountant', 'name': 'Angela'}
+      ];
+
+      var expected = [
+        {
+          'name': 'Accountant',
+          'items': [
+            {'position': 'Accountant', 'name': 'Ann'},
+            {'position': 'Accountant', 'name': 'Angela'}
+          ]
+        },
+        {
+          'name': 'Salesman',
+          'items': [
+            {'position': 'Salesman', 'name': 'Adam'}
+          ]
+        }
+      ];
+
+      expect(groupBy(input, ['position'], {}), equals(expected));
+      expect(groupBy([], ['position'], {}), equals([]));
+      expect(groupBy('not a list', ['position'], {}), equals('not a list'));
+      expect(groupBy(input, [], {}), equals(input)); // no property specified
+    });
+
+    test('has', () {
+      var input = [
+        {'active': true, 'name': 'Item1'},
+        {'active': false, 'name': 'Item2'},
+        {'inactive': true, 'name': 'Item3'}
+      ];
+
+      expect(has(input, ['active', true], {}), equals(true));
+      expect(has(input, ['active', false], {}), equals(true));
+      expect(has(input, ['active', 'missing'], {}), equals(false));
+      expect(has(input, ['missing', true], {}), equals(false));
+
+      // Test checking for truthy values
+      expect(has(input, ['active'], {}), equals(true));
+      expect(has(input, ['inactive'], {}), equals(true));
+
+      var emptyInput = [
+        {'active': null, 'name': 'Item1'},
+        {'active': '', 'name': 'Item2'},
+        {'active': 0, 'name': 'Item3'}
+      ];
+      expect(has(emptyInput, ['active'], {}), equals(false)); // all falsy
+
+      expect(has([], ['active', true], {}), equals(false));
+      expect(has('not a list', ['active', true], {}), equals(false));
+      expect(has(input, [], {}), equals(false)); // no property specified
+    });
+
+    test('length', () {
+      // Test with strings
+      expect(length('hello', [], {}), equals(5));
+      expect(length('', [], {}), equals(0));
+
+      // Test with arrays
+      expect(length([1, 2, 3], [], {}), equals(3));
+      expect(length([], [], {}), equals(0));
+
+      // Test with other types
+      expect(length(123, [], {}), equals(0));
+      expect(length(null, [], {}), equals(0));
+    });
+
+    test('whereExp', () {
+      var input = [
+        {'type': 'kitchen', 'name': 'Spatula', 'price': 10},
+        {'type': 'living', 'name': 'Couch', 'price': 500},
+        {'type': 'kitchen', 'name': 'Fork', 'price': 5},
+        {'type': 'bedroom', 'name': 'Bed', 'price': 800}
+      ];
+
+      // Test equality comparison
+      expect(
+          whereExp(input, ['item', 'item.type == "kitchen"'], {}),
+          equals([
+            {'type': 'kitchen', 'name': 'Spatula', 'price': 10},
+            {'type': 'kitchen', 'name': 'Fork', 'price': 5}
+          ]));
+
+      // Test numeric comparison
+      expect(
+          whereExp(input, ['item', 'item.price > 100'], {}),
+          equals([
+            {'type': 'living', 'name': 'Couch', 'price': 500},
+            {'type': 'bedroom', 'name': 'Bed', 'price': 800}
+          ]));
+
+      // Test simple property access (truthy)
+      expect(whereExp(input, ['item', 'item.type'], {}),
+          equals(input)); // all have truthy type
+
+      expect(whereExp([], ['item', 'item.type == "kitchen"'], {}), equals([]));
+      expect(whereExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals('not a list'));
+      expect(
+          whereExp(input, ['item'], {}), equals(input)); // incomplete arguments
+    });
+
+    test('findExp', () {
+      var input = [
+        {'type': 'kitchen', 'name': 'Spatula', 'active': true},
+        {'type': 'living', 'name': 'Couch', 'active': false},
+        {'type': 'kitchen', 'name': 'Fork', 'active': true}
+      ];
+
+      // Test equality comparison
+      expect(findExp(input, ['item', 'item.type == "living"'], {}),
+          equals({'type': 'living', 'name': 'Couch', 'active': false}));
+
+      // Test boolean comparison
+      expect(findExp(input, ['item', 'item.active == true'], {}),
+          equals({'type': 'kitchen', 'name': 'Spatula', 'active': true}));
+
+      // Test not found
+      expect(findExp(input, ['item', 'item.type == "bathroom"'], {}),
+          equals(null));
+
+      // Test simple property access
+      expect(findExp(input, ['item', 'item.active'], {}),
+          equals({'type': 'kitchen', 'name': 'Spatula', 'active': true}));
+
+      expect(findExp([], ['item', 'item.type == "kitchen"'], {}), equals(null));
+      expect(findExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals(null));
+      expect(
+          findExp(input, ['item'], {}), equals(null)); // incomplete arguments
+    });
+
+    test('findIndexExp', () {
+      var input = [
+        {'type': 'kitchen', 'name': 'Spatula'},
+        {'type': 'living', 'name': 'Couch'},
+        {'type': 'kitchen', 'name': 'Fork'}
+      ];
+
+      // Test equality comparison
+      expect(findIndexExp(input, ['item', 'item.type == "living"'], {}),
+          equals(1));
+      expect(
+          findIndexExp(input, ['item', 'item.name == "Fork"'], {}), equals(2));
+
+      // Test not found
+      expect(findIndexExp(input, ['item', 'item.type == "bathroom"'], {}),
+          equals(-1));
+
+      // Test simple property access
+      expect(findIndexExp(input, ['item', 'item.type'], {}),
+          equals(0)); // first truthy
+
+      expect(
+          findIndexExp([], ['item', 'item.type == "kitchen"'], {}), equals(-1));
+      expect(findIndexExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals(-1));
+      expect(findIndexExp(input, ['item'], {}),
+          equals(-1)); // incomplete arguments
+    });
+
+    test('groupByExp', () {
+      var input = [
+        {'graduation_year': 2013, 'name': 'Jay'},
+        {'graduation_year': 2014, 'name': 'John'},
+        {'graduation_year': 2009, 'name': 'Jack'},
+        {'graduation_year': 2013, 'name': 'Jane'}
+      ];
+
+      // Test simple property grouping
+      var result = groupByExp(input, ['item', 'item.graduation_year'], {});
+      expect(result, isA<List>());
+      expect(result.length, equals(3)); // 2013, 2014, 2009
+
+      // Check that groups are formed correctly
+      var groups = <String, List>{};
+      for (var group in result) {
+        if (group is Map) {
+          groups[group['name'].toString()] = group['items'] as List;
+        }
+      }
+
+      expect(groups['2013']?.length, equals(2)); // Jay and Jane
+      expect(groups['2014']?.length, equals(1)); // John
+      expect(groups['2009']?.length, equals(1)); // Jack
+
+      expect(groupByExp([], ['item', 'item.graduation_year'], {}), equals([]));
+      expect(groupByExp('not a list', ['item', 'item.graduation_year'], {}),
+          equals('not a list'));
+      expect(groupByExp(input, ['item'], {}),
+          equals(input)); // incomplete arguments
+    });
+
+    test('hasExp', () {
+      var input = [
+        {'active': true, 'name': 'Item1', 'price': 10},
+        {'active': false, 'name': 'Item2', 'price': 20},
+        {'inactive': true, 'name': 'Item3', 'price': 30}
+      ];
+
+      // Test equality comparison
+      expect(hasExp(input, ['item', 'item.active == true'], {}), equals(true));
+      expect(hasExp(input, ['item', 'item.active == false'], {}), equals(true));
+      expect(hasExp(input, ['item', 'item.active == "missing"'], {}),
+          equals(false));
+
+      // Test numeric comparison
+      expect(hasExp(input, ['item', 'item.price > 15'], {}), equals(true));
+      expect(hasExp(input, ['item', 'item.price > 50'], {}), equals(false));
+
+      // Test simple property access
+      expect(hasExp(input, ['item', 'item.active'], {}), equals(true));
+      expect(hasExp(input, ['item', 'item.missing'], {}), equals(false));
+
+      expect(hasExp([], ['item', 'item.active == true'], {}), equals(false));
+      expect(hasExp('not a list', ['item', 'item.active == true'], {}),
+          equals(false));
+      expect(
+          hasExp(input, ['item'], {}), equals(false)); // incomplete arguments
+    });
+
+    test('rejectExp', () {
+      var input = [
+        {'type': 'kitchen', 'name': 'Spatula', 'taxable': true},
+        {'type': 'living', 'name': 'Couch', 'taxable': false},
+        {'type': 'kitchen', 'name': 'Fork', 'taxable': true},
+        {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
+      ];
+
+      // Test equality comparison
+      expect(
+          rejectExp(input, ['item', 'item.type == "kitchen"'], {}),
+          equals([
+            {'type': 'living', 'name': 'Couch', 'taxable': false},
+            {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
+          ]));
+
+      // Test boolean comparison
+      expect(
+          rejectExp(input, ['item', 'item.taxable == true'], {}),
+          equals([
+            {'type': 'living', 'name': 'Couch', 'taxable': false},
+            {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
+          ]));
+
+      // Test simple property access (reject truthy)
+      expect(
+          rejectExp(input, ['item', 'item.taxable'], {}),
+          equals([
+            {'type': 'living', 'name': 'Couch', 'taxable': false},
+            {'type': 'bedroom', 'name': 'Bed', 'taxable': false}
+          ]));
+
+      expect(rejectExp([], ['item', 'item.type == "kitchen"'], {}), equals([]));
+      expect(rejectExp('not a list', ['item', 'item.type == "kitchen"'], {}),
+          equals('not a list'));
+      expect(rejectExp(input, ['item'], {}),
+          equals(input)); // incomplete arguments
+    });
   });
 
   group('URL Filters', () {
@@ -350,6 +819,51 @@ void main() {
       expect(json(42, [], {}), equals('42'));
     });
 
+    test('parse_json', () {
+      // Basic object parsing
+      expect(parseJson('{"a":1,"b":2}', [], {}), equals({'a': 1, 'b': 2}));
+
+      // Array parsing
+      expect(parseJson('[1,2,3]', [], {}), equals([1, 2, 3]));
+
+      // String parsing
+      expect(parseJson('"hello"', [], {}), equals('hello'));
+
+      // Number parsing
+      expect(parseJson('42', [], {}), equals(42));
+      expect(parseJson('3.14', [], {}), equals(3.14));
+
+      // Boolean parsing
+      expect(parseJson('true', [], {}), equals(true));
+      expect(parseJson('false', [], {}), equals(false));
+
+      // Null parsing
+      expect(parseJson('null', [], {}), equals(null));
+
+      // Complex nested object
+      expect(
+          parseJson(
+              '{"users":[{"name":"John","age":30},{"name":"Jane","age":25}]}',
+              [],
+              {}),
+          equals({
+            'users': [
+              {'name': 'John', 'age': 30},
+              {'name': 'Jane', 'age': 25}
+            ]
+          }));
+
+      // Whitespace handling
+      expect(parseJson('  { "key" : "value" }  ', [], {}),
+          equals({'key': 'value'}));
+
+      // Error cases
+      expect(() => parseJson(null, [], {}), throwsArgumentError);
+      expect(() => parseJson('invalid json', [], {}), throwsFormatException);
+      expect(() => parseJson('{invalid}', [], {}), throwsFormatException);
+      expect(() => parseJson('{"incomplete":', [], {}), throwsFormatException);
+    });
+
     test('inspect with circular references', () {
       var nestedCircular = <String, dynamic>{
         'a': <String, dynamic>{'b': <String, dynamic>{}}
@@ -447,6 +961,72 @@ void main() {
       expect(plus(5, [3], {}), equals(8));
       expect(plus(-5, [3], {}), equals(-2));
       expect(() => plus(5, [], {}), throwsArgumentError);
+    });
+
+    group('null handling', () {
+      test('abs handles null values', () {
+        expect(abs(null, [], {}), equals(0));
+      });
+
+      test('at_least handles null values', () {
+        expect(atLeast(null, [10], {}), equals(10));
+        expect(atLeast(5, [null], {}), equals(5));
+        expect(atLeast(null, [null], {}), equals(0));
+      });
+
+      test('at_most handles null values', () {
+        expect(atMost(null, [10], {}), equals(0));
+        expect(atMost(15, [null], {}), equals(0));
+        expect(atMost(null, [null], {}), equals(0));
+      });
+
+      test('ceil handles null values', () {
+        expect(ceil(null, [], {}), equals(0));
+      });
+
+      test('divided_by handles null values and division by zero', () {
+        expect(dividedBy(null, [2], {}), equals(0));
+        expect(
+            dividedBy(10, [null], {}), equals(10)); // 10 / 1 (null becomes 1)
+        expect(dividedBy(null, [null], {}), equals(0)); // 0 / 1
+        expect(
+            dividedBy(10, [0], {}), equals(0)); // division by zero protection
+      });
+
+      test('floor handles null values', () {
+        expect(floor(null, [], {}), equals(0));
+      });
+
+      test('minus handles null values', () {
+        expect(minus(null, [3], {}), equals(-3));
+        expect(minus(10, [null], {}), equals(10));
+        expect(minus(null, [null], {}), equals(0));
+      });
+
+      test('modulo handles null values and modulo by zero', () {
+        expect(modulo(null, [3], {}), equals(0));
+        expect(
+            modulo(10, [null], {}), equals(0)); // 10 % 1 = 0 (null becomes 1)
+        expect(modulo(null, [null], {}), equals(0));
+        expect(modulo(10, [0], {}), equals(0)); // modulo by zero protection
+      });
+
+      test('times handles null values', () {
+        expect(times(null, [3], {}), equals(0));
+        expect(times(5, [null], {}), equals(0));
+        expect(times(null, [null], {}), equals(0));
+      });
+
+      test('round handles null values', () {
+        expect(round(null, [], {}), equals(0));
+        expect(round(null, [2], {}), equals(0));
+      });
+
+      test('plus handles null values', () {
+        expect(plus(null, [3], {}), equals(3));
+        expect(plus(5, [null], {}), equals(5));
+        expect(plus(null, [null], {}), equals(0));
+      });
     });
   });
 
@@ -616,6 +1196,43 @@ void main() {
           equals('15th May 2023'));
       expect(dateToLongString('2023-05-15', ['ordinal', 'US'], {}),
           equals('May 15th, 2023'));
+    });
+  });
+
+  group('Missing Filter Tests', () {
+    test('jsonify (alias for json)', () {
+      final map = {'name': 'John', 'age': 30};
+      final result = json(map, [], {});
+      expect(result, equals('{"name":"John","age":30}'));
+
+      // Test with indentation
+      final indentedResult = json(map, [2], {});
+      expect(indentedResult, contains('{\n  "name"'));
+    });
+
+    test('lower (alias for downcase)', () {
+      expect(lower('HELLO WORLD', [], {}), equals('hello world'));
+      expect(lower('MiXeD cAsE', [], {}), equals('mixed case'));
+      expect(lower('', [], {}), equals(''));
+      expect(lower('already lowercase', [], {}), equals('already lowercase'));
+    });
+
+    test('upper (alias for upcase)', () {
+      expect(upper('hello world', [], {}), equals('HELLO WORLD'));
+      expect(upper('MiXeD cAsE', [], {}), equals('MIXED CASE'));
+      expect(upper('', [], {}), equals(''));
+      expect(upper('ALREADY UPPERCASE', [], {}), equals('ALREADY UPPERCASE'));
+    });
+
+    test('unescape', () {
+      expect(html.unescape('&lt;p&gt;Hello &amp; welcome&lt;/p&gt;', [], {}),
+          equals('<p>Hello & welcome</p>'));
+      expect(html.unescape('&amp;quot;Hello&amp;quot;', [], {}),
+          equals('&quot;Hello&quot;')); // Only unescapes known entities
+      expect(html.unescape('&#39;Hello&#39;', [], {}), equals("'Hello'"));
+      expect(html.unescape('No entities here', [], {}),
+          equals('No entities here'));
+      expect(html.unescape('', [], {}), equals(''));
     });
   });
 }

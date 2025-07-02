@@ -55,6 +55,34 @@ FilterFunction json = (dynamic value, List<dynamic> arguments,
       : JsonEncoder().convert(value);
 };
 
+/// Parses a JSON string into a Dart object.
+///
+/// This filter doesn't take any arguments.
+///
+/// Examples:
+/// ```
+/// {{ '{"name": "John", "age": 30}' | parse_json }}  // Output: {name: John, age: 30}
+/// {{ '[1, 2, 3]' | parse_json }}  // Output: [1, 2, 3]
+/// {{ 'true' | parse_json }}  // Output: true
+/// {{ '42' | parse_json }}  // Output: 42
+/// ```
+///
+/// Note: If the input is not a valid JSON string, this filter will throw a FormatException.
+FilterFunction parseJson = (dynamic value, List<dynamic> arguments,
+    Map<String, dynamic> namedArguments) {
+  if (value == null) {
+    throw ArgumentError('parse_json filter cannot parse null value');
+  }
+
+  String jsonString = value.toString();
+  try {
+    return JsonDecoder().convert(jsonString);
+  } catch (e) {
+    throw FormatException(
+        'parse_json filter: Invalid JSON string: $jsonString');
+  }
+};
+
 /// Inspects the input value, handling circular references.
 ///
 /// Arguments:
@@ -148,6 +176,7 @@ class MiscModule extends Module {
     filters['default'] = defaultFilter;
     filters['json'] = json;
     filters['jsonify'] = json; // Alias for 'json'
+    filters['parse_json'] = parseJson;
     filters['inspect'] = inspect;
     filters['to_integer'] = toInteger;
     filters['raw'] = raw;
