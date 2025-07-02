@@ -3,6 +3,7 @@
 - tablerow - use seperate buffer for each row being rendered
 - refactor parsers for if/case/for to better capture content in else branches etc
 
+
 ## 1.2.0
 
 ### 🔒 Environment-Scoped Registry
