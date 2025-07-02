@@ -409,28 +409,41 @@ Parser endIfTag() =>
       return Tag('endif', []);
     }).labeled('endIfTag');
 
-Parser forBlock() => seq3(
-      ref0(forTag),
-      ref0(element).starLazy(endForTag()),
-      ref0(endForTag),
-    ).labeled('for block').map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
-
-Parser<Tag> forTag() => someTag('for').labeled('forTag');
+Parser forTag() => someTag('for').labeled('forTag');
 
 Parser endForTag() =>
     (tagStart() & string('endfor').trim() & tagEnd()).map((values) {
       return Tag('endfor', []);
     }).labeled('endForTag');
 
-Parser caseBlock() => seq3(
-      ref0(caseTag),
-      ref0(element).plusLazy(endCaseTag()),
-      ref0(endCaseTag),
+Parser forElseBranchContent() => ref0(element).starLazy(ref0(endForTag)).labeled('forElseBranchContent');
+
+Parser elseBlockForFor() => seq2(
+      ref0(elseTag),
+      ref0(forElseBranchContent), 
     ).map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    }).labeled('caseBlock');
+      return (values.$1).copyWith(body: (values.$2 as List).cast<ASTNode>());
+    }).labeled('elseBlockForFor');
+
+Parser forBlock() => seq4(
+      ref0(forTag),
+      ref0(element).starLazy(
+        ref0(elseTag).or(ref0(endForTag)),
+      ), 
+      ref0(elseBlockForFor).optional(), 
+      ref0(endForTag),
+    ).map((values) {
+      final forTag = values.$1 as Tag;
+      final forBody = (values.$2).cast<ASTNode>();
+      final elseBlockForFor = values.$3 as Tag?;
+
+      final List<ASTNode> allBodyNodes = [...forBody];
+      if (elseBlockForFor != null) {
+        allBodyNodes.add(elseBlockForFor);
+      }
+
+      return forTag.copyWith(body: allBodyNodes);
+    }).labeled('forBlock');
 
 Parser<Tag> whenTag() => someTag('when').labeled('whenTag');
 
@@ -443,7 +456,9 @@ Parser endCaseTag() =>
 
 Parser whenBlock() => seq2(
       ref0(whenTag),
-      ref0(element).starLazy(ref0(endCaseTag).or(ref0(elseTag).or(whenTag()))),
+      ref0(element).starLazy(
+        ref0(whenTag).or(ref0(elseTag)).or(ref0(endCaseTag)),
+      ), 
     ).map((values) {
       return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
     }).labeled('whenBlock');
@@ -520,13 +535,11 @@ Parser elseBlock() => seq2(
 
 Parser element() => [
       ref0(ifBlock),
-      ref0(elsifBlock),
       ref0(forBlock),
       ref0(caseBlock),
-      ref0(elseBlock),
       ref0(whenBlock),
-      ref0(breakTag),
-      ref0(continueTag),
+      ref0(elseBlockForCase),
+      ref0(elseBlockForFor),
       ref0(hashBlockComment),
       ...TagRegistry.customParsers.map((p) => p.parser()),
       ref0(tag),
