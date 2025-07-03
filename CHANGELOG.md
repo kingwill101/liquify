@@ -1,4 +1,4 @@
-## 1.3.0-wip
+## 1.3.0
 - Correctly check for elsif tags and not elseif
 - tablerow - use seperate buffer for each row being rendered
 - refactor parsers for if/case/for to better capture content in else branches etc
