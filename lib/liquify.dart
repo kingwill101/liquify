@@ -17,7 +17,7 @@
 ///    // File-based template with custom root
 ///    final root = MapRoot({'header.liquid': 'Welcome {{ user }}!'});
 ///    final fileTemplate = Template.fromFile('header.liquid', root);+
-  
+
 ///    // Template with environment setup callback
 ///    final customTemplate = Template.parse(
 ///      'Hello {{ name | emphasize }}! {% custom_tag %}',
