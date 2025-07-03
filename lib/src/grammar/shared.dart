@@ -400,57 +400,51 @@ Parser<Tag> continueTag() =>
 
 Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
 
-Parser elseBlock() => seq2(
-      ref0(elseTag),
-      ref0(element)
-          .starLazy(ref0(endCaseTag).or(ref0(endIfTag)).or(ref0(endForTag))),
-    ).map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    }).labeled('elseBlock');
 Parser ifTag() => someTag("if").labeled('ifTag');
-Parser ifBlock() => seq3(
-      ref0(ifTag),
-      ref0(element).starLazy(endIfTag()),
-      ref0(endIfTag),
-    ).map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    }).labeled('ifBlock');
 
-Parser elseIfBlock() =>
-    seq2(ref0(elseifTag), ref0(element).starLazy((elseTag()).or(elseifTag())))
-        .map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    }).labeled('elseIfBlock');
-
-Parser elseifTag() => someTag("elseif").labeled('elseifTag');
+Parser elsifTag() => someTag("elsif").labeled('elsifTag');
 
 Parser endIfTag() =>
     (tagStart() & string('endif').trim() & tagEnd()).map((values) {
       return Tag('endif', []);
     }).labeled('endIfTag');
 
-Parser forBlock() => seq3(
-      ref0(forTag),
-      ref0(element).starLazy(endForTag()),
-      ref0(endForTag),
-    ).labeled('for block').map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    });
-
-Parser<Tag> forTag() => someTag('for').labeled('forTag');
+Parser forTag() => someTag('for').labeled('forTag');
 
 Parser endForTag() =>
     (tagStart() & string('endfor').trim() & tagEnd()).map((values) {
       return Tag('endfor', []);
     }).labeled('endForTag');
 
-Parser caseBlock() => seq3(
-      ref0(caseTag),
-      ref0(element).plusLazy(endCaseTag()),
-      ref0(endCaseTag),
+Parser forElseBranchContent() =>
+    ref0(element).starLazy(ref0(endForTag)).labeled('forElseBranchContent');
+
+Parser elseBlockForFor() => seq2(
+      ref0(elseTag),
+      ref0(forElseBranchContent),
     ).map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
-    }).labeled('caseBlock');
+      return (values.$1).copyWith(body: (values.$2 as List).cast<ASTNode>());
+    }).labeled('elseBlockForFor');
+
+Parser forBlock() => seq4(
+      ref0(forTag),
+      ref0(element).starLazy(
+        ref0(elseTag).or(ref0(endForTag)),
+      ),
+      ref0(elseBlockForFor).optional(),
+      ref0(endForTag),
+    ).map((values) {
+      final forTag = values.$1 as Tag;
+      final forBody = (values.$2).cast<ASTNode>();
+      final elseBlockForFor = values.$3 as Tag?;
+
+      final List<ASTNode> allBodyNodes = [...forBody];
+      if (elseBlockForFor != null) {
+        allBodyNodes.add(elseBlockForFor);
+      }
+
+      return forTag.copyWith(body: allBodyNodes);
+    }).labeled('forBlock');
 
 Parser<Tag> whenTag() => someTag('when').labeled('whenTag');
 
@@ -463,20 +457,91 @@ Parser endCaseTag() =>
 
 Parser whenBlock() => seq2(
       ref0(whenTag),
-      ref0(element).starLazy(ref0(endCaseTag).or(ref0(elseTag).or(whenTag()))),
+      ref0(element).starLazy(
+        ref0(whenTag).or(ref0(elseTag)).or(ref0(endCaseTag)),
+      ),
     ).map((values) {
-      return values.$1.copyWith(body: values.$2.cast<ASTNode>());
+      return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
     }).labeled('whenBlock');
+
+Parser elseBlockForCase() => seq2(
+      ref0(elseTag),
+      ref0(element).starLazy(ref0(endCaseTag)),
+    ).map((values) {
+      return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
+    }).labeled('elseBlockForCase');
+
+Parser caseBlock() => seq3(
+      ref0(caseTag),
+      ref0(element).starLazy(endCaseTag()),
+      ref0(endCaseTag),
+    ).map((values) {
+      return (values.$1).copyWith(body: (values.$2).cast<ASTNode>());
+    }).labeled('caseBlock');
+
+Parser ifBranchContent() => ref0(element)
+    .starLazy(
+      ref0(elsifTag).or(ref0(elseTag)).or(ref0(endIfTag)),
+    )
+    .labeled('ifBranchContent');
+
+Parser elsifBranchContent() => ref0(element)
+    .starLazy(
+      ref0(elsifTag).or(ref0(elseTag)).or(ref0(endIfTag)),
+    )
+    .labeled('elsifBranchContent');
+
+Parser elseBranchContent() =>
+    ref0(element).starLazy(ref0(endIfTag)).labeled('elseBranchContent');
+
+Parser ifBlock() => seq5(
+      ref0(ifTag),
+      ref0(ifBranchContent),
+      ref0(elseIfBlock).star(),
+      ref0(elseBlock).optional(),
+      ref0(endIfTag),
+    ).map((values) {
+      final ifTag = values.$1 as Tag;
+      final ifBody = (values.$2 as List).cast<ASTNode>();
+      final elsifBlocks = (values.$3).cast<Tag>();
+      final elseBlock = values.$4 as Tag?;
+
+      final List<ASTNode> allBodyNodes = [...ifBody];
+      for (var block in elsifBlocks) {
+        allBodyNodes.add(block);
+      }
+      if (elseBlock != null) {
+        allBodyNodes.add(elseBlock);
+      }
+
+      return ifTag.copyWith(body: allBodyNodes);
+    }).labeled('ifBlock');
+
+Parser elseIfBlock() => seq2(
+      ref0(elsifTag),
+      ref0(elsifBranchContent),
+    ).map((values) {
+      final elsifTag = values.$1 as Tag;
+      final elsifBody = (values.$2 as List).cast<ASTNode>();
+      return elsifTag.copyWith(body: elsifBody);
+    }).labeled('elseIfBlock');
+
+Parser elseBlock() => seq2(
+      ref0(elseTag),
+      ref0(elseBranchContent),
+    ).map((values) {
+      final elseTag = values.$1;
+      final elseBody = (values.$2 as List).cast<ASTNode>();
+      return elseTag.copyWith(body: elseBody);
+    }).labeled('elseBlock');
 
 Parser element() => [
       ref0(ifBlock),
-      ref0(elseIfBlock),
       ref0(forBlock),
       ref0(caseBlock),
-      ref0(elseBlock),
       ref0(whenBlock),
-      ref0(breakTag),
-      ref0(continueTag),
+      ref0(elseBlockForCase),
+      ref0(elseBlockForFor),
       ref0(hashBlockComment),
       ...TagRegistry.customParsers.map((p) => p.parser()),
       ref0(tag),

@@ -59,13 +59,13 @@ void main() {
         });
       });
 
-      test('if with multiple elseifs', () async {
+      test('if with multiple elsifs', () async {
         await testParser('''
           {% if false %}
             first
-          {% elseif true %}
+          {% elsif true %}
             second
-          {% elseif true %}
+          {% elsif true %}
             third
           {% else %}
             fourth
@@ -120,13 +120,13 @@ void main() {
         });
       });
 
-      test('if with multiple elseifs', () async {
+      test('if with multiple elsifs', () async {
         await testParser('''
           {% if false %}
             first
-          {% elseif true %}
+          {% elsif true %}
             second
-          {% elseif true %}
+          {% elsif true %}
             third
           {% else %}
             fourth

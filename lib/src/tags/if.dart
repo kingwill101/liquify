@@ -14,7 +14,7 @@ class IfTag extends AbstractTag with AsyncTag {
       Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
     for (final subNode in body) {
       if (subNode is Tag &&
-          (subNode.name == 'else' || subNode.name == 'elseif')) {
+          (subNode.name == 'else' || subNode.name == 'elsif')) {
         continue;
       }
 
@@ -36,7 +36,7 @@ class IfTag extends AbstractTag with AsyncTag {
       Evaluator evaluator, Buffer buffer, List<ASTNode> body) async {
     for (final subNode in body) {
       if (subNode is Tag &&
-          (subNode.name == 'else' || subNode.name == 'elseif')) {
+          (subNode.name == 'else' || subNode.name == 'elsif')) {
         continue;
       }
 
@@ -59,32 +59,29 @@ class IfTag extends AbstractTag with AsyncTag {
     // Get main condition result
     conditionMet = isTruthy(evaluator.evaluate(content[0]));
 
-    // Get all else/elif blocks
+    // Get all else/elsif blocks
     final elseBlock =
         body.where((n) => n is Tag && n.name == 'else').firstOrNull as Tag?;
-    final elseIfTags = body
-        .where((n) => n is Tag && (n.name == 'elseif' || n.name == 'elif'))
-        .cast<Tag>()
-        .toList();
+    final elsifTags =
+        body.where((n) => n is Tag && (n.name == 'elsif')).cast<Tag>().toList();
 
     // Main if condition
     if (conditionMet) {
-      // Filter out else/elif nodes from main body evaluation
+      // Filter out else/elsif nodes from main body evaluation
       final mainBody = body
-          .where((n) => !(n is Tag &&
-              (n.name == 'else' || n.name == 'elseif' || n.name == 'elif')))
+          .where((n) => !(n is Tag && (n.name == 'else' || n.name == 'elsif')))
           .toList();
       _renderBlockSync(evaluator, buffer, mainBody);
       return;
     }
 
-    // Try elseif/elif conditions in order
-    for (var elif in elseIfTags) {
-      if (elif.content.isEmpty) continue;
+    // Try elsif conditions in order
+    for (var elsif in elsifTags) {
+      if (elsif.content.isEmpty) continue;
 
-      final elIfConditionMet = isTruthy(evaluator.evaluate(elif.content[0]));
+      final elIfConditionMet = isTruthy(evaluator.evaluate(elsif.content[0]));
       if (elIfConditionMet) {
-        _renderBlockSync(evaluator, buffer, elif.body);
+        _renderBlockSync(evaluator, buffer, elsif.body);
         return;
       }
     }
@@ -101,33 +98,30 @@ class IfTag extends AbstractTag with AsyncTag {
     // Get main condition result
     conditionMet = isTruthy(await evaluator.evaluateAsync(content[0]));
 
-    // Get all else/elif blocks
+    // Get all else/elsif blocks
     final elseBlock =
         body.where((n) => n is Tag && n.name == 'else').firstOrNull as Tag?;
-    final elseIfTags = body
-        .where((n) => n is Tag && (n.name == 'elseif' || n.name == 'elif'))
-        .cast<Tag>()
-        .toList();
+    final elsifTags =
+        body.where((n) => n is Tag && (n.name == 'elsif')).cast<Tag>().toList();
 
     // Main if condition
     if (conditionMet) {
-      // Filter out else/elif nodes from main body evaluation
+      // Filter out else/elsif nodes from main body evaluation
       final mainBody = body
-          .where((n) => !(n is Tag &&
-              (n.name == 'else' || n.name == 'elseif' || n.name == 'elif')))
+          .where((n) => !(n is Tag && (n.name == 'else' || n.name == 'elsif')))
           .toList();
       await _renderBlockAsync(evaluator, buffer, mainBody);
       return;
     }
 
-    // Try elseif/elif conditions in order
-    for (var elif in elseIfTags) {
-      if (elif.content.isEmpty) continue;
+    // Try elsif conditions in order
+    for (var elsif in elsifTags) {
+      if (elsif.content.isEmpty) continue;
 
       final elIfConditionMet =
-          isTruthy(await evaluator.evaluateAsync(elif.content[0]));
+          isTruthy(await evaluator.evaluateAsync(elsif.content[0]));
       if (elIfConditionMet) {
-        await _renderBlockAsync(evaluator, buffer, elif.body);
+        await _renderBlockAsync(evaluator, buffer, elsif.body);
         return;
       }
     }

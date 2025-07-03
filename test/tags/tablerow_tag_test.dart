@@ -1,6 +1,5 @@
-import 'package:liquify/src/context.dart';
-import 'package:liquify/src/evaluator.dart';
 import 'package:test/test.dart';
+import 'package:liquify/parser.dart';
 
 import '../shared.dart';
 
@@ -16,6 +15,40 @@ void main() {
   });
 
   group('TableRowTag', () {
+    group('issues', () {
+      setUp(() {
+        evaluator.context.setVariable("keywords", [
+          {"term": "Hi", "type": "One"},
+          {"term": "Bye", "type": "One"},
+          {"term": "Yes", "type": "Two"},
+          {"term": "No"}
+        ]);
+      });
+      test('issue-30', () {
+        testParser('''
+<table>
+{% tablerow keyword in keywords cols:4 %}
+
+<span>{{keyword.term}}</span>
+{%- if keyword.type == "One" %}
+<sup>1</sup>
+{% elsif keyword.type == "Two" %}
+<sup>2</sup>
+{% endif %}
+
+{% endtablerow %}
+</table>
+        ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(
+            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+            '<table>  <tr class="row1">    <td class="col1">      <span>Hi</span><sup>1</sup>    </td>    <td class="col2">      <span>Bye</span><sup>1</sup>    </td>    <td class="col3">      <span>Yes</span><sup>2</sup>    </td>    <td class="col4">      <span>No</span>    </td>  </tr></table>'
+                .replaceAll(RegExp(r'\s+'), ''),
+          );
+        });
+      });
+    });
+
     setUp(() {
       evaluator.context.setVariable('collection', {
         'products': [
