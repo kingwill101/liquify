@@ -36,7 +36,7 @@ Add Liquify to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  liquify: ^1.3.1
+  liquify: ^1.3.2
 ```
 
 Or, for the latest development version:

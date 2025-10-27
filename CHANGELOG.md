@@ -1,3 +1,9 @@
+## 1.3.2
+- Add `LiquidOptions.maybeFrom` and type-checked option propagation through evaluator/filter pipelines
+- Refine date filters to share nil-handling helpers and keep strftime behaviour aligned with LiquidJS
+- Split the monolithic `filter_test.dart` into focused suites under `test/filters/` for easier maintenance
+- Export the new `LiquidOptions` surface via `liquify.dart` and wire template creation to default options
+
 ## 1.3.1
 - Fix string literal parsing to correctly handle escaped quotes and characters
 - Add regression tests covering render tag and evaluator behaviour with escaped strings
