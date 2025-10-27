@@ -93,6 +93,16 @@ Parameters:
         });
       });
 
+      test('renders template with escaped quotes', () async {
+        await testParser(
+            r'{% render "simple.liquid" name: "John \"The Man\" Johnson" %}',
+            (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(),
+              'Hello, John "The Man" Johnson!');
+        });
+      });
+
       test('renders a template with a for loop', () async {
         await testParser('{% render "for_loop.liquid" items: (1..3) %}',
             (document) {

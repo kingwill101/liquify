@@ -151,11 +151,43 @@ Parser numericLiteral() {
 }
 
 Parser<Literal> stringLiteral() {
-  return (char('"') & pattern('^"').starString() & char('"') |
-          char("'") & pattern("^'").starString() & char("'"))
-      .map((values) {
-    return Literal(values[1], LiteralType.string);
-  }).labeled('stringLiteral');
+  Parser<String> quotedString(String quote) {
+    final backslash = String.fromCharCode(92);
+    final bodyCharPattern = '^$quote$backslash';
+
+    final escapeSequence = (char('\\') & any()).map((values) {
+      final String character = values[1] as String;
+      switch (character) {
+        case 'n':
+          return '\n';
+        case 'r':
+          return '\r';
+        case 't':
+          return '\t';
+        case '"':
+          return '"';
+        case "'":
+          return "'";
+        case '\\':
+          return '\\';
+        default:
+          // Unknown escape sequences keep the backslash and the character.
+          return '\\$character';
+      }
+    }).labeled("quotedString");
+
+    final bodyCharacter = pattern(bodyCharPattern);
+
+    final content =
+        (escapeSequence | bodyCharacter).star().map((values) => values.join());
+
+    return (char(quote) & content & char(quote))
+        .map((values) => values[1] as String);
+  }
+
+  return (quotedString('"') | quotedString("'"))
+      .map((value) => Literal(value, LiteralType.string))
+      .labeled('stringLiteral');
 }
 
 Parser<Literal> booleanLiteral() {
