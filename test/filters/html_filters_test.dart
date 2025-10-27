@@ -136,14 +136,11 @@ void main() {
     });
 
     test('unescape restores entities', () {
-      expect(
-          html.unescape('&lt;p&gt;Hello &amp; welcome&lt;/p&gt;', [], {}),
+      expect(html.unescape('&lt;p&gt;Hello &amp; welcome&lt;/p&gt;', [], {}),
           equals('<p>Hello & welcome</p>'));
-      expect(
-          html.unescape('&amp;quot;Hello&amp;quot;', [], {}),
+      expect(html.unescape('&amp;quot;Hello&amp;quot;', [], {}),
           equals('&quot;Hello&quot;'));
-      expect(
-          html.unescape('&#39;Hello&#39;', [], {}), equals("'Hello'"));
+      expect(html.unescape('&#39;Hello&#39;', [], {}), equals("'Hello'"));
       expect(html.unescape('No entities here', [], {}),
           equals('No entities here'));
       expect(html.unescape('', [], {}), equals(''));

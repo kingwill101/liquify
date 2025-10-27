@@ -1,7 +1,7 @@
+import 'package:liquify/src/filters/date_utils.dart';
 import 'package:liquify/src/filters/module.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:liquify/src/liquid_options.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:intl/intl.dart';
 
 typedef FilterFunction = dynamic Function(dynamic value,
     List<dynamic> arguments, Map<String, dynamic> namedArguments);
@@ -15,150 +15,132 @@ void ensureTimezonesInitialized() {
   }
 }
 
-/// Formats a date according to the specified format string.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// - arguments[0]: (Optional) Format string (default: 'yyyy-MM-dd')
-/// Example usage:
-/// {{ "2023-05-15" | date: "MMMM d, yyyy" }} => May 15, 2023
+LiquidOptions _extractOptions(Map<String, dynamic> namedArguments) {
+  final raw = namedArguments['_options'];
+  return LiquidOptions.maybeFrom(raw) ?? const LiquidOptions();
+}
+
+String? _stringArg(dynamic argument) {
+  if (argument == null) return null;
+  final value = argument.toString();
+  if (value.isEmpty || value.toLowerCase() == 'nil') {
+    return null;
+  }
+  return value;
+}
+
+dynamic _fallbackValue(dynamic original) {
+  if (original == null) {
+    return '';
+  }
+  if (original is Map || original is Iterable || original is Set) {
+    return '[object Object]';
+  }
+  return original.toString();
+}
+
+const _defaultDateFormat = '%A, %B %-d, %Y at %-l:%M %P %z';
+
 FilterFunction date = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   ensureTimezonesInitialized();
-  tz.TZDateTime? date = parseDate(value);
-  if (date == null) return value;
+  final options = _extractOptions(namedArguments);
+  final isNilLiteral = namedArguments['__input_is_nil'] == true;
 
-  String format = arguments.isNotEmpty ? arguments[0].toString() : 'yyyy-MM-dd';
-  return DateFormat(format).format(date.toLocal());
+  String? format = arguments.isNotEmpty ? _stringArg(arguments[0]) : null;
+  dynamic timezoneArg =
+      arguments.length > 1 ? arguments[1] : null; // optional timezone argument
+
+  final parsed = parseDateValue(value,
+      options: options,
+      timezoneArgument: timezoneArg,
+      treatNullAsEpoch: isNilLiteral);
+
+  if (parsed == null) {
+    return _fallbackValue(value);
+  }
+
+  final formatString = format ?? options.dateFormat ?? _defaultDateFormat;
+  final formatted = formatStrftime(parsed, formatString, options);
+  if (formatString.trim() == '%s') {
+    return int.tryParse(formatted) ?? formatted;
+  }
+  return formatted;
 };
 
-/// Formats a date in XML Schema format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// Example usage:
-/// {{ "2023-05-15" | date_to_xmlschema }} => 2023-05-15T00:00:00.000-04:00
 FilterFunction dateToXmlschema = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   ensureTimezonesInitialized();
-  tz.TZDateTime? date = parseDate(value);
-  if (date == null) return value;
-  String offset = date.timeZoneOffset.inHours.abs().toString().padLeft(2, '0');
-  String sign = date.timeZoneOffset.isNegative ? '-' : '+';
-  return '${date.toIso8601String().split('.')[0]}.000$sign$offset:00';
+  final options = _extractOptions(namedArguments);
+  final parsed = parseDateValue(value,
+      options: options,
+      timezoneArgument: arguments.isNotEmpty ? arguments.first : null,
+      treatNullAsEpoch: namedArguments['__input_is_nil'] == true);
+
+  if (parsed == null) {
+    return _fallbackValue(value);
+  }
+  return formatXmlSchema(parsed);
 };
 
-/// Formats a date in RFC 822 format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// Example usage:
-/// {{ "2023-05-15" | date_to_rfc822 }} => Mon, 15 May 2023 00:00:00 -0400
 FilterFunction dateToRfc822 = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   ensureTimezonesInitialized();
-  tz.TZDateTime? date = parseDate(value);
-  if (date == null) return value;
-  String offset = date.timeZoneOffset.inHours.abs().toString().padLeft(2, '0');
-  String sign = date.timeZoneOffset.isNegative ? '-' : '+';
-  return '${DateFormat('EEE, dd MMM yyyy HH:mm:ss').format(date)} $sign${offset}00';
+  final options = _extractOptions(namedArguments);
+  final parsed = parseDateValue(value,
+      options: options,
+      timezoneArgument: arguments.isNotEmpty ? arguments.first : null,
+      treatNullAsEpoch: namedArguments['__input_is_nil'] == true);
+
+  if (parsed == null) {
+    return _fallbackValue(value);
+  }
+  return formatRfc822(parsed, options);
 };
 
-/// Formats a date to a short string format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// - arguments[0]: (Optional) 'ordinal' for ordinal date
-/// - arguments[1]: (Optional) 'US' for US-style formatting
-/// Example usage:
-/// {{ "2023-05-15" | date_to_string }} => 15 May 2023
-/// {{ "2023-05-15" | date_to_string: "ordinal" }} => 15th May 2023
-/// {{ "2023-05-15" | date_to_string: "ordinal", "US" }} => May 15th, 2023
 FilterFunction dateToString = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   ensureTimezonesInitialized();
-  return stringifyDate(value, 'MMM', arguments);
+  final options = _extractOptions(namedArguments);
+  final parsed = parseDateValue(value,
+      options: options,
+      treatNullAsEpoch: namedArguments['__input_is_nil'] == true);
+
+  if (parsed == null) {
+    return _fallbackValue(value);
+  }
+
+  final type = arguments.isNotEmpty ? arguments[0]?.toString() ?? '' : '';
+  final style = arguments.length > 1 ? arguments[1]?.toString() ?? '' : '';
+
+  final ordinal = type == 'ordinal';
+  final usStyle = style.toUpperCase() == 'US';
+
+  return formatShortDate(parsed, options,
+      ordinal: ordinal, longMonth: false, usStyle: usStyle);
 };
 
-/// Formats a date to a long string format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// - arguments[0]: (Optional) 'ordinal' for ordinal date
-/// - arguments[1]: (Optional) 'US' for US-style formatting
-/// Example usage:
-/// {{ "2023-05-15" | date_to_long_string }} => 15 May 2023
-/// {{ "2023-05-15" | date_to_long_string: "ordinal" }} => 15th May 2023
-/// {{ "2023-05-15" | date_to_long_string: "ordinal", "US" }} => May 15th, 2023
 FilterFunction dateToLongString = (dynamic value, List<dynamic> arguments,
     Map<String, dynamic> namedArguments) {
   ensureTimezonesInitialized();
-  return stringifyDate(value, 'MMMM', arguments);
+  final options = _extractOptions(namedArguments);
+  final parsed = parseDateValue(value,
+      options: options,
+      treatNullAsEpoch: namedArguments['__input_is_nil'] == true);
+
+  if (parsed == null) {
+    return _fallbackValue(value);
+  }
+
+  final type = arguments.isNotEmpty ? arguments[0]?.toString() ?? '' : '';
+  final style = arguments.length > 1 ? arguments[1]?.toString() ?? '' : '';
+
+  final ordinal = type == 'ordinal';
+  final usStyle = style.toUpperCase() == 'US';
+
+  return formatShortDate(parsed, options,
+      ordinal: ordinal, longMonth: true, usStyle: usStyle);
 };
-
-String stringifyDate(
-    dynamic value, String monthFormat, List<dynamic> arguments) {
-  tz.TZDateTime? date = parseDate(value);
-  if (date == null) return value.toString();
-
-  String type = arguments.isNotEmpty ? arguments[0].toString() : '';
-  String style = arguments.length > 1 ? arguments[1].toString() : '';
-
-  if (type == 'ordinal') {
-    String day = _getOrdinalDay(date.day);
-    return style == 'US'
-        ? DateFormat('$monthFormat d, yyyy')
-            .format(date)
-            .replaceFirst(' ${date.day},', ' $day,')
-        : DateFormat('d $monthFormat yyyy')
-            .format(date)
-            .replaceFirst('${date.day} ', '$day ');
-  }
-
-  return DateFormat('dd $monthFormat yyyy').format(date);
-}
-
-tz.TZDateTime? parseDate(dynamic value) {
-  tz.Location location = tz.local;
-  if (value == 'now' || value == 'today') {
-    return tz.TZDateTime.now(location);
-  } else if (value is num) {
-    return tz.TZDateTime.fromMillisecondsSinceEpoch(
-        location, value.toInt() * 1000);
-  } else if (value is String) {
-    if (RegExp(r'^\d+$').hasMatch(value)) {
-      return tz.TZDateTime.fromMillisecondsSinceEpoch(
-          location, int.parse(value) * 1000);
-    } else {
-      DateTime? dateTime = DateTime.parse(value);
-      return tz.TZDateTime(
-          location,
-          dateTime.year,
-          dateTime.month,
-          dateTime.day,
-          dateTime.hour,
-          dateTime.minute,
-          dateTime.second,
-          dateTime.millisecond);
-    }
-  } else if (value is DateTime) {
-    return tz.TZDateTime.from(value, location);
-  } else if (value is tz.TZDateTime) {
-    return value;
-  }
-  return null;
-}
-
-String _getOrdinalDay(int day) {
-  if (day >= 11 && day <= 13) {
-    return '${day}th';
-  }
-  switch (day % 10) {
-    case 1:
-      return '${day}st';
-    case 2:
-      return '${day}nd';
-    case 3:
-      return '${day}rd';
-    default:
-      return '${day}th';
-  }
-}
 
 class DateModule extends Module {
   @override

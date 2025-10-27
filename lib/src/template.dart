@@ -21,8 +21,7 @@ class Template {
       LiquidOptions? options})
       : _templateContent = root.resolve(templateName).content,
         _evaluator = Evaluator(
-            _createEnvironment(
-                data, environment, environmentSetup, options)
+            _createEnvironment(data, environment, environmentSetup, options)
               ..setRoot(root));
 
   /// Creates a new Template instance from a string.
@@ -41,8 +40,7 @@ class Template {
     LiquidOptions? options,
   })  : _templateContent = input,
         _evaluator = Evaluator(
-            _createEnvironment(
-                data, environment, environmentSetup, options)
+            _createEnvironment(data, environment, environmentSetup, options)
               ..setRoot(root));
 
   /// Renders the template with the current context.

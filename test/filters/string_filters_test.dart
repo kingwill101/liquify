@@ -36,8 +36,7 @@ void main() {
 
     test('lower alias', () {
       expect(array_filters.lower('HELLO WORLD', [], {}), equals('hello world'));
-      expect(
-          array_filters.lower('MiXeD cAsE', [], {}), equals('mixed case'));
+      expect(array_filters.lower('MiXeD cAsE', [], {}), equals('mixed case'));
       expect(array_filters.lower('', [], {}), equals(''));
       expect(array_filters.lower('already lowercase', [], {}),
           equals('already lowercase'));
@@ -45,8 +44,7 @@ void main() {
 
     test('upper alias', () {
       expect(array_filters.upper('hello world', [], {}), equals('HELLO WORLD'));
-      expect(
-          array_filters.upper('MiXeD cAsE', [], {}), equals('MIXED CASE'));
+      expect(array_filters.upper('MiXeD cAsE', [], {}), equals('MIXED CASE'));
       expect(array_filters.upper('', [], {}), equals(''));
       expect(array_filters.upper('ALREADY UPPERCASE', [], {}),
           equals('ALREADY UPPERCASE'));

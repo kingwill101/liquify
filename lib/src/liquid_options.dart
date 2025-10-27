@@ -1,6 +1,7 @@
 class LiquidOptions {
   final String? locale;
   final bool preserveTimezones;
+
   /// Can be an [int] (minutes offset) or IANA timezone name (String).
   final Object? timezoneOffset;
   final String? dateFormat;

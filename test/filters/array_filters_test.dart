@@ -156,9 +156,11 @@ void main() {
             ['c', 'd']
           ], {}),
           equals(['a', 'b', 'c', 'd']));
-      expect(concat([], [
-        [1, 2]
-      ], {}), equals([1, 2]));
+      expect(
+          concat([], [
+            [1, 2]
+          ], {}),
+          equals([1, 2]));
       expect(concat([1, 2], [[]], {}), equals([1, 2]));
       expect(concat([1, 2], [], {}), equals([1, 2]));
       expect(
@@ -431,13 +433,13 @@ void main() {
 
       expect(findIndexExp(input, ['item', 'item.type == "living"'], {}),
           equals(1));
-      expect(findIndexExp(input, ['item', 'item.name == "Fork"'], {}),
-          equals(2));
+      expect(
+          findIndexExp(input, ['item', 'item.name == "Fork"'], {}), equals(2));
       expect(findIndexExp(input, ['item', 'item.type == "bathroom"'], {}),
           equals(-1));
       expect(findIndexExp(input, ['item', 'item.type'], {}), equals(0));
-      expect(findIndexExp([], ['item', 'item.type == "kitchen"'], {}),
-          equals(-1));
+      expect(
+          findIndexExp([], ['item', 'item.type == "kitchen"'], {}), equals(-1));
       expect(findIndexExp('not a list', ['item', 'item.type == "kitchen"'], {}),
           equals(-1));
       expect(findIndexExp(input, ['item'], {}), equals(-1));

@@ -36,8 +36,7 @@ void main() {
       expect(slugify('Hello_World', ['pretty'], {}), equals('hello_world'));
       expect(slugify('Hello.World', ['pretty'], {}), equals('hello.world'));
       expect(slugify('Hello World!', ['invalid'], {}), equals('hello-world'));
-      expect(
-          slugify('Hello, World!', ['raw'], {}), equals('hello,-world!'));
+      expect(slugify('Hello, World!', ['raw'], {}), equals('hello,-world!'));
     });
   });
 }
