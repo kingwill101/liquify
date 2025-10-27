@@ -1,3 +1,7 @@
+## 1.3.1
+- Fix string literal parsing to correctly handle escaped quotes and characters
+- Add regression tests covering render tag and evaluator behaviour with escaped strings
+
 ## 1.3.0
 - Correctly check for elsif tags and not elseif
 - tablerow - use seperate buffer for each row being rendered
@@ -30,13 +34,13 @@
 ## 1.1.0
 
 ### 📚 Documentation
-- **Complete documentation overhaul**: Added comprehensive documentation system 
-- **Examples documentation**: Added 5 detailed example guides covering basic usage, layouts, custom tags, drop objects, and file system integration  
+- **Complete documentation overhaul**: Added comprehensive documentation system
+- **Examples documentation**: Added 5 detailed example guides covering basic usage, layouts, custom tags, drop objects, and file system integration
 - **Tags documentation**: Complete reference for all 21 tags with usage patterns and examples
 - **Filters documentation**: Comprehensive documentation for 68+ filters across 7 categories (array, string, math, date, HTML, URL, misc)
 - **API documentation**: Structured documentation hub with cross-references and navigation
 
-### 🧮 Filters  
+### 🧮 Filters
 - **NEW**: Add `parse_json` filter for parsing JSON strings into Dart objects
 - **Enhancement**: Math filters now handle null values gracefully (null treated as 0, prevents runtime type cast errors)
 - **Enhancement**: Complete expression-based filters (where_exp, find_exp, group_by_exp, etc.) with proper Liquid expression evaluation
@@ -62,7 +66,7 @@
 - Add tests for FileSystemRoot null fileSystem behavior
 
 ## 1.0.3
-- Fix contains operator 
+- Fix contains operator
 
 ## 1.0.2
 - allow iterating over key value pairs in for tags
@@ -92,7 +96,7 @@
 
 ## 0.8.2
 - Make sure we register all the missing string filters
-  
+
 ## 0.8.1
 - support elseif tags
 
@@ -101,13 +105,13 @@
 
 ## 0.7.4
 - For tag: make sure iterable is not null before assignment
- 
+
 ## 0.7.3
 - Truthy support for binary operators
- 
+
  ## 0.7.2
 - Array support
- 
+
 ## 0.7.1
 - array support
 
@@ -123,25 +127,25 @@
 ## 0.6.5
 
 - Member access fix
-  
+
 ## 0.6.3
 
 - Filtered assignment fix
 
 ## 0.6.2
 
-- Group filters into modules 
+- Group filters into modules
 
 ## 0.6.0
 
 - Empty type
 - MapRoot Root implementation
-  
+
 ## 0.5.0
 
 - Filesystem lookup
 - Render tag
-  
+
 ## 0.4.0
 
 - Drop support

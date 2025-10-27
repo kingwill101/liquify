@@ -89,6 +89,29 @@ void main() {
         expect((assignment.value as Literal).value, Empty());
       });
     });
+
+    test('Parses string literals with escape sequences', () {
+      testParser(r'''{% assign quoted = "John \"The Man\" Johnson" %}
+{% assign multiline = "Line\nBreak" %}
+{% assign unknown = "\\q" %}''', (document) {
+        final tags = document.children.whereType<Tag>().toList();
+        expect(tags.length, 3);
+
+        final quotedAssignment = tags[0].content[0] as Assignment;
+        expect((quotedAssignment.variable as Identifier).name, 'quoted');
+        expect((quotedAssignment.value as Literal).value,
+            'John "The Man" Johnson');
+
+        final multilineAssignment = tags[1].content[0] as Assignment;
+        expect((multilineAssignment.variable as Identifier).name, 'multiline');
+        expect((multilineAssignment.value as Literal).value, 'Line\nBreak');
+
+        final unknownAssignment = tags[2].content[0] as Assignment;
+        expect((unknownAssignment.variable as Identifier).name, 'unknown');
+        expect((unknownAssignment.value as Literal).value, r'\q');
+      });
+    });
+
     test('Parses complex tags', () {
       testParser('''
 {% if user.logged_in %}

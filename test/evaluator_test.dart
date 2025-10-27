@@ -1,6 +1,4 @@
-import 'package:liquify/src/ast.dart';
-import 'package:liquify/src/context.dart';
-import 'package:liquify/src/evaluator.dart';
+import 'package:liquify/parser.dart';
 import 'package:liquify/src/filter_registry.dart';
 import 'package:liquify/src/registry.dart';
 import 'package:test/test.dart';
@@ -112,6 +110,18 @@ void main() {
       expect(
           await evaluator.evaluateAsync(Literal('hello', LiteralType.string)),
           'hello');
+    });
+
+    test('parses escaped string literals from parser', () {
+      String render(String source) {
+        final localEvaluator = Evaluator(Environment());
+        return localEvaluator.evaluateNodes(parseInput(source));
+      }
+
+      expect(render(r'{{ "John \"The Man\" Johnson" }}'),
+          'John "The Man" Johnson');
+      expect(render(r'{{ "Line\nBreak" }}'), 'Line\nBreak');
+      expect(render(r'{{ "\\q" }}'), r'\q');
     });
 
     test('evaluates empty literals on strings', () {
