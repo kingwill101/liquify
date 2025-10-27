@@ -91,8 +91,7 @@ void main() {
     });
 
     test('Parses string literals with escape sequences', () {
-      testParser(
-          r'''{% assign quoted = "John \"The Man\" Johnson" %}
+      testParser(r'''{% assign quoted = "John \"The Man\" Johnson" %}
 {% assign multiline = "Line\nBreak" %}
 {% assign unknown = "\\q" %}''', (document) {
         final tags = document.children.whereType<Tag>().toList();

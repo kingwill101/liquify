@@ -98,8 +98,7 @@ Parameters:
             r'{% render "simple.liquid" name: "John \"The Man\" Johnson" %}',
             (document) {
           evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(),
-              'Hello, John "The Man" Johnson!');
+          expect(evaluator.buffer.toString(), 'Hello, John "The Man" Johnson!');
         });
       });
 
