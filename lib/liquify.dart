@@ -200,3 +200,4 @@ export 'package:liquify/src/drop.dart';
 export 'package:liquify/src/tag_registry.dart';
 export 'package:liquify/src/filter_registry.dart';
 export 'package:liquify/src/filters/module.dart';
+export 'package:liquify/src/liquid_options.dart';

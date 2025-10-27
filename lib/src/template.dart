@@ -1,6 +1,7 @@
 import 'package:liquify/parser.dart' as parser;
 import 'package:liquify/parser.dart';
 import 'package:liquify/src/fs.dart';
+import 'package:liquify/src/liquid_options.dart';
 
 class Template {
   final String _templateContent;
@@ -16,10 +17,12 @@ class Template {
   Template.fromFile(String templateName, Root root,
       {Map<String, dynamic> data = const {},
       Environment? environment,
-      void Function(Environment)? environmentSetup})
+      void Function(Environment)? environmentSetup,
+      LiquidOptions? options})
       : _templateContent = root.resolve(templateName).content,
         _evaluator = Evaluator(
-            _createEnvironment(data, environment, environmentSetup)
+            _createEnvironment(
+                data, environment, environmentSetup, options)
               ..setRoot(root));
 
   /// Creates a new Template instance from a string.
@@ -35,9 +38,11 @@ class Template {
     Root? root,
     Environment? environment,
     void Function(Environment)? environmentSetup,
+    LiquidOptions? options,
   })  : _templateContent = input,
         _evaluator = Evaluator(
-            _createEnvironment(data, environment, environmentSetup)
+            _createEnvironment(
+                data, environment, environmentSetup, options)
               ..setRoot(root));
 
   /// Renders the template with the current context.
@@ -94,6 +99,7 @@ class Template {
     Map<String, dynamic> data,
     Environment? environment,
     void Function(Environment)? environmentSetup,
+    LiquidOptions? options,
   ) {
     Environment env;
 
@@ -109,6 +115,16 @@ class Template {
     // Apply any environment setup callback
     if (environmentSetup != null) {
       environmentSetup(env);
+    }
+
+    final existingOptions =
+        LiquidOptions.maybeFrom(env.getRegister('liquidOptions'));
+    if (options != null) {
+      env.setRegister('liquidOptions', options);
+    } else if (existingOptions != null) {
+      env.setRegister('liquidOptions', existingOptions);
+    } else {
+      env.setRegister('liquidOptions', const LiquidOptions());
     }
 
     return env;

@@ -2,6 +2,7 @@ import 'package:liquify/parser.dart' show parseInput, Tag;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
 import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/liquid_options.dart';
 import 'package:liquify/src/tag_registry.dart';
 import 'package:liquify/src/util.dart';
 
@@ -172,6 +173,19 @@ class Evaluator implements ASTVisitor<dynamic> {
     return evaluateNodes(node.children);
   }
 
+  bool _isNilExpression(ASTNode expr) {
+    if (expr is Identifier && expr.name == 'nil') {
+      return true;
+    }
+    if (expr is Literal && expr.type == LiteralType.nil) {
+      return true;
+    }
+    if (expr is Variable) {
+      return _isNilExpression(expr.expression) || expr.name == 'nil';
+    }
+    return false;
+  }
+
   @override
   dynamic visitFilter(Filter node) {
     final filterFunction = context.getFilter(node.name.name);
@@ -188,6 +202,18 @@ class Evaluator implements ASTVisitor<dynamic> {
       } else {
         args.add(arg.accept(this));
       }
+    }
+
+    if (!namedArgs.containsKey('_options')) {
+      final options =
+          LiquidOptions.maybeFrom(context.getRegister('liquidOptions'));
+      if (options != null) {
+        namedArgs['_options'] = options;
+      }
+    }
+
+    if (context.getRegister('__input_is_nil') == true) {
+      namedArgs['__input_is_nil'] = true;
     }
 
     return (value) => filterFunction(value, args, namedArgs);
@@ -210,9 +236,17 @@ class Evaluator implements ASTVisitor<dynamic> {
       value = node.expression.accept(this);
     }
 
+    final inputIsNil = _isNilExpression(node.expression);
+    if (inputIsNil) {
+      context.setRegister('__input_is_nil', true);
+    } else {
+      context.removeRegister('__input_is_nil');
+    }
+
     for (final filter in node.filters) {
       final filterFunction = filter.accept(this);
       value = filterFunction(value);
+      context.removeRegister('__input_is_nil');
     }
     return value;
   }
@@ -384,6 +418,18 @@ class Evaluator implements ASTVisitor<dynamic> {
       }
     }
 
+    if (!namedArgs.containsKey('_options')) {
+      final options =
+          LiquidOptions.maybeFrom(context.getRegister('liquidOptions'));
+      if (options != null) {
+        namedArgs['_options'] = options;
+      }
+    }
+
+    if (context.getRegister('__input_is_nil') == true) {
+      namedArgs['__input_is_nil'] = true;
+    }
+
     return (value) => filterFunction(value, args, namedArgs);
   }
 
@@ -404,9 +450,17 @@ class Evaluator implements ASTVisitor<dynamic> {
       value = await node.expression.acceptAsync(this);
     }
 
+    final inputIsNil = _isNilExpression(node.expression);
+    if (inputIsNil) {
+      context.setRegister('__input_is_nil', true);
+    } else {
+      context.removeRegister('__input_is_nil');
+    }
+
     for (final filter in node.filters) {
       final filterFunction = await filter.acceptAsync(this);
       value = filterFunction(value);
+      context.removeRegister('__input_is_nil');
     }
     return value;
   }
