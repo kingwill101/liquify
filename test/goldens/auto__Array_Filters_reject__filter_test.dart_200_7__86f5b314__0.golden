@@ -1,0 +1,10 @@
+[
+  {
+    "type": "living",
+    "name": "Couch"
+  },
+  {
+    "type": "bedroom",
+    "name": "Bed"
+  }
+]

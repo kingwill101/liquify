@@ -1,0 +1,22 @@
+[
+  {
+    "type": "kitchen",
+    "name": "Spatula",
+    "taxable": true
+  },
+  {
+    "type": "living",
+    "name": "Couch",
+    "taxable": false
+  },
+  {
+    "type": "kitchen",
+    "name": "Fork",
+    "taxable": true
+  },
+  {
+    "type": "bedroom",
+    "name": "Bed",
+    "taxable": false
+  }
+]

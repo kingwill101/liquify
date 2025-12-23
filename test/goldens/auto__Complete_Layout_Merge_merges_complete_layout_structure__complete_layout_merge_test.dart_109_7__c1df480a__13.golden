@@ -1,0 +1,38 @@
+      <!DOCTYPE html>
+      <html>
+        <head>
+          Child Title
+          <link rel="stylesheet" href="styles.css">
+        </head>
+        <body>
+          <header>
+            
+        <div class="header-wrapper">
+          
+        <nav>
+          <ul>
+            <li>Child Nav Before</li>
+            
+            <nav>Default Navigation</nav>
+          
+            <li>Child Nav After</li>
+          </ul>
+        </nav>
+      
+          <h1>Parent Header</h1>
+        </div>
+      
+          </header>
+          <main>
+            
+        <div class="content">
+          <p>Child Customized Content</p>
+        </div>
+      
+          </main>
+          <footer>
+            Default Footer
+          </footer>
+        </body>
+      </html>
+      

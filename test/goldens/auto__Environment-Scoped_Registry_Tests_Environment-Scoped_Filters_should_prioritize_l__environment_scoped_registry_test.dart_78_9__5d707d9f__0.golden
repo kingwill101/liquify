@@ -1,0 +1,4 @@
+{
+  "type": "Function",
+  "matcher": "Instance of '_IsNotNull'"
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "type": "kitchen",
+    "name": "Spatula",
+    "price": 10
+  },
+  {
+    "type": "kitchen",
+    "name": "Fork",
+    "price": 5
+  }
+]

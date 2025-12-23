@@ -1,0 +1,12 @@
+[
+  {
+    "type": "living",
+    "name": "Couch",
+    "taxable": false
+  },
+  {
+    "type": "bedroom",
+    "name": "Bed",
+    "taxable": false
+  }
+]

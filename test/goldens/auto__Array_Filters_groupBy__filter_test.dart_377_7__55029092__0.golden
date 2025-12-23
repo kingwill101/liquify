@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Accountant",
+    "items": [
+      {
+        "position": "Accountant",
+        "name": "Ann"
+      },
+      {
+        "position": "Accountant",
+        "name": "Angela"
+      }
+    ]
+  },
+  {
+    "name": "Salesman",
+    "items": [
+      {
+        "position": "Salesman",
+        "name": "Adam"
+      }
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "type": "kitchen",
+    "name": "Spatula"
+  },
+  {
+    "type": "living",
+    "name": "Couch"
+  },
+  {
+    "type": "kitchen",
+    "name": "Fork"
+  },
+  {
+    "type": "bedroom",
+    "name": "Bed"
+  }
+]
