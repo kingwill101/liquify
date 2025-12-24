@@ -1,40 +1,48 @@
+import 'package:liquify/src/render_target.dart';
+
 class Buffer {
-  final StringBuffer _buffer = StringBuffer();
+  Buffer({RenderSink? sink}) : _sink = sink ?? StringRenderSink();
+
+  final RenderSink _sink;
 
   /// Writes the given object to the buffer.
   ///
   /// If the object is null, an empty string is written.
   void write(Object? obj) {
-    if (obj == null) {
-      _buffer.write('');
-    } else {
-      _buffer.write(obj.toString());
-    }
+    _sink.write(obj);
   }
 
   /// Writes the given object to the buffer, followed by a newline.
   ///
   /// If no object is provided, only a newline is written.
   void writeln([Object? obj]) {
-    write(obj);
-    _buffer.writeln();
+    _sink.writeln(obj);
   }
 
   /// Returns the contents of the buffer as a string.
   @override
-  String toString() => _buffer.toString();
+  String toString() => _sink.debugString();
 
   /// Clears the contents of the buffer.
   void clear() {
-    _buffer.clear();
+    _sink.clear();
   }
 
   /// Returns the length of the buffer's contents.
-  int get length => _buffer.length;
+  int get length => toString().length;
 
   /// Returns true if the buffer is empty.
-  bool get isEmpty => _buffer.isEmpty;
+  bool get isEmpty => length == 0;
 
   /// Returns true if the buffer is not empty.
-  bool get isNotEmpty => _buffer.isNotEmpty;
+  bool get isNotEmpty => !isEmpty;
+
+  /// Returns a new buffer spawned from the same sink type.
+  Buffer spawn() => Buffer(sink: _sink.spawn());
+
+  /// Merges another buffer into this buffer.
+  void merge(Buffer other) => _sink.merge(other._sink);
+
+  /// Returns the structured value of the underlying sink.
+  Object? value() => _sink.result();
 }

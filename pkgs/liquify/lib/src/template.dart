@@ -1,6 +1,7 @@
 import 'package:liquify/parser.dart' as parser;
 import 'package:liquify/parser.dart';
 import 'package:liquify/src/fs.dart';
+import 'package:liquify/src/render_target.dart';
 
 class Template {
   final String _templateContent;
@@ -13,14 +14,16 @@ class Template {
   /// [data] is an optional map of variables to be used in the template evaluation.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
-  Template.fromFile(String templateName, Root root,
-      {Map<String, dynamic> data = const {},
-      Environment? environment,
-      void Function(Environment)? environmentSetup})
-      : _templateContent = root.resolve(templateName).content,
-        _evaluator = Evaluator(
-            _createEnvironment(data, environment, environmentSetup)
-              ..setRoot(root));
+  Template.fromFile(
+    String templateName,
+    Root root, {
+    Map<String, dynamic> data = const {},
+    Environment? environment,
+    void Function(Environment)? environmentSetup,
+  }) : _templateContent = root.resolve(templateName).content,
+       _evaluator = Evaluator(
+         _createEnvironment(data, environment, environmentSetup)..setRoot(root),
+       );
 
   /// Creates a new Template instance from a string.
   ///
@@ -35,10 +38,10 @@ class Template {
     Root? root,
     Environment? environment,
     void Function(Environment)? environmentSetup,
-  })  : _templateContent = input,
-        _evaluator = Evaluator(
-            _createEnvironment(data, environment, environmentSetup)
-              ..setRoot(root));
+  }) : _templateContent = input,
+       _evaluator = Evaluator(
+         _createEnvironment(data, environment, environmentSetup)..setRoot(root),
+       );
 
   /// Renders the template with the current context.
   ///
@@ -74,6 +77,35 @@ class Template {
     final result = _evaluator.buffer.toString();
 
     return result;
+  }
+
+  /// Renders the template to a custom target.
+  ///
+  /// [clearBuffer] determines whether to clear the temporary buffer after rendering.
+  R renderWith<R>(RenderTarget<R> target, {bool clearBuffer = true}) {
+    final parsed = parser.parseInput(_templateContent);
+    final sink = target.createSink();
+    final buffer = Buffer(sink: sink);
+    return _evaluator.withBuffer(buffer, () {
+      _evaluator.evaluateNodes(parsed);
+      return target.finalize(sink);
+    }, clearBuffer: clearBuffer);
+  }
+
+  /// Asynchronously renders the template to a custom target.
+  ///
+  /// [clearBuffer] determines whether to clear the temporary buffer after rendering.
+  Future<R> renderWithAsync<R>(
+    RenderTarget<R> target, {
+    bool clearBuffer = true,
+  }) async {
+    final parsed = parser.parseInput(_templateContent);
+    final sink = target.createSink();
+    final buffer = Buffer(sink: sink);
+    return _evaluator.withBufferAsync(buffer, () async {
+      await _evaluator.evaluateNodesAsync(parsed);
+      return target.finalize(sink);
+    }, clearBuffer: clearBuffer);
   }
 
   /// Updates the template context with new data.

@@ -17,7 +17,7 @@ extension BufferHandling on Evaluator {
   }
 
   void pushBuffer() {
-    _blockBuffers.add(Buffer());
+    _blockBuffers.add(currentBuffer.spawn());
   }
 
   String popBuffer() {
@@ -25,5 +25,12 @@ extension BufferHandling on Evaluator {
       throw Exception('No block buffer to pop');
     }
     return _blockBuffers.removeLast().toString();
+  }
+
+  Object? popBufferValue() {
+    if (_blockBuffers.isEmpty) {
+      throw Exception('No block buffer to pop');
+    }
+    return _blockBuffers.removeLast().value();
   }
 }

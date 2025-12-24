@@ -43,14 +43,64 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   Future tmpResultAsync(List<ASTNode> nodes) async {
     final innerContext = context.clone();
-    return await Evaluator.withBuffer(innerContext, Buffer())
-        .evaluateNodesAsync(nodes);
+    return await Evaluator.withBuffer(
+      innerContext,
+      Buffer(),
+    ).evaluateNodesAsync(nodes);
   }
 
   /// Creates a nested evaluator with a cloned context and the given [buffer].
   Evaluator createInnerEvaluatorWithBuffer(Buffer buffer) {
     final innerContext = context.clone();
     return Evaluator.withBuffer(innerContext, buffer);
+  }
+
+  /// Runs an action using the provided buffer, restoring the previous buffer afterward.
+  T withBuffer<T>(
+    Buffer newBuffer,
+    T Function() action, {
+    bool clearBuffer = true,
+  }) {
+    final previousBuffer = buffer;
+    final previousBlocks = List<Buffer>.from(_blockBuffers);
+    buffer = newBuffer;
+    _blockBuffers.clear();
+    try {
+      final result = action();
+      if (clearBuffer) {
+        buffer.clear();
+      }
+      return result;
+    } finally {
+      buffer = previousBuffer;
+      _blockBuffers
+        ..clear()
+        ..addAll(previousBlocks);
+    }
+  }
+
+  /// Runs an async action using the provided buffer, restoring the previous buffer afterward.
+  Future<T> withBufferAsync<T>(
+    Buffer newBuffer,
+    Future<T> Function() action, {
+    bool clearBuffer = true,
+  }) async {
+    final previousBuffer = buffer;
+    final previousBlocks = List<Buffer>.from(_blockBuffers);
+    buffer = newBuffer;
+    _blockBuffers.clear();
+    try {
+      final result = await action();
+      if (clearBuffer) {
+        buffer.clear();
+      }
+      return result;
+    } finally {
+      buffer = previousBuffer;
+      _blockBuffers
+        ..clear()
+        ..addAll(previousBlocks);
+    }
   }
 
   @override
