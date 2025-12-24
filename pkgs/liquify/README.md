@@ -83,6 +83,18 @@ void main() async {
 }
 ```
 
+### Custom render targets
+
+Liquify can render to non-string targets using `renderWith` and a custom `RenderTarget`:
+
+```dart
+final template = Template.parse('Hello {{ name }}!', data: {'name': 'World'});
+final result = template.renderWith(const StringRenderTarget());
+print(result); // Same as render()
+```
+
+UI/SDUI rendering is provided in separate packages (for example `liquify_ui`).
+
 You can also update the template context between renders:
 
 ```dart
