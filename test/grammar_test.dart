@@ -1,7 +1,6 @@
 import 'package:liquify/src/ast.dart';
 import 'package:test/test.dart';
-
-import 'shared.dart';
+import 'support/shared.dart';
 
 void main() {
   group('Liquid Grammar Parser', () {

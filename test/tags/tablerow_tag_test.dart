@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 import 'package:liquify/parser.dart';
 
-import '../shared.dart';
+import '../support/shared.dart';
 
 void main() {
   late Evaluator evaluator;

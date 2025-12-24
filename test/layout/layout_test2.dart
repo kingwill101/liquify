@@ -3,8 +3,7 @@ import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
 import 'package:liquify/src/fs.dart';
 import 'package:test/test.dart';
-
-import 'shared.dart';
+import '../support/shared.dart';
 
 void main() {
   late Evaluator evaluator;
@@ -96,35 +95,5 @@ void main() {
         });
       });
     });
-
-//     group('async evaluation', () {
-//       test('nested layout inheritance', () async {
-//         await testParser('''
-//           {% layout "posts/hello-world.liquid" %}
-//         ''', (document) async {
-//           await evaluator.evaluateNodesAsync(document.children);
-//           expect(evaluator.buffer.toString().trim(), '''
-// <!DOCTYPE html>
-// <html>
-// <head>
-//   <title>Post Title</title>
-//   <link rel="stylesheet" href="/styles.css">
-// </head>
-// <body>
-//   <header>
-//     Default Header
-//   </header>
-//   <main>
-//     Hello, World!
-//   </main>
-//   <footer>
-//     Default Footer
-//   </footer>
-//   <script src="/main.js"></script>
-// </body>
-// </html>'''.trim());
-//         });
-//       });
-//     });
   });
 }
