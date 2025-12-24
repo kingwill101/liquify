@@ -34,7 +34,9 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     _logger.info('Starting layout evaluation');
     if (content.first is Literal) {
       layoutName = (content.first as Literal).value as String;
@@ -51,35 +53,38 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
     return ((tagStart() &
                 string('layout').trim() &
                 ref0(identifier).or(ref0(stringLiteral)).trim() &
-                ref0(namedArgument)
-                    .star()
-                    .starSeparated(char(',') | whitespace())
-                    .trim() &
+                ref0(
+                  namedArgument,
+                ).star().starSeparated(char(',') | whitespace()).trim() &
                 tagEnd()) &
             ref0(element).star())
         .map((values) {
-      final arguments = [values[2] as ASTNode];
-      final elements = values[3].elements as List;
-      for (var i = 0; i < elements.length; i++) {
-        if (elements[i] is List) {
-          final list = elements[i] as List;
-          for (var j = 0; j < list.length; j++) {
-            final arg = list[j] as NamedArgument;
-            arguments.add(arg);
+          final arguments = [values[2] as ASTNode];
+          final elements = values[3].elements as List;
+          for (var i = 0; i < elements.length; i++) {
+            if (elements[i] is List) {
+              final list = elements[i] as List;
+              for (var j = 0; j < list.length; j++) {
+                final arg = list[j] as NamedArgument;
+                arguments.add(arg);
+              }
+              continue;
+            }
           }
-          continue;
-        }
-      }
 
-      final tag = Tag('layout', arguments, body: values[5].cast<ASTNode>());
-      return tag;
-    });
+          final tag = Tag('layout', arguments, body: values[5].cast<ASTNode>());
+          return tag;
+        });
   }
 
-  FutureOr<void> buildLayout(Evaluator evaluator, String layoutName,
-      [bool isAsync = false]) async {
-    final layoutEvaluator =
-        evaluator.createInnerEvaluatorWithBuffer(evaluator.buffer);
+  FutureOr<void> buildLayout(
+    Evaluator evaluator,
+    String layoutName, [
+    bool isAsync = false,
+  ]) async {
+    final layoutEvaluator = evaluator.createInnerEvaluatorWithBuffer(
+      evaluator.currentBuffer,
+    );
     layoutEvaluator.context.setRoot(evaluator.context.getRoot());
     layoutEvaluator.context.merge(evaluator.context.all());
 
@@ -100,42 +105,42 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
       throw Exception('Failed to analyze layout template: $layoutName');
     }
 
-    final blocks =
-        body.whereType<Tag>().where((tag) => tag.name == 'block').map((tag) {
-      String source = "templ${Random().nextInt(1000)}.liquid";
-      String name = '';
-      if (tag.content.isNotEmpty && tag.content.first is Identifier) {
-        name = (tag.content.first as Identifier).name;
-      } else if (tag.content.isNotEmpty && tag.content.first is Literal) {
-        name = (tag.content.first as Literal).value as String;
-      }
-      return BlockInfo(
-          name: name,
-          source: source,
-          content: tag.body,
-          isOverride: true,
-          nestedBlocks: {},
-          hasSuperCall: false);
-    }).fold<Map<String, BlockInfo>>({}, (map, block) {
-      map[block.name] = block;
-      return map;
-    });
+    final blocks = body
+        .whereType<Tag>()
+        .where((tag) => tag.name == 'block')
+        .map((tag) {
+          String source = "templ${Random().nextInt(1000)}.liquid";
+          String name = '';
+          if (tag.content.isNotEmpty && tag.content.first is Identifier) {
+            name = (tag.content.first as Identifier).name;
+          } else if (tag.content.isNotEmpty && tag.content.first is Literal) {
+            name = (tag.content.first as Literal).value as String;
+          }
+          return BlockInfo(
+            name: name,
+            source: source,
+            content: tag.body,
+            isOverride: true,
+            nestedBlocks: {},
+            hasSuperCall: false,
+          );
+        })
+        .fold<Map<String, BlockInfo>>({}, (map, block) {
+          map[block.name] = block;
+          return map;
+        });
 
-    final mergedAst =
-        buildCompleteMergedAst(layoutStructure, overrides: blocks);
+    final mergedAst = buildCompleteMergedAst(
+      layoutStructure,
+      overrides: blocks,
+    );
 
     // Evaluate the merged AST
     _logger.info('Evaluating merged AST');
-    for (final node in mergedAst) {
-      dynamic result;
-      if (isAsync) {
-        result = await layoutEvaluator.evaluateAsync(node);
-      } else {
-        result = layoutEvaluator.evaluate(node);
-      }
-      if (result != null) {
-        evaluator.buffer.write(result);
-      }
+    if (isAsync) {
+      await layoutEvaluator.evaluateNodesAsync(mergedAst);
+    } else {
+      layoutEvaluator.evaluateNodes(mergedAst);
     }
 
     _logger.info('Layout evaluation complete');

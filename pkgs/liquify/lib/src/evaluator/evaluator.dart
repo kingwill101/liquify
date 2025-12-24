@@ -334,7 +334,7 @@ class Evaluator implements ASTVisitor<dynamic> {
         : TagRegistry.createTag(node.name, node.content, node.filters);
     tag?.preprocess(this);
     tag?.body = node.body;
-    tag?.evaluate(this, buffer);
+    tag?.evaluate(this, currentBuffer);
   }
 
   @override
@@ -543,7 +543,7 @@ class Evaluator implements ASTVisitor<dynamic> {
         : TagRegistry.createTag(node.name, node.content, node.filters);
     tag?.preprocess(this);
     tag?.body = node.body;
-    await tag?.evaluateAsync(this, buffer);
+    await tag?.evaluateAsync(this, currentBuffer);
   }
 
   @override

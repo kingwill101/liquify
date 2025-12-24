@@ -9,27 +9,29 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
   void preprocess(Evaluator evaluator) {
     if (content.isEmpty || content.first is! Identifier) {
       throw Exception(
-          'CaptureTag requires a variable name as the first argument.');
+        'CaptureTag requires a variable name as the first argument.',
+      );
     }
     variableName = (content.first as Identifier).name;
   }
 
-  Future<dynamic> _evaluateCapture(Evaluator evaluator, Buffer buffer,
-      {bool isAsync = false}) async {
-    Buffer buf = Buffer();
-    final variable = args.firstOrNull;
-    if (variable == null) {
+  Future<dynamic> _evaluateCapture(
+    Evaluator evaluator,
+    Buffer buffer, {
+    bool isAsync = false,
+  }) async {
+    if (variableName.isEmpty) {
       return '';
     }
 
-    for (final node in body) {
-      if (node is Tag) continue;
-      final value = isAsync
-          ? await evaluator.evaluateAsync(node)
-          : evaluator.evaluate(node);
-      buf.write(value);
+    evaluator.startBlockCapture();
+    if (isAsync) {
+      await evaluator.evaluateNodesAsync(body);
+    } else {
+      evaluator.evaluateNodes(body);
     }
-    evaluator.context.setVariable(variable.name, buf.toString());
+    final captured = evaluator.endBlockCapture();
+    evaluator.context.setVariable(variableName, captured);
   }
 
   @override
@@ -39,15 +41,19 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     return _evaluateCapture(evaluator, buffer, isAsync: true);
   }
 
   @override
   Parser parser() {
-    return seq3(tagStart() & string('capture').trim(), ref0(identifier).trim(),
-            tagEnd())
-        .map((values) {
+    return seq3(
+      tagStart() & string('capture').trim(),
+      ref0(identifier).trim(),
+      tagEnd(),
+    ).map((values) {
       return Tag('capture', [values.$2 as ASTNode]);
     });
   }
