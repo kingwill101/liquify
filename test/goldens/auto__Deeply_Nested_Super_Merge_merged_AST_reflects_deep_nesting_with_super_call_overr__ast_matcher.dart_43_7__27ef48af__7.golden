@@ -1,3 +1,0 @@
-[
-  "      <!DOCTYPE html>\n      <html>\n        <head>\n          Grandparent Title\n        </head>\n        <body>\n          <header>\n            \n              <div>Grandparent Header</div>\n              \n        <nav>\n          <ul>\n            <li>Child Nav Before</li>\n            \n        <nav><ul><li>Parent Nav</li></ul></nav>\n      \n            <li>Child Nav After</li>\n          </ul>\n        </nav>\n      \n            \n          </header>\n          <main>\n            Grandparent Content\n          </main>\n          <footer>\n            Grandparent Footer\n          </footer>\n        </body>\n      </html>\n      "
-]

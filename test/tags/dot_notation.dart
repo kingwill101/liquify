@@ -1,8 +1,8 @@
-import 'package:test/test.dart';
 import 'package:liquify/src/evaluator.dart';
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/ast.dart';
 import 'package:liquify/src/filter_registry.dart';
+import '../support/golden_harness.dart';
 
 void main() {
   group('Dot notation filters', () {

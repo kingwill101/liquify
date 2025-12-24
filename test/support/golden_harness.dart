@@ -9,6 +9,25 @@ export 'package:test/test.dart' hide expect, group, test;
 
 final _goldenRecorder = _GoldenRecorder();
 
+Directory get goldenDir => _goldenRecorder.dir;
+
+File goldenFile(String name) => File('${goldenDir.path}/$name.golden');
+
+bool get updatingGoldens => _goldenRecorder.updating;
+
+String readOrUpdateGolden(String name, String actual) {
+  final file = goldenFile(name);
+  if (updatingGoldens) {
+    goldenDir.createSync(recursive: true);
+    file.writeAsStringSync(actual);
+    return actual;
+  }
+  t.expect(file.existsSync(), t.isTrue,
+      reason:
+          'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.');
+  return file.readAsStringSync();
+}
+
 @isTestGroup
 void group(String description, void Function() body,
     {String? skip, t.Timeout? timeout, dynamic tags}) {
@@ -73,8 +92,64 @@ class _GoldenContext {
 }
 
 class _GoldenRecorder {
-  final Directory _dir = Directory('test/goldens');
+  _GoldenRecorder() : _dir = _resolveGoldenDir();
+
+  final Directory _dir;
   final bool _update = Platform.environment['UPDATE_GOLDENS'] == '1';
+
+  Directory get dir => _dir;
+  bool get updating => _update;
+
+  static Directory _resolveGoldenDir() {
+    final override = Platform.environment['GOLDEN_DIR'];
+    if (override != null && override.isNotEmpty) {
+      return Directory(override);
+    }
+    final root = _findRepoRoot(Directory.current);
+    return Directory('${root.path}/.golden');
+  }
+
+  static Directory _findRepoRoot(Directory start) {
+    final fromTest = _rootFromTestPath(start);
+    if (fromTest != null) {
+      return fromTest;
+    }
+
+    var current = start;
+    while (true) {
+      if (File('${current.path}/pubspec.yaml').existsSync() ||
+          Directory('${current.path}/.git').existsSync()) {
+        return current;
+      }
+      final parent = current.parent;
+      if (parent.path == current.path) {
+        return start;
+      }
+      current = parent;
+    }
+  }
+
+  static Directory? _rootFromTestPath(Directory start) {
+    final path = start.absolute.path;
+    final separator = Platform.pathSeparator;
+    final marker = '${separator}test${separator}';
+    final markerIndex = path.lastIndexOf(marker);
+    if (markerIndex != -1) {
+      final rootPath = path.substring(0, markerIndex);
+      if (rootPath.isNotEmpty) {
+        return Directory(rootPath);
+      }
+    }
+
+    final testSuffix = '${separator}test';
+    if (path.endsWith(testSuffix)) {
+      final rootPath = path.substring(0, path.length - testSuffix.length);
+      if (rootPath.isNotEmpty) {
+        return Directory(rootPath);
+      }
+    }
+    return null;
+  }
 
   void record(Object? actual, Object? matcher, StackTrace trace) {
     final context = Zone.current[_goldenContextKey] as _GoldenContext?;
@@ -102,7 +177,13 @@ class _GoldenRecorder {
 
     final expected = file.readAsStringSync();
     if (expected != content) {
-      t.expect(content, t.equals(expected));
+      t.expect(
+        content,
+        t.equals(expected),
+        reason:
+            'Golden mismatch: ${file.path}. Golden content differs from actual output. '
+            'Run with UPDATE_GOLDENS=1 to update.',
+      );
     }
   }
 
@@ -137,7 +218,8 @@ class _GoldenRecorder {
       }
       final path =
           frame.uri.path.isNotEmpty ? frame.uri.path : frame.uri.toString();
-      return '$path:${frame.line}:${frame.column}';
+      final normalized = _normalizeTestPath(path);
+      return '$normalized:${frame.line}:${frame.column}';
     }
     return 'unknown';
   }
@@ -150,7 +232,8 @@ class _GoldenRecorder {
       }
       final path =
           frame.uri.path.isNotEmpty ? frame.uri.path : frame.uri.toString();
-      return '$path:${frame.line}:${frame.column}';
+      final normalized = _normalizeTestPath(path);
+      return '$normalized:${frame.line}:${frame.column}';
     }
     return null;
   }
@@ -165,6 +248,16 @@ class _GoldenRecorder {
       return false;
     }
     return path.contains('/test/') || path.startsWith('test/');
+  }
+
+  String _normalizeTestPath(String path) {
+    var normalized = path.replaceAll('\\', '/');
+    const marker = '/test/';
+    final markerIndex = normalized.lastIndexOf(marker);
+    if (markerIndex != -1) {
+      normalized = normalized.substring(markerIndex + 1);
+    }
+    return normalized;
   }
 
   String _sanitize(String input) {

@@ -1,7 +1,7 @@
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
-import 'package:test/test.dart';
 import '../support/shared.dart';
+import '../support/golden_harness.dart';
 
 void main() {
   late Evaluator evaluator;

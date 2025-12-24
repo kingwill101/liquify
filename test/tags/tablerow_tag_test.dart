@@ -1,7 +1,7 @@
-import 'package:test/test.dart';
 import 'package:liquify/parser.dart';
 
 import '../support/shared.dart';
+import '../support/golden_harness.dart';
 
 void main() {
   late Evaluator evaluator;
