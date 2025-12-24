@@ -110,10 +110,7 @@ bool isTruthy(dynamic data) {
 /// Recursively converts an [ASTNode] to a JSON-compatible map.
 dynamic astToJson(ASTNode node) {
   if (node is TextNode) {
-    return {
-      'type': 'TextNode',
-      'text': node.text,
-    };
+    return {'type': 'TextNode', 'text': node.text};
   } else if (node is Tag) {
     return {
       'type': 'Tag',
@@ -210,12 +207,12 @@ class Logger {
   }
 
   static void enableAllContexts() {
-    _enabledContexts.updateAll((_, __) => true);
+    _enabledContexts.updateAll((_, _) => true);
     _indentLevels.clear();
   }
 
   static void disableAllContexts() {
-    _enabledContexts.updateAll((_, __) => false);
+    _enabledContexts.updateAll((_, _) => false);
     _indentLevels.clear();
   }
 }

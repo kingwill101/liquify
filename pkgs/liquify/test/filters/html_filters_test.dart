@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('HTML Filters', () {
-    test('escape should escape \" and < >', () {
+    test('escape should escape " and < >', () {
       expect(
         html.escape('"Hello" <world>', [], {}),
         equals('&#34;Hello&#34; &lt;world&gt;'),

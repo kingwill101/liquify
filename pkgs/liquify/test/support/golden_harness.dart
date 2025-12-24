@@ -22,21 +22,32 @@ String readOrUpdateGolden(String name, String actual) {
     file.writeAsStringSync(actual);
     return actual;
   }
-  t.expect(file.existsSync(), t.isTrue,
-      reason:
-          'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.');
+  t.expect(
+    file.existsSync(),
+    t.isTrue,
+    reason:
+        'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.',
+  );
   return file.readAsStringSync();
 }
 
 @isTestGroup
-void group(String description, void Function() body,
-    {String? skip, t.Timeout? timeout, dynamic tags}) {
+void group(
+  String description,
+  void Function() body, {
+  String? skip,
+  t.Timeout? timeout,
+  dynamic tags,
+}) {
   final parent = _groupStack;
   t.group(
     description,
-    () => runZoned(body, zoneValues: {
-      _goldenGroupKey: [...parent, description]
-    }),
+    () => runZoned(
+      body,
+      zoneValues: {
+        _goldenGroupKey: [...parent, description],
+      },
+    ),
     skip: skip,
     timeout: timeout,
     tags: tags,
@@ -44,8 +55,14 @@ void group(String description, void Function() body,
 }
 
 @isTest
-void test(String description, dynamic Function() body,
-    {String? skip, t.Timeout? timeout, dynamic tags, int? retry}) {
+void test(
+  String description,
+  dynamic Function() body, {
+  String? skip,
+  t.Timeout? timeout,
+  dynamic tags,
+  int? retry,
+}) {
   final fullName = _fullTestName(description);
   final scopedName = _goldenRecorder.scopedTestName(
     fullName,
@@ -132,7 +149,7 @@ class _GoldenRecorder {
   static Directory? _rootFromTestPath(Directory start) {
     final path = start.absolute.path;
     final separator = Platform.pathSeparator;
-    final marker = '${separator}test${separator}';
+    final marker = '$separator' 'test' '$separator';
     final markerIndex = path.lastIndexOf(marker);
     if (markerIndex != -1) {
       final rootPath = path.substring(0, markerIndex);
@@ -171,9 +188,12 @@ class _GoldenRecorder {
       return;
     }
 
-    t.expect(file.existsSync(), t.isTrue,
-        reason:
-            'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.');
+    t.expect(
+      file.existsSync(),
+      t.isTrue,
+      reason:
+          'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.',
+    );
 
     final expected = file.readAsStringSync();
     if (expected != content) {
@@ -188,7 +208,11 @@ class _GoldenRecorder {
   }
 
   String _goldenFileName(
-      String testName, String location, int occurrence, int index) {
+    String testName,
+    String location,
+    int occurrence,
+    int index,
+  ) {
     final safeName = _truncate(_sanitize(_shortTestName(testName)), 80);
     final hash = _hash('$testName|$location|$occurrence');
     final safeLocation = _truncate(_sanitize(_shortLocation(location)), 60);
@@ -216,8 +240,9 @@ class _GoldenRecorder {
       if (!_isTestFrame(frame)) {
         continue;
       }
-      final path =
-          frame.uri.path.isNotEmpty ? frame.uri.path : frame.uri.toString();
+      final path = frame.uri.path.isNotEmpty
+          ? frame.uri.path
+          : frame.uri.toString();
       final normalized = _normalizeTestPath(path);
       return '$normalized:${frame.line}:${frame.column}';
     }
@@ -230,8 +255,9 @@ class _GoldenRecorder {
       if (!_isTestFrame(frame)) {
         continue;
       }
-      final path =
-          frame.uri.path.isNotEmpty ? frame.uri.path : frame.uri.toString();
+      final path = frame.uri.path.isNotEmpty
+          ? frame.uri.path
+          : frame.uri.toString();
       final normalized = _normalizeTestPath(path);
       return '$normalized:${frame.line}:${frame.column}';
     }
@@ -239,8 +265,9 @@ class _GoldenRecorder {
   }
 
   bool _isTestFrame(Frame frame) {
-    final path =
-        frame.uri.path.isNotEmpty ? frame.uri.path : frame.uri.toString();
+    final path = frame.uri.path.isNotEmpty
+        ? frame.uri.path
+        : frame.uri.toString();
     if (path.contains('golden_harness.dart')) {
       return false;
     }
