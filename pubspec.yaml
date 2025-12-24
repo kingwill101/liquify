@@ -4,3 +4,5 @@ environment:
   sdk: '>=3.8.0 <4.0.0'
 workspace:
   - pkgs/liquify
+  - pkgs/liquify_flutter
+  - pkgs/liquify_ui
