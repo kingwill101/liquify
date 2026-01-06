@@ -9,6 +9,9 @@ export 'package:test/test.dart' hide expect, group, test;
 
 final _goldenRecorder = _GoldenRecorder();
 
+/// Normalize line endings to LF for cross-platform compatibility.
+String _normalizeLineEndings(String value) => value.replaceAll('\r\n', '\n');
+
 Directory get goldenDir => _goldenRecorder.dir;
 
 File goldenFile(String name) => File('${goldenDir.path}/$name.golden');
@@ -17,10 +20,11 @@ bool get updatingGoldens => _goldenRecorder.updating;
 
 String readOrUpdateGolden(String name, String actual) {
   final file = goldenFile(name);
+  final normalizedActual = _normalizeLineEndings(actual);
   if (updatingGoldens) {
     goldenDir.createSync(recursive: true);
-    file.writeAsStringSync(actual);
-    return actual;
+    file.writeAsStringSync(normalizedActual);
+    return normalizedActual;
   }
   t.expect(
     file.existsSync(),
@@ -28,7 +32,7 @@ String readOrUpdateGolden(String name, String actual) {
     reason:
         'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.',
   );
-  return file.readAsStringSync();
+  return _normalizeLineEndings(file.readAsStringSync());
 }
 
 @isTestGroup
@@ -178,7 +182,7 @@ class _GoldenRecorder {
     }
 
     final normalized = _normalize(actual, matcher);
-    final content = _serialize(normalized);
+    final content = _normalizeLineEndings(_serialize(normalized));
     final index = context.index++;
     final location = _locationKey(trace);
     final occurrence = _nextOccurrence(context, location);
@@ -198,7 +202,7 @@ class _GoldenRecorder {
           'Missing golden file: ${file.path}. Run with UPDATE_GOLDENS=1 to create it.',
     );
 
-    final expected = file.readAsStringSync();
+    final expected = _normalizeLineEndings(file.readAsStringSync());
     if (expected != content) {
       t.expect(
         content,
@@ -268,9 +272,11 @@ class _GoldenRecorder {
   }
 
   bool _isTestFrame(Frame frame) {
-    final path = frame.uri.path.isNotEmpty
+    final rawPath = frame.uri.path.isNotEmpty
         ? frame.uri.path
         : frame.uri.toString();
+    // Normalize path separators for cross-platform compatibility
+    final path = rawPath.replaceAll('\\', '/');
     if (path.contains('golden_harness.dart')) {
       return false;
     }
@@ -366,7 +372,9 @@ class _GoldenRecorder {
 
   String _normalizeString(String value) {
     final tempDirPattern = RegExp(r'liquify_test_[A-Za-z0-9]+');
-    return value.replaceAll(tempDirPattern, 'liquify_test_<temp>');
+    return value
+        .replaceAll('\r\n', '\n')
+        .replaceAll(tempDirPattern, 'liquify_test_<temp>');
   }
 
   String _serialize(Object? value) {
