@@ -1,0 +1,31 @@
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
+
+default:
+  @just --list
+
+# Regenerate tag specs and generated outputs.
+codegen:
+  dart run build_runner build
+
+# Merge generated + overrides into the main registry, then re-run codegen.
+registry-merge:
+  dart run tool/merge_type_registry.dart
+  dart run build_runner build
+
+# Analyzer + focused generator tests.
+analyze:
+  dart analyze
+
+test-generated:
+  flutter test test/generated/type_parsers_test.dart test/generated/type_graph_report_test.dart
+
+# End-to-end helper: codegen, merge registry, analyze, and run tests.
+registry-all:
+  just codegen
+  just registry-merge
+  just analyze
+  just test-generated
+
+# Quick summary of type graph coverage.
+typegraph-summary:
+  dart run tool/typegraph_summary.dart

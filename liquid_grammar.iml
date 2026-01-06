@@ -6,6 +6,18 @@
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify/build" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_flutter/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_flutter/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_ui/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_ui/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/pkgs/liquify_ui/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />

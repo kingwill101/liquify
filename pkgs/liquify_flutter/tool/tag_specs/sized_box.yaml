@@ -1,0 +1,10 @@
+tag: sized_box
+widget: SizedBox
+properties:
+  - name: width
+    type: double
+  - name: height
+    type: double
+children:
+  kind: single
+  fallback: none

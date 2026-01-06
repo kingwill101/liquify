@@ -1,0 +1,129 @@
+{% comment %}
+Image viewer demo screen. Expects: actions (Drop).
+{% endcomment %}
+{% layout "image_viewer/layouts/base.liquid" %}
+{% block content %}
+  {% assign clip_radius = "" | border_radius: circular: 16 %}
+  {% assign clip_shape = "" | rounded_rectangle_border: borderRadius: clip_radius %}
+  {% column spacing: 20 %}
+    {% row spacing: 12 crossAxisAlignment: "center" %}
+      {% filled_button onPressed: "nav:home" %}
+        {% text data: "Apps" %}
+      {% endfilled_button %}
+      {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Image Viewer" style: text_style_1 %}
+      {% sized_box width: 12 %}
+      {% opacity opacity: 0.7 %}
+        {% assign text_style_2 = "" | text_style: fontSize: 12, color: "#9aa0ab" %}
+{% text data: "Preview tags + layout tools" style: text_style_2 %}
+      {% endopacity %}
+    {% endrow %}
+    {% card color: "#1c1f27" %}
+      {% column spacing: 16 %}
+        {% stack %}
+          {% clip_r_rect borderRadius: 16 clipBehavior: "hardEdge" %}
+            {% aspect_ratio aspectRatio: 1.6 %}
+              {% container %}
+                {% colored_box color: "#202634" %}{% endcolored_box %}
+                
+                  {% center %}
+                    {% fitted_box fit: "contain" %}
+                      {% icon icon: "image" size: 140 color: "#7dd3fc" %}
+                    {% endfitted_box %}
+                  {% endcenter %}
+                
+              {% endcontainer %}
+            {% endaspect_ratio %}
+          {% endclip_r_rect %}
+          {% positioned top: 12 right: 12 %}
+            {% opacity opacity: 0.9 %}
+              {% card color: "#0f1014" %}
+                {% row spacing: 6 %}
+                  {% icon icon: "favorite" size: 14 color: "#fb7185" %}
+                  {% assign text_style_3 = "" | text_style: fontSize: 12, color: "#f6f7fb" %}
+{% text data: "Saved" style: text_style_3 %}
+                {% endrow %}
+              {% endcard %}
+            {% endopacity %}
+          {% endpositioned %}
+          {% positioned bottom: 12 left: 12 %}
+            {% card color: "#0f1014" %}
+              {% row spacing: 6 %}
+                {% icon icon: "image" size: 12 color: "#9aa0ab" %}
+                {% assign text_style_4 = "" | text_style: fontSize: 11, color: "#9aa0ab" %}
+{% text data: "16:10" style: text_style_4 %}
+              {% endrow %}
+            {% endcard %}
+          {% endpositioned %}
+        {% endstack %}
+        {% column spacing: 8 %}
+          {% assign text_style_5 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "No image loaded" style: text_style_5 %}
+          {% assign text_style_6 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Use tags like clip_r_rect, aspect_ratio, opacity, and positioned to build layered cards." style: text_style_6 %}
+        {% endcolumn %}
+        {% row spacing: 12 crossAxisAlignment: "center" %}
+          {% clip_r_rect borderRadius: 12 %}
+            {% image bytes: demo_image_bytes width: 64 height: 64 fit: "cover" %}
+          {% endclip_r_rect %}
+          {% column spacing: 4 crossAxisAlignment: "start" %}
+            {% assign text_style_7 = "" | text_style: fontSize: 12, fontWeight: "bold", color: "#e2e8f0" %}
+{% text data: "Image tag" style: text_style_7 %}
+            {% assign text_style_8 = "" | text_style: fontSize: 11, color: "#94a3b8" %}
+{% text data: "Memory bytes preview" style: text_style_8 %}
+          {% endcolumn %}
+        {% endrow %}
+        {% wrap spacing: 8 runSpacing: 8 %}
+          {% card color: "#242a36" %}
+            {% assign text_style_9 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "clip_r_rect" style: text_style_9 %}
+          {% endcard %}
+          {% card color: "#242a36" %}
+            {% assign text_style_10 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "aspect_ratio" style: text_style_10 %}
+          {% endcard %}
+          {% card color: "#242a36" %}
+            {% assign text_style_11 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "stack/positioned" style: text_style_11 %}
+          {% endcard %}
+          {% card color: "#242a36" %}
+            {% assign text_style_12 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "fitted_box" style: text_style_12 %}
+          {% endcard %}
+          {% card color: "#242a36" %}
+            {% assign text_style_13 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "opacity" style: text_style_13 %}
+          {% endcard %}
+        {% endwrap %}
+      {% endcolumn %}
+    {% endcard %}
+    {% card color: "#1c1f27" %}
+      {% column spacing: 12 %}
+        {% assign text_style_14 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Media + Decor" style: text_style_14 %}
+        {% assign text_style_15 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Placeholders, decoration layers, shaders, and clipping." style: text_style_15 %}
+        {% row spacing: 12 crossAxisAlignment: "center" %}
+          {% placeholder fallbackWidth: 120 fallbackHeight: 80 color: "#334155" %}
+          {% decorated_box decoration: "#0f172a" %}
+            {% sized_box width: 120 height: 80 %}{% endsized_box %}
+          {% enddecorated_box %}
+          {% decorated_box decoration: "#1f2937" position: "foreground" %}
+            {% sized_box width: 120 height: 80 %}{% endsized_box %}
+          {% enddecorated_box %}
+        {% endrow %}
+        {% row spacing: 12 crossAxisAlignment: "center" %}
+          {% clip_path shape: clip_shape %}
+            {% decorated_box decoration: "#1d4ed8" %}
+              {% sized_box width: 120 height: 80 %}{% endsized_box %}
+            {% enddecorated_box %}
+          {% endclip_path %}
+          {% shader_mask %}
+            {% assign text_style_16 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#e2e8f0" %}
+{% text data: "Shader mask" style: text_style_16 %}
+          {% endshader_mask %}
+        {% endrow %}
+      {% endcolumn %}
+    {% endcard %}
+  {% endcolumn %}
+{% endblock %}

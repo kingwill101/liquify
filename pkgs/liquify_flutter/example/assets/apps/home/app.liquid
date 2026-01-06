@@ -1,0 +1,106 @@
+{% comment %}
+Home hub listing demo apps. Expects: apps (list), actions (Drop).
+{% endcomment %}
+{% lua assign: app_summary %}
+  local apps = get("apps")
+  if type(apps) ~= "table" then
+    apps = {}
+  end
+  local count = 0
+  local labels = ""
+  for _, item in ipairs(apps) do
+    count = count + 1
+    if item.title then
+      if labels == "" then
+        labels = item.title
+      else
+        labels = labels .. ", " .. item.title
+      end
+    end
+  end
+  return { count = count, labels = labels }
+{% endlua %}
+{% assign summary_count = app_summary.count | default: 0 %}
+{% assign summary_labels = app_summary.labels | default: "" %}
+{% layout "home/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: 18 crossAxisAlignment: "stretch" %}
+      {% card color: "#171b23" %}
+        {% stack %}
+          {% positioned top: -48 right: -32 %}
+            {% opacity opacity: 0.12 %}
+              {% clip_oval %}
+                {% container width: 160 height: 160 %}
+                  {% colored_box color: "#7dd3fc" %}{% endcolored_box %}
+                {% endcontainer %}
+              {% endclip_oval %}
+            {% endopacity %}
+          {% endpositioned %}
+          {% positioned bottom: -40 left: -20 %}
+            {% opacity opacity: 0.1 %}
+              {% clip_oval %}
+                {% container width: 120 height: 120 %}
+                  {% colored_box color: "#f5b74a" %}{% endcolored_box %}
+                {% endcontainer %}
+              {% endclip_oval %}
+            {% endopacity %}
+          {% endpositioned %}
+          {% column spacing: 10 %}
+            {% row spacing: 8 crossAxisAlignment: "center" %}
+              {% icon icon: "dashboard" size: 18 color: "#f6f7fb" %}
+              {% assign text_style_1 = "" | text_style: fontSize: 24, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Liquify Apps" style: text_style_1 %}
+            {% endrow %}
+            {% assign text_style_2 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Pick a module to explore widgets and layouts." style: text_style_2 %}
+            {% row spacing: 6 crossAxisAlignment: "center" %}
+              {% assign text_style_3 = "" | text_style: fontSize: 12, color: "#7dd3fc" %}
+{% text data: "Lua summary:" style: text_style_3 %}
+              {% assign text_style_4 = "" | text_style: fontSize: 12, color: "#cbd5f5" %}
+{% text data: summary_count style: text_style_4 %}
+              {% assign text_style_5 = "" | text_style: fontSize: 12, color: "#cbd5f5" %}
+{% text data: "apps" style: text_style_5 %}
+            {% endrow %}
+            {% assign text_style_6 = "" | text_style: fontSize: 12, color: "#7b8496" %}
+{% text data: summary_labels style: text_style_6 %}
+            {% wrap spacing: 8 runSpacing: 8 %}
+              {% card color: "#232733" %}
+                {% assign text_style_7 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "stack" style: text_style_7 %}
+              {% endcard %}
+              {% card color: "#232733" %}
+                {% assign text_style_8 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "clip" style: text_style_8 %}
+              {% endcard %}
+              {% card color: "#232733" %}
+                {% assign text_style_9 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "grid" style: text_style_9 %}
+              {% endcard %}
+              {% card color: "#232733" %}
+                {% assign text_style_10 = "" | text_style: fontSize: 11, color: "#cbd5f5" %}
+{% text data: "wrap" style: text_style_10 %}
+              {% endcard %}
+            {% endwrap %}
+          {% endcolumn %}
+        {% endstack %}
+      {% endcard %}
+      {% for app in apps %}
+        {% card color: "#1b1f28" %}
+          {% column spacing: 12 crossAxisAlignment: "start" %}
+            {% row spacing: 10 crossAxisAlignment: "center" %}
+              {% icon icon: app.icon size: 20 color: app.accent %}
+              {% assign text_style_11 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: app.title style: text_style_11 %}
+            {% endrow %}
+            {% assign text_style_12 = "" | text_style: color: "#9aa0ab" %}
+{% text data: app.subtitle style: text_style_12 %}
+            {% filled_button onPressed: app.action %}
+              {% text data: "Open" %}
+            {% endfilled_button %}
+          {% endcolumn %}
+        {% endcard %}
+      {% endfor %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

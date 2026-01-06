@@ -1,0 +1,59 @@
+{% comment %}
+Calculator history page. Expects: actions (Drop).
+{% endcomment %}
+{% layout "calculator/layouts/base.liquid" %}
+{% block content %}
+  {% column spacing: 16 %}
+    {% row spacing: 12 crossAxisAlignment: "center" %}
+      {% filled_button onPressed: "nav:back" %}
+        {% text data: "Back" %}
+      {% endfilled_button %}
+      {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "History" style: text_style_1 %}
+      {% sized_box width: 8 %}{% endsized_box %}
+      {% opacity opacity: 0.7 %}
+        {% assign text_style_2 = "" | text_style: fontSize: 12, color: "#9aa0ab" %}
+{% text data: "tap an entry to replay" style: text_style_2 %}
+      {% endopacity %}
+    {% endrow %}
+    {% card color: "#1c1f27" %}
+      {% column spacing: 12 %}
+        {% assign text_style_3 = "" | text_style: fontSize: 14, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Recent" style: text_style_3 %}
+        {% divider color: "#2a2f3a" thickness: 1 %}
+        {% column spacing: 10 %}
+          {% card color: "#20242f" %}
+            {% row spacing: 8 %}
+              {% icon icon: "history" size: 16 color: "#9aa0ab" %}
+              {% assign text_style_4 = "" | text_style: color: "#f6f7fb" %}
+{% text data: "128 × 12" style: text_style_4 %}
+              {% sized_box width: 12 %}{% endsized_box %}
+              {% assign text_style_5 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "1,536" style: text_style_5 %}
+            {% endrow %}
+          {% endcard %}
+          {% card color: "#20242f" %}
+            {% row spacing: 8 %}
+              {% icon icon: "history" size: 16 color: "#9aa0ab" %}
+              {% assign text_style_6 = "" | text_style: color: "#f6f7fb" %}
+{% text data: "45 ÷ 5" style: text_style_6 %}
+              {% sized_box width: 12 %}{% endsized_box %}
+              {% assign text_style_7 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "9" style: text_style_7 %}
+            {% endrow %}
+          {% endcard %}
+          {% card color: "#20242f" %}
+            {% row spacing: 8 %}
+              {% icon icon: "history" size: 16 color: "#9aa0ab" %}
+              {% assign text_style_8 = "" | text_style: color: "#f6f7fb" %}
+{% text data: "13 − 4" style: text_style_8 %}
+              {% sized_box width: 12 %}{% endsized_box %}
+              {% assign text_style_9 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "9" style: text_style_9 %}
+            {% endrow %}
+          {% endcard %}
+        {% endcolumn %}
+      {% endcolumn %}
+    {% endcard %}
+  {% endcolumn %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% comment %}
+Calculator keypad grid (wide). Expects: actions (Drop) for button action handlers.
+Optional layout vars: keypad_width, grid_gap, cell_height, button_size,
+button_padding, button_radius, digit_size, operator_size, action_size.
+{% endcomment %}
+{% container alignment: "center" %}
+  {% sized_box width: keypad_width height: grid_height %}{% endsized_box %}
+  
+  {% assign keypad_delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: 5, mainAxisSpacing: grid_gap, crossAxisSpacing: grid_gap, mainAxisExtent: cell_height %}
+  {% grid_view gridDelegate: keypad_delegate shrinkWrap: true %}
+    {% filled_button onPressed: "(" %}{% text data: "(" %}{% endfilled_button %}
+    {% filled_button onPressed: ")" %}{% text data: ")" %}{% endfilled_button %}
+    {% filled_button onPressed: "FC" %}{% text data: "FC" %}{% endfilled_button %}
+    {% filled_button onPressed: "+/-" %}{% text data: "+/-" %}{% endfilled_button %}
+    {% filled_button onPressed: "÷" %}{% text data: "÷" %}{% endfilled_button %}
+
+    {% filled_button onPressed: "%" %}{% text data: "%" %}{% endfilled_button %}
+    {% filled_button onPressed: "7" %}{% text data: "7" %}{% endfilled_button %}
+    {% filled_button onPressed: "8" %}{% text data: "8" %}{% endfilled_button %}
+    {% filled_button onPressed: "9" %}{% text data: "9" %}{% endfilled_button %}
+    {% filled_button onPressed: "×" %}{% text data: "×" %}{% endfilled_button %}
+
+    {% filled_button onPressed: "pi" %}{% text data: "pi" %}{% endfilled_button %}
+    {% filled_button onPressed: "4" %}{% text data: "4" %}{% endfilled_button %}
+    {% filled_button onPressed: "5" %}{% text data: "5" %}{% endfilled_button %}
+    {% filled_button onPressed: "6" %}{% text data: "6" %}{% endfilled_button %}
+    {% filled_button onPressed: "−" %}{% text data: "−" %}{% endfilled_button %}
+
+    {% filled_button onPressed: "^" %}{% text data: "^" %}{% endfilled_button %}
+    {% filled_button onPressed: "1" %}{% text data: "1" %}{% endfilled_button %}
+    {% filled_button onPressed: "2" %}{% text data: "2" %}{% endfilled_button %}
+    {% filled_button onPressed: "3" %}{% text data: "3" %}{% endfilled_button %}
+    {% filled_button onPressed: "+" %}{% text data: "+" %}{% endfilled_button %}
+
+    {% filled_button onPressed: "0" %}{% text data: "0" %}{% endfilled_button %}
+    {% filled_button onPressed: "." %}{% text data: "." %}{% endfilled_button %}
+    {% filled_button onPressed: "=" %}{% text data: "=" %}{% endfilled_button %}
+    {% filled_button onPressed: "⌫" %}{% text data: "⌫" %}{% endfilled_button %}
+    {% filled_button onPressed: "MC" %}{% text data: "MC" %}{% endfilled_button %}
+  {% endgrid_view %}
+  
+{% endcontainer %}

@@ -1,0 +1,18 @@
+{% comment %}
+Display card for calculator. Expects: expression, display. Optional layout vars:
+display_width, display_height, display_padding, display_gap, expression_size,
+display_size.
+{% endcomment %}
+{% container %}
+  {% sized_box width: display_width height: display_height %}{% endsized_box %}
+  
+    {% card %}
+      {% column spacing: display_gap mainAxisAlignment: "spaceBetween" crossAxisAlignment: "end" %}
+        {% assign text_style_1 = "" | text_style: fontSize: expression_size %}
+{% text data: expression textAlign: "right" maxLines: 1 overflow: "ellipsis" style: text_style_1 %}
+        {% assign text_style_2 = "" | text_style: fontSize: display_size %}
+{% text data: display textAlign: "right" maxLines: 1 overflow: "ellipsis" style: text_style_2 %}
+      {% endcolumn %}
+    {% endcard %}
+  
+{% endcontainer %}

@@ -1,0 +1,63 @@
+{% comment %}
+Calculator screen composition. Uses base layout and renders the display and keypad
+partials. Expects: expression, display, actions (Drop passed to keypad).
+{% endcomment %}
+{% assign content_pad = "" | responsive: xs: 12, sm: 16, md: 20, lg: 24, default: 20 %}
+{% assign section_gap = "" | responsive: xs: 10, sm: 12, md: 14, lg: 16, default: 14 %}
+{% assign header_gap = "" | responsive: xs: 6, sm: 8, md: 10, lg: 12, default: 10 %}
+{% assign header_run_gap = "" | responsive: xs: 4, sm: 6, md: 8, lg: 10, default: 8 %}
+{% assign header_radius = "" | responsive: xs: 10, sm: 11, md: 12, lg: 12, default: 12 %}
+{% assign header_padding = "" | responsive: xs: 8, sm: 9, md: 10, lg: 10, default: 10 %}
+{% assign header_text_size = "" | responsive: xs: 14, sm: 15, md: 16, lg: 18, default: 16 %}
+{% assign header_block = "" | responsive: xs: 76, sm: 68, md: 54, lg: 54, default: 54 %}
+
+{% assign usable_width = screen.width | minus: content_pad | minus: content_pad %}
+{% assign display_height = screen.height | times: 0.2 | at_most: 180 | at_least: 88 %}
+{% assign display_padding = "" | responsive: xs: 8, sm: 9, md: 10, lg: 12, default: 10 %}
+{% assign display_gap = "" | responsive: xs: 2, sm: 3, md: 3, lg: 4, default: 3 %}
+{% assign expression_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 16, xl: 18, default: 16 %}
+{% assign display_size = "" | responsive: xs: 20, sm: 22, md: 24, lg: 28, xl: 30, default: 28 %}
+
+{% assign grid_gap = "" | responsive: xs: 6, sm: 8, md: 10, lg: 12, default: 10 %}
+{% assign button_size = "" | responsive: xs: "", sm: "", default: "" %}
+{% assign button_padding = "" | responsive: xs: 8, sm: 9, md: 10, lg: 12, default: 10 %}
+{% assign button_radius = "" | responsive: xs: 14, sm: 16, md: 18, lg: 20, default: 18 %}
+{% assign digit_size = "" | responsive: xs: 15, sm: 16, md: 18, lg: 20, default: 18 %}
+{% assign operator_size = "" | responsive: xs: 15, sm: 16, md: 18, lg: 20, default: 18 %}
+{% assign action_size = "" | responsive: xs: 13, sm: 14, md: 16, lg: 18, default: 16 %}
+
+{% assign available_height = screen.height | minus: content_pad | minus: content_pad | minus: header_block | minus: display_height | minus: section_gap | minus: section_gap %}
+{% assign gap_total = grid_gap | times: 4 %}
+{% assign gap_total_x = grid_gap | times: 3 %}
+{% assign max_cell_height = available_height | minus: gap_total | divided_by: 5 %}
+{% assign cell_height = max_cell_height %}
+{% assign grid_height = cell_height | times: 5 | plus: gap_total %}
+{% assign keypad_width = usable_width %}
+{% assign display_width = keypad_width %}
+{% layout "calculator/layouts/base.liquid" %}
+{% block content %}
+  {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+    {% center %}
+      {% container alignment: "center" width: keypad_width height: header_block %}
+        
+          {% wrap alignment: "center" runAlignment: "center" spacing: header_gap runSpacing: header_run_gap %}
+            {% filled_button onPressed: "nav:home" %}
+              {% text data: "Apps" %}
+            {% endfilled_button %}
+            {% filled_button onPressed: "page:history" %}
+              {% text data: "History" %}
+            {% endfilled_button %}
+            {% assign text_style_1 = "" | text_style: fontSize: header_text_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Calculator" style: text_style_1 %}
+          {% endwrap %}
+        
+      {% endcontainer %}
+    {% endcenter %}
+    {% center %}
+      {% render "calculator/partials/display.liquid", expression: expression, display: display, display_width: display_width, display_height: display_height, display_padding: display_padding, display_gap: display_gap, expression_size: expression_size, display_size: display_size %}
+    {% endcenter %}
+    {% center %}
+      {% render "calculator/partials/keypad.liquid", actions: actions, keypad_width: keypad_width, grid_height: grid_height, grid_gap: grid_gap, cell_height: cell_height, button_size: button_size, button_padding: button_padding, button_radius: button_radius, digit_size: digit_size, operator_size: operator_size, action_size: action_size %}
+    {% endcenter %}
+  {% endcolumn %}
+{% endblock %}

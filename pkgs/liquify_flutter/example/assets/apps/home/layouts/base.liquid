@@ -1,0 +1,12 @@
+{% comment %}
+Base layout for the home app hub. Provides dark background and a content block.
+{% endcomment %}
+{% assign base_pad_inset = "" | edge_insets: all: 24 %}
+{% safe_area %}
+  {% container color: "#0f1014" %}
+    {% padding padding: base_pad_inset %}
+      {% block content %}
+      {% endblock %}
+    {% endpadding %}
+  {% endcontainer %}
+{% endsafe_area %}

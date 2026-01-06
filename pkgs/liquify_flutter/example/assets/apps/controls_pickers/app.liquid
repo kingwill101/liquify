@@ -1,0 +1,65 @@
+{% comment %}
+Controls pickers demo. Expects dropdown_menu_items, dropdown_value, stepper_steps,
+ step_index, scheduled_date, scheduled_time, icon_toggle_icons, icon_toggle_index.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Pickers" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Pickers + Steps" style: text_style_2 %}
+          {% dropdown_button
+            items: dropdown_menu_items
+            value: dropdown_value
+            onChanged: "controls:dropdown"
+            isExpanded: true
+            iconEnabledColor: "#e2e8f0"
+            iconSize: 20
+            menuMaxHeight: 220
+            dropdownColor: "#101521"
+            padding: 8
+            alignment: "center" %}
+          {% container %}
+            {% sized_box height: 180 %}{% endsized_box %}
+            {% stepper steps: stepper_steps currentStep: step_index onStepTapped: "controls:step" type: "horizontal" %}
+          {% endcontainer %}
+          {% wrap spacing: 12 runSpacing: 12 %}
+            {% assign min_date = "" | date_time: year: 2023, month: 1, day: 1 %}
+            {% assign max_date = "" | date_time: year: 2026, month: 12, day: 31 %}
+            {% date_picker_dialog
+              initialDate: scheduled_date
+              firstDate: min_date
+              lastDate: max_date
+              currentDate: scheduled_date
+              confirmText: "Select" %}
+            {% time_picker_dialog
+              initialTime: scheduled_time
+              initialEntryMode: "input"
+              confirmText: "Select" %}
+          {% endwrap %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Quick toggles" style: text_style_3 %}
+          {% wrap spacing: 8 runSpacing: 8 %}
+            {% for icon_name in icon_toggle_icons %}
+              {% icon_button icon: icon_name tooltip: "Toggle" onPressed: "controls:icon_toggle" %}
+            {% endfor %}
+          {% endwrap %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

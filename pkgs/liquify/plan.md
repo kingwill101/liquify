@@ -359,7 +359,7 @@ This gives you a JSX-like feel:
 Example Liquid:
 
 ```liquid
-{% column gap:12 %}
+{% column spacing:12 %}
   Hello {{ user.name }}
   {% button text:"Buy" action:{ "type":"navigate", "route":"/checkout" } %}
 {% endcolumn %}
