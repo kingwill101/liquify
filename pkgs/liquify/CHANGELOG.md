@@ -1,3 +1,19 @@
+## 1.4.0
+
+### Liquid tag improvements
+- Treat each non-empty line in `{% liquid %}` blocks as a statement
+- Ignore whitespace-only lines inside `{% liquid %}` blocks
+- Error on CR-only line endings in `{% liquid %}` blocks for consistent parsing behavior
+- Route `{% liquid %}` output through the active buffer (works correctly inside captures)
+
+### Output and scope semantics
+- Preserve value types for single-expression tag content so numeric filters (e.g., `times`) behave correctly
+- `assign` inside `for` loops now persists after the loop while keeping `forloop` and loop variables local
+
+### Tests
+- Add `{% liquid %}` shorthand syntax and whitespace handling tests
+- Add capture regression coverage for `{% liquid %}` output routing
+
 ## 1.3.1
 - Fix string literal parsing to correctly handle escaped quotes and characters
 - Add regression tests covering render tag and evaluator behaviour with escaped strings

@@ -213,6 +213,7 @@ class Environment {
     }
   }
 
+
   /// Retrieves the value of a variable from the current scope or any parent scopes.
   ///
   /// This method searches the variable stack from the top (most recent scope) to the

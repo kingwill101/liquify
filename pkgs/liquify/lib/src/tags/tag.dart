@@ -40,10 +40,22 @@ abstract class AbstractTag {
 
   /// Evaluates the tag's content and returns the result as a string.
   dynamic evaluateContent(Evaluator evaluator) {
+    if (content.isEmpty) {
+      return '';
+    }
+    if (content.length == 1) {
+      return evaluator.evaluate(content.first);
+    }
     return content.map((node) => evaluator.evaluate(node)).join('');
   }
 
   dynamic evaluateContentAsync(Evaluator eval) {
+    if (content.isEmpty) {
+      return '';
+    }
+    if (content.length == 1) {
+      return eval.evaluateAsync(content.first);
+    }
     return Future.wait(
       content.map((node) => eval.evaluateAsync(node)),
     ).then((results) => results.join(''));
