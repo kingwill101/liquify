@@ -7,3 +7,6 @@
 .openspec
 openspec
 .github/prompts
+.idea
+.pub-cache
+.tooling

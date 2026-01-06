@@ -100,5 +100,50 @@ void main() {
         });
       });
     });
+
+    // Tests specifically for the FilteredExpression with Assignment handling
+    group('filtered assignment extraction', () {
+      test('extracts variable name from filtered assignment sync', () async {
+        await testParser('''
+              {% assign result = "test" | upcase | downcase %}
+              {{ result }}
+            ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString().trim(), equals('test'));
+        });
+      });
+
+      test('extracts variable name from filtered assignment async', () async {
+        await testParser('''
+              {% assign result = "test" | upcase | downcase %}
+              {{ result }}
+            ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString().trim(), equals('test'));
+        });
+      });
+
+      test('handles variable reference with filter sync', () async {
+        await testParser('''
+              {% assign original = "hello" %}
+              {% assign modified = original | upcase %}
+              {{ modified }}
+            ''', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString().trim(), equals('HELLO'));
+        });
+      });
+
+      test('handles variable reference with filter async', () async {
+        await testParser('''
+              {% assign original = "hello" %}
+              {% assign modified = original | upcase %}
+              {{ modified }}
+            ''', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString().trim(), equals('HELLO'));
+        });
+      });
+    });
   });
 }
