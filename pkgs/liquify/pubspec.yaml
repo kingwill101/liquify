@@ -33,6 +33,7 @@ dev_dependencies:
   meta: ^1.17.0
   stack_trace: ^1.11.1
   test: ^1.28.0
+  coverage: ^1.10.1
 
 funding:
   - https://www.buymeacoffee.com/kingwill101
