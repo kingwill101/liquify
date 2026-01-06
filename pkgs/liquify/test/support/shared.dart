@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:liquify/liquify.dart';
 import 'package:liquify/parser.dart';
 
-FutureOr<void> testParser(String source,
-    FutureOr<void> Function(Document document) testFunction) async {
+FutureOr<void> testParser(
+  String source,
+  FutureOr<void> Function(Document document) testFunction,
+) async {
   try {
     final document = Document(parseInput(source));
     try {

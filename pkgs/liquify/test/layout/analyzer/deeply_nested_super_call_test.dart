@@ -61,28 +61,50 @@ void main() {
 
       // Since "navigation" is originally nested in "header", the final key for the overridden block is "header.navigation".
       final navBlock = resolvedBlocks['header.navigation'];
-      expect(navBlock, isNotNull,
-          reason: 'header.navigation block should be present.');
-      expect(navBlock!.source, equals('child.liquid'),
-          reason: 'Child override should be used for the nested block.');
-      expect(navBlock.isOverride, isTrue,
-          reason: 'The nested block override must be marked as an override.');
-      expect(navBlock.hasSuperCall, isTrue,
-          reason: 'The nested block should detect a super() call.');
+      expect(
+        navBlock,
+        isNotNull,
+        reason: 'header.navigation block should be present.',
+      );
+      expect(
+        navBlock!.source,
+        equals('child.liquid'),
+        reason: 'Child override should be used for the nested block.',
+      );
+      expect(
+        navBlock.isOverride,
+        isTrue,
+        reason: 'The nested block override must be marked as an override.',
+      );
+      expect(
+        navBlock.hasSuperCall,
+        isTrue,
+        reason: 'The nested block should detect a super() call.',
+      );
 
       // Verify that the nested block's parent is set and comes from parent.liquid.
-      expect(navBlock.parent, isNotNull,
-          reason: 'The deeply nested override should have a parent block.');
-      expect(navBlock.parent!.source, equals('parent.liquid'),
-          reason:
-              'The parent block for the nested override should be from parent.liquid.');
+      expect(
+        navBlock.parent,
+        isNotNull,
+        reason: 'The deeply nested override should have a parent block.',
+      );
+      expect(
+        navBlock.parent!.source,
+        equals('parent.liquid'),
+        reason:
+            'The parent block for the nested override should be from parent.liquid.',
+      );
 
       // Additionally, check that at least one node in the block's content is a Tag named "super".
-      bool foundSuper =
-          (navBlock.content ?? []).any((n) => n is Tag && n.name == 'super');
-      expect(foundSuper, isTrue,
-          reason:
-              'The deeply nested block content should include a super() call tag.');
+      bool foundSuper = (navBlock.content ?? []).any(
+        (n) => n is Tag && n.name == 'super',
+      );
+      expect(
+        foundSuper,
+        isTrue,
+        reason:
+            'The deeply nested block content should include a super() call tag.',
+      );
     });
   });
 }

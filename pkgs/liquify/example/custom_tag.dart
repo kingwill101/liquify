@@ -55,18 +55,16 @@ class BoxTag extends AbstractTag with CustomTagParser {
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     String content = evaluator.evaluate(body[0]).toString().trim();
 
-    content = Template.parse(
-      content,
-      data: evaluator.context.all(),
-    ).render();
+    content = Template.parse(content, data: evaluator.context.all()).render();
 
     String boxChar = this.content.isNotEmpty
         ? evaluator.evaluate(this.content[0]).toString()
         : '+';
 
     List<String> lines = content.split('\n');
-    int maxLength =
-        lines.map((line) => line.length).reduce((a, b) => a > b ? a : b);
+    int maxLength = lines
+        .map((line) => line.length)
+        .reduce((a, b) => a > b ? a : b);
 
     String topBottom = boxChar * (maxLength);
     buffer.writeln(topBottom);
@@ -91,9 +89,12 @@ class BoxTag extends AbstractTag with CustomTagParser {
             string('endbox').trim() &
             tagEnd())
         .map((values) {
-      var boxChar = values[2] != null ? TextNode(values[2]) : null;
-      return Tag("box", boxChar != null ? [boxChar] : [],
-          body: [TextNode(values[4])]);
-    });
+          var boxChar = values[2] != null ? TextNode(values[2]) : null;
+          return Tag(
+            "box",
+            boxChar != null ? [boxChar] : [],
+            body: [TextNode(values[4])],
+          );
+        });
   }
 }

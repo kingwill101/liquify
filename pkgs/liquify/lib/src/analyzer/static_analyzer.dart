@@ -72,7 +72,8 @@ class StaticAnalysisResult {
     buffer.writeln('Used variables: ${usedVariables.join(", ")}');
     if (undefinedVariables.isNotEmpty) {
       buffer.writeln(
-          'Potentially undefined variables: ${undefinedVariables.join(", ")}');
+        'Potentially undefined variables: ${undefinedVariables.join(", ")}',
+      );
     }
     if (layoutDependencies.isNotEmpty) {
       buffer.writeln('Layout dependencies: ${layoutDependencies.join(" -> ")}');
@@ -105,8 +106,9 @@ class LiquidStaticAnalyzer {
     _logger.info('Starting static analysis of $templatePath');
 
     // First, use template analyzer to resolve layouts and includes
-    final templateAnalysis =
-        _templateAnalyzer.analyzeTemplate(templatePath).last;
+    final templateAnalysis = _templateAnalyzer
+        .analyzeTemplate(templatePath)
+        .last;
     final structure = templateAnalysis.structures[templatePath];
 
     if (structure == null) {
@@ -236,13 +238,15 @@ class LiquidStaticAnalyzer {
   ) {
     usedVariables.add(variable.name);
 
-    variableReferences.add(VariableReference(
-      name: variable.name,
-      templatePath: templatePath,
-      lineNumber: 0,
-      isAssignment: false,
-      isRead: true,
-    ));
+    variableReferences.add(
+      VariableReference(
+        name: variable.name,
+        templatePath: templatePath,
+        lineNumber: 0,
+        isAssignment: false,
+        isRead: true,
+      ),
+    );
 
     // Process the expression for dependencies
     if (variable.expression is Variable) {
@@ -275,12 +279,14 @@ class LiquidStaticAnalyzer {
 
     // Then analyze each filter
     for (final filter in expr.filters) {
-      filterUsages.add(FilterUsage(
-        name: filter.name.name,
-        templatePath: templatePath,
-        lineNumber: 0,
-        arguments: filter.arguments.map((arg) => arg.toString()).toList(),
-      ));
+      filterUsages.add(
+        FilterUsage(
+          name: filter.name.name,
+          templatePath: templatePath,
+          lineNumber: 0,
+          arguments: filter.arguments.map((arg) => arg.toString()).toList(),
+        ),
+      );
 
       // Track variable dependencies through filter arguments
       for (final arg in filter.arguments) {
@@ -312,13 +318,15 @@ class LiquidStaticAnalyzer {
             tag.content.firstWhere((n) => n is Identifier) as Identifier;
         final varName = assignContent.name;
         declaredVariables.add(varName);
-        variableReferences.add(VariableReference(
-          name: varName,
-          templatePath: templatePath,
-          lineNumber: 0,
-          isAssignment: true,
-          isRead: false,
-        ));
+        variableReferences.add(
+          VariableReference(
+            name: varName,
+            templatePath: templatePath,
+            lineNumber: 0,
+            isAssignment: true,
+            isRead: false,
+          ),
+        );
 
         // Process the assigned value for dependencies
         for (final node in tag.content) {
@@ -336,13 +344,15 @@ class LiquidStaticAnalyzer {
             tag.content.firstWhere((n) => n is Identifier) as Identifier;
         final varName = captureContent.name;
         declaredVariables.add(varName);
-        variableReferences.add(VariableReference(
-          name: varName,
-          templatePath: templatePath,
-          lineNumber: 0,
-          isAssignment: true,
-          isRead: false,
-        ));
+        variableReferences.add(
+          VariableReference(
+            name: varName,
+            templatePath: templatePath,
+            lineNumber: 0,
+            isAssignment: true,
+            isRead: false,
+          ),
+        );
         break;
 
       case 'for':
@@ -352,21 +362,25 @@ class LiquidStaticAnalyzer {
         declaredVariables.add(loopVar);
         usedVariables.add(collection);
 
-        variableReferences.add(VariableReference(
-          name: loopVar,
-          templatePath: templatePath,
-          lineNumber: 0,
-          isAssignment: true,
-          isRead: false,
-        ));
+        variableReferences.add(
+          VariableReference(
+            name: loopVar,
+            templatePath: templatePath,
+            lineNumber: 0,
+            isAssignment: true,
+            isRead: false,
+          ),
+        );
 
-        variableReferences.add(VariableReference(
-          name: collection,
-          templatePath: templatePath,
-          lineNumber: 0,
-          isAssignment: false,
-          isRead: true,
-        ));
+        variableReferences.add(
+          VariableReference(
+            name: collection,
+            templatePath: templatePath,
+            lineNumber: 0,
+            isAssignment: false,
+            isRead: true,
+          ),
+        );
         break;
     }
   }

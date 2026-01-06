@@ -54,10 +54,14 @@ void main() {
       expect(contentBlock.parent!.source, equals('base.liquid'));
 
       // Additionally, check that at least one node in the block's content is a Tag named "super".
-      bool foundSuper = (contentBlock.content ?? [])
-          .any((n) => n is Tag && n.name == 'super');
-      expect(foundSuper, isTrue,
-          reason: 'The block content should include a super() call tag.');
+      bool foundSuper = (contentBlock.content ?? []).any(
+        (n) => n is Tag && n.name == 'super',
+      );
+      expect(
+        foundSuper,
+        isTrue,
+        reason: 'The block content should include a super() call tag.',
+      );
 
       // This test will eventually verify that the rendered output is:
       // "<div>Child Content Before</div><p>Base Content</p><div>Child Content After</div>"

@@ -27,10 +27,15 @@ void main() {
     });
 
     test('throws exception for missing template file', () {
-      final rootThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: true);
-      expect(() => rootThrow.resolve('missing.liquid'),
-          throwsA(isA<TemplateNotFoundException>()));
+      final rootThrow = FileSystemRoot(
+        tempDir.path,
+        fileSystem: LocalFileSystem(),
+        throwOnMissing: true,
+      );
+      expect(
+        () => rootThrow.resolve('missing.liquid'),
+        throwsA(isA<TemplateNotFoundException>()),
+      );
     });
 
     test('resolves existing template file asynchronously', () async {
@@ -40,21 +45,27 @@ void main() {
     });
 
     test('throws exception for missing template file asynchronously', () async {
-      final rootThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: true);
-      expect(() => rootThrow.resolveAsync('missing.liquid'),
-          throwsA(isA<TemplateNotFoundException>()));
+      final rootThrow = FileSystemRoot(
+        tempDir.path,
+        fileSystem: LocalFileSystem(),
+        throwOnMissing: true,
+      );
+      expect(
+        () => rootThrow.resolveAsync('missing.liquid'),
+        throwsA(isA<TemplateNotFoundException>()),
+      );
     });
 
     test(
-        'FileSystemRoot works with default LocalFileSystem when fileSystem is null',
-        () {
-      // This should not throw and should use LocalFileSystem internally
-      final rootWithNull = FileSystemRoot(tempDir.path, fileSystem: null);
-      final source = rootWithNull.resolve('header.liquid');
-      expect(source.content, equals('Header content'));
-      expect(source.file?.path, contains('header.liquid'));
-    });
+      'FileSystemRoot works with default LocalFileSystem when fileSystem is null',
+      () {
+        // This should not throw and should use LocalFileSystem internally
+        final rootWithNull = FileSystemRoot(tempDir.path, fileSystem: null);
+        final source = rootWithNull.resolve('header.liquid');
+        expect(source.content, equals('Header content'));
+        expect(source.file?.path, contains('header.liquid'));
+      },
+    );
 
     test('resolves template with extension fallback', () {
       // Only create a file with .liquid extension in tempDir
@@ -67,10 +78,15 @@ void main() {
     });
 
     test('throws if no extension match is found', () {
-      final rootThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: true);
-      expect(() => rootThrow.resolve('doesnotexist'),
-          throwsA(isA<TemplateNotFoundException>()));
+      final rootThrow = FileSystemRoot(
+        tempDir.path,
+        fileSystem: LocalFileSystem(),
+        throwOnMissing: true,
+      );
+      expect(
+        () => rootThrow.resolve('doesnotexist'),
+        throwsA(isA<TemplateNotFoundException>()),
+      );
     });
 
     test('resolves template with extension fallback asynchronously', () async {
@@ -82,43 +98,68 @@ void main() {
     });
 
     test('throws if no extension match is found asynchronously', () async {
-      final rootThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: true);
-      expect(() => rootThrow.resolveAsync('doesnotexist_async'),
-          throwsA(isA<TemplateNotFoundException>()));
+      final rootThrow = FileSystemRoot(
+        tempDir.path,
+        fileSystem: LocalFileSystem(),
+        throwOnMissing: true,
+      );
+      expect(
+        () => rootThrow.resolveAsync('doesnotexist_async'),
+        throwsA(isA<TemplateNotFoundException>()),
+      );
     });
 
     test('returns empty Source if throwOnMissing is false (sync)', () {
-      final rootNoThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: false);
+      final rootNoThrow = FileSystemRoot(
+        tempDir.path,
+        fileSystem: LocalFileSystem(),
+        throwOnMissing: false,
+      );
       final source = rootNoThrow.resolve('doesnotexist');
       expect(source.content, equals(''));
       expect(source.file, isNull);
     });
 
     test('returns empty Source if throwOnMissing is false (async)', () async {
-      final rootNoThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: false);
+      final rootNoThrow = FileSystemRoot(
+        tempDir.path,
+        fileSystem: LocalFileSystem(),
+        throwOnMissing: false,
+      );
       final source = await rootNoThrow.resolveAsync('doesnotexist_async');
       expect(source.content, equals(''));
       expect(source.file, isNull);
     });
 
-    test('throws TemplateNotFoundException if throwOnMissing is true (sync)',
-        () {
-      final rootThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: true);
-      expect(() => rootThrow.resolve('doesnotexist'),
-          throwsA(isA<TemplateNotFoundException>()));
-    });
+    test(
+      'throws TemplateNotFoundException if throwOnMissing is true (sync)',
+      () {
+        final rootThrow = FileSystemRoot(
+          tempDir.path,
+          fileSystem: LocalFileSystem(),
+          throwOnMissing: true,
+        );
+        expect(
+          () => rootThrow.resolve('doesnotexist'),
+          throwsA(isA<TemplateNotFoundException>()),
+        );
+      },
+    );
 
-    test('throws TemplateNotFoundException if throwOnMissing is true (async)',
-        () async {
-      final rootThrow = FileSystemRoot(tempDir.path,
-          fileSystem: LocalFileSystem(), throwOnMissing: true);
-      expect(() => rootThrow.resolveAsync('doesnotexist_async'),
-          throwsA(isA<TemplateNotFoundException>()));
-    });
+    test(
+      'throws TemplateNotFoundException if throwOnMissing is true (async)',
+      () async {
+        final rootThrow = FileSystemRoot(
+          tempDir.path,
+          fileSystem: LocalFileSystem(),
+          throwOnMissing: true,
+        );
+        expect(
+          () => rootThrow.resolveAsync('doesnotexist_async'),
+          throwsA(isA<TemplateNotFoundException>()),
+        );
+      },
+    );
   });
 
   group('MapRoot', () {
@@ -136,12 +177,16 @@ void main() {
       expect(source.file, isNull);
     });
 
-    test('throws TemplateNotFoundException if throwOnMissing is true (sync)',
-        () {
-      final root = MapRoot({'foo': 'bar'}, throwOnMissing: true);
-      expect(() => root.resolve('missing'),
-          throwsA(isA<TemplateNotFoundException>()));
-    });
+    test(
+      'throws TemplateNotFoundException if throwOnMissing is true (sync)',
+      () {
+        final root = MapRoot({'foo': 'bar'}, throwOnMissing: true);
+        expect(
+          () => root.resolve('missing'),
+          throwsA(isA<TemplateNotFoundException>()),
+        );
+      },
+    );
 
     test('returns empty Source for missing template (async)', () async {
       final root = MapRoot({'foo': 'bar'});
@@ -150,11 +195,15 @@ void main() {
       expect(source.file, isNull);
     });
 
-    test('throws TemplateNotFoundException if throwOnMissing is true (async)',
-        () async {
-      final root = MapRoot({'foo': 'bar'}, throwOnMissing: true);
-      expect(() => root.resolveAsync('missing'),
-          throwsA(isA<TemplateNotFoundException>()));
-    });
+    test(
+      'throws TemplateNotFoundException if throwOnMissing is true (async)',
+      () async {
+        final root = MapRoot({'foo': 'bar'}, throwOnMissing: true);
+        expect(
+          () => root.resolveAsync('missing'),
+          throwsA(isA<TemplateNotFoundException>()),
+        );
+      },
+    );
   });
 }

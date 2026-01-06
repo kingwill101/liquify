@@ -28,10 +28,10 @@ class TableRowLoopObject {
     this.col0 = 0,
     this.colFirst = true,
     this.colLast = false,
-  })  : rindex = length,
-        rindex0 = length - 1,
-        first = true,
-        last = length == 1;
+  }) : rindex = length,
+       rindex0 = length - 1,
+       first = true,
+       last = length == 1;
 
   void increment() {
     index++;
@@ -66,22 +66,22 @@ class TableRowLoopObject {
   }
 
   TableRowLoopObject.fromJson(Map<String, dynamic> json)
-      : length = json['length'],
-        cols = json['cols'],
-        parentloop = json['parentloop'] != null
-            ? TableRowLoopObject.fromJson(json['parentloop'])
-            : null,
-        index = json['index'],
-        index0 = json['index0'],
-        rindex = json['rindex'],
-        rindex0 = json['rindex0'],
-        first = json['first'],
-        last = json['last'],
-        row = json['row'],
-        col = json['col'],
-        col0 = json['col0'],
-        colFirst = json['col_first'],
-        colLast = json['col_last'];
+    : length = json['length'],
+      cols = json['cols'],
+      parentloop = json['parentloop'] != null
+          ? TableRowLoopObject.fromJson(json['parentloop'])
+          : null,
+      index = json['index'],
+      index0 = json['index0'],
+      rindex = json['rindex'],
+      rindex0 = json['rindex0'],
+      first = json['first'],
+      last = json['last'],
+      row = json['row'],
+      col = json['col'],
+      col0 = json['col0'],
+      colFirst = json['col_first'],
+      colLast = json['col_last'];
 }
 
 class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
@@ -110,7 +110,8 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
 
     if (left is! Identifier) {
       throw Exception(
-          'TableRowTag requires an identifier on the left side of "in".');
+        'TableRowTag requires an identifier on the left side of "in".',
+      );
     }
 
     accessor = left;
@@ -153,11 +154,12 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
     final parentLoop =
         evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
     final tableRowLoop = TableRowLoopObject(
-        length: iterable.length,
-        cols: cols,
-        parentloop: parentLoop != null
-            ? TableRowLoopObject.fromJson(parentLoop)
-            : null);
+      length: iterable.length,
+      cols: cols,
+      parentloop: parentLoop != null
+          ? TableRowLoopObject.fromJson(parentLoop)
+          : null,
+    );
 
     evaluator.context.pushScope();
 
@@ -220,17 +222,20 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     if (iterable.isEmpty) return;
 
     final parentLoop =
         evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
     final tableRowLoop = TableRowLoopObject(
-        length: iterable.length,
-        cols: cols,
-        parentloop: parentLoop != null
-            ? TableRowLoopObject.fromJson(parentLoop)
-            : null);
+      length: iterable.length,
+      cols: cols,
+      parentloop: parentLoop != null
+          ? TableRowLoopObject.fromJson(parentLoop)
+          : null,
+    );
 
     evaluator.context.pushScope();
 
@@ -297,10 +302,10 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
             any().plusLazy(endTableRowTag()) &
             endTableRowTag())
         .map((values) {
-      final tag = values[0] as Tag;
-      tag.body = parseInput((values[1] as List).join(''));
-      return tag;
-    });
+          final tag = values[0] as Tag;
+          tag.body = parseInput((values[1] as List).join(''));
+          return tag;
+        });
   }
 }
 

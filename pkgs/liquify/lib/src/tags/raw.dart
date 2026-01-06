@@ -3,8 +3,11 @@ import 'package:liquify/src/tag.dart';
 class RawTag extends AbstractTag with CustomTagParser, AsyncTag {
   RawTag(super.content, super.filters);
 
-  Future<dynamic> _evaluateRaw(Evaluator evaluator, Buffer buffer,
-      {bool isAsync = false}) async {
+  Future<dynamic> _evaluateRaw(
+    Evaluator evaluator,
+    Buffer buffer, {
+    bool isAsync = false,
+  }) async {
     for (final node in content) {
       if (node is TextNode) {
         final value = isAsync
@@ -22,7 +25,9 @@ class RawTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     return _evaluateRaw(evaluator, buffer, isAsync: true);
   }
 
@@ -38,7 +43,7 @@ class RawTag extends AbstractTag with CustomTagParser, AsyncTag {
             string('endraw').trim() &
             tagEnd())
         .map((values) {
-      return Tag("raw", [TextNode(values[3])]);
-    });
+          return Tag("raw", [TextNode(values[3])]);
+        });
   }
 }

@@ -15,15 +15,20 @@ void main() {
   });
 
   test("issue #23", () async {
-    await testParser('''
+    await testParser(
+      '''
 {% assign name = "hello" %}
 {% if name contains "ello" %}
 These shoes are awesome! {{name}}
 {% endif %}
-    ''', (document) {
-      evaluator.evaluateNodes(document.children);
-      expect(evaluator.buffer.toString().trim(),
-          equals('These shoes are awesome! hello'));
-    });
+    ''',
+      (document) {
+        evaluator.evaluateNodes(document.children);
+        expect(
+          evaluator.buffer.toString().trim(),
+          equals('These shoes are awesome! hello'),
+        );
+      },
+    );
   });
 }

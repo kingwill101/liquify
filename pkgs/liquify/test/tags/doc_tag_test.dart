@@ -17,7 +17,8 @@ void main() {
   group('Doc Tag', () {
     group('sync evaluation', () {
       test('shows raw text', () async {
-        await testParser('''{% doc %}
+        await testParser(
+          '''{% doc %}
   Renders a message.
 
   @param {string} foo - A string value.
@@ -26,16 +27,19 @@ void main() {
   @example
   {% render 'message', foo: 'Hello', bar: 'World' %}
 {% enddoc %}
-''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), isEmpty);
-        });
+''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString().trim(), isEmpty);
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('shows raw text', () async {
-        await testParser('''{% doc %}
+        await testParser(
+          '''{% doc %}
   Renders a message.
 
   @param {string} foo - A string value.
@@ -44,10 +48,12 @@ void main() {
   @example
   {% render 'message', foo: 'Hello', bar: 'World' %}
 {% enddoc %}
-''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), isEmpty);
-        });
+''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString().trim(), isEmpty);
+          },
+        );
       });
     });
   });

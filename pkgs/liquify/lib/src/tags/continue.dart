@@ -13,7 +13,9 @@ class ContinueTag extends AbstractTag with AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     throw ContinueException();
   }
 }

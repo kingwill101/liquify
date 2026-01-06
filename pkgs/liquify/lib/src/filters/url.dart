@@ -19,10 +19,14 @@ String stringify(dynamic x) {
 /// Example:
 /// Input: "hello%20world"
 /// Output: "hello world"
-FilterFunction urlDecode = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  return Uri.decodeComponent(stringify(value)).replaceAll('+', ' ');
-};
+FilterFunction urlDecode =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      return Uri.decodeComponent(stringify(value)).replaceAll('+', ' ');
+    };
 
 /// Encodes a string for use in a URL.
 ///
@@ -34,10 +38,14 @@ FilterFunction urlDecode = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: "hello world"
 /// Output: "hello+world"
-FilterFunction urlEncode = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  return Uri.encodeComponent(stringify(value)).replaceAll('%20', '+');
-};
+FilterFunction urlEncode =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      return Uri.encodeComponent(stringify(value)).replaceAll('%20', '+');
+    };
 
 /// Escapes a string using CGI escape characters.
 ///
@@ -49,14 +57,18 @@ FilterFunction urlEncode = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: "hello world!"
 /// Output: "hello+world%21"
-FilterFunction cgiEscape = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  return Uri.encodeComponent(stringify(value))
-      .replaceAll('%20', '+')
-      .replaceAllMapped(RegExp(r"[!'()*]"), (match) {
-    return '%${match.group(0)!.codeUnitAt(0).toRadixString(16).toUpperCase()}';
-  });
-};
+FilterFunction cgiEscape =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      return Uri.encodeComponent(
+        stringify(value),
+      ).replaceAll('%20', '+').replaceAllMapped(RegExp(r"[!'()*]"), (match) {
+        return '%${match.group(0)!.codeUnitAt(0).toRadixString(16).toUpperCase()}';
+      });
+    };
 
 /// Escapes a string for use in a URI.
 ///
@@ -68,12 +80,16 @@ FilterFunction cgiEscape = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: "hello world[]"
 /// Output: "hello%20world[]"
-FilterFunction uriEscape = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  return Uri.encodeFull(stringify(value))
-      .replaceAll('%5B', '[')
-      .replaceAll('%5D', ']');
-};
+FilterFunction uriEscape =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      return Uri.encodeFull(
+        stringify(value),
+      ).replaceAll('%5B', '[').replaceAll('%5D', ']');
+    };
 
 /// Enum representing different modes for the slugify filter.
 enum SlugifyMode { raw, defaultMode, pretty, ascii, latin, none }
@@ -95,65 +111,77 @@ enum SlugifyMode { raw, defaultMode, pretty, ascii, latin, none }
 /// {{ "Héllö Wörld!" | slugify: 'ascii' }}        => "hello-world"
 /// {{ "Héllö Wörld!" | slugify: 'latin' }}        => "hello-world"
 /// {{ "Hello World!" | slugify: 'default', true }} => "Hello-World"
-FilterFunction slugify = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  String mode = arguments.isNotEmpty ? arguments[0] as String : 'default';
-  bool cased = arguments.length > 1 ? arguments[1] as bool : false;
+FilterFunction slugify =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      String mode = arguments.isNotEmpty ? arguments[0] as String : 'default';
+      bool cased = arguments.length > 1 ? arguments[1] as bool : false;
 
-  String str = stringify(value);
+      String str = stringify(value);
 
-  RegExp spacesReplacer = RegExp(r'\s+');
+      RegExp spacesReplacer = RegExp(r'\s+');
 
-  switch (mode) {
-    case 'none':
-      // Do nothing
+      switch (mode) {
+        case 'none':
+          // Do nothing
+          return str;
+        case 'raw':
+          // Replace spaces with a single hyphen, preserve other characters
+          str = str.trim().replaceAll(spacesReplacer, '-');
+          break;
+        case 'pretty':
+          // Preserve certain characters, replace spaces with hyphens
+          str = str
+              .replaceAll(
+                RegExp(
+                  r'[^\w\s._~!$&'
+                  '()+,;=@-]',
+                ),
+                '',
+              )
+              .trim()
+              .replaceAll(spacesReplacer, '-');
+          break;
+        case 'ascii':
+          // Remove non-ASCII characters, replace spaces with hyphens
+          str = str
+              .replaceAll(RegExp(r'[^\x00-\x7F]+'), '') // Remove non-ASCII
+              .replaceAll(
+                RegExp(r'[^\w\s-]'),
+                '',
+              ) // Remove non-alphanumeric except hyphen
+              .trim()
+              .replaceAll(spacesReplacer, '-');
+          break;
+        case 'latin':
+          // Transliterate Latin characters, then process like default
+          str = removeAccents(str);
+          // Process like default case
+          str = str
+              .replaceAll(RegExp(r'[^\w\s-]'), '')
+              .trim()
+              .replaceAll(spacesReplacer, '-');
+          break;
+        case 'default':
+        default:
+          // Remove non-word characters (except hyphens), replace spaces with hyphens
+          str = str
+              .replaceAll(RegExp(r'[^\w\s-]'), '')
+              .trim()
+              .replaceAll(spacesReplacer, '-');
+          break;
+      }
+
+      // Apply lowercase for all modes except 'none', unless cased is true
+      if (mode != 'none' && !cased) {
+        str = str.toLowerCase();
+      }
+
       return str;
-    case 'raw':
-      // Replace spaces with a single hyphen, preserve other characters
-      str = str.trim().replaceAll(spacesReplacer, '-');
-      break;
-    case 'pretty':
-      // Preserve certain characters, replace spaces with hyphens
-      str = str
-          .replaceAll(RegExp(r'[^\w\s._~!$&' '()+,;=@-]'), '')
-          .trim()
-          .replaceAll(spacesReplacer, '-');
-      break;
-    case 'ascii':
-      // Remove non-ASCII characters, replace spaces with hyphens
-      str = str
-          .replaceAll(RegExp(r'[^\x00-\x7F]+'), '') // Remove non-ASCII
-          .replaceAll(
-              RegExp(r'[^\w\s-]'), '') // Remove non-alphanumeric except hyphen
-          .trim()
-          .replaceAll(spacesReplacer, '-');
-      break;
-    case 'latin':
-      // Transliterate Latin characters, then process like default
-      str = removeAccents(str);
-      // Process like default case
-      str = str
-          .replaceAll(RegExp(r'[^\w\s-]'), '')
-          .trim()
-          .replaceAll(spacesReplacer, '-');
-      break;
-    case 'default':
-    default:
-      // Remove non-word characters (except hyphens), replace spaces with hyphens
-      str = str
-          .replaceAll(RegExp(r'[^\w\s-]'), '')
-          .trim()
-          .replaceAll(spacesReplacer, '-');
-      break;
-  }
-
-  // Apply lowercase for all modes except 'none', unless cased is true
-  if (mode != 'none' && !cased) {
-    str = str.toLowerCase();
-  }
-
-  return str;
-};
+    };
 
 /// Removes accents from Latin characters.
 ///

@@ -66,7 +66,9 @@ class CycleTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     final cycleState = _getCycleState(evaluator);
     final currentIndex = cycleState['index'] as int;
     final currentItem = items[currentIndex];
@@ -79,14 +81,17 @@ class CycleTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    return seq3(tagStart() & string('cycle').trim(),
-            ref0(cycleArguments).trim(), tagEnd())
-        .map((values) {
+    return seq3(
+      tagStart() & string('cycle').trim(),
+      ref0(cycleArguments).trim(),
+      tagEnd(),
+    ).map((values) {
       return Tag(
-          'cycle',
-          values.$2 is List
-              ? values.$2.cast<ASTNode>()
-              : <ASTNode>[values.$2 as ASTNode]);
+        'cycle',
+        values.$2 is List
+            ? values.$2.cast<ASTNode>()
+            : <ASTNode>[values.$2 as ASTNode],
+      );
     });
   }
 
@@ -96,18 +101,22 @@ class CycleTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   Parser cycleNamedArgument() {
     return seq3(
-            ref0(stringLiteral), char(':').trim(), ref0(cycleSimpleArguments))
-        .map((values) {
+      ref0(stringLiteral),
+      char(':').trim(),
+      ref0(cycleSimpleArguments),
+    ).map((values) {
       final name = values.$1;
       final args = (values.$3 as List).cast<ASTNode>();
       return NamedArgument(
-          Identifier(name.value), Literal(args, LiteralType.array));
+        Identifier(name.value),
+        Literal(args, LiteralType.array),
+      );
     });
   }
 
   Parser cycleSimpleArguments() {
-    return ref0(expression)
-        .plusSeparated(char(',').trim())
-        .map((result) => result.elements);
+    return ref0(
+      expression,
+    ).plusSeparated(char(',').trim()).map((result) => result.elements);
   }
 }

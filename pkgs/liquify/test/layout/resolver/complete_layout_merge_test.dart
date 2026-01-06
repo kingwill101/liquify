@@ -86,7 +86,9 @@ void main() {
       expect(childStructure.templatePath, equals('child.liquid'));
       expect(childStructure.parent?.templatePath, equals('parent.liquid'));
       expect(
-          childStructure.parent?.parent?.templatePath, equals('base.liquid'));
+        childStructure.parent?.parent?.templatePath,
+        equals('base.liquid'),
+      );
 
       // Verify block structure
       expect(childStructure.blocks.length, equals(3));
@@ -94,8 +96,10 @@ void main() {
       expect(childStructure.blocks['title']?.isOverride, isTrue);
       expect(childStructure.blocks['content']?.source, equals('child.liquid'));
       expect(childStructure.blocks['content']?.isOverride, isTrue);
-      expect(childStructure.blocks['header.navigation']?.source,
-          equals('child.liquid'));
+      expect(
+        childStructure.blocks['header.navigation']?.source,
+        equals('child.liquid'),
+      );
       expect(childStructure.blocks['header.navigation']?.isOverride, isTrue);
       expect(childStructure.blocks['header.navigation']?.hasSuperCall, isTrue);
 
@@ -108,19 +112,25 @@ void main() {
       // Verify the merged content
       expect(mergedText, contains('Child Title')); // Child's title override
       expect(
-          mergedText,
-          contains(
-              '<link rel="stylesheet" href="styles.css">')); // Base styles preserved
-      expect(mergedText,
-          contains('Child Nav Before')); // Child's navigation prefix
+        mergedText,
+        contains('<link rel="stylesheet" href="styles.css">'),
+      ); // Base styles preserved
       expect(
-          mergedText,
-          contains(
-              'Default Navigation')); // Parent's navigation (from super call)
+        mergedText,
+        contains('Child Nav Before'),
+      ); // Child's navigation prefix
       expect(
-          mergedText, contains('Child Nav After')); // Child's navigation suffix
-      expect(mergedText,
-          contains('Child Customized Content')); // Child's content override
+        mergedText,
+        contains('Default Navigation'),
+      ); // Parent's navigation (from super call)
+      expect(
+        mergedText,
+        contains('Child Nav After'),
+      ); // Child's navigation suffix
+      expect(
+        mergedText,
+        contains('Child Customized Content'),
+      ); // Child's content override
       expect(mergedText, contains('Default Footer')); // Base footer preserved
 
       // Verify the order of elements
@@ -130,38 +140,39 @@ void main() {
           .where((s) => s.isNotEmpty)
           .toList();
       expect(
-          lines,
-          containsAllInOrder([
-            '<!DOCTYPE html>',
-            '<html>',
-            '<head>',
-            'Child Title',
-            '<link rel="stylesheet" href="styles.css">',
-            '</head>',
-            '<body>',
-            '<header>',
-            '<div class="header-wrapper">',
-            '<nav>',
-            '<ul>',
-            '<li>Child Nav Before</li>',
-            '<nav>Default Navigation</nav>',
-            '<li>Child Nav After</li>',
-            '</ul>',
-            '</nav>',
-            '<h1>Parent Header</h1>',
-            '</div>',
-            '</header>',
-            '<main>',
-            '<div class="content">',
-            '<p>Child Customized Content</p>',
-            '</div>',
-            '</main>',
-            '<footer>',
-            'Default Footer',
-            '</footer>',
-            '</body>',
-            '</html>'
-          ]));
+        lines,
+        containsAllInOrder([
+          '<!DOCTYPE html>',
+          '<html>',
+          '<head>',
+          'Child Title',
+          '<link rel="stylesheet" href="styles.css">',
+          '</head>',
+          '<body>',
+          '<header>',
+          '<div class="header-wrapper">',
+          '<nav>',
+          '<ul>',
+          '<li>Child Nav Before</li>',
+          '<nav>Default Navigation</nav>',
+          '<li>Child Nav After</li>',
+          '</ul>',
+          '</nav>',
+          '<h1>Parent Header</h1>',
+          '</div>',
+          '</header>',
+          '<main>',
+          '<div class="content">',
+          '<p>Child Customized Content</p>',
+          '</div>',
+          '</main>',
+          '<footer>',
+          'Default Footer',
+          '</footer>',
+          '</body>',
+          '</html>',
+        ]),
+      );
 
       // For debugging purposes, print the merged AST
       // print('Merged AST nodes:');

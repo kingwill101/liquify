@@ -17,12 +17,13 @@ void basicTemplateRendering() {
 
   final data = {
     'name': 'Alice',
-    'items': ['apple', 'banana', 'cherry']
+    'items': ['apple', 'banana', 'cherry'],
   };
 
   final result = Template.parse(
-      'Hello, {{ name | upcase }}! Your items are: {% for item in items %}{{ item }}{% unless forloop.last %}, {% endunless %}{% endfor %}.',
-      data: data);
+    'Hello, {{ name | upcase }}! Your items are: {% for item in items %}{{ item }}{% unless forloop.last %}, {% endunless %}{% endfor %}.',
+    data: data,
+  );
 
   print(result.render());
   // Output: Hello, ALICE! Your items are: apple, banana, cherry.
@@ -33,7 +34,9 @@ void customTagExample() {
 
   // Register the custom tag
   TagRegistry.register(
-      'reverse', (content, filters) => ReverseTag(content, filters));
+    'reverse',
+    (content, filters) => ReverseTag(content, filters),
+  );
 
   // Use the custom tag
   final result = Template.parse('{% reverse %}Hello, World!{% endreverse %}');
@@ -51,8 +54,10 @@ void customFilterExample() {
   });
 
   // Use the custom filter
-  final result = Template.parse('{{ price | multiply: 1.1 | round }}',
-      data: {'price': 100});
+  final result = Template.parse(
+    '{{ price | multiply: 1.1 | round }}',
+    data: {'price': 100},
+  );
   print(result.render());
   // Output: 110
 }
@@ -83,7 +88,7 @@ class ReverseTag extends AbstractTag with CustomTagParser {
             string('endreverse').trim() &
             tagEnd())
         .map((values) {
-      return Tag("reverse", [TextNode(values[3])]);
-    });
+          return Tag("reverse", [TextNode(values[3])]);
+        });
   }
 }

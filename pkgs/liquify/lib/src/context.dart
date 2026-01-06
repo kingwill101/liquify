@@ -12,7 +12,7 @@ import 'tags/tag.dart';
 /// accessing and modifying variables within the current scope.
 enum BlockMode {
   output, // Normal template rendering
-  store // Store blocks for layout
+  store, // Store blocks for layout
 }
 
 class Environment {
@@ -30,19 +30,20 @@ class Environment {
   /// - [data]: An optional map of initial variables and their values. Defaults to an empty map.
   /// - [register]: An optional map of initial register values. Defaults to an empty map.
   /// - [strictMode]: When true, only locally registered filters and tags are accessible. Defaults to false.
-  Environment(
-      [Map<String, dynamic> data = const {},
-      Map<String, dynamic>? register,
-      bool strictMode = false])
-      : _variableStack = [data],
-        _registers = register ?? {},
-        _strictMode = strictMode;
+  Environment([
+    Map<String, dynamic> data = const {},
+    Map<String, dynamic>? register,
+    bool strictMode = false,
+  ]) : _variableStack = [data],
+       _registers = register ?? {},
+       _strictMode = strictMode;
 
-  Environment.withStrictMode(
-      [Map<String, dynamic> data = const {}, Map<String, dynamic>? register])
-      : _variableStack = [data],
-        _registers = register ?? {},
-        _strictMode = true;
+  Environment.withStrictMode([
+    Map<String, dynamic> data = const {},
+    Map<String, dynamic>? register,
+  ]) : _variableStack = [data],
+       _registers = register ?? {},
+       _strictMode = true;
 
   Environment._clone(this._variableStack, this._registers, this._strictMode);
 
@@ -72,8 +73,11 @@ class Environment {
       }
     });
 
-    final cloned =
-        Environment._clone(clonedVariableStack, clonedRegisters, _strictMode);
+    final cloned = Environment._clone(
+      clonedVariableStack,
+      clonedRegisters,
+      _strictMode,
+    );
     cloned._root = _root;
     return cloned;
   }

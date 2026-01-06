@@ -26,8 +26,10 @@ void main() {
 
     test('json', () {
       expect(json({'a': 1, 'b': 2}, [], {}), equals('{"a":1,"b":2}'));
-      expect(json({'a': 1, 'b': 2}, [2], {}),
-          equals('{\n  "a": 1,\n  "b": 2\n}'));
+      expect(
+        json({'a': 1, 'b': 2}, [2], {}),
+        equals('{\n  "a": 1,\n  "b": 2\n}'),
+      );
       expect(json([1, 2, 3], [], {}), equals('[1,2,3]'));
       expect(json('string', [], {}), equals('"string"'));
       expect(json(42, [], {}), equals('42'));
@@ -54,19 +56,23 @@ void main() {
       expect(parseJson('null', [], {}), equals(null));
 
       expect(
-          parseJson(
-              '{"users":[{"name":"John","age":30},{"name":"Jane","age":25}]}',
-              [],
-              {}),
-          equals({
-            'users': [
-              {'name': 'John', 'age': 30},
-              {'name': 'Jane', 'age': 25}
-            ]
-          }));
+        parseJson(
+          '{"users":[{"name":"John","age":30},{"name":"Jane","age":25}]}',
+          [],
+          {},
+        ),
+        equals({
+          'users': [
+            {'name': 'John', 'age': 30},
+            {'name': 'Jane', 'age': 25},
+          ],
+        }),
+      );
 
-      expect(parseJson('  { "key" : "value" }  ', [], {}),
-          equals({'key': 'value'}));
+      expect(
+        parseJson('  { "key" : "value" }  ', [], {}),
+        equals({'key': 'value'}),
+      );
 
       expect(() => parseJson(null, [], {}), throwsArgumentError);
       expect(() => parseJson('invalid json', [], {}), throwsFormatException);
@@ -76,15 +82,17 @@ void main() {
 
     test('inspect with circular references', () {
       var nestedCircular = <String, dynamic>{
-        'a': <String, dynamic>{'b': <String, dynamic>{}}
+        'a': <String, dynamic>{'b': <String, dynamic>{}},
       };
 
       var aMap = nestedCircular['a'] as Map<String, dynamic>;
       var bMap = aMap['b'] as Map<String, dynamic>;
       bMap['c'] = aMap;
 
-      expect(inspect(nestedCircular, [], {}),
-          equals('{"a":{"b":{"c":"[Circular]"}}}'));
+      expect(
+        inspect(nestedCircular, [], {}),
+        equals('{"a":{"b":{"c":"[Circular]"}}}'),
+      );
     });
 
     test('inspect handles list cycles', () {

@@ -28,13 +28,15 @@ class BlockTag extends AbstractTag with CustomTagParser {
                 string('block').trim() &
                 ref0(identifier).trim() &
                 tagEnd()) &
-            ref0(element)
-                .starLazy(tagStart() & string('endblock').trim() & tagEnd()) &
+            ref0(
+              element,
+            ).starLazy(tagStart() & string('endblock').trim() & tagEnd()) &
             (tagStart() & string('endblock').trim() & tagEnd()))
         .map((values) {
-      final tag =
-          Tag('block', [values[2] as ASTNode], body: values[4].cast<ASTNode>());
-      return tag;
-    });
+          final tag = Tag('block', [
+            values[2] as ASTNode,
+          ], body: values[4].cast<ASTNode>());
+          return tag;
+        });
   }
 }

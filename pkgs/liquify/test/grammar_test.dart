@@ -5,59 +5,69 @@ import 'support/shared.dart';
 void main() {
   group('Liquid Grammar Parser', () {
     test('Parses liquid tags', () {
-      testParser('''
+      testParser(
+        '''
 {% liquid
  assign my_variable = "string"
-%}''', (document) {
-        expect(document.children.length, 1);
+%}''',
+        (document) {
+          expect(document.children.length, 1);
 
-        final tag = document.children[0] as Tag;
-        expect(tag.name, 'liquid');
-        expect((tag.content[0] as Tag).name, 'assign');
-      });
+          final tag = document.children[0] as Tag;
+          expect(tag.name, 'liquid');
+          expect((tag.content[0] as Tag).name, 'assign');
+        },
+      );
     });
 
     test('Parses member access expressions in filter arguments', () {
-      testParser('''
+      testParser(
+        '''
 {% assign stats = stats | push: '{"value": ' | append: features.size | append: ', "label": "Features", "color": "purple"}' %}
-        ''', (document) {
-        final assignTags = document.children.whereType<Tag>().toList();
-        expect(assignTags.length, 1);
-        final assignment = assignTags[0].content[0] as Assignment;
-        expect((assignment.variable as Identifier).name, 'stats');
-        expect(assignment.value, isA<FilteredExpression>());
-        final filtered = assignment.value as FilteredExpression;
-        expect(filtered.filters.length, 3);
-        expect(filtered.filters[0].name.name, 'push');
-        expect(filtered.filters[1].name.name, 'append');
-        expect(filtered.filters[2].name.name, 'append');
+        ''',
+        (document) {
+          final assignTags = document.children.whereType<Tag>().toList();
+          expect(assignTags.length, 1);
+          final assignment = assignTags[0].content[0] as Assignment;
+          expect((assignment.variable as Identifier).name, 'stats');
+          expect(assignment.value, isA<FilteredExpression>());
+          final filtered = assignment.value as FilteredExpression;
+          expect(filtered.filters.length, 3);
+          expect(filtered.filters[0].name.name, 'push');
+          expect(filtered.filters[1].name.name, 'append');
+          expect(filtered.filters[2].name.name, 'append');
 
-        // Verify the nested assignment structure
-        expect(filtered.expression, isA<Assignment>());
-        final innerAssignment = filtered.expression as Assignment;
-        expect((innerAssignment.variable as Identifier).name, 'stats');
-        expect((innerAssignment.value as Identifier).name, 'stats');
+          // Verify the nested assignment structure
+          expect(filtered.expression, isA<Assignment>());
+          final innerAssignment = filtered.expression as Assignment;
+          expect((innerAssignment.variable as Identifier).name, 'stats');
+          expect((innerAssignment.value as Identifier).name, 'stats');
 
-        // Verify push filter argument
-        expect(filtered.filters[0].arguments.length, 1);
-        expect(filtered.filters[0].arguments[0], isA<Literal>());
-        expect(
-            (filtered.filters[0].arguments[0] as Literal).value, '{"value": ');
+          // Verify push filter argument
+          expect(filtered.filters[0].arguments.length, 1);
+          expect(filtered.filters[0].arguments[0], isA<Literal>());
+          expect(
+            (filtered.filters[0].arguments[0] as Literal).value,
+            '{"value": ',
+          );
 
-        // Verify first append filter argument - this should be a MemberAccess (features.size)
-        expect(filtered.filters[1].arguments.length, 1);
-        expect(filtered.filters[1].arguments[0], isA<MemberAccess>());
-        final memberAccess = filtered.filters[1].arguments[0] as MemberAccess;
-        expect((memberAccess.object as Identifier).name, 'features');
-        expect(memberAccess.members.length, 1);
-        expect((memberAccess.members[0] as Identifier).name, 'size');
+          // Verify first append filter argument - this should be a MemberAccess (features.size)
+          expect(filtered.filters[1].arguments.length, 1);
+          expect(filtered.filters[1].arguments[0], isA<MemberAccess>());
+          final memberAccess = filtered.filters[1].arguments[0] as MemberAccess;
+          expect((memberAccess.object as Identifier).name, 'features');
+          expect(memberAccess.members.length, 1);
+          expect((memberAccess.members[0] as Identifier).name, 'size');
 
-        // Verify second append filter argument - this should be a literal string
-        expect(filtered.filters[2].arguments.length, 1);
-        expect(filtered.filters[2].arguments[0], isA<Literal>());
-        expect((filtered.filters[2].arguments[0] as Literal).value,
-            ', "label": "Features", "color": "purple"}');
-      });
+          // Verify second append filter argument - this should be a literal string
+          expect(filtered.filters[2].arguments.length, 1);
+          expect(filtered.filters[2].arguments[0], isA<Literal>());
+          expect(
+            (filtered.filters[2].arguments[0] as Literal).value,
+            ', "label": "Features", "color": "purple"}',
+          );
+        },
+      );
     });
 
     test('Parses empty input', () {
@@ -67,16 +77,19 @@ void main() {
     });
 
     test('Parses raw tags', () {
-      testParser('''
+      testParser(
+        '''
 {% raw %}
  assign my_variable = "string"
-{% endraw %}''', (document) {
-        expect(document.children.length, 1);
+{% endraw %}''',
+        (document) {
+          expect(document.children.length, 1);
 
-        final tag = document.children[0] as Tag;
-        expect(tag.name, 'raw');
-        expect(tag.content.length, 1);
-      });
+          final tag = document.children[0] as Tag;
+          expect(tag.name, 'raw');
+          expect(tag.content.length, 1);
+        },
+      );
     });
     test('Parses empty literal', () {
       testParser('{% assign my_variable = empty %}', (document) {
@@ -90,29 +103,38 @@ void main() {
     });
 
     test('Parses string literals with escape sequences', () {
-      testParser(r'''{% assign quoted = "John \"The Man\" Johnson" %}
+      testParser(
+        r'''{% assign quoted = "John \"The Man\" Johnson" %}
 {% assign multiline = "Line\nBreak" %}
-{% assign unknown = "\\q" %}''', (document) {
-        final tags = document.children.whereType<Tag>().toList();
-        expect(tags.length, 3);
+{% assign unknown = "\\q" %}''',
+        (document) {
+          final tags = document.children.whereType<Tag>().toList();
+          expect(tags.length, 3);
 
-        final quotedAssignment = tags[0].content[0] as Assignment;
-        expect((quotedAssignment.variable as Identifier).name, 'quoted');
-        expect((quotedAssignment.value as Literal).value,
-            'John "The Man" Johnson');
+          final quotedAssignment = tags[0].content[0] as Assignment;
+          expect((quotedAssignment.variable as Identifier).name, 'quoted');
+          expect(
+            (quotedAssignment.value as Literal).value,
+            'John "The Man" Johnson',
+          );
 
-        final multilineAssignment = tags[1].content[0] as Assignment;
-        expect((multilineAssignment.variable as Identifier).name, 'multiline');
-        expect((multilineAssignment.value as Literal).value, 'Line\nBreak');
+          final multilineAssignment = tags[1].content[0] as Assignment;
+          expect(
+            (multilineAssignment.variable as Identifier).name,
+            'multiline',
+          );
+          expect((multilineAssignment.value as Literal).value, 'Line\nBreak');
 
-        final unknownAssignment = tags[2].content[0] as Assignment;
-        expect((unknownAssignment.variable as Identifier).name, 'unknown');
-        expect((unknownAssignment.value as Literal).value, r'\q');
-      });
+          final unknownAssignment = tags[2].content[0] as Assignment;
+          expect((unknownAssignment.variable as Identifier).name, 'unknown');
+          expect((unknownAssignment.value as Literal).value, r'\q');
+        },
+      );
     });
 
     test('Parses complex tags', () {
-      testParser('''
+      testParser(
+        '''
 {% if user.logged_in %}
   <p>Welcome back, {{ user.name }}!</p>
   {% if user.admin %}
@@ -126,9 +148,11 @@ void main() {
     {{{ }}}}}}
  {% endraw %}
 {% endif %}
-''', (document) {
-        expect(document.children.length, greaterThan(0));
-      });
+''',
+        (document) {
+          expect(document.children.length, greaterThan(0));
+        },
+      );
     });
 
     test('Parses simple variable expression', () {
@@ -233,8 +257,9 @@ void main() {
     });
 
     test('Parses variable expression with filter arguments', () {
-      testParser('{{ user | filter1: var1,var2 | filter2: var3:3, var4:4 }}',
-          (document) {
+      testParser('{{ user | filter1: var1,var2 | filter2: var3:3, var4:4 }}', (
+        document,
+      ) {
         expect(document.children.length, 1);
 
         final filtered = document.children[0] as FilteredExpression;
@@ -253,21 +278,23 @@ void main() {
         expect(filtered.filters[1].name.name, 'filter2');
         expect(filtered.filters[1].arguments.length, 2);
         expect(
-            (filtered.filters[1].arguments[0] as NamedArgument).identifier.name,
-            'var3');
+          (filtered.filters[1].arguments[0] as NamedArgument).identifier.name,
+          'var3',
+        );
         expect(
-            ((filtered.filters[1].arguments[0] as NamedArgument).value
-                    as Literal)
-                .value,
-            3);
+          ((filtered.filters[1].arguments[0] as NamedArgument).value as Literal)
+              .value,
+          3,
+        );
         expect(
-            (filtered.filters[1].arguments[1] as NamedArgument).identifier.name,
-            'var4');
+          (filtered.filters[1].arguments[1] as NamedArgument).identifier.name,
+          'var4',
+        );
         expect(
-            ((filtered.filters[1].arguments[1] as NamedArgument).value
-                    as Literal)
-                .value,
-            4);
+          ((filtered.filters[1].arguments[1] as NamedArgument).value as Literal)
+              .value,
+          4,
+        );
       });
     });
 
@@ -301,7 +328,9 @@ void main() {
         final memberAccess = variable.expression as MemberAccess;
         expect((memberAccess.object as Identifier).name, 'user');
         expect(
-            (memberAccess.members[0] as Identifier).name, equals('first-name'));
+          (memberAccess.members[0] as Identifier).name,
+          equals('first-name'),
+        );
       });
     });
 
@@ -443,83 +472,104 @@ void main() {
       });
     });
 
-    test('Parses tag with filter and named arguments for all literal types',
-        () {
+    test('Parses tag with filter and named arguments for all literal types', () {
       testParser(
-          '{% tagname | filter1: arg1:1, arg2:"2", arg3:\'3\', arg4:true, arg5:false %}',
-          (document) {
-        expect(document.children.length, 1);
-        final tag = document.children[0] as Tag;
-        expect(tag.name, 'tagname');
-        expect(tag.filters.length, 1);
-        expect(tag.filters[0].name.name, 'filter1');
-        expect(tag.filters[0].arguments.length, 5);
+        '{% tagname | filter1: arg1:1, arg2:"2", arg3:\'3\', arg4:true, arg5:false %}',
+        (document) {
+          expect(document.children.length, 1);
+          final tag = document.children[0] as Tag;
+          expect(tag.name, 'tagname');
+          expect(tag.filters.length, 1);
+          expect(tag.filters[0].name.name, 'filter1');
+          expect(tag.filters[0].arguments.length, 5);
 
-        // Checking the first argument (number)
-        expect((tag.filters[0].arguments[0] as NamedArgument).identifier.name,
-            'arg1');
-        expect(
+          // Checking the first argument (number)
+          expect(
+            (tag.filters[0].arguments[0] as NamedArgument).identifier.name,
+            'arg1',
+          );
+          expect(
             ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
                 .value,
-            1);
-        expect(
+            1,
+          );
+          expect(
             ((tag.filters[0].arguments[0] as NamedArgument).value as Literal)
                 .type,
-            LiteralType.number);
+            LiteralType.number,
+          );
 
-        // Checking the second argument (double-quoted string)
-        expect((tag.filters[0].arguments[1] as NamedArgument).identifier.name,
-            'arg2');
-        expect(
+          // Checking the second argument (double-quoted string)
+          expect(
+            (tag.filters[0].arguments[1] as NamedArgument).identifier.name,
+            'arg2',
+          );
+          expect(
             ((tag.filters[0].arguments[1] as NamedArgument).value as Literal)
                 .value,
-            '2');
-        expect(
+            '2',
+          );
+          expect(
             ((tag.filters[0].arguments[1] as NamedArgument).value as Literal)
                 .type,
-            LiteralType.string);
+            LiteralType.string,
+          );
 
-        // Checking the third argument (single-quoted string)
-        expect((tag.filters[0].arguments[2] as NamedArgument).identifier.name,
-            'arg3');
-        expect(
+          // Checking the third argument (single-quoted string)
+          expect(
+            (tag.filters[0].arguments[2] as NamedArgument).identifier.name,
+            'arg3',
+          );
+          expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .value,
-            '3');
-        expect(
+            '3',
+          );
+          expect(
             ((tag.filters[0].arguments[2] as NamedArgument).value as Literal)
                 .type,
-            LiteralType.string);
+            LiteralType.string,
+          );
 
-        // Checking the fourth argument (boolean true)
-        expect((tag.filters[0].arguments[3] as NamedArgument).identifier.name,
-            'arg4');
-        expect(
+          // Checking the fourth argument (boolean true)
+          expect(
+            (tag.filters[0].arguments[3] as NamedArgument).identifier.name,
+            'arg4',
+          );
+          expect(
             ((tag.filters[0].arguments[3] as NamedArgument).value as Literal)
                 .value,
-            true);
-        expect(
+            true,
+          );
+          expect(
             ((tag.filters[0].arguments[3] as NamedArgument).value as Literal)
                 .type,
-            LiteralType.boolean);
+            LiteralType.boolean,
+          );
 
-        // Checking the fifth argument (boolean false)
-        expect((tag.filters[0].arguments[4] as NamedArgument).identifier.name,
-            'arg5');
-        expect(
+          // Checking the fifth argument (boolean false)
+          expect(
+            (tag.filters[0].arguments[4] as NamedArgument).identifier.name,
+            'arg5',
+          );
+          expect(
             ((tag.filters[0].arguments[4] as NamedArgument).value as Literal)
                 .value,
-            false);
-        expect(
+            false,
+          );
+          expect(
             ((tag.filters[0].arguments[4] as NamedArgument).value as Literal)
                 .type,
-            LiteralType.boolean);
-      });
+            LiteralType.boolean,
+          );
+        },
+      );
     });
 
     test('Parses tag with arguments and filters', () {
-      testParser('{% tagname arg1 "arg2" | filter1 | filter2: 123 %}',
-          (document) {
+      testParser('{% tagname arg1 "arg2" | filter1 | filter2: 123 %}', (
+        document,
+      ) {
         expect(document.children.length, 1);
         final tag = document.children[0] as Tag;
         expect(tag.name, 'tagname');
@@ -535,25 +585,30 @@ void main() {
     });
 
     test('Parses assignments within tags', () {
-      testParser('{% if user %}{% assign my_variable = "string" %}{% endif %}',
-          (document) {
-        expect(document.children.length, 1);
+      testParser(
+        '{% if user %}{% assign my_variable = "string" %}{% endif %}',
+        (document) {
+          expect(document.children.length, 1);
 
-        final ifTag = document.children[0] as Tag;
-        expect(ifTag.name, 'if');
-        expect(ifTag.body.length, 1);
+          final ifTag = document.children[0] as Tag;
+          expect(ifTag.name, 'if');
+          expect(ifTag.body.length, 1);
 
-        expect((ifTag.content[0] as Identifier).name, 'user');
+          expect((ifTag.content[0] as Identifier).name, 'user');
 
-        final assignTag = ifTag.body[0] as Tag;
-        expect(assignTag.name, 'assign');
-        expect(
+          final assignTag = ifTag.body[0] as Tag;
+          expect(assignTag.name, 'assign');
+          expect(
             ((assignTag.content[0] as Assignment).variable as Identifier).name,
-            'my_variable');
-        expect((assignTag.content[0] as Assignment).value is Literal, true);
-        expect(((assignTag.content[0] as Assignment).value as Literal).value,
-            'string');
-      });
+            'my_variable',
+          );
+          expect((assignTag.content[0] as Assignment).value is Literal, true);
+          expect(
+            ((assignTag.content[0] as Assignment).value as Literal).value,
+            'string',
+          );
+        },
+      );
     });
 
     test('Parses comparison operators', () {
@@ -686,42 +741,44 @@ void main() {
       });
     });
 
-    test('Parses complex logical operation with unary and binary operators',
-        () {
-      testParser('{% if not false and 1 == 1 or 2 < 3 %}', (document) {
-        expect(document.children.length, 1);
+    test(
+      'Parses complex logical operation with unary and binary operators',
+      () {
+        testParser('{% if not false and 1 == 1 or 2 < 3 %}', (document) {
+          expect(document.children.length, 1);
 
-        final tag = document.children[0] as Tag;
-        expect(tag.name, 'if');
-        expect(tag.content.length, 1);
+          final tag = document.children[0] as Tag;
+          expect(tag.name, 'if');
+          expect(tag.content.length, 1);
 
-        final operation = tag.content[0] as BinaryOperation;
+          final operation = tag.content[0] as BinaryOperation;
 
-        // Expect OR operation as the root
-        expect(operation.operator, 'or');
+          // Expect OR operation as the root
+          expect(operation.operator, 'or');
 
-        // The left side should be an AND operation
-        final leftOperation = operation.left as BinaryOperation;
-        expect(leftOperation.operator, 'and');
+          // The left side should be an AND operation
+          final leftOperation = operation.left as BinaryOperation;
+          expect(leftOperation.operator, 'and');
 
-        // The left side of the AND should be a NOT operation
-        final notOperation = leftOperation.left as UnaryOperation;
-        expect(notOperation.operator, 'not');
-        expect((notOperation.expression as Literal).value, false);
+          // The left side of the AND should be a NOT operation
+          final notOperation = leftOperation.left as UnaryOperation;
+          expect(notOperation.operator, 'not');
+          expect((notOperation.expression as Literal).value, false);
 
-        // The right side of the AND should be a comparison
-        final comparison = leftOperation.right as BinaryOperation;
-        expect(comparison.operator, '==');
-        expect((comparison.left as Literal).value, 1);
-        expect((comparison.right as Literal).value, 1);
+          // The right side of the AND should be a comparison
+          final comparison = leftOperation.right as BinaryOperation;
+          expect(comparison.operator, '==');
+          expect((comparison.left as Literal).value, 1);
+          expect((comparison.right as Literal).value, 1);
 
-        // The right side of the OR should be a comparison
-        final rightComparison = operation.right as BinaryOperation;
-        expect(rightComparison.operator, '<');
-        expect((rightComparison.left as Literal).value, 2);
-        expect((rightComparison.right as Literal).value, 3);
-      });
-    });
+          // The right side of the OR should be a comparison
+          final rightComparison = operation.right as BinaryOperation;
+          expect(rightComparison.operator, '<');
+          expect((rightComparison.left as Literal).value, 2);
+          expect((rightComparison.right as Literal).value, 3);
+        });
+      },
+    );
 
     test('Parses contains operator', () {
       final containsTests = [
@@ -827,8 +884,9 @@ void main() {
         final comparison = tag.content[0] as BinaryOperation;
         expect(comparison.operator, '==');
 
-        final groupedExpression = (comparison.left as GroupedExpression)
-            .expression as BinaryOperation;
+        final groupedExpression =
+            (comparison.left as GroupedExpression).expression
+                as BinaryOperation;
         expect(groupedExpression.operator, '+');
         expect((groupedExpression.left as Literal).value, 1);
         expect((groupedExpression.right as Literal).value, 2);
@@ -866,8 +924,7 @@ void main() {
     group('control flow', () {
       group('IfTag', () {
         test('basic if statement', () {
-          testParser(
-              '{% if true %}'
+          testParser('{% if true %}'
               'Should be True'
               '{% mytag %}'
               '{% endif %}', (document) {
@@ -885,30 +942,35 @@ void main() {
         });
 
         test('single char braces', () {
-          testParser('''
+          testParser(
+            '''
 {
  "{{ config_path }}",
 }
-  ''', (document) {
-            expect(document.children.length, 3);
-          });
+  ''',
+            (document) {
+              expect(document.children.length, 3);
+            },
+          );
         });
         test('json structure', () {
-          testParser('''
+          testParser(
+            '''
 {
   "app_name": "MyApp",
   "config_path": "{{ config_path }}",
   "log_path": "/var/log/myapp",
   "max_connections": 100
   }
-  ''', (document) {
-            expect(document.children.length, 3);
-          });
+  ''',
+            (document) {
+              expect(document.children.length, 3);
+            },
+          );
         });
 
         test('if-else statement', () {
-          testParser(
-              '{% if false %}'
+          testParser('{% if false %}'
               'True'
               '{% else %}'
               'False'
@@ -928,8 +990,7 @@ void main() {
         });
 
         test('nested if statements', () {
-          testParser(
-              '{% if true %}'
+          testParser('{% if true %}'
               '{% if false %}'
               'Inner False'
               '{% else %}'
@@ -954,8 +1015,7 @@ void main() {
         });
 
         test('if statement with break', () {
-          testParser(
-              '{% for item in (1..5) %}'
+          testParser('{% for item in (1..5) %}'
               '{% if item == 3 %}'
               '{% break %}'
               '{% endif %}'
@@ -978,8 +1038,7 @@ void main() {
         });
 
         test('if statement with continue', () {
-          testParser(
-              '{% for item in (1..5) %}'
+          testParser('{% for item in (1..5) %}'
               '{% if item == 3 %}'
               '{% continue %}'
               '{% endif %}'
@@ -1006,159 +1065,183 @@ void main() {
 
   group('Array', () {
     test('Parses arrays', () {
-      testParser('''
+      testParser(
+        '''
 {% assign page_1 = name[0] %}
-''', (document) {
-        final tag = document.children.whereType<Tag>().first;
-        final assignment = tag.content[0] as Assignment;
-        final variable = assignment.variable as Identifier;
-        final arrayAccess = assignment.value as ArrayAccess;
-        final array = arrayAccess.array as Identifier;
-        final key = arrayAccess.key as Literal;
+''',
+        (document) {
+          final tag = document.children.whereType<Tag>().first;
+          final assignment = tag.content[0] as Assignment;
+          final variable = assignment.variable as Identifier;
+          final arrayAccess = assignment.value as ArrayAccess;
+          final array = arrayAccess.array as Identifier;
+          final key = arrayAccess.key as Literal;
 
-        expect(variable.name, 'page_1');
-        expect(array.name, 'name');
-        expect(key, isA<Literal>());
-        expect(key.type, LiteralType.number);
-        expect(key.value, 0);
-      });
+          expect(variable.name, 'page_1');
+          expect(array.name, 'name');
+          expect(key, isA<Literal>());
+          expect(key.type, LiteralType.number);
+          expect(key.value, 0);
+        },
+      );
     });
     test('simple with string keys', () {
-      testParser('''
+      testParser(
+        '''
 {% assign page_2 = pages["does-not-exist"] %}
-''', (document) {
-        final tag = document.children.whereType<Tag>().first;
-        final assignment = tag.content[0] as Assignment;
-        final variable = assignment.variable as Identifier;
-        final arrayAccess = assignment.value as ArrayAccess;
-        final array = arrayAccess.array as Identifier;
-        final key = arrayAccess.key as Literal;
+''',
+        (document) {
+          final tag = document.children.whereType<Tag>().first;
+          final assignment = tag.content[0] as Assignment;
+          final variable = assignment.variable as Identifier;
+          final arrayAccess = assignment.value as ArrayAccess;
+          final array = arrayAccess.array as Identifier;
+          final key = arrayAccess.key as Literal;
 
-        expect(variable.name, 'page_2');
-        expect(array.name, 'pages');
-        expect(key, isA<Literal>());
-        expect(key.type, LiteralType.string);
-        expect(key.value, 'does-not-exist');
-      });
+          expect(variable.name, 'page_2');
+          expect(array.name, 'pages');
+          expect(key, isA<Literal>());
+          expect(key.type, LiteralType.string);
+          expect(key.value, 'does-not-exist');
+        },
+      );
     });
 
     test('member access with array access', () {
-      testParser('''
+      testParser(
+        '''
 {% assign posts = pages.categories[0] %}
-''', (document) {
-        final tags = document.children.whereType<Tag>().toList();
-        final tag3 = tags[0];
-        expect(((tag3.content[0] as Assignment).variable as Identifier).name,
-            'posts');
-        expect(((tag3.content[0] as Assignment).value), isA<MemberAccess>());
-        expect(((tag3.content[0] as Assignment).value as MemberAccess).object,
-            isA<Identifier>());
+''',
+        (document) {
+          final tags = document.children.whereType<Tag>().toList();
+          final tag3 = tags[0];
+          expect(
+            ((tag3.content[0] as Assignment).variable as Identifier).name,
+            'posts',
+          );
+          expect(((tag3.content[0] as Assignment).value), isA<MemberAccess>());
+          expect(
+            ((tag3.content[0] as Assignment).value as MemberAccess).object,
+            isA<Identifier>(),
+          );
 
-        expect(
+          expect(
             (((tag3.content[0] as Assignment).value as MemberAccess).object
                     as Identifier)
                 .name,
-            equals('pages'));
-        final members =
-            ((tag3.content[0] as Assignment).value as MemberAccess).members;
-        expect(members.length, 1);
-        expect(members[0], isA<ArrayAccess>());
-        expect((members[0] as ArrayAccess).key, isA<Literal>());
-        expect(((members[0] as ArrayAccess).key as Literal).value, equals(0));
-        expect(((members[0] as ArrayAccess).array as Identifier).name,
-            equals(equals('categories')));
-      });
+            equals('pages'),
+          );
+          final members =
+              ((tag3.content[0] as Assignment).value as MemberAccess).members;
+          expect(members.length, 1);
+          expect(members[0], isA<ArrayAccess>());
+          expect((members[0] as ArrayAccess).key, isA<Literal>());
+          expect(((members[0] as ArrayAccess).key as Literal).value, equals(0));
+          expect(
+            ((members[0] as ArrayAccess).array as Identifier).name,
+            equals(equals('categories')),
+          );
+        },
+      );
     });
 
-    test('complex structure, multiple member access and multiple array_access',
-        () {
-      testParser('''
+    test(
+      'complex structure, multiple member access and multiple array_access',
+      () {
+        testParser(
+          '''
 {% assign complex = pages.categories[0].tags[0].title %}
-''', (document) {
-        final tags = document.children.whereType<Tag>().toList();
+''',
+          (document) {
+            final tags = document.children.whereType<Tag>().toList();
 
-        final tag4 = tags[0];
-        expect(((tag4.content[0] as Assignment).variable as Identifier).name,
-            'complex');
-        expect((tag4.content[0] as Assignment).value, isA<MemberAccess>());
+            final tag4 = tags[0];
+            expect(
+              ((tag4.content[0] as Assignment).variable as Identifier).name,
+              'complex',
+            );
+            expect((tag4.content[0] as Assignment).value, isA<MemberAccess>());
 
-        final memberAccess =
-            (tag4.content[0] as Assignment).value as MemberAccess;
-        expect(memberAccess.object, isA<Identifier>());
-        expect((memberAccess.object as Identifier).name, 'pages');
+            final memberAccess =
+                (tag4.content[0] as Assignment).value as MemberAccess;
+            expect(memberAccess.object, isA<Identifier>());
+            expect((memberAccess.object as Identifier).name, 'pages');
 
-        expect(memberAccess.members.length, 3);
+            expect(memberAccess.members.length, 3);
 
-        final firstMember = memberAccess.members[0] as ArrayAccess;
-        expect(firstMember.array, isA<Identifier>());
-        expect((firstMember.array as Identifier).name, 'categories');
-        expect(firstMember.key, isA<Literal>());
-        expect((firstMember.key as Literal).type, LiteralType.number);
-        expect((firstMember.key as Literal).value, 0);
+            final firstMember = memberAccess.members[0] as ArrayAccess;
+            expect(firstMember.array, isA<Identifier>());
+            expect((firstMember.array as Identifier).name, 'categories');
+            expect(firstMember.key, isA<Literal>());
+            expect((firstMember.key as Literal).type, LiteralType.number);
+            expect((firstMember.key as Literal).value, 0);
 
-        final secondMember = memberAccess.members[1] as ArrayAccess;
-        expect(secondMember.array, isA<Identifier>());
-        expect((secondMember.array as Identifier).name, 'tags');
-        expect(secondMember.key, isA<Literal>());
-        expect((secondMember.key as Literal).type, LiteralType.number);
-        expect((secondMember.key as Literal).value, 0);
+            final secondMember = memberAccess.members[1] as ArrayAccess;
+            expect(secondMember.array, isA<Identifier>());
+            expect((secondMember.array as Identifier).name, 'tags');
+            expect(secondMember.key, isA<Literal>());
+            expect((secondMember.key as Literal).type, LiteralType.number);
+            expect((secondMember.key as Literal).value, 0);
 
-        final thirdMember = memberAccess.members[2] as Identifier;
-        expect(thirdMember.name, 'title');
-      });
-    });
+            final thirdMember = memberAccess.members[2] as Identifier;
+            expect(thirdMember.name, 'title');
+          },
+        );
+      },
+    );
   });
 
   group('Boolean Literal Regression Tests', () {
     test(
-        'Boolean literals are parsed correctly in comparisons (not as identifiers)',
-        () {
-      // Regression test for issue where 'true' and 'false' were being parsed
-      // as identifiers instead of boolean literals in comparison operations
-      testParser('{{ item.active == true }}', (document) {
-        expect(document.children.length, 1);
-        final variable = document.children[0] as Variable;
-        expect(variable.expression, isA<BinaryOperation>());
+      'Boolean literals are parsed correctly in comparisons (not as identifiers)',
+      () {
+        // Regression test for issue where 'true' and 'false' were being parsed
+        // as identifiers instead of boolean literals in comparison operations
+        testParser('{{ item.active == true }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<BinaryOperation>());
 
-        final comparison = variable.expression as BinaryOperation;
-        expect(comparison.operator, '==');
-        expect(comparison.left, isA<MemberAccess>());
-        expect(comparison.right, isA<Literal>());
+          final comparison = variable.expression as BinaryOperation;
+          expect(comparison.operator, '==');
+          expect(comparison.left, isA<MemberAccess>());
+          expect(comparison.right, isA<Literal>());
 
-        final rightLiteral = comparison.right as Literal;
-        expect(rightLiteral.type, LiteralType.boolean);
-        expect(rightLiteral.value, true);
-      });
+          final rightLiteral = comparison.right as Literal;
+          expect(rightLiteral.type, LiteralType.boolean);
+          expect(rightLiteral.value, true);
+        });
 
-      testParser('{{ item.active == false }}', (document) {
-        expect(document.children.length, 1);
-        final variable = document.children[0] as Variable;
-        expect(variable.expression, isA<BinaryOperation>());
+        testParser('{{ item.active == false }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<BinaryOperation>());
 
-        final comparison = variable.expression as BinaryOperation;
-        expect(comparison.operator, '==');
-        expect(comparison.left, isA<MemberAccess>());
-        expect(comparison.right, isA<Literal>());
+          final comparison = variable.expression as BinaryOperation;
+          expect(comparison.operator, '==');
+          expect(comparison.left, isA<MemberAccess>());
+          expect(comparison.right, isA<Literal>());
 
-        final rightLiteral = comparison.right as Literal;
-        expect(rightLiteral.type, LiteralType.boolean);
-        expect(rightLiteral.value, false);
-      });
+          final rightLiteral = comparison.right as Literal;
+          expect(rightLiteral.type, LiteralType.boolean);
+          expect(rightLiteral.value, false);
+        });
 
-      testParser('{% if value != true %}content{% endif %}', (document) {
-        expect(document.children.length, 1);
-        final ifTag = document.children[0] as Tag;
-        expect(ifTag.content[0], isA<BinaryOperation>());
+        testParser('{% if value != true %}content{% endif %}', (document) {
+          expect(document.children.length, 1);
+          final ifTag = document.children[0] as Tag;
+          expect(ifTag.content[0], isA<BinaryOperation>());
 
-        final comparison = ifTag.content[0] as BinaryOperation;
-        expect(comparison.operator, '!=');
-        expect(comparison.left, isA<Identifier>());
-        expect(comparison.right, isA<Literal>());
+          final comparison = ifTag.content[0] as BinaryOperation;
+          expect(comparison.operator, '!=');
+          expect(comparison.left, isA<Identifier>());
+          expect(comparison.right, isA<Literal>());
 
-        final rightLiteral = comparison.right as Literal;
-        expect(rightLiteral.type, LiteralType.boolean);
-        expect(rightLiteral.value, true);
-      });
-    });
+          final rightLiteral = comparison.right as Literal;
+          expect(rightLiteral.type, LiteralType.boolean);
+          expect(rightLiteral.value, true);
+        });
+      },
+    );
   });
 }

@@ -5,10 +5,7 @@ void main() {
   final product = ProductDrop(
     name: 'Smartphone',
     price: 599.99,
-    manufacturer: ManufacturerDrop(
-      name: 'TechCorp',
-      country: 'Japan',
-    ),
+    manufacturer: ManufacturerDrop(name: 'TechCorp', country: 'Japan'),
   );
 
   FilterRegistry.register('discounted_price', (input, args, namedArgs) {
@@ -36,12 +33,7 @@ void main() {
   ];
 
   for (final template in templates) {
-    final result = Template.parse(
-      template,
-      data: {
-        'product': product,
-      },
-    );
+    final result = Template.parse(template, data: {'product': product});
     print(result.render());
   }
 }
@@ -59,16 +51,13 @@ class ProductDrop extends Drop {
 
   @override
   Map<String, dynamic> get attrs => {
-        'name': name,
-        'price': price,
-        'manufacturer': manufacturer,
-      };
+    'name': name,
+    'price': price,
+    'manufacturer': manufacturer,
+  };
 
   @override
-  List<Symbol> get invokable => [
-        ...super.invokable,
-        #is_expensive,
-      ];
+  List<Symbol> get invokable => [...super.invokable, #is_expensive];
 
   @override
   invoke(Symbol symbol, [List<dynamic>? args]) {
@@ -85,14 +74,8 @@ class ManufacturerDrop extends Drop {
   final String name;
   final String country;
 
-  ManufacturerDrop({
-    required this.name,
-    required this.country,
-  });
+  ManufacturerDrop({required this.name, required this.country});
 
   @override
-  Map<String, dynamic> get attrs => {
-        'name': name,
-        'country': country,
-      };
+  Map<String, dynamic> get attrs => {'name': name, 'country': country};
 }

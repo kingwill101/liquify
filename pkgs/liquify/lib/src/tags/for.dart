@@ -19,10 +19,10 @@ class ForLoopObject {
     this.parentloop,
     this.index = 1,
     this.index0 = 0,
-  })  : rindex = length,
-        rindex0 = length - 1,
-        first = true,
-        last = length == 1;
+  }) : rindex = length,
+       rindex0 = length - 1,
+       first = true,
+       last = length == 1;
 
   void increment() {
     index++;
@@ -47,16 +47,16 @@ class ForLoopObject {
   }
 
   ForLoopObject.fromJson(Map<String, dynamic> json)
-      : length = json['length'],
-        parentloop = json['parentloop'] != null
-            ? ForLoopObject.fromJson(json['parentloop'])
-            : null,
-        index = json['index'],
-        index0 = json['index0'],
-        rindex = json['rindex'],
-        rindex0 = json['rindex0'],
-        first = json['first'],
-        last = json['last'];
+    : length = json['length'],
+      parentloop = json['parentloop'] != null
+          ? ForLoopObject.fromJson(json['parentloop'])
+          : null,
+      index = json['index'],
+      index0 = json['index0'],
+      rindex = json['rindex'],
+      rindex0 = json['rindex0'],
+      first = json['first'],
+      last = json['last'];
 }
 
 class ForTag extends AbstractTag with AsyncTag {
@@ -84,7 +84,8 @@ class ForTag extends AbstractTag with AsyncTag {
 
     if (left is! Identifier) {
       throw Exception(
-          'ForTag requires an identifier on the left side of "in".');
+        'ForTag requires an identifier on the left side of "in".',
+      );
     }
 
     variableName = left.name;
@@ -131,8 +132,9 @@ class ForTag extends AbstractTag with AsyncTag {
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     if (iterable.isEmpty) {
-      final elseBlock =
-          body.where((node) => node is Tag && node.name == 'else').firstOrNull;
+      final elseBlock = body
+          .where((node) => node is Tag && node.name == 'else')
+          .firstOrNull;
       if (elseBlock != null) {
         for (final node in (elseBlock as Tag).body) {
           if (node is Tag) {
@@ -148,9 +150,11 @@ class ForTag extends AbstractTag with AsyncTag {
     final parentLoop =
         evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
     final forLoop = ForLoopObject(
-        length: iterable.length,
-        parentloop:
-            parentLoop != null ? ForLoopObject.fromJson(parentLoop) : null);
+      length: iterable.length,
+      parentloop: parentLoop != null
+          ? ForLoopObject.fromJson(parentLoop)
+          : null,
+    );
 
     evaluator.context.pushScope();
 
@@ -185,10 +189,13 @@ class ForTag extends AbstractTag with AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     if (iterable.isEmpty) {
-      final elseBlock =
-          body.where((node) => node is Tag && node.name == 'else').firstOrNull;
+      final elseBlock = body
+          .where((node) => node is Tag && node.name == 'else')
+          .firstOrNull;
       if (elseBlock != null) {
         for (final node in (elseBlock as Tag).body) {
           if (node is Tag) {
@@ -204,9 +211,11 @@ class ForTag extends AbstractTag with AsyncTag {
     final parentLoop =
         evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
     final forLoop = ForLoopObject(
-        length: iterable.length,
-        parentloop:
-            parentLoop != null ? ForLoopObject.fromJson(parentLoop) : null);
+      length: iterable.length,
+      parentloop: parentLoop != null
+          ? ForLoopObject.fromJson(parentLoop)
+          : null,
+    );
 
     evaluator.context.pushScope();
 

@@ -17,9 +17,9 @@ class Document extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'Document',
-        'children': children.map((child) => child.toJson()).toList(),
-      };
+    'type': 'Document',
+    'children': children.map((child) => child.toJson()).toList(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitDocument(this);
@@ -40,8 +40,8 @@ class Tag extends ASTNode {
     List<ASTNode>? content, {
     this.filters = const [],
     List<ASTNode>? body,
-  })  : _body = body ?? [],
-        _content = content ?? [];
+  }) : _body = body ?? [],
+       _content = content ?? [];
 
   List<ASTNode> get body => collapseTextNodes(_body);
 
@@ -73,12 +73,12 @@ class Tag extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'Tag',
-        'name': name,
-        'content': content.map((child) => child.toJson()).toList(),
-        'body': body.map((child) => child.toJson()).toList(),
-        'filters': filters.map((filter) => filter.toJson()).toList(),
-      };
+    'type': 'Tag',
+    'name': name,
+    'content': content.map((child) => child.toJson()).toList(),
+    'body': body.map((child) => child.toJson()).toList(),
+    'filters': filters.map((filter) => filter.toJson()).toList(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitTag(this);
@@ -100,9 +100,9 @@ class GroupedExpression extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'GroupedExpression',
-        'expression': expression.toJson(),
-      };
+    'type': 'GroupedExpression',
+    'expression': expression.toJson(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitGroupedExpression(this);
@@ -120,10 +120,10 @@ class Assignment extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'Assignment',
-        'variable': variable,
-        'value': value.toJson(),
-      };
+    'type': 'Assignment',
+    'variable': variable,
+    'value': value.toJson(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitAssignment(this);
@@ -142,11 +142,11 @@ class BinaryOperation extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'BinaryOperation',
-        'operator': operator,
-        'left': left.toJson(),
-        'right': right.toJson(),
-      };
+    'type': 'BinaryOperation',
+    'operator': operator,
+    'left': left.toJson(),
+    'right': right.toJson(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitBinaryOperation(this);
@@ -162,10 +162,7 @@ class Identifier extends ASTNode {
   Identifier(this.name);
 
   @override
-  Map<String, dynamic> toJson() => {
-        'type': 'Identifier',
-        'name': name,
-      };
+  Map<String, dynamic> toJson() => {'type': 'Identifier', 'name': name};
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitIdentifier(this);
@@ -210,19 +207,21 @@ class Literal extends ASTNode {
   Literal(this._value, this.type);
 
   dynamic get value => switch (type) {
-        LiteralType.string => _value.toString(),
-        LiteralType.number => _value is num || _value is int || _value is double
-            ? _value
-            : num.parse(_value as String),
-        LiteralType.boolean => _value is bool
-            ? _value
-            : _value == 'true'
-                ? true
-                : false,
-        LiteralType.array => _value as List,
-        LiteralType.nil => null,
-        LiteralType.empty => Empty(),
-      };
+    LiteralType.string => _value.toString(),
+    LiteralType.number =>
+      _value is num || _value is int || _value is double
+          ? _value
+          : num.parse(_value as String),
+    LiteralType.boolean =>
+      _value is bool
+          ? _value
+          : _value == 'true'
+          ? true
+          : false,
+    LiteralType.array => _value as List,
+    LiteralType.nil => null,
+    LiteralType.empty => Empty(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitLiteral(this);
@@ -233,10 +232,10 @@ class Literal extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'Literal',
-        'value': value,
-        'literalType': type.toString().split('.').last,
-      };
+    'type': 'Literal',
+    'value': value,
+    'literalType': type.toString().split('.').last,
+  };
 
   @override
   bool operator ==(Object other) {
@@ -269,10 +268,7 @@ class TextNode extends ASTNode {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-        'type': 'TextNode',
-        'text': text,
-      };
+  Map<String, dynamic> toJson() => {'type': 'TextNode', 'text': text};
 }
 
 class MemberAccess extends ASTNode {
@@ -283,10 +279,10 @@ class MemberAccess extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'MemberAccess',
-        'object': object.toJson(),
-        'members': members,
-      };
+    'type': 'MemberAccess',
+    'object': object.toJson(),
+    'members': members,
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitMemberAccess(this);
@@ -304,10 +300,10 @@ class ArrayAccess extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'ArrayAccess',
-        'array': array.toJson(),
-        'key': key.toJson(),
-      };
+    'type': 'ArrayAccess',
+    'array': array.toJson(),
+    'key': key.toJson(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitArrayAccess(this);
@@ -332,10 +328,10 @@ class UnaryOperation extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'UnaryOperation',
-        'operator': operator,
-        'expression': expression.toJson(),
-      };
+    'type': 'UnaryOperation',
+    'operator': operator,
+    'expression': expression.toJson(),
+  };
 }
 
 class Variable extends ASTNode {
@@ -346,10 +342,10 @@ class Variable extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'Variable',
-        'name': name,
-        'expression': expression.toJson(),
-      };
+    'type': 'Variable',
+    'name': name,
+    'expression': expression.toJson(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitVariable(this);
@@ -367,10 +363,10 @@ class FilteredExpression extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'FilteredExpression',
-        'expression': expression.toJson(),
-        'filters': filters.map((filter) => filter.toJson()).toList(),
-      };
+    'type': 'FilteredExpression',
+    'expression': expression.toJson(),
+    'filters': filters.map((filter) => filter.toJson()).toList(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitFilterExpression(this);
@@ -388,10 +384,10 @@ class Filter extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'Filter',
-        'name': name.toJson(),
-        'arguments': arguments.map((arg) => arg.toJson()).toList(),
-      };
+    'type': 'Filter',
+    'name': name.toJson(),
+    'arguments': arguments.map((arg) => arg.toJson()).toList(),
+  };
 
   @override
   T accept<T>(ASTVisitor<T> visitor) => visitor.visitFilter(this);
@@ -416,8 +412,8 @@ class NamedArgument extends ASTNode {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'NamedArgument',
-        'identifier': identifier.toJson(),
-        'value': value.toJson(),
-      };
+    'type': 'NamedArgument',
+    'identifier': identifier.toJson(),
+    'value': value.toJson(),
+  };
 }

@@ -34,9 +34,7 @@ class TemplateAnalysis {
   /// Initializes empty maps and lists for collecting analysis results.
   /// The analysis will be populated as the template and its inheritance
   /// chain are processed.
-  TemplateAnalysis()
-      : structures = {},
-        warnings = [];
+  TemplateAnalysis() : structures = {}, warnings = [];
 
   /// Converts the analysis results to a JSON-compatible map.
   ///
@@ -49,9 +47,6 @@ class TemplateAnalysis {
   /// * warnings: List of warning messages
   /// * structures: Map of template paths to their structures
   Map<String, dynamic> toJson() {
-    return {
-      'warnings': warnings,
-      'structures': structures,
-    };
+    return {'warnings': warnings, 'structures': structures};
   }
 }

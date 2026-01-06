@@ -21,11 +21,12 @@ void main() {
           {"term": "Hi", "type": "One"},
           {"term": "Bye", "type": "One"},
           {"term": "Yes", "type": "Two"},
-          {"term": "No"}
+          {"term": "No"},
         ]);
       });
       test('issue-30', () {
-        testParser('''
+        testParser(
+          '''
 <table>
 {% tablerow keyword in keywords cols:4 %}
 
@@ -38,14 +39,16 @@ void main() {
 
 {% endtablerow %}
 </table>
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(
-            evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-            '<table>  <tr class="row1">    <td class="col1">      <span>Hi</span><sup>1</sup>    </td>    <td class="col2">      <span>Bye</span><sup>1</sup>    </td>    <td class="col3">      <span>Yes</span><sup>2</sup>    </td>    <td class="col4">      <span>No</span>    </td>  </tr></table>'
-                .replaceAll(RegExp(r'\s+'), ''),
-          );
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(
+              evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
+              '<table>  <tr class="row1">    <td class="col1">      <span>Hi</span><sup>1</sup>    </td>    <td class="col2">      <span>Bye</span><sup>1</sup>    </td>    <td class="col3">      <span>Yes</span><sup>2</sup>    </td>    <td class="col4">      <span>No</span>    </td>  </tr></table>'
+                  .replaceAll(RegExp(r'\s+'), ''),
+            );
+          },
+        );
       });
     });
 
@@ -58,19 +61,21 @@ void main() {
           {'title': 'Bullseye Shirt'},
           {'title': 'Another Classic Vinyl'},
           {'title': 'Awesome Jeans'},
-        ]
+        ],
       });
     });
 
     group('sync evaluation', () {
       test('basic row iteration', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow product in collection.products %}
 {{- product.title }}
 {% endtablerow %}
-</table>''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       Cool Shirt
@@ -92,17 +97,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with cols attribute', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow product in collection.products cols:2 %}
 {{- product.title }}
 {% endtablerow %}
-</table>''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       Cool Shirt
@@ -128,17 +136,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with limit and cols attributes', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow item in (1..6) cols:2 limit:4 %}
   {{- item }}
 {% endtablerow %}
-</table>''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       1
@@ -156,17 +167,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with offset and cols attributes', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow item in (1..6) cols:2 offset:3 %}
     {{- item }}
 {% endtablerow %}
-</table>''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       4
@@ -181,17 +195,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with limit, offset and cols attributes', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow item in (1..10) cols:3 limit:6 offset:2 %}
   {{- item }}
 {% endtablerow %}
-</table>''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       3
@@ -215,18 +232,21 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with range', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% assign num = 4 -%}
 {% tablerow i in (1..num) %}
   {{- i }}
 {% endtablerow %}
-</table>''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       1
@@ -242,19 +262,22 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('basic row iteration', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow product in collection.products %}
 {{- product.title }}
 {% endtablerow %}
-</table>''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       Cool Shirt
@@ -276,17 +299,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with cols attribute', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow product in collection.products cols:2 %}
 {{- product.title }}
 {% endtablerow %}
-</table>''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       Cool Shirt
@@ -312,17 +338,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with limit and cols attributes', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow item in (1..6) cols:2 limit:4 %}
   {{- item }}
 {% endtablerow %}
-</table>''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       1
@@ -340,17 +369,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with offset and cols attributes', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow item in (1..6) cols:2 offset:3 %}
     {{- item }}
 {% endtablerow %}
-</table>''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       4
@@ -365,17 +397,20 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with limit, offset and cols attributes', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% tablerow item in (1..10) cols:3 limit:6 offset:2 %}
   {{- item }}
 {% endtablerow %}
-</table>''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       3
@@ -399,18 +434,21 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
 
       test('with range', () async {
-        await testParser('''<table>
+        await testParser(
+          '''<table>
 {% assign num = 4 -%}
 {% tablerow i in (1..num) %}
   {{- i }}
 {% endtablerow %}
-</table>''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''<table>
+</table>''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''<table>
   <tr class="row1">
     <td class="col1">
       1
@@ -426,7 +464,8 @@ void main() {
     </td>
   </tr>
 </table>''');
-        });
+          },
+        );
       });
     });
   });

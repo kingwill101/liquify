@@ -4,8 +4,10 @@ import 'package:liquify/src/tag_registry.dart';
 class LiquidTag extends AbstractTag with CustomTagParser, AsyncTag {
   LiquidTag(super.content, super.filters);
 
-  Future<dynamic> _evaluateLiquid(Evaluator evaluator,
-      {bool isAsync = false}) async {
+  Future<dynamic> _evaluateLiquid(
+    Evaluator evaluator, {
+    bool isAsync = false,
+  }) async {
     Evaluator innerEvaluator = evaluator.createInnerEvaluator()
       ..context.setRoot(evaluator.context.getRoot());
 
@@ -26,18 +28,24 @@ class LiquidTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     return _evaluateLiquid(evaluator, isAsync: true);
   }
 
   @override
-  Parser parser() => (tagStart() &
+  Parser parser() =>
+      (tagStart() &
               string('liquid').trim() &
               any().starLazy(tagEnd()).flatten() &
               tagEnd())
           .map((values) {
-        return Tag("liquid", liquidTagContents(values[2], TagRegistry.tags));
-      });
+            return Tag(
+              "liquid",
+              liquidTagContents(values[2], TagRegistry.tags),
+            );
+          });
 
   List<ASTNode> liquidTagContents(String content, List<String> tagRegistry) {
     final lines = content.split('\n').map((line) => line.trim()).toList();

@@ -17,8 +17,7 @@ void main() {
   group('CycleTag', () {
     group('sync evaluation', () {
       test('basic cycling through values', () async {
-        await testParser(
-            '{% cycle "one", "two", "three" %}'
+        await testParser('{% cycle "one", "two", "three" %}'
             '{% cycle "one", "two", "three" %}'
             '{% cycle "one", "two", "three" %}'
             '{% cycle "one", "two", "three" %}', (document) {
@@ -28,8 +27,7 @@ void main() {
       });
 
       test('cycling with named groups', () async {
-        await testParser(
-            '{% cycle "group1": "one", "two", "three" %}'
+        await testParser('{% cycle "group1": "one", "two", "three" %}'
             '{% cycle "group2": "a", "b", "c" %}'
             '{% cycle "group1": "one", "two", "three" %}'
             '{% cycle "group2": "a", "b", "c" %}', (document) {
@@ -39,8 +37,7 @@ void main() {
       });
 
       test('cycling with variables', () async {
-        await testParser(
-            '{% assign var1 = "first" %}'
+        await testParser('{% assign var1 = "first" %}'
             '{% assign var2 = "second" %}'
             '{% cycle var1, var2 %}'
             '{% cycle var1, var2 %}'
@@ -53,8 +50,7 @@ void main() {
 
     group('async evaluation', () {
       test('basic cycling through values', () async {
-        await testParser(
-            '{% cycle "one", "two", "three" %}'
+        await testParser('{% cycle "one", "two", "three" %}'
             '{% cycle "one", "two", "three" %}'
             '{% cycle "one", "two", "three" %}'
             '{% cycle "one", "two", "three" %}', (document) async {
@@ -64,8 +60,7 @@ void main() {
       });
 
       test('cycling with named groups', () async {
-        await testParser(
-            '{% cycle "group1": "one", "two", "three" %}'
+        await testParser('{% cycle "group1": "one", "two", "three" %}'
             '{% cycle "group2": "a", "b", "c" %}'
             '{% cycle "group1": "one", "two", "three" %}'
             '{% cycle "group2": "a", "b", "c" %}', (document) async {
@@ -75,8 +70,7 @@ void main() {
       });
 
       test('cycling with variables', () async {
-        await testParser(
-            '{% assign var1 = "first" %}'
+        await testParser('{% assign var1 = "first" %}'
             '{% assign var2 = "second" %}'
             '{% cycle var1, var2 %}'
             '{% cycle var1, var2 %}'

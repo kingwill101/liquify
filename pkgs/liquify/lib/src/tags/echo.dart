@@ -14,7 +14,9 @@ class EchoTag extends AbstractTag with AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     var value = await evaluateContentAsync(evaluator);
     var filtered = await applyFiltersAsync(value, evaluator);
     buffer.write(filtered);

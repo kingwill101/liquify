@@ -8,7 +8,9 @@ class DocTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {}
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {}
 
   @override
   Parser parser() {
@@ -22,7 +24,7 @@ class DocTag extends AbstractTag with CustomTagParser, AsyncTag {
             string('enddoc').trim() &
             tagEnd())
         .map((values) {
-      return Tag("doc", [TextNode(values[3])]);
-    });
+          return Tag("doc", [TextNode(values[3])]);
+        });
   }
 }

@@ -11,61 +11,72 @@ final resolverLogger = Logger('Resolver');
 List<ASTNode> _mergeNode(ASTNode node, TemplateStructure structure) {
   if (node is Tag && node.name == 'block') {
     final blockName = _getBlockName(node);
-    resolverLogger
-        .info("[_mergeNode] Processing block tag with name: $blockName");
+    resolverLogger.info(
+      "[_mergeNode] Processing block tag with name: $blockName",
+    );
 
     if (blockName == null) {
-      resolverLogger
-          .info("[_mergeNode] Block name is null, returning original node");
+      resolverLogger.info(
+        "[_mergeNode] Block name is null, returning original node",
+      );
       return [node];
     }
 
     // First try to find a direct override for this block
     BlockInfo? block = structure.resolvedBlocks[blockName];
     resolverLogger.info(
-        "[_mergeNode] Direct block lookup for '$blockName': ${block != null ? 'found' : 'not found'}");
+      "[_mergeNode] Direct block lookup for '$blockName': ${block != null ? 'found' : 'not found'}",
+    );
 
     // If no direct override found, look for nested block override
     if (block == null) {
-      final nestedBlockName = structure.resolvedBlocks.keys
-          .firstWhere((key) => key.endsWith('.$blockName'), orElse: () => '');
+      final nestedBlockName = structure.resolvedBlocks.keys.firstWhere(
+        (key) => key.endsWith('.$blockName'),
+        orElse: () => '',
+      );
       if (nestedBlockName.isNotEmpty) {
         block = structure.resolvedBlocks[nestedBlockName];
-        resolverLogger
-            .info("[_mergeNode] Found nested block override: $nestedBlockName");
+        resolverLogger.info(
+          "[_mergeNode] Found nested block override: $nestedBlockName",
+        );
       }
     }
 
     // If we found a block (either direct or nested)
     if (block != null && block.content != null) {
       resolverLogger.info(
-          "[_mergeNode] Found block override: isOverride=${block.isOverride}, hasSuperCall=${block.hasSuperCall}");
+        "[_mergeNode] Found block override: isOverride=${block.isOverride}, hasSuperCall=${block.hasSuperCall}",
+      );
 
       // If this is an override with super call, process it
       if (block.hasSuperCall) {
-        resolverLogger
-            .info("[_mergeNode] Processing super call for block: $blockName");
+        resolverLogger.info(
+          "[_mergeNode] Processing super call for block: $blockName",
+        );
         return _processSuperCall(node, block, structure);
       }
 
       // If this is an override, use its content
       if (block.isOverride) {
-        resolverLogger
-            .info("[_mergeNode] Using override content for block: $blockName");
+        resolverLogger.info(
+          "[_mergeNode] Using override content for block: $blockName",
+        );
         return block.content!;
       }
     }
 
     resolverLogger.info(
-        "[_mergeNode] No override found or not an override, processing block body");
+      "[_mergeNode] No override found or not an override, processing block body",
+    );
     return node.body.expand((n) => _mergeNode(n, structure)).toList();
   }
 
   // For non-block nodes, recursively process children
   if (node is Tag) {
     resolverLogger.info("[_mergeNode] Processing non-block tag: ${node.name}");
-    final newContent =
-        node.content.expand((n) => _mergeNode(n, structure)).toList();
+    final newContent = node.content
+        .expand((n) => _mergeNode(n, structure))
+        .toList();
     final newBody = node.body.expand((n) => _mergeNode(n, structure)).toList();
     return [Tag(node.name, newContent, body: newBody)];
   }
@@ -83,7 +94,10 @@ String? _getBlockName(Tag blockTag) {
 }
 
 List<ASTNode> _processSuperCall(
-    Tag node, BlockInfo block, TemplateStructure structure) {
+  Tag node,
+  BlockInfo block,
+  TemplateStructure structure,
+) {
   if (structure.parent == null) {
     return [];
   }
@@ -96,8 +110,10 @@ List<ASTNode> _processSuperCall(
 
   // If not found directly, look for it as a nested block
   if (parentBlock == null) {
-    final nestedBlockName = structure.parent!.resolvedBlocks.keys
-        .firstWhere((key) => key.endsWith('.$blockName'), orElse: () => '');
+    final nestedBlockName = structure.parent!.resolvedBlocks.keys.firstWhere(
+      (key) => key.endsWith('.$blockName'),
+      orElse: () => '',
+    );
     if (nestedBlockName.isNotEmpty) {
       parentBlock = structure.parent!.resolvedBlocks[nestedBlockName];
     }
@@ -113,13 +129,13 @@ List<ASTNode> _processSuperCall(
       .toList();
 }
 
-List<ASTNode> buildCompleteMergedAst(TemplateStructure structure,
-    {Map<String, BlockInfo>? overrides}) {
+List<ASTNode> buildCompleteMergedAst(
+  TemplateStructure structure, {
+  Map<String, BlockInfo>? overrides,
+}) {
   final chain = structure.inheritanceChain;
   List<ASTNode> baseNodes = chain.first.nodes;
-  Map<String, BlockInfo> currentOverrides = {
-    ...overrides ?? {},
-  };
+  Map<String, BlockInfo> currentOverrides = {...overrides ?? {}};
 
   resolverLogger.startScope('Building complete merged AST');
 
@@ -127,14 +143,16 @@ List<ASTNode> buildCompleteMergedAst(TemplateStructure structure,
   for (int i = chain.length - 1; i >= 0; i--) {
     final current = chain[i];
     resolverLogger.startScope('Processing template: ${current.templatePath}');
-    resolverLogger
-        .info('Available blocks: (${current.resolvedBlocks.keys.join(', ')})');
+    resolverLogger.info(
+      'Available blocks: (${current.resolvedBlocks.keys.join(', ')})',
+    );
 
     // Collect overrides from this level
     for (var entry in current.resolvedBlocks.entries) {
       if (entry.value.isOverride && !currentOverrides.containsKey(entry.key)) {
         resolverLogger.info(
-            'Adding override for block: ${entry.key} from ${current.templatePath}');
+          'Adding override for block: ${entry.key} from ${current.templatePath}',
+        );
         currentOverrides[entry.key] = entry.value;
       }
     }
@@ -143,18 +161,25 @@ List<ASTNode> buildCompleteMergedAst(TemplateStructure structure,
 
   // Now process the base nodes with all collected overrides
   resolverLogger.startScope('Processing base nodes');
-  resolverLogger
-      .info('Available overrides: ${currentOverrides.keys.join(', ')}');
-  baseNodes =
-      _processNodesWithOverrides(baseNodes, chain.last, currentOverrides);
+  resolverLogger.info(
+    'Available overrides: ${currentOverrides.keys.join(', ')}',
+  );
+  baseNodes = _processNodesWithOverrides(
+    baseNodes,
+    chain.last,
+    currentOverrides,
+  );
   resolverLogger.endScope();
 
   resolverLogger.endScope('AST building completed');
   return _collapseNodes(baseNodes);
 }
 
-List<ASTNode> _processNodesWithOverrides(List<ASTNode> nodes,
-    TemplateStructure structure, Map<String, BlockInfo> overrides) {
+List<ASTNode> _processNodesWithOverrides(
+  List<ASTNode> nodes,
+  TemplateStructure structure,
+  Map<String, BlockInfo> overrides,
+) {
   List<ASTNode> result = [];
 
   for (var node in nodes) {
@@ -189,8 +214,9 @@ List<ASTNode> _processNodesWithOverrides(List<ASTNode> nodes,
               }
             } else {
               // For other nodes, process them recursively
-              processedContent.addAll(_processNodesWithOverrides(
-                  [contentNode], structure, overrides));
+              processedContent.addAll(
+                _processNodesWithOverrides([contentNode], structure, overrides),
+              );
             }
           }
           result.addAll(processedContent);
@@ -198,10 +224,13 @@ List<ASTNode> _processNodesWithOverrides(List<ASTNode> nodes,
         } else {
           resolverLogger.info('No override found, processing block body');
           // No override found - process the block's body recursively
-          result.addAll(node.body
-              .expand(
-                  (n) => _processNodesWithOverrides([n], structure, overrides))
-              .toList());
+          result.addAll(
+            node.body
+                .expand(
+                  (n) => _processNodesWithOverrides([n], structure, overrides),
+                )
+                .toList(),
+          );
         }
       }
       resolverLogger.endScope();
@@ -286,8 +315,11 @@ List<ASTNode> _collapseNodes(List<ASTNode> nodes) {
   return result;
 }
 
-List<ASTNode> _applyOverride(ASTNode node, TemplateStructure structure,
-    Map<String, BlockInfo> overrides) {
+List<ASTNode> _applyOverride(
+  ASTNode node,
+  TemplateStructure structure,
+  Map<String, BlockInfo> overrides,
+) {
   if (node is Tag && node.name == 'block') {
     // Extract block name
     String? blockName;
@@ -316,8 +348,10 @@ List<ASTNode> _applyOverride(ASTNode node, TemplateStructure structure,
           return override.content!.expand((child) {
             if (child is Tag && child.name == 'super') {
               // Handle super() calls by using parent content
-              return node.body.expand((parentChild) =>
-                  _applyOverride(parentChild, structure, overrides));
+              return node.body.expand(
+                (parentChild) =>
+                    _applyOverride(parentChild, structure, overrides),
+              );
             }
             return _applyOverride(child, structure, overrides);
           }).toList();
@@ -348,10 +382,11 @@ List<ASTNode> _applyOverride(ASTNode node, TemplateStructure structure,
 }
 
 List<ASTNode> resolveSuperCalls(
-    List<ASTNode>? overrideContent,
-    List<ASTNode>? parentContent,
-    TemplateStructure structure,
-    Map<String, BlockInfo> overrides) {
+  List<ASTNode>? overrideContent,
+  List<ASTNode>? parentContent,
+  TemplateStructure structure,
+  Map<String, BlockInfo> overrides,
+) {
   if (overrideContent == null) return [];
   List<ASTNode> result = [];
 
@@ -359,18 +394,33 @@ List<ASTNode> resolveSuperCalls(
     if (node is Tag && node.name == 'super') {
       // On super() call, inject parent content
       if (parentContent != null) {
-        result.addAll(parentContent.expand((child) => _applyOverride(
-            child, structure.parent!, structure.parent!.resolvedBlocks)));
+        result.addAll(
+          parentContent.expand(
+            (child) => _applyOverride(
+              child,
+              structure.parent!,
+              structure.parent!.resolvedBlocks,
+            ),
+          ),
+        );
       }
     } else if (node is TextNode) {
       // Preserve text nodes
       result.add(node);
     } else if (node is Tag) {
       // Process other tags recursively
-      final newContent =
-          resolveSuperCalls(node.content, parentContent, structure, overrides);
-      final newBody =
-          resolveSuperCalls(node.body, parentContent, structure, overrides);
+      final newContent = resolveSuperCalls(
+        node.content,
+        parentContent,
+        structure,
+        overrides,
+      );
+      final newBody = resolveSuperCalls(
+        node.body,
+        parentContent,
+        structure,
+        overrides,
+      );
       result.add(Tag(node.name, newContent, body: newBody));
     } else {
       result.add(node);

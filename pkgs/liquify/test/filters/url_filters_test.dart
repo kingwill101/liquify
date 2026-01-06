@@ -21,8 +21,10 @@ void main() {
     });
 
     test('uriEscape', () {
-      expect(uriEscape('http://example.com/path[1]/test', [], {}),
-          equals('http://example.com/path[1]/test'));
+      expect(
+        uriEscape('http://example.com/path[1]/test', [], {}),
+        equals('http://example.com/path[1]/test'),
+      );
       expect(uriEscape('hello world', [], {}), equals('hello%20world'));
     });
 
@@ -34,11 +36,12 @@ void main() {
       expect(slugify('Hello  World!', ['raw'], {}), equals('hello-world!'));
       expect(slugify('Hello World!', ['none'], {}), equals('Hello World!'));
       expect(slugify('Héllö Wörld!', ['latin'], {}), equals('hello-world'));
-      expect(slugify('Hello World!', ['default', true], {}),
-          equals('Hello-World'));
+      expect(
+        slugify('Hello World!', ['default', true], {}),
+        equals('Hello-World'),
+      );
       expect(slugify('Hello, World!', [], {}), equals('hello-world'));
-      expect(slugify('   Hello,    World!   ', [], {}),
-          equals('hello-world'));
+      expect(slugify('   Hello,    World!   ', [], {}), equals('hello-world'));
       expect(slugify('Hello_World', ['pretty'], {}), equals('hello_world'));
       expect(slugify('Hello.World', ['pretty'], {}), equals('hello.world'));
       expect(slugify('Hello World!', ['invalid'], {}), equals('hello-world'));
@@ -51,8 +54,10 @@ void main() {
     });
 
     test('slugify preserves case for cased inputs', () {
-      expect(slugify('Hello World', ['default', true], {}),
-          equals('Hello-World'));
+      expect(
+        slugify('Hello World', ['default', true], {}),
+        equals('Hello-World'),
+      );
       expect(slugify('KeepCase', ['none', true], {}), equals('KeepCase'));
     });
   });

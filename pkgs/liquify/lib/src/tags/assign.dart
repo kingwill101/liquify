@@ -14,8 +14,10 @@ class AssignTag extends AbstractTag with AsyncTag {
 
   Identifier get variable => assignment?.variable as Identifier;
 
-  Future<dynamic> _evaluateAssignment(Evaluator evaluator,
-      {bool isAsync = false}) async {
+  Future<dynamic> _evaluateAssignment(
+    Evaluator evaluator, {
+    bool isAsync = false,
+  }) async {
     if (assignmentIsVariable()) {
       final value = isAsync
           ? await evaluator.evaluateAsync(assignment!.value)
@@ -31,7 +33,9 @@ class AssignTag extends AbstractTag with AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     return _evaluateAssignment(evaluator, isAsync: true);
   }
 

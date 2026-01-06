@@ -17,7 +17,8 @@ void main() {
   group('Comment Tag', () {
     group('sync evaluation', () {
       test('shows raw text', () async {
-        await testParser('''{% comment %}
+        await testParser(
+          '''{% comment %}
   Navigation Component
   
   Usage:
@@ -27,16 +28,19 @@ void main() {
   Parameters:
     - current_page: Optional current page for highlighting active nav items
 {% endcomment %}
-''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), isEmpty);
-        });
+''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString().trim(), isEmpty);
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('shows raw text', () async {
-        await testParser('''{% comment %}
+        await testParser(
+          '''{% comment %}
   Navigation Component
   
   Usage:
@@ -46,10 +50,12 @@ void main() {
   Parameters:
     - current_page: Optional current page for highlighting active nav items
 {% endcomment %}
-''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), isEmpty);
-        });
+''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString().trim(), isEmpty);
+          },
+        );
       });
     });
   });

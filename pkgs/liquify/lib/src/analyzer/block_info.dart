@@ -134,8 +134,9 @@ class BlockInfo {
       'hasSuperCall': hasSuperCall,
       'hasParent': parent != null,
       'parentSource': parent?.source,
-      'nestedBlocks':
-          nestedBlocks.map((key, value) => MapEntry(key, value.toJson())),
+      'nestedBlocks': nestedBlocks.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      ),
     };
   }
 

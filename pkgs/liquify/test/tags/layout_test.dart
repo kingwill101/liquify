@@ -40,81 +40,99 @@ Footer''');
   group('Layout Tag', () {
     group('sync evaluation', () {
       test('basic layout usage', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "default-layout.liquid" %}
           {% block content %}My page content{% endblock %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 Header
 My page content
 Footer'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
 
       test('multiple named blocks', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "multi-block-layout.liquid" %}
           {% block header %}Custom Header{% endblock %}
           {% block content %}Custom Content{% endblock %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 Custom Header
 Custom Content
 Default Footer'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
 
       test('default block contents', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "default-layout.liquid" %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 Header
 Default content
 Footer'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
 
       test('passing variables to layout', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign title = "My Page" %}
           {% layout "default-layout.liquid", my_variable: title %}
           {% block content %}
             {{ my_variable }}
           {% endblock %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          final output = evaluator.buffer.toString();
-          expect(output, contains('My Page'));
-          expect(output, contains('Header'));
-          expect(output, contains('Footer'));
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            final output = evaluator.buffer.toString();
+            expect(output, contains('My Page'));
+            expect(output, contains('Header'));
+            expect(output, contains('Footer'));
+          },
+        );
       });
 
       test('multiple variables with literal values', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "default-layout.liquid", title: "Page Title", subtitle: "Welcome" %}
           {% block content %}
             {{ title }} - {{ subtitle }}
           {% endblock %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          final output = evaluator.buffer.toString();
-          expect(output, contains('Page Title'));
-          expect(output, contains('Welcome'));
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            final output = evaluator.buffer.toString();
+            expect(output, contains('Page Title'));
+            expect(output, contains('Welcome'));
+          },
+        );
       });
 
       test('nested layouts with multiple blocks and variables', () async {
@@ -129,99 +147,120 @@ Footer'''
   {% block subcontent %}Default subcontent{% endblock %}
 {% endblock %}''');
 
-        await testParser('''
+        await testParser(
+          '''
       {% layout "layouts/nested.liquid", page_title: "Welcome" %}
       {% block subcontent %}
         <p>Custom subcontent</p>
         <span>{{ page_title }}</span>
       {% endblock %}
-    ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          final output = evaluator.buffer.toString();
-          expect(output, contains('<h1>Welcome</h1>'));
-          expect(output, contains('<p>Custom subcontent</p>'));
-          expect(output, contains('<span>Welcome</span>'));
-        });
+    ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            final output = evaluator.buffer.toString();
+            expect(output, contains('<h1>Welcome</h1>'));
+            expect(output, contains('<p>Custom subcontent</p>'));
+            expect(output, contains('<span>Welcome</span>'));
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('basic layout usage', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "default-layout.liquid" %}
           {% block content %}My page content{% endblock %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 Header
 My page content
 Footer'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
 
       test('multiple named blocks', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "multi-block-layout.liquid" %}
           {% block header %}Custom Header{% endblock %}
           {% block content %}Custom Content{% endblock %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 Custom Header
 Custom Content
 Default Footer'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
 
       test('default block contents', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "default-layout.liquid" %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 Header
 Default content
 Footer'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
 
       test('passing variables to layout', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign title = "My Page" %}
           {% layout "default-layout.liquid", my_variable: title %}
           {% block content %}
             {{ my_variable }}
           {% endblock %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          final output = evaluator.buffer.toString();
-          expect(output, contains('My Page'));
-          expect(output, contains('Header'));
-          expect(output, contains('Footer'));
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            final output = evaluator.buffer.toString();
+            expect(output, contains('My Page'));
+            expect(output, contains('Header'));
+            expect(output, contains('Footer'));
+          },
+        );
       });
 
       test('multiple variables with literal values', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "default-layout.liquid", title: "Page Title", subtitle: "Welcome" %}
           {% block content %}
             {{ title }} - {{ subtitle }}
           {% endblock %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          final output = evaluator.buffer.toString();
-          expect(output, contains('Page Title'));
-          expect(output, contains('Welcome'));
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            final output = evaluator.buffer.toString();
+            expect(output, contains('Page Title'));
+            expect(output, contains('Welcome'));
+          },
+        );
       });
 
       test('nested layouts with multiple blocks and variables', () async {
@@ -236,19 +275,22 @@ Footer'''
   {% block subcontent %}Default subcontent{% endblock %}
 {% endblock %}''');
 
-        await testParser('''
+        await testParser(
+          '''
       {% layout "layouts/nested.liquid", page_title: "Welcome" %}
       {% block subcontent %}
         <p>Custom subcontent</p>
         <span>{{ page_title }}</span>
       {% endblock %}
-    ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          final output = evaluator.buffer.toString();
-          expect(output, contains('<h1>Welcome</h1>'));
-          expect(output, contains('<p>Custom subcontent</p>'));
-          expect(output, contains('<span>Welcome</span>'));
-        });
+    ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            final output = evaluator.buffer.toString();
+            expect(output, contains('<h1>Welcome</h1>'));
+            expect(output, contains('<p>Custom subcontent</p>'));
+            expect(output, contains('<span>Welcome</span>'));
+          },
+        );
       });
     });
   });

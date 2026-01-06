@@ -187,8 +187,10 @@ class TemplateStructure {
   /// final flatBlocks = structure.flatten(blocks);
   /// print(flatBlocks['header.navigation']); // Prints nested block info
   /// ```
-  Map<String, BlockInfo> flatten(Map<String, BlockInfo> blocks,
-      {String prefix = ''}) {
+  Map<String, BlockInfo> flatten(
+    Map<String, BlockInfo> blocks, {
+    String prefix = '',
+  }) {
     final map = <String, BlockInfo>{};
     blocks.forEach((key, blockInfo) {
       final fullName = prefix.isEmpty ? key : '$prefix.$key';
@@ -213,8 +215,9 @@ class TemplateStructure {
         ancestor = ancestor.parent;
       }
 
-      final effectiveBlock =
-          isOverride ? blockInfo.copyWith(isOverride: true) : blockInfo;
+      final effectiveBlock = isOverride
+          ? blockInfo.copyWith(isOverride: true)
+          : blockInfo;
       map[fullName] = effectiveBlock;
 
       // Also flatten any nested blocks

@@ -90,7 +90,7 @@ void main() async {
   <div class="post-footer">
     <a href="/posts">Back to Posts</a>
   </div>
-{% endblock %}'''
+{% endblock %}''',
   });
 
   // Sample post data
@@ -112,15 +112,18 @@ of the Liquid template engine. We'll be covering:
 
 Stay tuned for more content coming soon!''',
       'tags': ['welcome', 'introduction', 'liquid'],
-    }
+    },
   };
 
   print('\nRendering blog post with layout inheritance:');
   print('----------------------------------------\n');
 
   // Render the blog post
-  final template =
-      Template.fromFile('posts/hello-world.liquid', fs, data: context);
+  final template = Template.fromFile(
+    'posts/hello-world.liquid',
+    fs,
+    data: context,
+  );
   print(await template.renderAsync());
 
   // Demonstrate dynamic layout names
@@ -128,10 +131,9 @@ Stay tuned for more content coming soon!''',
   print('----------------------------------------\n');
 
   final dynamicTemplate = Template.parse(
-      '{% layout "layouts/{{ layout_type }}.liquid", title: "Dynamic Title" %}',
-      data: {
-        'layout_type': 'post',
-      },
-      root: fs);
+    '{% layout "layouts/{{ layout_type }}.liquid", title: "Dynamic Title" %}',
+    data: {'layout_type': 'post'},
+    root: fs,
+  );
   print(await dynamicTemplate.renderAsync());
 }

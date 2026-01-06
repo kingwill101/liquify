@@ -26,14 +26,18 @@ String _stringify(dynamic value) => value?.toString() ?? '';
 /// Example:
 /// Input: {{ "<p>Hello & welcome</p>" | escape }}
 /// Output: &lt;p&gt;Hello &amp; welcome&lt;/p&gt;
-FilterFunction escape = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  final str = _stringify(value);
-  return str.replaceAllMapped(
-    RegExp('[&<>"\']'),
-    (Match match) => _escapeMap[match.group(0)] ?? '',
-  );
-};
+FilterFunction escape =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      final str = _stringify(value);
+      return str.replaceAllMapped(
+        RegExp('[&<>"\']'),
+        (Match match) => _escapeMap[match.group(0)] ?? '',
+      );
+    };
 
 /// Alias for the `escape` filter.
 ///
@@ -51,14 +55,18 @@ FilterFunction xmlEscape = escape;
 /// Example:
 /// Input: {{ "&lt;p&gt;Hello &amp; welcome&lt;/p&gt;" | unescape }}
 /// Output: <p>Hello & welcome</p>
-FilterFunction unescape = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  final str = _stringify(value);
-  return str.replaceAllMapped(
-    RegExp(r'&(amp|lt|gt|#34|#39);'),
-    (Match m) => _unescapeMap[m.group(0)] ?? m.group(0)!,
-  );
-};
+FilterFunction unescape =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      final str = _stringify(value);
+      return str.replaceAllMapped(
+        RegExp(r'&(amp|lt|gt|#34|#39);'),
+        (Match m) => _unescapeMap[m.group(0)] ?? m.group(0)!,
+      );
+    };
 
 /// Escapes HTML special characters in a string, but doesn't re-escape entities.
 ///
@@ -67,11 +75,15 @@ FilterFunction unescape = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: {{ "&lt;p&gt;Hello &amp; welcome&lt;/p&gt;" | escape_once }}
 /// Output: &lt;p&gt;Hello &amp; welcome&lt;/p&gt;
-FilterFunction escapeOnce = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  final unescaped = unescape(value, arguments, namedArguments);
-  return escape(unescaped, arguments, namedArguments);
-};
+FilterFunction escapeOnce =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      final unescaped = unescape(value, arguments, namedArguments);
+      return escape(unescaped, arguments, namedArguments);
+    };
 
 /// Converts newlines to HTML line breaks.
 ///
@@ -80,11 +92,15 @@ FilterFunction escapeOnce = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: {{ "Hello\nWorld" | newline_to_br }}
 /// Output: Hello<br />\nWorld
-FilterFunction newlineToBr = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  final str = _stringify(value);
-  return str.replaceAll(RegExp(r'\r?\n'), '<br />\n');
-};
+FilterFunction newlineToBr =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      final str = _stringify(value);
+      return str.replaceAll(RegExp(r'\r?\n'), '<br />\n');
+    };
 
 /// Strips all HTML tags from a string.
 ///
@@ -93,15 +109,20 @@ FilterFunction newlineToBr = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: {{ "<p>Hello <b>World</b></p>" | strip_html }}
 /// Output: Hello World
-FilterFunction stripHtml = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  final str = _stringify(value);
-  return str.replaceAll(
-    RegExp(
-        r'<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<.*?>|<!--[\s\S]*?-->'),
-    '',
-  );
-};
+FilterFunction stripHtml =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      final str = _stringify(value);
+      return str.replaceAll(
+        RegExp(
+          r'<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<.*?>|<!--[\s\S]*?-->',
+        ),
+        '',
+      );
+    };
 
 /// Strips all newlines from a string.
 ///
@@ -110,11 +131,15 @@ FilterFunction stripHtml = (dynamic value, List<dynamic> arguments,
 /// Example:
 /// Input: {{ "Hello\nWorld" | strip_newlines }}
 /// Output: HelloWorld
-FilterFunction stripNewlines = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  final str = _stringify(value);
-  return str.replaceAll(RegExp(r'\r?\n'), '');
-};
+FilterFunction stripNewlines =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      final str = _stringify(value);
+      return str.replaceAll(RegExp(r'\r?\n'), '');
+    };
 
 /// Map of HTML filter names to their corresponding functions.
 class HtmlModule extends Module {

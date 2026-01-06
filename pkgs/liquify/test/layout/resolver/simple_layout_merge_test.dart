@@ -47,7 +47,7 @@ void main() {
       ASTMatcher.validateAST(mergedAst, [
         ASTMatcher.text('<!DOCTYPE html>'),
         ASTMatcher.text('Overridden Title'),
-        ASTMatcher.text('Overridden Content')
+        ASTMatcher.text('Overridden Content'),
       ]);
     });
   });

@@ -87,14 +87,20 @@ void main() {
         expect(source.file?.path, equals('simple.liquid'));
       });
 
-      test('throws exception for non-existent template asynchronously',
-          () async {
-        expect(() => root.resolveAsync('non_existent.liquid'), throwsException);
-      });
+      test(
+        'throws exception for non-existent template asynchronously',
+        () async {
+          expect(
+            () => root.resolveAsync('non_existent.liquid'),
+            throwsException,
+          );
+        },
+      );
 
       test('handles delayed template resolution', () async {
-        final delayedRoot = MockRoot({'delayed.liquid': 'Delayed content'},
-            delay: Duration(milliseconds: 100));
+        final delayedRoot = MockRoot({
+          'delayed.liquid': 'Delayed content',
+        }, delay: Duration(milliseconds: 100));
 
         final stopwatch = Stopwatch()..start();
         await delayedRoot.resolveAsync('delayed.liquid');

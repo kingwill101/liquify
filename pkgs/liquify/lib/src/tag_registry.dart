@@ -20,7 +20,9 @@ class TagRegistry {
   ///
   /// If the created tag implements CustomTagParser, it's also added to _customTagParsers.
   static void register(
-      String name, Function(List<ASTNode>, List<Filter>) creator) {
+    String name,
+    Function(List<ASTNode>, List<Filter>) creator,
+  ) {
     _tags[name] = creator;
 
     final creatorInstance = creator([].cast<ASTNode>(), [].cast<Filter>());
@@ -33,7 +35,10 @@ class TagRegistry {
   ///
   /// Returns null if the tag is not registered.
   static AbstractTag? createTag(
-      String name, List<ASTNode> content, List<Filter> filters) {
+    String name,
+    List<ASTNode> content,
+    List<Filter> filters,
+  ) {
     final creator = _tags[name];
     if (creator != null) {
       return creator(content, filters);
@@ -48,49 +53,95 @@ class TagRegistry {
 /// Registers all built-in Liquid tags.
 void registerBuiltInTags() {
   TagRegistry.register(
-      'layout', (content, filters) => tags.LayoutTag(content, filters));
+    'layout',
+    (content, filters) => tags.LayoutTag(content, filters),
+  );
   TagRegistry.register(
-      'super', (content, filters) => tags.SuperTag(content, filters));
+    'super',
+    (content, filters) => tags.SuperTag(content, filters),
+  );
   TagRegistry.register(
-      'block', (content, filters) => tags.BlockTag(content, filters));
+    'block',
+    (content, filters) => tags.BlockTag(content, filters),
+  );
   TagRegistry.register(
-      'echo', (content, filters) => tags.EchoTag(content, filters));
+    'echo',
+    (content, filters) => tags.EchoTag(content, filters),
+  );
   TagRegistry.register(
-      'assign', (content, filters) => tags.AssignTag(content, filters));
+    'assign',
+    (content, filters) => tags.AssignTag(content, filters),
+  );
   TagRegistry.register(
-      'increment', (content, filters) => tags.IncrementTag(content, filters));
+    'increment',
+    (content, filters) => tags.IncrementTag(content, filters),
+  );
   TagRegistry.register(
-      'decrement', (content, filters) => tags.DecrementTag(content, filters));
+    'decrement',
+    (content, filters) => tags.DecrementTag(content, filters),
+  );
   TagRegistry.register(
-      'repeat', (content, filters) => tags.RepeatTag(content, filters));
+    'repeat',
+    (content, filters) => tags.RepeatTag(content, filters),
+  );
   TagRegistry.register(
-      'for', (content, filters) => tags.ForTag(content, filters));
+    'for',
+    (content, filters) => tags.ForTag(content, filters),
+  );
   TagRegistry.register(
-      'if', (content, filters) => tags.IfTag(content, filters));
+    'if',
+    (content, filters) => tags.IfTag(content, filters),
+  );
   TagRegistry.register(
-      'elsif', (content, filters) => tags.IfTag(content, filters));
+    'elsif',
+    (content, filters) => tags.IfTag(content, filters),
+  );
   TagRegistry.register(
-      'continue', (content, filters) => tags.ContinueTag(content, filters));
+    'continue',
+    (content, filters) => tags.ContinueTag(content, filters),
+  );
   TagRegistry.register(
-      'break', (content, filters) => tags.BreakTag(content, filters));
+    'break',
+    (content, filters) => tags.BreakTag(content, filters),
+  );
   TagRegistry.register(
-      'cycle', (content, filters) => tags.CycleTag(content, filters));
+    'cycle',
+    (content, filters) => tags.CycleTag(content, filters),
+  );
   TagRegistry.register(
-      'tablerow', (content, filters) => tags.TableRowTag(content, filters));
+    'tablerow',
+    (content, filters) => tags.TableRowTag(content, filters),
+  );
   TagRegistry.register(
-      'unless', (content, filters) => tags.UnlessTag(content, filters));
+    'unless',
+    (content, filters) => tags.UnlessTag(content, filters),
+  );
   TagRegistry.register(
-      'capture', (content, filters) => tags.CaptureTag(content, filters));
+    'capture',
+    (content, filters) => tags.CaptureTag(content, filters),
+  );
   TagRegistry.register(
-      'liquid', (content, filters) => tags.LiquidTag(content, filters));
+    'liquid',
+    (content, filters) => tags.LiquidTag(content, filters),
+  );
   TagRegistry.register(
-      'case', (content, filters) => tags.CaseTag(content, filters));
+    'case',
+    (content, filters) => tags.CaseTag(content, filters),
+  );
   TagRegistry.register(
-      'raw', (content, filters) => tags.RawTag(content, filters));
+    'raw',
+    (content, filters) => tags.RawTag(content, filters),
+  );
   TagRegistry.register(
-      'comment', (content, filters) => tags.CommentTag(content, filters));
+    'comment',
+    (content, filters) => tags.CommentTag(content, filters),
+  );
   TagRegistry.register(
-      'doc', (content, filters) => tags.DocTag(content, filters));
+    'doc',
+    (content, filters) => tags.DocTag(content, filters),
+  );
   TagRegistry.register(
-      'render', (content, filters) => tags.RenderTag(content, filters));
+    'render',
+    (content, filters) => tags.RenderTag(content, filters),
+  );
 }

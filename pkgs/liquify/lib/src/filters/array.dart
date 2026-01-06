@@ -10,18 +10,22 @@ import 'package:liquify/src/evaluator.dart';
 /// Arguments: None
 ///
 /// Example: {{ "hello" | upper }} => "HELLO"
-dynamic upper(dynamic value, List<dynamic> arguments,
-        Map<String, dynamic> namedArguments) =>
-    value.toString().toUpperCase();
+dynamic upper(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) => value.toString().toUpperCase();
 
 /// Converts the input value to lowercase.
 ///
 /// Arguments: None
 ///
 /// Example: {{ "HELLO" | lower }} => "hello"
-dynamic lower(dynamic value, List<dynamic> arguments,
-        Map<String, dynamic> namedArguments) =>
-    value.toString().toLowerCase();
+dynamic lower(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) => value.toString().toLowerCase();
 
 /// Returns the length of the input string or list.
 ///
@@ -29,8 +33,11 @@ dynamic lower(dynamic value, List<dynamic> arguments,
 ///
 /// Example: {{ "hello" | length }} => 5
 /// Example: {{ [1, 2, 3] | length }} => 3
-dynamic length(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic length(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is String) return value.length;
   if (value is List) return value.length;
   return 0;
@@ -42,8 +49,11 @@ dynamic length(dynamic value, List<dynamic> arguments,
 /// - separator (optional): The string to use as a separator. Default is a space.
 ///
 /// Example: {{ [1, 2, 3] | join: ", " }} => "1, 2, 3"
-dynamic join(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic join(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return value;
   final separator = arguments.isNotEmpty ? arguments[0].toString() : ' ';
   return value.join(separator);
@@ -54,8 +64,11 @@ dynamic join(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, 2, 3] | first }} => 1
-dynamic first(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic first(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || value.isEmpty) return '';
   return value.first;
 }
@@ -65,8 +78,11 @@ dynamic first(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, 2, 3] | last }} => 3
-dynamic last(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic last(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || value.isEmpty) return '';
   return value.last;
 }
@@ -76,8 +92,11 @@ dynamic last(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, 2, 3] | reverse }} => [3, 2, 1]
-dynamic reverse(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic reverse(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return value;
   return value.reversed.toList();
 }
@@ -88,8 +107,11 @@ dynamic reverse(dynamic value, List<dynamic> arguments,
 ///
 /// Example: {{ "hello" | size }} => 5
 /// Example: {{ [1, 2, 3] | size }} => 3
-dynamic size(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic size(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is String) return value.length;
   if (value is List) return value.length;
   return 0;
@@ -100,8 +122,11 @@ dynamic size(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [3, 1, 2] | sort }} => [1, 2, 3]
-dynamic sort(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic sort(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return value;
   final sorted = List.from(value);
   sorted.sort();
@@ -114,8 +139,11 @@ dynamic sort(dynamic value, List<dynamic> arguments,
 /// - property: The name of the property to map.
 ///
 /// Example: {{ [{"name": "Alice"}, {"name": "Bob"}] | map: "name" }} => ["Alice", "Bob"]
-dynamic map(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic map(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final property = arguments[0].toString();
   return value.map((item) => item is Map ? item[property] : null).toList();
@@ -128,8 +156,11 @@ dynamic map(dynamic value, List<dynamic> arguments,
 /// - expected (optional): The expected value of the property.
 ///
 /// Example: {{ [{"age": 20}, {"age": 30}] | where: "age", 30 }} => [{"age": 30}]
-dynamic where(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic where(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
@@ -145,8 +176,11 @@ dynamic where(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, 2, 2, 3, 3] | uniq }} => [1, 2, 3]
-dynamic uniq(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic uniq(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return value;
   return value.toSet().toList();
 }
@@ -159,8 +193,11 @@ dynamic uniq(dynamic value, List<dynamic> arguments,
 ///
 /// Example: {{ [1, 2, 3, 4, 5] | slice: 1, 3 }} => [2, 3, 4]
 /// Example: {{ "hello" | slice: 1, 3 }} => "ell"
-dynamic slice(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic slice(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List && value is! String) return value;
 
   final length = value is String ? value.length : (value as List).length;
@@ -169,8 +206,9 @@ dynamic slice(dynamic value, List<dynamic> arguments,
   int start = arguments.isNotEmpty ? arguments[0] as int : 0;
   if (start < 0) start = math.max(length + start, 0);
 
-  final sliceLength =
-      arguments.length > 1 ? math.max(0, arguments[1] as int) : 1;
+  final sliceLength = arguments.length > 1
+      ? math.max(0, arguments[1] as int)
+      : 1;
   final end = math.min(start + sliceLength, length);
 
   if (start >= length) return value is String ? '' : [];
@@ -187,8 +225,11 @@ dynamic slice(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, null, 2, "", 3] | compact }} => [1, 2, "", 3]
-dynamic compact(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic compact(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return value;
   return value.where((item) => item != null).toList();
 }
@@ -199,8 +240,11 @@ dynamic compact(dynamic value, List<dynamic> arguments,
 /// - array: The array to concatenate with the input array.
 ///
 /// Example: {{ [1, 2] | concat: [3, 4] }} => [1, 2, 3, 4]
-dynamic concat(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic concat(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final array = arguments[0];
   if (array is! List) return value;
@@ -214,8 +258,11 @@ dynamic concat(dynamic value, List<dynamic> arguments,
 /// - expected (optional): The value to reject. If not provided, rejects truthy values.
 ///
 /// Example: {{ [{"type": "kitchen"}, {"type": "living"}] | reject: "type", "kitchen" }} => [{"type": "living"}]
-dynamic reject(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic reject(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
@@ -240,8 +287,11 @@ dynamic reject(dynamic value, List<dynamic> arguments,
 /// - element: The element to push to the array.
 ///
 /// Example: {{ [1, 2] | push: 3 }} => [1, 2, 3]
-dynamic push(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic push(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final element = arguments[0];
   return [...value, element];
@@ -252,8 +302,11 @@ dynamic push(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, 2, 3] | pop }} => [1, 2]
-dynamic pop(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic pop(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || value.isEmpty) return value;
   return value.sublist(0, value.length - 1);
 }
@@ -263,8 +316,11 @@ dynamic pop(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ [1, 2, 3] | shift }} => [2, 3]
-dynamic shift(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic shift(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || value.isEmpty) return value;
   return value.sublist(1);
 }
@@ -275,8 +331,11 @@ dynamic shift(dynamic value, List<dynamic> arguments,
 /// - element: The element to add to the beginning of the array.
 ///
 /// Example: {{ [2, 3] | unshift: 1 }} => [1, 2, 3]
-dynamic unshift(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic unshift(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final element = arguments[0];
   return [element, ...value];
@@ -289,8 +348,11 @@ dynamic unshift(dynamic value, List<dynamic> arguments,
 /// - expected (optional): The value to match. If not provided, finds first truthy value.
 ///
 /// Example: {{ [{"name": "Alice"}, {"name": "Bob"}] | find: "name", "Bob" }} => {"name": "Bob"}
-dynamic find(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic find(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return null;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
@@ -322,8 +384,11 @@ dynamic find(dynamic value, List<dynamic> arguments,
 /// - expected (optional): The value to match. If not provided, finds first truthy value.
 ///
 /// Example: {{ [{"name": "Alice"}, {"name": "Bob"}] | find_index: "name", "Bob" }} => 1
-dynamic findIndex(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic findIndex(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return -1;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
@@ -356,8 +421,11 @@ dynamic findIndex(dynamic value, List<dynamic> arguments,
 ///
 /// Example: {{ [1, 2, 3] | sum }} => 6
 /// Example: {{ [{"price": 10}, {"price": 20}] | sum: "price" }} => 30
-dynamic sum(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic sum(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return 0;
 
   if (arguments.isNotEmpty) {
@@ -390,8 +458,11 @@ dynamic sum(dynamic value, List<dynamic> arguments,
 /// Arguments: None
 ///
 /// Example: {{ ["item10", "item2", "item1"] | sort_natural }} => ["item1", "item2", "item10"]
-dynamic sortNatural(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic sortNatural(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List) return value;
   final sorted = List.from(value);
 
@@ -439,8 +510,11 @@ dynamic sortNatural(dynamic value, List<dynamic> arguments,
 ///
 /// Example: {{ [{"type": "A"}, {"type": "B"}, {"type": "A"}] | group_by: "type" }}
 /// Output: [{"name": "A", "items": [{"type": "A"}, {"type": "A"}]}, {"name": "B", "items": [{"type": "B"}]}]
-dynamic groupBy(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic groupBy(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return value;
   final property = arguments[0].toString();
 
@@ -468,8 +542,11 @@ dynamic groupBy(dynamic value, List<dynamic> arguments,
 /// - expected (optional): The value to check for. If not provided, checks for truthy values.
 ///
 /// Example: {{ [{"active": true}, {"active": false}] | has: "active", true }} => true
-dynamic has(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic has(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.isEmpty) return false;
   final property = arguments[0].toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
@@ -502,8 +579,11 @@ dynamic has(dynamic value, List<dynamic> arguments,
 /// - expression: A basic Liquid expression to evaluate (e.g., "item.type == 'kitchen'")
 ///
 /// Example: {{ products | where_exp: "item", "item.type == 'kitchen'" }}
-dynamic whereExp(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic whereExp(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.length < 2) return value;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
@@ -521,8 +601,11 @@ dynamic whereExp(dynamic value, List<dynamic> arguments,
 /// - expression: A basic Liquid expression to evaluate (e.g., "item.type == 'kitchen'")
 ///
 /// Example: {{ products | find_exp: "item", "item.type == 'kitchen'" }}
-dynamic findExp(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic findExp(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.length < 2) return null;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
@@ -543,8 +626,11 @@ dynamic findExp(dynamic value, List<dynamic> arguments,
 /// - expression: A basic Liquid expression to evaluate (e.g., "item.type == 'kitchen'")
 ///
 /// Example: {{ products | find_index_exp: "item", "item.type == 'kitchen'" }}
-dynamic findIndexExp(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic findIndexExp(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.length < 2) return -1;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
@@ -565,8 +651,11 @@ dynamic findIndexExp(dynamic value, List<dynamic> arguments,
 /// - expression: A basic Liquid expression to evaluate for grouping (e.g., "item.graduation_year | truncate: 3, ''")
 ///
 /// Example: {{ members | group_by_exp: "item", "item.graduation_year" }}
-dynamic groupByExp(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic groupByExp(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.length < 2) return value;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
@@ -575,9 +664,13 @@ dynamic groupByExp(dynamic value, List<dynamic> arguments,
 
   for (final item in value) {
     final groupKey =
-        _evaluateLiquidExpression(item, itemName, expression, returnValue: true)
-                ?.toString() ??
-            '';
+        _evaluateLiquidExpression(
+          item,
+          itemName,
+          expression,
+          returnValue: true,
+        )?.toString() ??
+        '';
 
     if (!groups.containsKey(groupKey)) {
       groups[groupKey] = [];
@@ -597,8 +690,11 @@ dynamic groupByExp(dynamic value, List<dynamic> arguments,
 /// - expression: A basic Liquid expression to evaluate (e.g., "item.active == true")
 ///
 /// Example: {{ products | has_exp: "item", "item.active == true" }}
-dynamic hasExp(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic hasExp(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.length < 2) return false;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
@@ -619,8 +715,11 @@ dynamic hasExp(dynamic value, List<dynamic> arguments,
 /// - expression: A basic Liquid expression to evaluate (e.g., "item.type == 'kitchen'")
 ///
 /// Example: {{ products | reject_exp: "item", "item.type == 'kitchen'" }}
-dynamic rejectExp(dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
+dynamic rejectExp(
+  dynamic value,
+  List<dynamic> arguments,
+  Map<String, dynamic> namedArguments,
+) {
   if (value is! List || arguments.length < 2) return value;
   final itemName = arguments[0].toString();
   final expression = arguments[1].toString();
@@ -634,8 +733,11 @@ dynamic rejectExp(dynamic value, List<dynamic> arguments,
 /// Helper function to evaluate Liquid expressions using the proper parser and evaluator.
 /// This creates a proper Liquid expression and evaluates it with the item as context.
 dynamic _evaluateLiquidExpression(
-    dynamic item, String itemName, String expression,
-    {bool returnValue = false}) {
+  dynamic item,
+  String itemName,
+  String expression, {
+  bool returnValue = false,
+}) {
   try {
     // Create a complete Liquid expression by wrapping it in {{ }}
     final liquidExpression = '{{ $expression }}';

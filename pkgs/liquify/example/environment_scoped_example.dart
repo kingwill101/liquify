@@ -52,7 +52,9 @@ void main() async {
     data: {'value': 'test'},
     environmentSetup: (env) {
       env.registerLocalFilter(
-          'format', (value, args, namedArgs) => 'FORMAT_A:$value');
+        'format',
+        (value, args, namedArgs) => 'FORMAT_A:$value',
+      );
     },
   );
 
@@ -61,7 +63,9 @@ void main() async {
     data: {'value': 'test'},
     environmentSetup: (env) {
       env.registerLocalFilter(
-          'format', (value, args, namedArgs) => 'FORMAT_B:$value');
+        'format',
+        (value, args, namedArgs) => 'FORMAT_B:$value',
+      );
     },
   );
 
@@ -78,16 +82,22 @@ void main() async {
   );
 
   // Register initial filter
-  dynamicTemplate.environment.registerLocalFilter('transform',
-      (value, args, namedArgs) {
+  dynamicTemplate.environment.registerLocalFilter('transform', (
+    value,
+    args,
+    namedArgs,
+  ) {
     return 'INITIAL:$value';
   });
 
   final resultBefore = await dynamicTemplate.renderAsync(clearBuffer: false);
 
   // Change the filter behavior
-  dynamicTemplate.environment.registerLocalFilter('transform',
-      (value, args, namedArgs) {
+  dynamicTemplate.environment.registerLocalFilter('transform', (
+    value,
+    args,
+    namedArgs,
+  ) {
     return 'UPDATED:$value';
   });
 
@@ -98,15 +108,23 @@ void main() async {
   print('5. Complex nested environment with cloning:');
   final baseEnv = Environment();
   baseEnv.registerLocalFilter(
-      'base_filter', (value, args, namedArgs) => 'BASE:$value');
+    'base_filter',
+    (value, args, namedArgs) => 'BASE:$value',
+  );
   baseEnv.registerLocalTag(
-      'base_tag', (content, filters) => BaseTag(content, filters));
+    'base_tag',
+    (content, filters) => BaseTag(content, filters),
+  );
 
   final childEnv = baseEnv.clone();
   childEnv.registerLocalFilter(
-      'child_filter', (value, args, namedArgs) => 'CHILD:$value');
+    'child_filter',
+    (value, args, namedArgs) => 'CHILD:$value',
+  );
   childEnv.registerLocalTag(
-      'child_tag', (content, filters) => ChildTag(content, filters));
+    'child_tag',
+    (content, filters) => ChildTag(content, filters),
+  );
 
   final complexTemplate = Template.parse(
     '''

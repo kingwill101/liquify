@@ -18,76 +18,102 @@ void main() {
     group('sync evaluation', () {
       test('renders when false', () async {
         await testParser(
-            '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
-            (document) {
-          evaluator.context.setVariable('product', {'title': 'Terrible Shoes'});
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), 'These shoes are not awesome.');
-        });
+          '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
+          (document) {
+            evaluator.context.setVariable('product', {
+              'title': 'Terrible Shoes',
+            });
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), 'These shoes are not awesome.');
+          },
+        );
       });
 
       test('doesnt render when true', () async {
         await testParser(
-            '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
-            (document) {
-          evaluator.context.setVariable('product', {'title': 'Awesome Shoes'});
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '');
-        });
+          '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
+          (document) {
+            evaluator.context.setVariable('product', {
+              'title': 'Awesome Shoes',
+            });
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '');
+          },
+        );
       });
 
       test('handles nested unless', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% unless product.title == "Awesome Shoes" %}
             {% unless product.price > 100 %}
               Affordable non-awesome shoes!
             {% endunless %}
           {% endunless %}
-        ''', (document) {
-          evaluator.context
-              .setVariable('product', {'title': 'Terrible Shoes', 'price': 50});
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(),
-              'Affordable non-awesome shoes!');
-        });
+        ''',
+          (document) {
+            evaluator.context.setVariable('product', {
+              'title': 'Terrible Shoes',
+              'price': 50,
+            });
+            evaluator.evaluateNodes(document.children);
+            expect(
+              evaluator.buffer.toString().trim(),
+              'Affordable non-awesome shoes!',
+            );
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('renders when false', () async {
         await testParser(
-            '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
-            (document) async {
-          evaluator.context.setVariable('product', {'title': 'Terrible Shoes'});
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), 'These shoes are not awesome.');
-        });
+          '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
+          (document) async {
+            evaluator.context.setVariable('product', {
+              'title': 'Terrible Shoes',
+            });
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), 'These shoes are not awesome.');
+          },
+        );
       });
 
       test('doesnt render when true', () async {
         await testParser(
-            '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
-            (document) async {
-          evaluator.context.setVariable('product', {'title': 'Awesome Shoes'});
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '');
-        });
+          '{% unless product.title == "Awesome Shoes" %}These shoes are not awesome.{% endunless %}',
+          (document) async {
+            evaluator.context.setVariable('product', {
+              'title': 'Awesome Shoes',
+            });
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '');
+          },
+        );
       });
 
       test('handles nested unless', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% unless product.title == "Awesome Shoes" %}
             {% unless product.price > 100 %}
               Affordable non-awesome shoes!
             {% endunless %}
           {% endunless %}
-        ''', (document) async {
-          evaluator.context
-              .setVariable('product', {'title': 'Terrible Shoes', 'price': 50});
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(),
-              'Affordable non-awesome shoes!');
-        });
+        ''',
+          (document) async {
+            evaluator.context.setVariable('product', {
+              'title': 'Terrible Shoes',
+              'price': 50,
+            });
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(
+              evaluator.buffer.toString().trim(),
+              'Affordable non-awesome shoes!',
+            );
+          },
+        );
       });
     });
   });

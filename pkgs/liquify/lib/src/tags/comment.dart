@@ -8,7 +8,9 @@ class CommentTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {}
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {}
 
   @override
   Parser parser() {
@@ -22,7 +24,7 @@ class CommentTag extends AbstractTag with CustomTagParser, AsyncTag {
             string('endcomment').trim() &
             tagEnd())
         .map((values) {
-      return Tag("comment", [TextNode(values[3])]);
-    });
+          return Tag("comment", [TextNode(values[3])]);
+        });
   }
 }

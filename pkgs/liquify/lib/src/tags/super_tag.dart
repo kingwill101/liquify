@@ -21,7 +21,7 @@ class SuperTag extends AbstractTag with CustomTagParser {
             char(')').trim() &
             varEnd())
         .map((_) {
-      return Tag('super', []);
-    });
+          return Tag('super', []);
+        });
   }
 }

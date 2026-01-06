@@ -20,7 +20,8 @@ extension Evaluation on Evaluator {
   }
 
   Future<List<ASTNode>> resolveAndParseTemplateAsync(
-      String templateName) async {
+    String templateName,
+  ) async {
     final root = context.getRoot();
     if (root == null) {
       throw Exception('No root directory set for template resolution');

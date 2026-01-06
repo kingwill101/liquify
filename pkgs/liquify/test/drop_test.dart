@@ -8,21 +8,25 @@ void main() {
 
   group('Drop', () {
     test('properties', () async {
-      expect(Template.parse('{{ name.lastName }}', data: data).render(),
-          equals('Jones'));
+      expect(
+        Template.parse('{{ name.lastName }}', data: data).render(),
+        equals('Jones'),
+      );
     });
 
     test('nesting', () async {
-      var template =
-          Template.parse('{{ name.address.country }}', data: data).render();
+      var template = Template.parse(
+        '{{ name.address.country }}',
+        data: data,
+      ).render();
       expect(template, equals('U.S.A'));
     });
 
     test('invokable', () async {
       expect(
-          Template.parse('{{ name.first }} {{ name.last }}', data: data)
-              .render(),
-          equals('John Jones'));
+        Template.parse('{{ name.first }} {{ name.last }}', data: data).render(),
+        equals('John Jones'),
+      );
     });
   });
 }
@@ -44,18 +48,14 @@ class PersonDrop extends Drop {
 
   @override
   Map<String, dynamic> get attrs => {
-        "firstName": firstName,
-        "lastName": lastName,
-        "fullName": fullName(),
-        "address": AddressDrop(),
-      };
+    "firstName": firstName,
+    "lastName": lastName,
+    "fullName": fullName(),
+    "address": AddressDrop(),
+  };
 
   @override
-  List<Symbol> get invokable => [
-        ...super.invokable,
-        #first,
-        #last,
-      ];
+  List<Symbol> get invokable => [...super.invokable, #first, #last];
 
   @override
   invoke(Symbol symbol) {

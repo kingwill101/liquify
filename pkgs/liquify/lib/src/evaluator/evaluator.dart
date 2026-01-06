@@ -145,7 +145,9 @@ class Evaluator implements ASTVisitor<dynamic> {
         return isTruthy(left) || isTruthy(right);
       case '..':
         return List.generate(
-            (right ?? 0) - (left ?? 0) + 1, (index) => (left ?? 0) + index);
+          (right ?? 0) - (left ?? 0) + 1,
+          (index) => (left ?? 0) + index,
+        );
       case 'in':
         if (right is! Iterable) {
           throw Exception('Right side of "in" operator must be iterable.');
@@ -158,7 +160,8 @@ class Evaluator implements ASTVisitor<dynamic> {
           return left.contains(right);
         }
         throw Exception(
-            'contains operator requires string or iterable on left side and string on right side');
+          'contains operator requires string or iterable on left side and string on right side',
+        );
       default:
         throw UnsupportedError('Unsupported operator: $op');
     }
@@ -252,7 +255,8 @@ class Evaluator implements ASTVisitor<dynamic> {
         value = ((node.expression as Assignment).value as Literal).value;
       } else if ((node.expression as Assignment).value is Identifier) {
         value = context.getVariable(
-            ((node.expression as Assignment).value as Identifier).name);
+          ((node.expression as Assignment).value as Identifier).name,
+        );
       } else {
         value = (node.expression as Assignment).value.accept(this);
       }
@@ -446,7 +450,8 @@ class Evaluator implements ASTVisitor<dynamic> {
         value = ((node.expression as Assignment).value as Literal).value;
       } else if ((node.expression as Assignment).value is Identifier) {
         value = context.getVariable(
-            ((node.expression as Assignment).value as Identifier).name);
+          ((node.expression as Assignment).value as Identifier).name,
+        );
       } else {
         value = await (node.expression as Assignment).value.acceptAsync(this);
       }

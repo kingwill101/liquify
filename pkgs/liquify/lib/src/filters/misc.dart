@@ -17,20 +17,24 @@ import 'package:liquify/src/filters/module.dart';
 /// {{ false | default: 'Nope', true }}  // Output: false
 /// {{ 'Hello' | default: 'Guest' }}  // Output: 'Hello'
 /// ```
-FilterFunction defaultFilter = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  if (arguments.isEmpty) {
-    throw ArgumentError('default filter requires at least one argument');
-  }
-  dynamic defaultValue = arguments[0];
-  bool allowFalse = arguments.length > 1 ? arguments[1] as bool : false;
+FilterFunction defaultFilter =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      if (arguments.isEmpty) {
+        throw ArgumentError('default filter requires at least one argument');
+      }
+      dynamic defaultValue = arguments[0];
+      bool allowFalse = arguments.length > 1 ? arguments[1] as bool : false;
 
-  if (value is List || value is String) {
-    return (value as dynamic).isEmpty ? defaultValue : value;
-  }
-  if (value == false && allowFalse) return false;
-  return isFalsy(value) ? defaultValue : value;
-};
+      if (value is List || value is String) {
+        return (value as dynamic).isEmpty ? defaultValue : value;
+      }
+      if (value == false && allowFalse) return false;
+      return isFalsy(value) ? defaultValue : value;
+    };
 
 /// Converts the input value to a JSON string.
 ///
@@ -47,13 +51,17 @@ FilterFunction defaultFilter = (dynamic value, List<dynamic> arguments,
 /// //   "age": 30
 /// // }
 /// ```
-FilterFunction json = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  int? space = arguments.isNotEmpty ? arguments[0] as int? : null;
-  return space != null && space > 0
-      ? JsonEncoder.withIndent(' ' * space).convert(value)
-      : JsonEncoder().convert(value);
-};
+FilterFunction json =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      int? space = arguments.isNotEmpty ? arguments[0] as int? : null;
+      return space != null && space > 0
+          ? JsonEncoder.withIndent(' ' * space).convert(value)
+          : JsonEncoder().convert(value);
+    };
 
 /// Parses a JSON string into a Dart object.
 ///
@@ -68,20 +76,25 @@ FilterFunction json = (dynamic value, List<dynamic> arguments,
 /// ```
 ///
 /// Note: If the input is not a valid JSON string, this filter will throw a FormatException.
-FilterFunction parseJson = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  if (value == null) {
-    throw ArgumentError('parse_json filter cannot parse null value');
-  }
+FilterFunction parseJson =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      if (value == null) {
+        throw ArgumentError('parse_json filter cannot parse null value');
+      }
 
-  String jsonString = value.toString();
-  try {
-    return JsonDecoder().convert(jsonString);
-  } catch (e) {
-    throw FormatException(
-        'parse_json filter: Invalid JSON string: $jsonString');
-  }
-};
+      String jsonString = value.toString();
+      try {
+        return JsonDecoder().convert(jsonString);
+      } catch (e) {
+        throw FormatException(
+          'parse_json filter: Invalid JSON string: $jsonString',
+        );
+      }
+    };
 
 /// Inspects the input value, handling circular references.
 ///
@@ -101,34 +114,38 @@ FilterFunction parseJson = (dynamic value, List<dynamic> arguments,
 /// //   }
 /// // }
 /// ```
-FilterFunction inspect = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  int? space = arguments.isNotEmpty ? arguments[0] as int? : null;
-  Set<dynamic> ancestors = {};
+FilterFunction inspect =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      int? space = arguments.isNotEmpty ? arguments[0] as int? : null;
+      Set<dynamic> ancestors = {};
 
-  dynamic serialize(dynamic object) {
-    if (object is! Map && object is! List) return object;
-    if (ancestors.contains(object)) return '[Circular]';
-    ancestors.add(object);
-    if (object is List) {
-      var result = object.map(serialize).toList();
-      ancestors.remove(object);
-      return result;
-    } else if (object is Map) {
-      var result = {};
-      object.forEach((key, value) {
-        result[key] = serialize(value);
-      });
-      ancestors.remove(object);
-      return result;
-    }
-    return object;
-  }
+      dynamic serialize(dynamic object) {
+        if (object is! Map && object is! List) return object;
+        if (ancestors.contains(object)) return '[Circular]';
+        ancestors.add(object);
+        if (object is List) {
+          var result = object.map(serialize).toList();
+          ancestors.remove(object);
+          return result;
+        } else if (object is Map) {
+          var result = {};
+          object.forEach((key, value) {
+            result[key] = serialize(value);
+          });
+          ancestors.remove(object);
+          return result;
+        }
+        return object;
+      }
 
-  return space != null && space > 0
-      ? JsonEncoder.withIndent(' ' * space).convert(serialize(value))
-      : JsonEncoder().convert(serialize(value));
-};
+      return space != null && space > 0
+          ? JsonEncoder.withIndent(' ' * space).convert(serialize(value))
+          : JsonEncoder().convert(serialize(value));
+    };
 
 /// Converts the input value to an integer.
 ///
@@ -139,13 +156,17 @@ FilterFunction inspect = (dynamic value, List<dynamic> arguments,
 /// {{ 3.14 | to_integer }}  // Output: 3
 /// {{ '42' | to_integer }}  // Output: 42
 /// ```
-FilterFunction toInteger = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  if (value is num) {
-    return value.round();
-  }
-  return int.parse(value.toString());
-};
+FilterFunction toInteger =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      if (value is num) {
+        return value.round();
+      }
+      return int.parse(value.toString());
+    };
 
 /// Returns the input value without any processing (raw).
 ///
@@ -156,10 +177,14 @@ FilterFunction toInteger = (dynamic value, List<dynamic> arguments,
 /// {% assign my_var = "<p>Hello, World!</p>" %}
 /// {{ my_var | raw }}  // Output: <p>Hello, World!</p>
 /// ```
-FilterFunction raw = (dynamic value, List<dynamic> arguments,
-    Map<String, dynamic> namedArguments) {
-  return value;
-};
+FilterFunction raw =
+    (
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    ) {
+      return value;
+    };
 
 /// Helper function to check if a value is falsy.
 bool isFalsy(dynamic value) {

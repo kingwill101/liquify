@@ -11,7 +11,10 @@ class IfTag extends AbstractTag with AsyncTag {
   IfTag(super.content, super.filters);
 
   void _renderBlockSync(
-      Evaluator evaluator, Buffer buffer, List<ASTNode> body) {
+    Evaluator evaluator,
+    Buffer buffer,
+    List<ASTNode> body,
+  ) {
     for (final subNode in body) {
       if (subNode is Tag &&
           (subNode.name == 'else' || subNode.name == 'elsif')) {
@@ -33,7 +36,10 @@ class IfTag extends AbstractTag with AsyncTag {
   }
 
   Future<void> _renderBlockAsync(
-      Evaluator evaluator, Buffer buffer, List<ASTNode> body) async {
+    Evaluator evaluator,
+    Buffer buffer,
+    List<ASTNode> body,
+  ) async {
     for (final subNode in body) {
       if (subNode is Tag &&
           (subNode.name == 'else' || subNode.name == 'elsif')) {
@@ -62,8 +68,10 @@ class IfTag extends AbstractTag with AsyncTag {
     // Get all else/elsif blocks
     final elseBlock =
         body.where((n) => n is Tag && n.name == 'else').firstOrNull as Tag?;
-    final elsifTags =
-        body.where((n) => n is Tag && (n.name == 'elsif')).cast<Tag>().toList();
+    final elsifTags = body
+        .where((n) => n is Tag && (n.name == 'elsif'))
+        .cast<Tag>()
+        .toList();
 
     // Main if condition
     if (conditionMet) {
@@ -94,15 +102,19 @@ class IfTag extends AbstractTag with AsyncTag {
 
   @override
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
     // Get main condition result
     conditionMet = isTruthy(await evaluator.evaluateAsync(content[0]));
 
     // Get all else/elsif blocks
     final elseBlock =
         body.where((n) => n is Tag && n.name == 'else').firstOrNull as Tag?;
-    final elsifTags =
-        body.where((n) => n is Tag && (n.name == 'elsif')).cast<Tag>().toList();
+    final elsifTags = body
+        .where((n) => n is Tag && (n.name == 'elsif'))
+        .cast<Tag>()
+        .toList();
 
     // Main if condition
     if (conditionMet) {
@@ -118,8 +130,9 @@ class IfTag extends AbstractTag with AsyncTag {
     for (var elsif in elsifTags) {
       if (elsif.content.isEmpty) continue;
 
-      final elIfConditionMet =
-          isTruthy(await evaluator.evaluateAsync(elsif.content[0]));
+      final elIfConditionMet = isTruthy(
+        await evaluator.evaluateAsync(elsif.content[0]),
+      );
       if (elIfConditionMet) {
         await _renderBlockAsync(evaluator, buffer, elsif.body);
         return;

@@ -25,21 +25,24 @@ class FileSystemRoot implements Root {
   final List<String> _extensions;
   final bool throwOnMissing;
 
-  FileSystemRoot(String basePath,
-      {FileSystem? fileSystem,
-      List<String>? extensions,
-      this.throwOnMissing = false})
-      : _extensions = extensions ?? ['.liquid', '.html'],
-        fileSystem = fileSystem ?? LocalFileSystem(),
-        baseDir = (fileSystem ?? LocalFileSystem()).directory(
-            (fileSystem ?? LocalFileSystem()).path.normalize(basePath));
+  FileSystemRoot(
+    String basePath, {
+    FileSystem? fileSystem,
+    List<String>? extensions,
+    this.throwOnMissing = false,
+  }) : _extensions = extensions ?? ['.liquid', '.html'],
+       fileSystem = fileSystem ?? LocalFileSystem(),
+       baseDir = (fileSystem ?? LocalFileSystem()).directory(
+         (fileSystem ?? LocalFileSystem()).path.normalize(basePath),
+       );
 
   @override
   Source resolve(String relPath) {
     if (fileSystem.path.extension(relPath).isEmpty) {
       for (final ext in _extensions) {
-        final file =
-            baseDir.childFile(fileSystem.path.normalize('$relPath$ext'));
+        final file = baseDir.childFile(
+          fileSystem.path.normalize('$relPath$ext'),
+        );
         if (file.existsSync()) {
           final content = file.readAsStringSync();
           return Source(file.uri, content, this);
@@ -68,8 +71,9 @@ class FileSystemRoot implements Root {
   Future<Source> resolveAsync(String relPath) async {
     if (fileSystem.path.extension(relPath).isEmpty) {
       for (final ext in _extensions) {
-        final file =
-            baseDir.childFile(fileSystem.path.normalize('$relPath$ext'));
+        final file = baseDir.childFile(
+          fileSystem.path.normalize('$relPath$ext'),
+        );
         if (await file.exists()) {
           final content = await file.readAsString();
           return Source(file.uri, content, this);
@@ -137,9 +141,11 @@ class MapRoot implements Root {
   final bool throwOnMissing;
   final List<String> _extensions;
 
-  MapRoot(this._templates,
-      {this.throwOnMissing = false, List<String>? extensions})
-      : _extensions = extensions ?? ['.liquid', '.html'];
+  MapRoot(
+    this._templates, {
+    this.throwOnMissing = false,
+    List<String>? extensions,
+  }) : _extensions = extensions ?? ['.liquid', '.html'];
 
   @override
   Source resolve(String relPath) {

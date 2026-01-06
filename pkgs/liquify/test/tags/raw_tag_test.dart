@@ -17,51 +17,63 @@ void main() {
   group('Raw Tag', () {
     group('sync evaluation', () {
       test('shows raw text', () async {
-        await testParser('''{% raw %}{% liquid
+        await testParser(
+          '''{% raw %}{% liquid
 assign my_variable = "string"
-%}{% endraw %}''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '''{% liquid
+%}{% endraw %}''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '''{% liquid
 assign my_variable = "string"
 %}''');
-        });
+          },
+        );
       });
 
       test('preserves liquid tags', () async {
-        await testParser('''{% raw %}
+        await testParser(
+          '''{% raw %}
 {% if user %}
   Hello {{ user.name }}!
-{% endif %}{% endraw %}''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), '''{% if user %}
+{% endif %}{% endraw %}''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString().trim(), '''{% if user %}
   Hello {{ user.name }}!
 {% endif %}''');
-        });
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('shows raw text', () async {
-        await testParser('''{% raw %}{% liquid
+        await testParser(
+          '''{% raw %}{% liquid
 assign my_variable = "string"
-%}{% endraw %}''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '''{% liquid
+%}{% endraw %}''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '''{% liquid
 assign my_variable = "string"
 %}''');
-        });
+          },
+        );
       });
 
       test('preserves liquid tags', () async {
-        await testParser('''{% raw %}
+        await testParser(
+          '''{% raw %}
 {% if user %}
   Hello {{ user.name }}!
-{% endif %}{% endraw %}''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), '''{% if user %}
+{% endif %}{% endraw %}''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString().trim(), '''{% if user %}
   Hello {{ user.name }}!
 {% endif %}''');
-        });
+          },
+        );
       });
     });
   });

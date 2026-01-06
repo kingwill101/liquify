@@ -6,8 +6,12 @@ import 'package:liquify/src/filters/filters.dart';
 /// [value] The input value to be filtered.
 /// [arguments] A list of positional arguments passed to the filter.
 /// [namedArguments] A map of named arguments passed to the filter.
-typedef FilterFunction = dynamic Function(dynamic value,
-    List<dynamic> arguments, Map<String, dynamic> namedArguments);
+typedef FilterFunction =
+    dynamic Function(
+      dynamic value,
+      List<dynamic> arguments,
+      Map<String, dynamic> namedArguments,
+    );
 
 /// A registry for storing and retrieving filter functions.
 class FilterRegistry {
@@ -28,8 +32,11 @@ class FilterRegistry {
   /// [name] The name of the filter to be registered.
   /// [function] The filter function to be associated with the given name.
   /// [dotNotation] If true, the filter can be used with dot notation.
-  static void register(String name, FilterFunction function,
-      {bool dotNotation = false}) {
+  static void register(
+    String name,
+    FilterFunction function, {
+    bool dotNotation = false,
+  }) {
     _filters[name] = function;
     if (dotNotation) {
       _dotNotationFilters.add(name);

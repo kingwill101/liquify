@@ -149,7 +149,10 @@ class _GoldenRecorder {
   static Directory? _rootFromTestPath(Directory start) {
     final path = start.absolute.path;
     final separator = Platform.pathSeparator;
-    final marker = '$separator' 'test' '$separator';
+    final marker =
+        '$separator'
+        'test'
+        '$separator';
     final markerIndex = path.lastIndexOf(marker);
     if (markerIndex != -1) {
       final rootPath = path.substring(0, markerIndex);

@@ -17,7 +17,8 @@ void main() {
   group('if/elsif tag', () {
     group('sync evaluation', () {
       test('handles elsif with first condition false', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 1 %}
           {% if num == 2 %}
             num is 2
@@ -26,14 +27,17 @@ void main() {
           {% else %}
             didn't find it
           {% endif %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), equals('num is 1'));
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString().trim(), equals('num is 1'));
+          },
+        );
       });
 
       test('handles first condition true', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 2 %}
           {% if num == 2 %}
             num is 2
@@ -42,14 +46,17 @@ void main() {
           {% else %}
             didn't find it
           {% endif %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), equals('num is 2'));
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString().trim(), equals('num is 2'));
+          },
+        );
       });
 
       test('handles nested if in else block - condition true', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
@@ -63,15 +70,21 @@ void main() {
               it is not greater than 2
             {% endif %}
           {% endif %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), contains("didn't find it"));
-          expect(evaluator.buffer.toString(), contains("it is greater than 2"));
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), contains("didn't find it"));
+            expect(
+              evaluator.buffer.toString(),
+              contains("it is greater than 2"),
+            );
+          },
+        );
       });
 
       test('handles nested if in else block - condition false', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
@@ -85,18 +98,23 @@ void main() {
               it is not greater than 5
             {% endif %}
           {% endif %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), contains("didn't find it"));
-          expect(evaluator.buffer.toString(),
-              contains("it is not greater than 5"));
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), contains("didn't find it"));
+            expect(
+              evaluator.buffer.toString(),
+              contains("it is not greater than 5"),
+            );
+          },
+        );
       });
     });
 
     group('async evaluation', () {
       test('handles elsif with first condition false', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 1 %}
           {% if num == 2 %}
             num is 2
@@ -105,14 +123,17 @@ void main() {
           {% else %}
             didn't find it
           {% endif %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), equals('num is 1'));
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString().trim(), equals('num is 1'));
+          },
+        );
       });
 
       test('handles first condition true', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 2 %}
           {% if num == 2 %}
             num is 2
@@ -121,14 +142,17 @@ void main() {
           {% else %}
             didn't find it
           {% endif %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), equals('num is 2'));
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString().trim(), equals('num is 2'));
+          },
+        );
       });
 
       test('handles nested if in else block - condition true', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
@@ -142,15 +166,21 @@ void main() {
               it is not greater than 2
             {% endif %}
           {% endif %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), contains("didn't find it"));
-          expect(evaluator.buffer.toString(), contains("it is greater than 2"));
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), contains("didn't find it"));
+            expect(
+              evaluator.buffer.toString(),
+              contains("it is greater than 2"),
+            );
+          },
+        );
       });
 
       test('handles nested if in else block - condition false', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% assign num = 4 %}
           {% if num == 2 %}
             num is 2
@@ -164,12 +194,16 @@ void main() {
               it is not greater than 5
             {% endif %}
           {% endif %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), contains("didn't find it"));
-          expect(evaluator.buffer.toString(),
-              contains("it is not greater than 5"));
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), contains("didn't find it"));
+            expect(
+              evaluator.buffer.toString(),
+              contains("it is not greater than 5"),
+            );
+          },
+        );
       });
     });
   });

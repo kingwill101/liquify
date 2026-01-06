@@ -65,11 +65,13 @@ void main() {
   group('Nested Layouts', () {
     group('sync evaluation', () {
       test('nested layout inheritance', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% layout "posts/hello-world.liquid" %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(
               evaluator.buffer.toString().trim(),
               '''
 <!DOCTYPE html>
@@ -91,8 +93,10 @@ void main() {
   <script src="/main.js"></script>
 </body>
 </html>'''
-                  .trim());
-        });
+                  .trim(),
+            );
+          },
+        );
       });
     });
   });

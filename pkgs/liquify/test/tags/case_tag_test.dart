@@ -16,8 +16,7 @@ void main() {
   group('Case/when tag', () {
     group('sync evaluation', () {
       test('case tag with single match', () async {
-        await testParser(
-            '{% assign handle = "cake" %}'
+        await testParser('{% assign handle = "cake" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -32,8 +31,7 @@ void main() {
       });
 
       test('case tag with multiple values in when', () async {
-        await testParser(
-            '{% assign handle = "biscuit" %}'
+        await testParser('{% assign handle = "biscuit" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -43,14 +41,15 @@ void main() {
             'This is something else'
             '{% endcase %}', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(),
-              'This is a cookie or biscuit');
+          expect(
+            evaluator.buffer.toString().trim(),
+            'This is a cookie or biscuit',
+          );
         });
       });
 
       test('case tag with else condition', () async {
-        await testParser(
-            '{% assign handle = "pie" %}'
+        await testParser('{% assign handle = "pie" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -60,14 +59,15 @@ void main() {
             'This is neither a cake nor a cookie'
             '{% endcase %}', (document) {
           evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(),
-              'This is neither a cake nor a cookie');
+          expect(
+            evaluator.buffer.toString().trim(),
+            'This is neither a cake nor a cookie',
+          );
         });
       });
 
       test('case tag with no matching condition and no else', () async {
-        await testParser(
-            '{% assign handle = "pie" %}'
+        await testParser('{% assign handle = "pie" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -82,8 +82,7 @@ void main() {
 
     group('async evaluation', () {
       test('case tag with single match', () async {
-        await testParser(
-            '{% assign handle = "cake" %}'
+        await testParser('{% assign handle = "cake" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -98,8 +97,7 @@ void main() {
       });
 
       test('case tag with multiple values in when', () async {
-        await testParser(
-            '{% assign handle = "biscuit" %}'
+        await testParser('{% assign handle = "biscuit" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -109,14 +107,15 @@ void main() {
             'This is something else'
             '{% endcase %}', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(),
-              'This is a cookie or biscuit');
+          expect(
+            evaluator.buffer.toString().trim(),
+            'This is a cookie or biscuit',
+          );
         });
       });
 
       test('case tag with else condition', () async {
-        await testParser(
-            '{% assign handle = "pie" %}'
+        await testParser('{% assign handle = "pie" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'
@@ -126,14 +125,15 @@ void main() {
             'This is neither a cake nor a cookie'
             '{% endcase %}', (document) async {
           await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(),
-              'This is neither a cake nor a cookie');
+          expect(
+            evaluator.buffer.toString().trim(),
+            'This is neither a cake nor a cookie',
+          );
         });
       });
 
       test('case tag with no matching condition and no else', () async {
-        await testParser(
-            '{% assign handle = "pie" %}'
+        await testParser('{% assign handle = "pie" %}'
             '{% case handle %}'
             '{% when "cake" %}'
             'This is a cake'

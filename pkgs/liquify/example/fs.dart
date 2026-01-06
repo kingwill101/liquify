@@ -21,7 +21,7 @@ Experience:
     'experience': [
       '5 years as a Software Developer',
       '3 years of Flutter development',
-      '2 years of Dart programming'
+      '2 years of Dart programming',
     ],
   };
 
@@ -32,15 +32,22 @@ Experience:
 
   // Example 2: Render greeting directly
   print('\nExample 2: Render greeting directly');
-  final greetingTemplate = Template.fromFile('greeting.liquid', fs,
-      data: {'name': 'Bob', 'greeting': 'Good morning'});
+  final greetingTemplate = Template.fromFile(
+    'greeting.liquid',
+    fs,
+    data: {'name': 'Bob', 'greeting': 'Good morning'},
+  );
   print(greetingTemplate.render());
 
   // Example 3: Render list directly
   print('\nExample 3: Render list directly');
-  final listTemplate = Template.fromFile('list.liquid', fs, data: {
-    'items': ['Item 1', 'Item 2', 'Item 3']
-  });
+  final listTemplate = Template.fromFile(
+    'list.liquid',
+    fs,
+    data: {
+      'items': ['Item 1', 'Item 2', 'Item 3'],
+    },
+  );
   print(listTemplate.render());
 
   // Example 4: Attempt to render non-existent file

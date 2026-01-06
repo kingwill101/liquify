@@ -24,8 +24,9 @@ void main() {
       });
 
       test('if-else statement', () async {
-        await testParser('{% if false %}True{% else %}False{% endif %}',
-            (document) {
+        await testParser('{% if false %}True{% else %}False{% endif %}', (
+          document,
+        ) {
           evaluator.evaluateNodes(document.children);
           expect(evaluator.buffer.toString(), 'False');
         });
@@ -33,33 +34,37 @@ void main() {
 
       test('nested if statements', () async {
         await testParser(
-            '{% if true %}{% if false %}Inner False{% else %}Inner True{% endif %}{% endif %}',
-            (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), 'Inner True');
-        });
+          '{% if true %}{% if false %}Inner False{% else %}Inner True{% endif %}{% endif %}',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), 'Inner True');
+          },
+        );
       });
 
       test('if statement with break', () async {
         await testParser(
-            '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
-            (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '12');
-        });
+          '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '12');
+          },
+        );
       });
 
       test('if statement with continue', () async {
         await testParser(
-            '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
-            (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString(), '1245');
-        });
+          '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString(), '1245');
+          },
+        );
       });
 
       test('if with multiple elsifs', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% if false %}
             first
           {% elsif true %}
@@ -69,10 +74,12 @@ void main() {
           {% else %}
             fourth
           {% endif %}
-        ''', (document) {
-          evaluator.evaluateNodes(document.children);
-          expect(evaluator.buffer.toString().trim(), 'second');
-        });
+        ''',
+          (document) {
+            evaluator.evaluateNodes(document.children);
+            expect(evaluator.buffer.toString().trim(), 'second');
+          },
+        );
       });
     });
 
@@ -85,8 +92,9 @@ void main() {
       });
 
       test('if-else statement', () async {
-        await testParser('{% if false %}True{% else %}False{% endif %}',
-            (document) async {
+        await testParser('{% if false %}True{% else %}False{% endif %}', (
+          document,
+        ) async {
           await evaluator.evaluateNodesAsync(document.children);
           expect(evaluator.buffer.toString(), 'False');
         });
@@ -94,33 +102,37 @@ void main() {
 
       test('nested if statements', () async {
         await testParser(
-            '{% if true %}{% if false %}Inner False{% else %}Inner True{% endif %}{% endif %}',
-            (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), 'Inner True');
-        });
+          '{% if true %}{% if false %}Inner False{% else %}Inner True{% endif %}{% endif %}',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), 'Inner True');
+          },
+        );
       });
 
       test('if statement with break', () async {
         await testParser(
-            '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
-            (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '12');
-        });
+          '{% for item in (1..5) %}{% if item == 3 %}{% break %}{% endif %}{{ item }}{% endfor %}',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '12');
+          },
+        );
       });
 
       test('if statement with continue', () async {
         await testParser(
-            '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
-            (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString(), '1245');
-        });
+          '{% for item in (1..5) %}{% if item == 3 %}{% continue %}{% endif %}{{ item }}{% endfor %}',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString(), '1245');
+          },
+        );
       });
 
       test('if with multiple elsifs', () async {
-        await testParser('''
+        await testParser(
+          '''
           {% if false %}
             first
           {% elsif true %}
@@ -130,10 +142,12 @@ void main() {
           {% else %}
             fourth
           {% endif %}
-        ''', (document) async {
-          await evaluator.evaluateNodesAsync(document.children);
-          expect(evaluator.buffer.toString().trim(), 'second');
-        });
+        ''',
+          (document) async {
+            await evaluator.evaluateNodesAsync(document.children);
+            expect(evaluator.buffer.toString().trim(), 'second');
+          },
+        );
       });
     });
   });

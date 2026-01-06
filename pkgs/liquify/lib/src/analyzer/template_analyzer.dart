@@ -64,8 +64,9 @@ class TemplateAnalyzer {
   }) sync* {
     final analysis = TemplateAnalysis();
     if (root == null && initialNodes == null) {
-      analysis.warnings
-          .add('No root directory set and no initial nodes provided');
+      analysis.warnings.add(
+        'No root directory set and no initial nodes provided',
+      );
       yield analysis;
       return;
     }
@@ -73,8 +74,12 @@ class TemplateAnalyzer {
       final nodes =
           initialNodes ?? parseInput(root!.resolve(templatePath).content);
 
-      for (final structure in _analyzeStructure(templatePath, nodes, analysis,
-          providedParent: parentStructure)) {
+      for (final structure in _analyzeStructure(
+        templatePath,
+        nodes,
+        analysis,
+        providedParent: parentStructure,
+      )) {
         if (structure != null) {
           analysis.structures[templatePath] = structure;
         }
@@ -130,8 +135,11 @@ class TemplateAnalyzer {
 
           // Process parent structure completely before continuing
           var lastParentStructure = parentStructure;
-          for (final structure
-              in _analyzeStructure(parentPath, parentNodes, analysis)) {
+          for (final structure in _analyzeStructure(
+            parentPath,
+            parentNodes,
+            analysis,
+          )) {
             lastParentStructure = structure;
             if (lastParentStructure != null) {
               analysis.structures[parentPath] = lastParentStructure;
@@ -142,7 +150,8 @@ class TemplateAnalyzer {
           // Ensure parent blocks are fully processed
           if (parentStructure != null) {
             logger.info(
-                '[Analyzer] Parent blocks: ${parentStructure.blocks.keys.join(', ')}');
+              '[Analyzer] Parent blocks: ${parentStructure.blocks.keys.join(', ')}',
+            );
           }
         }
         structureBody = List.from(node.body);
@@ -236,9 +245,11 @@ class TemplateAnalyzer {
             // Check if this block has any nested blocks that are overridden
             bool hasOverriddenSubBlocks = false;
             if (parentStructure != null) {
-              hasOverriddenSubBlocks = parentStructure.blocks.keys.any((key) =>
-                  key.startsWith('$finalName.') &&
-                  parentStructure?.blocks[key]?.isOverride == true);
+              hasOverriddenSubBlocks = parentStructure.blocks.keys.any(
+                (key) =>
+                    key.startsWith('$finalName.') &&
+                    parentStructure?.blocks[key]?.isOverride == true,
+              );
             }
 
             bool foundSuper = false;
@@ -261,7 +272,8 @@ class TemplateAnalyzer {
               name: finalName,
               source: templatePath,
               content: node.body,
-              isOverride: isOverride ||
+              isOverride:
+                  isOverride ||
                   hasOverriddenSubBlocks ||
                   parentBlock != null ||
                   parentStructure != null,
@@ -277,7 +289,8 @@ class TemplateAnalyzer {
             }
 
             logger.info(
-                '[Analyzer] Created block: $finalName (override: ${newBlock.isOverride})');
+              '[Analyzer] Created block: $finalName (override: ${newBlock.isOverride})',
+            );
             processBlockNodes(node.body, parentBlock: newBlock);
           }
         } else if (node is Tag) {
@@ -331,7 +344,8 @@ class TemplateAnalyzer {
     }
     final nestedTree = _nestByDotNotation(structure.blocks);
     logger.info(
-        "[Analyzer][buildResolvedTree] Final nested tree produced: $nestedTree");
+      "[Analyzer][buildResolvedTree] Final nested tree produced: $nestedTree",
+    );
     return nestedTree;
   }
 
@@ -362,8 +376,9 @@ class TemplateAnalyzer {
           };
         } else {
           current[segment].putIfAbsent('children', () => <String, dynamic>{});
-          current =
-              Map<String, dynamic>.from(current[segment]['children'] as Map);
+          current = Map<String, dynamic>.from(
+            current[segment]['children'] as Map,
+          );
         }
       }
     });

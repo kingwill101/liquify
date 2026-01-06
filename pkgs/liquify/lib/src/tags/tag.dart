@@ -44,8 +44,9 @@ abstract class AbstractTag {
   }
 
   dynamic evaluateContentAsync(Evaluator eval) {
-    return Future.wait(content.map((node) => eval.evaluateAsync(node)))
-        .then((results) => results.join(''));
+    return Future.wait(
+      content.map((node) => eval.evaluateAsync(node)),
+    ).then((results) => results.join(''));
   }
 
   /// Applies the tag's filters to the given value.
@@ -56,8 +57,9 @@ abstract class AbstractTag {
       if (filterFunction == null) {
         throw Exception('Undefined filter: ${filter.name.name}');
       }
-      final args =
-          filter.arguments.map((arg) => evaluator.evaluate(arg)).toList();
+      final args = filter.arguments
+          .map((arg) => evaluator.evaluate(arg))
+          .toList();
       result = filterFunction(result, args, {});
     }
     return result;
@@ -70,7 +72,8 @@ abstract class AbstractTag {
         throw Exception('Undefined filter: ${filter.name.name}');
       }
       final args = await Future.wait(
-          filter.arguments.map((arg) => evaluator.evaluateAsync(arg)));
+        filter.arguments.map((arg) => evaluator.evaluateAsync(arg)),
+      );
       value = filterFunction(value, args, {});
     }
     return value;
@@ -118,5 +121,7 @@ abstract class AbstractTag {
   /// Override this method in subclasses to implement tag behavior
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {}
   Future<dynamic> evaluateWithContextAsync(
-      Evaluator evaluator, Buffer buffer) async {}
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {}
 }
