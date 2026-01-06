@@ -124,28 +124,22 @@ void main() {
       });
 
       test('handles empty tag', () async {
-        await testParser(
-          '{% liquid %}',
-          (document) {
-            evaluator.evaluateNodes(document.children);
-            expect(evaluator.buffer.toString(), '');
-          },
-        );
+        await testParser('{% liquid %}', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), '');
+        });
       });
 
       test('handles lines containing only whitespace', () async {
-        await testParser(
-          '{% liquid \n'
-          '  echo \'hello \' \n'
-          '    \n'
-          '\t\n'
-          '  echo \'goodbye\'\n'
-          '%}',
-          (document) {
-            evaluator.evaluateNodes(document.children);
-            expect(evaluator.buffer.toString(), 'hello goodbye');
-          },
-        );
+        await testParser('{% liquid \n'
+            '  echo \'hello \' \n'
+            '    \n'
+            '\t\n'
+            '  echo \'goodbye\'\n'
+            '%}', (document) {
+          evaluator.evaluateNodes(document.children);
+          expect(evaluator.buffer.toString(), 'hello goodbye');
+        });
       });
 
       test('fails with carriage return terminated tags', () async {
@@ -159,10 +153,7 @@ void main() {
           'endfor',
           '-%}',
         ].join('\r');
-        expect(
-          () => testParser(src, (_) {}),
-          throwsException,
-        );
+        expect(() => testParser(src, (_) {}), throwsException);
       });
     });
 
@@ -275,28 +266,22 @@ void main() {
       });
 
       test('handles empty tag', () async {
-        await testParser(
-          '{% liquid %}',
-          (document) async {
-            await evaluator.evaluateNodesAsync(document.children);
-            expect(evaluator.buffer.toString(), '');
-          },
-        );
+        await testParser('{% liquid %}', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), '');
+        });
       });
 
       test('handles lines containing only whitespace', () async {
-        await testParser(
-          '{% liquid \n'
-          '  echo \'hello \' \n'
-          '    \n'
-          '\t\n'
-          '  echo \'goodbye\'\n'
-          '%}',
-          (document) async {
-            await evaluator.evaluateNodesAsync(document.children);
-            expect(evaluator.buffer.toString(), 'hello goodbye');
-          },
-        );
+        await testParser('{% liquid \n'
+            '  echo \'hello \' \n'
+            '    \n'
+            '\t\n'
+            '  echo \'goodbye\'\n'
+            '%}', (document) async {
+          await evaluator.evaluateNodesAsync(document.children);
+          expect(evaluator.buffer.toString(), 'hello goodbye');
+        });
       });
 
       test('fails with carriage return terminated tags', () async {
@@ -310,10 +295,7 @@ void main() {
           'endfor',
           '-%}',
         ].join('\r');
-        expect(
-          () => testParser(src, (_) {}),
-          throwsException,
-        );
+        expect(() => testParser(src, (_) {}), throwsException);
       });
     });
   });

@@ -46,16 +46,13 @@ void main() {
       });
 
       test('routes liquid tag output through active buffer', () async {
-        await testParser(
-          '{% liquid echo "Hello" %}',
-          (document) {
-            evaluator.startBlockCapture();
-            evaluator.evaluateNodes(document.children);
-            final captured = evaluator.endBlockCapture();
-            expect(captured, 'Hello');
-            expect(evaluator.buffer.toString(), '');
-          },
-        );
+        await testParser('{% liquid echo "Hello" %}', (document) {
+          evaluator.startBlockCapture();
+          evaluator.evaluateNodes(document.children);
+          final captured = evaluator.endBlockCapture();
+          expect(captured, 'Hello');
+          expect(evaluator.buffer.toString(), '');
+        });
       });
     });
 
@@ -91,16 +88,13 @@ void main() {
       });
 
       test('routes liquid tag output through active buffer', () async {
-        await testParser(
-          '{% liquid echo "Hello" %}',
-          (document) async {
-            evaluator.startBlockCapture();
-            await evaluator.evaluateNodesAsync(document.children);
-            final captured = evaluator.endBlockCapture();
-            expect(captured, 'Hello');
-            expect(evaluator.buffer.toString(), '');
-          },
-        );
+        await testParser('{% liquid echo "Hello" %}', (document) async {
+          evaluator.startBlockCapture();
+          await evaluator.evaluateNodesAsync(document.children);
+          final captured = evaluator.endBlockCapture();
+          expect(captured, 'Hello');
+          expect(evaluator.buffer.toString(), '');
+        });
       });
     });
   });
