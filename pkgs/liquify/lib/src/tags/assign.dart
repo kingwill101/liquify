@@ -14,6 +14,15 @@ class AssignTag extends AbstractTag with AsyncTag {
 
   Identifier get variable => assignment?.variable as Identifier;
 
+  FilteredExpression? get filteredAssignment {
+    for (final expr in content.whereType<FilteredExpression>()) {
+      if (expr.expression is Assignment) {
+        return expr;
+      }
+    }
+    return null;
+  }
+
   Future<dynamic> _evaluateAssignment(
     Evaluator evaluator, {
     bool isAsync = false,
@@ -22,8 +31,23 @@ class AssignTag extends AbstractTag with AsyncTag {
       final value = isAsync
           ? await evaluator.evaluateAsync(assignment!.value)
           : evaluator.evaluate(assignment!.value);
-      _setVar(evaluator, value);
+      evaluator.context.setVariable(variable.name, value);
+      return null;
     }
+    final filtered = filteredAssignment;
+    if (filtered != null) {
+      final assignmentExpr = filtered.expression as Assignment;
+      if (assignmentExpr.variable is Identifier) {
+        final filteredValue = isAsync
+            ? await evaluator.evaluateAsync(filtered)
+            : evaluator.evaluate(filtered);
+        evaluator.context.setVariable(
+          (assignmentExpr.variable as Identifier).name,
+          filteredValue,
+        );
+      }
+    }
+    return null;
   }
 
   @override
@@ -37,9 +61,5 @@ class AssignTag extends AbstractTag with AsyncTag {
     Buffer buffer,
   ) async {
     return _evaluateAssignment(evaluator, isAsync: true);
-  }
-
-  void _setVar(Evaluator e, dynamic value) {
-    e.context.setVariable(variable.name, value);
   }
 }

@@ -558,6 +558,26 @@ void main() {
       expect(await evaluator.evaluateAsync(filteredExpression), 5);
     });
 
+    test('awaits async filters between chained filters', () async {
+      FilterRegistry.register('async_upper_chain', (
+        value,
+        args,
+        namedArgs,
+      ) async {
+        await Future<void>.delayed(const Duration(milliseconds: 1));
+        return value.toString().toUpperCase();
+      });
+
+      final filteredExpression = FilteredExpression(
+        Literal('hello', LiteralType.string),
+        [
+          Filter(Identifier('async_upper_chain'), []),
+          Filter(Identifier('length'), []),
+        ],
+      );
+      expect(await evaluator.evaluateAsync(filteredExpression), 5);
+    });
+
     test('applies filters with named arguments', () {
       FilterRegistry.register('truncate', (value, args, namedArgs) {
         final length = namedArgs['length'] ?? 5;
