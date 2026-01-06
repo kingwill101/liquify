@@ -227,7 +227,7 @@ class GeneratedActionChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.color = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'disabledColor':
           config.disabledColor = parseGeneratedColor(value);
@@ -1693,7 +1693,7 @@ class GeneratedAppBarTag extends WidgetTagBase with AsyncTag {
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'bottom':
-          config.bottom = (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
+          config.bottom = (value is PreferredSizeWidget ? value : parsePreferredSizeWidget(value) as PreferredSizeWidget?);
           break;
         case 'bottomOpacity':
           config.bottomOpacity = toDouble(value);
@@ -1963,7 +1963,7 @@ class GeneratedAutocompleteTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'displayStringForOption':
-          config.displayStringForOption = (resolveGenericCallback1(evaluator, value) as AutocompleteOptionToString<Object>?);
+          config.displayStringForOption = (value is AutocompleteOptionToString<Object> ? value : resolveGenericCallback1(evaluator, value) as AutocompleteOptionToString<Object>?);
           break;
         case 'focusNode':
           config.focusNode = parseGeneratedFocusNode(evaluator, value);
@@ -1975,16 +1975,16 @@ class GeneratedAutocompleteTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected = (resolveGenericValueChanged(evaluator, value) as AutocompleteOnSelected<Object>?);
+          config.onSelected = (value is AutocompleteOnSelected<Object> ? value : resolveGenericValueChanged(evaluator, value) as AutocompleteOnSelected<Object>?);
           break;
         case 'optionsBuilder':
-          config.optionsBuilder = (resolveGenericCallback1(evaluator, value) as AutocompleteOptionsBuilder<Object>?);
+          config.optionsBuilder = (value is AutocompleteOptionsBuilder<Object> ? value : resolveGenericCallback1(evaluator, value) as AutocompleteOptionsBuilder<Object>?);
           break;
         case 'optionsMaxHeight':
           config.optionsMaxHeight = toDouble(value);
           break;
         case 'optionsViewBuilder':
-          config.optionsViewBuilder = (resolveCallbackValue(evaluator, value) as AutocompleteOptionsViewBuilder<Object>?);
+          config.optionsViewBuilder = (value is AutocompleteOptionsViewBuilder<Object> ? value : resolveCallbackValue(evaluator, value) as AutocompleteOptionsViewBuilder<Object>?);
           break;
         case 'optionsViewOpenDirection':
           config.optionsViewOpenDirection = parseGeneratedOptionsViewOpenDirection(value);
@@ -2414,7 +2414,7 @@ class GeneratedBottomNavigationBarTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onTap':
-          config.onTap = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onTap = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'selectedFontSize':
           config.selectedFontSize = toDouble(value);
@@ -2576,7 +2576,7 @@ class GeneratedBottomSheetTag extends WidgetTagBase with AsyncTag {
           config.onClosing = resolveActionCallback(evaluator, value);
           break;
         case 'onDragEnd':
-          config.onDragEnd = (resolveCallbackValue(evaluator, value) as BottomSheetDragEndHandler?);
+          config.onDragEnd = (value is BottomSheetDragEndHandler ? value : resolveCallbackValue(evaluator, value) as BottomSheetDragEndHandler?);
           break;
         case 'onDragStart':
           config.onDragStart = resolveGenericValueChanged(evaluator, value);
@@ -2670,7 +2670,7 @@ class GeneratedCalendarDatePickerTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'calendarDelegate':
-          config.calendarDelegate = (parseGeneratedCalendarDelegate(value) as CalendarDelegate<DateTime>?);
+          config.calendarDelegate = (value is CalendarDelegate<DateTime> ? value : parseGeneratedCalendarDelegate(value) as CalendarDelegate<DateTime>?);
           break;
         case 'currentDate':
           config.currentDate = parseGeneratedDateTime(value);
@@ -2691,10 +2691,10 @@ class GeneratedCalendarDatePickerTag extends WidgetTagBase with AsyncTag {
           config.lastDate = parseGeneratedDateTime(value);
           break;
         case 'onDateChanged':
-          config.onDateChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<DateTime>?);
+          config.onDateChanged = (value is ValueChanged<DateTime> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<DateTime>?);
           break;
         case 'onDisplayedMonthChanged':
-          config.onDisplayedMonthChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<DateTime>?);
+          config.onDisplayedMonthChanged = (value is ValueChanged<DateTime> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<DateTime>?);
           break;
         case 'selectableDayPredicate':
           config.selectableDayPredicate = resolveBoolPredicateCallback(evaluator, value);
@@ -2981,7 +2981,7 @@ class GeneratedCheckboxTag extends WidgetTagBase with AsyncTag {
           config.checkColor = parseGeneratedColor(value);
           break;
         case 'fillColor':
-          config.fillColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.fillColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'focusColor':
           config.focusColor = parseGeneratedColor(value);
@@ -3005,10 +3005,10 @@ class GeneratedCheckboxTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool?>?);
+          config.onChanged = (value is ValueChanged<bool?> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool?>?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'semanticLabel':
           config.semanticLabel = toStringValue(value);
@@ -3152,7 +3152,7 @@ class GeneratedCheckboxListTileTag extends WidgetTagBase with AsyncTag {
           config.enabled = toBool(value);
           break;
         case 'fillColor':
-          config.fillColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.fillColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'focusNode':
           config.focusNode = parseGeneratedFocusNode(evaluator, value);
@@ -3179,13 +3179,13 @@ class GeneratedCheckboxListTileTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool?>?);
+          config.onChanged = (value is ValueChanged<bool?> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool?>?);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'secondary':
           config.secondary = resolveWidget(value);
@@ -3364,7 +3364,7 @@ class GeneratedChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.color = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'deleteButtonTooltipMessage':
           config.deleteButtonTooltipMessage = toStringValue(value);
@@ -3549,7 +3549,7 @@ class GeneratedChoiceChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.color = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'disabledColor':
           config.disabledColor = parseGeneratedColor(value);
@@ -3582,7 +3582,7 @@ class GeneratedChoiceChipTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onSelected':
-          config.onSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onSelected = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -3757,13 +3757,13 @@ class GeneratedCircleAvatarTag extends WidgetTagBase with CustomTagParser, Async
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'backgroundImage':
-          config.backgroundImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.backgroundImage = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'foregroundColor':
           config.foregroundColor = parseGeneratedColor(value);
           break;
         case 'foregroundImage':
-          config.foregroundImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.foregroundImage = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -3775,10 +3775,10 @@ class GeneratedCircleAvatarTag extends WidgetTagBase with CustomTagParser, Async
           config.minRadius = toDouble(value);
           break;
         case 'onBackgroundImageError':
-          config.onBackgroundImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
+          config.onBackgroundImageError = (value is ImageErrorListener ? value : resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'onForegroundImageError':
-          config.onForegroundImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
+          config.onForegroundImageError = (value is ImageErrorListener ? value : resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'radius':
           config.radius = toDouble(value);
@@ -3990,7 +3990,7 @@ class GeneratedClipOvalTag extends WidgetTagBase with CustomTagParser, AsyncTag 
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
+          config.clipper = (value is CustomClipper<Rect> ? value : parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4072,7 +4072,7 @@ class GeneratedClipPathTag extends WidgetTagBase with CustomTagParser, AsyncTag 
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<Path>?);
+          config.clipper = (value is CustomClipper<Path> ? value : parseGeneratedCustomClipper(value) as CustomClipper<Path>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4157,7 +4157,7 @@ class GeneratedClipRRectTag extends WidgetTagBase with CustomTagParser, AsyncTag
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<RRect>?);
+          config.clipper = (value is CustomClipper<RRect> ? value : parseGeneratedCustomClipper(value) as CustomClipper<RRect>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4241,7 +4241,7 @@ class GeneratedClipRectTag extends WidgetTagBase with CustomTagParser, AsyncTag 
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
+          config.clipper = (value is CustomClipper<Rect> ? value : parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4845,7 +4845,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
           config.columns = parseGeneratedListOfDataColumn(value);
           break;
         case 'dataRowColor':
-          config.dataRowColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.dataRowColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'dataRowHeight':
           config.dataRowHeight = toDouble(value);
@@ -4866,7 +4866,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
           config.dividerThickness = toDouble(value);
           break;
         case 'headingRowColor':
-          config.headingRowColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.headingRowColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'headingRowHeight':
           config.headingRowHeight = toDouble(value);
@@ -4881,7 +4881,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onSelectAll':
-          config.onSelectAll = (resolveGenericValueChanged(evaluator, value) as ValueSetter<bool?>?);
+          config.onSelectAll = (value is ValueSetter<bool?> ? value : resolveGenericValueChanged(evaluator, value) as ValueSetter<bool?>?);
           break;
         case 'rows':
           config.rows = parseGeneratedListOfDataRow(evaluator, value);
@@ -4992,7 +4992,7 @@ class GeneratedDatePickerDialogTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'calendarDelegate':
-          config.calendarDelegate = (parseGeneratedCalendarDelegate(value) as CalendarDelegate<DateTime>?);
+          config.calendarDelegate = (value is CalendarDelegate<DateTime> ? value : parseGeneratedCalendarDelegate(value) as CalendarDelegate<DateTime>?);
           break;
         case 'cancelText':
           config.cancelText = toStringValue(value);
@@ -5043,7 +5043,7 @@ class GeneratedDatePickerDialogTag extends WidgetTagBase with AsyncTag {
           config.lastDate = parseGeneratedDateTime(value);
           break;
         case 'onDatePickerModeChange':
-          config.onDatePickerModeChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<DatePickerEntryMode>?);
+          config.onDatePickerModeChange = (value is ValueChanged<DatePickerEntryMode> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<DatePickerEntryMode>?);
           break;
         case 'restorationId':
           config.restorationId = toStringValue(value);
@@ -5462,7 +5462,7 @@ class GeneratedDismissibleTag extends WidgetTagBase with CustomTagParser, AsyncT
           config.behavior = parseGeneratedHitTestBehavior(value);
           break;
         case 'confirmDismiss':
-          config.confirmDismiss = (resolveFutureBoolCallback1(evaluator, value) as ConfirmDismissCallback?);
+          config.confirmDismiss = (value is ConfirmDismissCallback ? value : resolveFutureBoolCallback1(evaluator, value) as ConfirmDismissCallback?);
           break;
         case 'crossAxisEndOffset':
           config.crossAxisEndOffset = toDouble(value);
@@ -5925,7 +5925,7 @@ class GeneratedDropdownButtonTag extends WidgetTagBase with AsyncTag {
           config.menuWidth = toDouble(value);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<Object?>?);
+          config.onChanged = (value is ValueChanged<Object?> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<Object?>?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -6085,10 +6085,10 @@ class GeneratedElevatedButtonTag extends WidgetTagBase with CustomTagParser, Asy
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onHover = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -6336,7 +6336,7 @@ class GeneratedExpansionTileTag extends WidgetTagBase with CustomTagParser, Asyn
           config.minTileHeight = toDouble(value);
           break;
         case 'onExpansionChanged':
-          config.onExpansionChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onExpansionChanged = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'shape':
           config.shape = parseGeneratedShapeBorder(value);
@@ -6594,10 +6594,10 @@ class GeneratedFilledButtonTag extends WidgetTagBase with CustomTagParser, Async
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onHover = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -6704,7 +6704,7 @@ class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.color = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'deleteButtonTooltipMessage':
           config.deleteButtonTooltipMessage = toStringValue(value);
@@ -6752,7 +6752,7 @@ class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
           config.onDeleted = resolveActionCallback(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onSelected = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -7420,10 +7420,10 @@ class GeneratedFormTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.onPopInvoked = resolveBoolActionCallback(evaluator, value);
           break;
         case 'onPopInvokedWithResult':
-          config.onPopInvokedWithResult = (resolveGenericActionCallback2(evaluator, value) as PopInvokedWithResultCallback<Object?>?);
+          config.onPopInvokedWithResult = (value is PopInvokedWithResultCallback<Object?> ? value : resolveGenericActionCallback2(evaluator, value) as PopInvokedWithResultCallback<Object?>?);
           break;
         case 'onWillPop':
-          config.onWillPop = (resolveFutureBoolCallback0(evaluator, value) as WillPopCallback?);
+          config.onWillPop = (value is WillPopCallback ? value : resolveFutureBoolCallback0(evaluator, value) as WillPopCallback?);
           break;
         default:
           handleUnknownArg('form', name);
@@ -7488,13 +7488,13 @@ class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
           config.autovalidateMode = parseGeneratedAutovalidateMode(value);
           break;
         case 'builder':
-          config.builder = (resolveGenericCallback1(evaluator, value) as FormFieldBuilder<Object?>?);
+          config.builder = (value is FormFieldBuilder<Object?> ? value : resolveGenericCallback1(evaluator, value) as FormFieldBuilder<Object?>?);
           break;
         case 'enabled':
           config.enabled = toBool(value);
           break;
         case 'errorBuilder':
-          config.errorBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as FormFieldErrorBuilder?);
+          config.errorBuilder = (value is FormFieldErrorBuilder ? value : resolveWidgetBuilder2Callback(evaluator, value) as FormFieldErrorBuilder?);
           break;
         case 'forceErrorText':
           config.forceErrorText = toStringValue(value);
@@ -7509,13 +7509,13 @@ class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
           config.onReset = resolveActionCallback(evaluator, value);
           break;
         case 'onSaved':
-          config.onSaved = (resolveGenericValueChanged(evaluator, value) as FormFieldSetter<Object?>?);
+          config.onSaved = (value is FormFieldSetter<Object?> ? value : resolveGenericValueChanged(evaluator, value) as FormFieldSetter<Object?>?);
           break;
         case 'restorationId':
           config.restorationId = toStringValue(value);
           break;
         case 'validator':
-          config.validator = (resolveGenericCallback1(evaluator, value) as FormFieldValidator<Object?>?);
+          config.validator = (value is FormFieldValidator<Object?> ? value : resolveGenericCallback1(evaluator, value) as FormFieldValidator<Object?>?);
           break;
         default:
           handleUnknownArg('form_field', name);
@@ -8332,16 +8332,16 @@ class GeneratedHeroTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'createRectTween':
-          config.createRectTween = (resolveGenericCallback2(evaluator, value) as CreateRectTween?);
+          config.createRectTween = (value is CreateRectTween ? value : resolveGenericCallback2(evaluator, value) as CreateRectTween?);
           break;
         case 'flightShuttleBuilder':
-          config.flightShuttleBuilder = (resolveCallbackValue(evaluator, value) as HeroFlightShuttleBuilder?);
+          config.flightShuttleBuilder = (value is HeroFlightShuttleBuilder ? value : resolveCallbackValue(evaluator, value) as HeroFlightShuttleBuilder?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'placeholderBuilder':
-          config.placeholderBuilder = (resolveCallbackValue(evaluator, value) as HeroPlaceholderBuilder?);
+          config.placeholderBuilder = (value is HeroPlaceholderBuilder ? value : resolveCallbackValue(evaluator, value) as HeroPlaceholderBuilder?);
           break;
         case 'tag':
           config.tag = parseGeneratedObject(evaluator, value);
@@ -8569,7 +8569,7 @@ class GeneratedIconButtonTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onHover':
-          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onHover = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -8875,7 +8875,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.colorBlendMode = parseGeneratedBlendMode(value);
           break;
         case 'errorBuilder':
-          config.errorBuilder = (resolveCallbackValue(evaluator, value) as ImageErrorWidgetBuilder?);
+          config.errorBuilder = (value is ImageErrorWidgetBuilder ? value : resolveCallbackValue(evaluator, value) as ImageErrorWidgetBuilder?);
           break;
         case 'excludeFromSemantics':
           config.excludeFromSemantics = toBool(value);
@@ -8887,7 +8887,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.fit = parseGeneratedBoxFit(value);
           break;
         case 'frameBuilder':
-          config.frameBuilder = (resolveCallbackValue(evaluator, value) as ImageFrameBuilder?);
+          config.frameBuilder = (value is ImageFrameBuilder ? value : resolveCallbackValue(evaluator, value) as ImageFrameBuilder?);
           break;
         case 'gaplessPlayback':
           config.gaplessPlayback = toBool(value);
@@ -8896,7 +8896,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.height = toDouble(value);
           break;
         case 'image':
-          config.image = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.image = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'isAntiAlias':
           config.isAntiAlias = toBool(value);
@@ -8905,7 +8905,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'loadingBuilder':
-          config.loadingBuilder = (resolveCallbackValue(evaluator, value) as ImageLoadingBuilder?);
+          config.loadingBuilder = (value is ImageLoadingBuilder ? value : resolveCallbackValue(evaluator, value) as ImageLoadingBuilder?);
           break;
         case 'matchTextDirection':
           config.matchTextDirection = toBool(value);
@@ -9125,7 +9125,7 @@ class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.color = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'deleteButtonTooltipMessage':
           config.deleteButtonTooltipMessage = toStringValue(value);
@@ -9179,7 +9179,7 @@ class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
           config.onPressed = resolveActionCallback(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onSelected = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -9494,7 +9494,7 @@ class GeneratedLayoutBuilderTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'builder':
-          config.builder = (resolveWidgetBuilder2Callback(evaluator, value) as Widget Function(BuildContext, BoxConstraints)?);
+          config.builder = (value is Widget Function(BuildContext, BoxConstraints) ? value : resolveWidgetBuilder2Callback(evaluator, value) as Widget Function(BuildContext, BoxConstraints)?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -9798,7 +9798,7 @@ class GeneratedListTileTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -10021,7 +10021,7 @@ class GeneratedListViewTag extends WidgetTagBase with CustomTagParser, AsyncTag 
           config.itemExtent = toDouble(value);
           break;
         case 'itemExtentBuilder':
-          config.itemExtentBuilder = (resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
+          config.itemExtentBuilder = (value is ItemExtentBuilder ? value : resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -10604,16 +10604,16 @@ class GeneratedNavigationBarTag extends WidgetTagBase with AsyncTag {
           config.labelPadding = parseGeneratedEdgeInsetsGeometry(value);
           break;
         case 'labelTextStyle':
-          config.labelTextStyle = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<TextStyle?>?);
+          config.labelTextStyle = (value is WidgetStateProperty<TextStyle?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<TextStyle?>?);
           break;
         case 'maintainBottomViewPadding':
           config.maintainBottomViewPadding = toBool(value);
           break;
         case 'onDestinationSelected':
-          config.onDestinationSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onDestinationSelected = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'selectedIndex':
           config.selectedIndex = toInt(value);
@@ -10823,7 +10823,7 @@ class GeneratedNavigationDrawerTag extends WidgetTagBase with CustomTagParser, A
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onDestinationSelected':
-          config.onDestinationSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onDestinationSelected = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'selectedIndex':
           config.selectedIndex = toInt(value);
@@ -11020,7 +11020,7 @@ class GeneratedNavigationRailTag extends WidgetTagBase with AsyncTag {
           config.minWidth = toDouble(value);
           break;
         case 'onDestinationSelected':
-          config.onDestinationSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onDestinationSelected = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'scrollable':
           config.scrollable = toBool(value);
@@ -11421,10 +11421,10 @@ class GeneratedOutlinedButtonTag extends WidgetTagBase with CustomTagParser, Asy
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onHover = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -11729,7 +11729,7 @@ class GeneratedPageViewTag extends WidgetTagBase with CustomTagParser, AsyncTag 
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onPageChanged':
-          config.onPageChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onPageChanged = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'padEnds':
           config.padEnds = toBool(value);
@@ -11862,7 +11862,7 @@ class GeneratedPaginatedDataTableTag extends WidgetTagBase with AsyncTag {
           config.header = resolveWidget(value);
           break;
         case 'headingRowColor':
-          config.headingRowColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.headingRowColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'headingRowHeight':
           config.headingRowHeight = toDouble(value);
@@ -11877,13 +11877,13 @@ class GeneratedPaginatedDataTableTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onPageChanged':
-          config.onPageChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onPageChanged = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'onRowsPerPageChanged':
-          config.onRowsPerPageChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int?>?);
+          config.onRowsPerPageChanged = (value is ValueChanged<int?> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int?>?);
           break;
         case 'onSelectAll':
-          config.onSelectAll = (resolveGenericValueChanged(evaluator, value) as ValueSetter<bool?>?);
+          config.onSelectAll = (value is ValueSetter<bool?> ? value : resolveGenericValueChanged(evaluator, value) as ValueSetter<bool?>?);
           break;
         case 'primary':
           config.primary = toBool(value);
@@ -12267,7 +12267,7 @@ class GeneratedPopupMenuButtonTag extends WidgetTagBase with CustomTagParser, As
           config.initialValue = parseGeneratedObject(evaluator, value);
           break;
         case 'itemBuilder':
-          config.itemBuilder = (resolveBuildContextCallback(evaluator, value) as PopupMenuItemBuilder<Object?>?);
+          config.itemBuilder = (value is PopupMenuItemBuilder<Object?> ? value : resolveBuildContextCallback(evaluator, value) as PopupMenuItemBuilder<Object?>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -12285,7 +12285,7 @@ class GeneratedPopupMenuButtonTag extends WidgetTagBase with CustomTagParser, As
           config.onOpened = resolveActionCallback(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected = (resolveGenericValueChanged(evaluator, value) as PopupMenuItemSelected<Object?>?);
+          config.onSelected = (value is PopupMenuItemSelected<Object?> ? value : resolveGenericValueChanged(evaluator, value) as PopupMenuItemSelected<Object?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -12539,7 +12539,7 @@ class GeneratedPopupMenuItemTag extends WidgetTagBase with CustomTagParser, Asyn
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'labelTextStyle':
-          config.labelTextStyle = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<TextStyle?>?);
+          config.labelTextStyle = (value is WidgetStateProperty<TextStyle?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<TextStyle?>?);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -12759,7 +12759,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase with CustomTagParser
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'dragBoundaryProvider':
-          config.dragBoundaryProvider = (resolveBuildContextCallback(evaluator, value) as ReorderDragBoundaryProvider?);
+          config.dragBoundaryProvider = (value is ReorderDragBoundaryProvider ? value : resolveBuildContextCallback(evaluator, value) as ReorderDragBoundaryProvider?);
           break;
         case 'dragStartBehavior':
           config.dragStartBehavior = parseGeneratedDragStartBehavior(value);
@@ -12774,7 +12774,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase with CustomTagParser
           config.itemExtent = toDouble(value);
           break;
         case 'itemExtentBuilder':
-          config.itemExtentBuilder = (resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
+          config.itemExtentBuilder = (value is ItemExtentBuilder ? value : resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -12807,7 +12807,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase with CustomTagParser
           config.prototypeItem = resolveWidget(value);
           break;
         case 'proxyDecorator':
-          config.proxyDecorator = (resolveCallbackValue(evaluator, value) as ReorderItemProxyDecorator?);
+          config.proxyDecorator = (value is ReorderItemProxyDecorator ? value : resolveCallbackValue(evaluator, value) as ReorderItemProxyDecorator?);
           break;
         case 'restorationId':
           config.restorationId = toStringValue(value);
@@ -13282,7 +13282,7 @@ class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'appBar':
-          config.appBar = (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
+          config.appBar = (value is PreferredSizeWidget ? value : parsePreferredSizeWidget(value) as PreferredSizeWidget?);
           break;
         case 'backgroundColor':
           config.backgroundColor = parseGeneratedColor(value);
@@ -13473,7 +13473,7 @@ class GeneratedSegmentedButtonTag extends WidgetTagBase with AsyncTag {
           config.multiSelectionEnabled = toBool(value);
           break;
         case 'onSelectionChanged':
-          config.onSelectionChanged = (resolveGenericValueChanged(evaluator, value) as void Function(Set< Object?>)?);
+          config.onSelectionChanged = (value is void Function(Set< Object?>) ? value : resolveGenericValueChanged(evaluator, value) as void Function(Set< Object?>)?);
           break;
         case 'segments':
           config.segments = parseGeneratedListOfButtonSegmentObject(evaluator, value);
@@ -13563,7 +13563,7 @@ class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
           config.autofocus = toBool(value);
           break;
         case 'contextMenuBuilder':
-          config.contextMenuBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
+          config.contextMenuBuilder = (value is EditableTextContextMenuBuilder ? value : resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
           break;
         case 'cursorColor':
           config.cursorColor = parseGeneratedColor(value);
@@ -13602,7 +13602,7 @@ class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
           config.minLines = toInt(value);
           break;
         case 'onSelectionChanged':
-          config.onSelectionChanged = (resolveGenericActionCallback2(evaluator, value) as SelectionChangedCallback?);
+          config.onSelectionChanged = (value is SelectionChangedCallback ? value : resolveGenericActionCallback2(evaluator, value) as SelectionChangedCallback?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -13797,7 +13797,7 @@ class GeneratedShaderMaskTag extends WidgetTagBase with CustomTagParser, AsyncTa
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'shaderCallback':
-          config.shaderCallback = (resolveGenericCallback1(evaluator, value) as ShaderCallback?);
+          config.shaderCallback = (value is ShaderCallback ? value : resolveGenericCallback1(evaluator, value) as ShaderCallback?);
           break;
         default:
           handleUnknownArg('shader_mask', name);
@@ -14320,16 +14320,16 @@ class GeneratedSliderTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onChangeEnd':
-          config.onChangeEnd = (resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
+          config.onChangeEnd = (value is ValueChanged<double> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
           break;
         case 'onChangeStart':
-          config.onChangeStart = (resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
+          config.onChangeStart = (value is ValueChanged<double> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
+          config.onChanged = (value is ValueChanged<double> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -14341,7 +14341,7 @@ class GeneratedSliderTag extends WidgetTagBase with AsyncTag {
           config.secondaryTrackValue = toDouble(value);
           break;
         case 'semanticFormatterCallback':
-          config.semanticFormatterCallback = (resolveGenericCallback1(evaluator, value) as SemanticFormatterCallback?);
+          config.semanticFormatterCallback = (value is SemanticFormatterCallback ? value : resolveGenericCallback1(evaluator, value) as SemanticFormatterCallback?);
           break;
         case 'thumbColor':
           config.thumbColor = parseGeneratedColor(value);
@@ -14462,7 +14462,7 @@ class GeneratedSliverAppBarTag extends WidgetTagBase with AsyncTag {
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'bottom':
-          config.bottom = (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
+          config.bottom = (value is PreferredSizeWidget ? value : parsePreferredSizeWidget(value) as PreferredSizeWidget?);
           break;
         case 'centerTitle':
           config.centerTitle = toBool(value);
@@ -15442,7 +15442,7 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'connectorColor':
-          config.connectorColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color>?);
+          config.connectorColor = (value is WidgetStateProperty<Color> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color>?);
           break;
         case 'connectorThickness':
           config.connectorThickness = toDouble(value);
@@ -15451,7 +15451,7 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
           config.controller = parseGeneratedScrollController(evaluator, value);
           break;
         case 'controlsBuilder':
-          config.controlsBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as ControlsWidgetBuilder?);
+          config.controlsBuilder = (value is ControlsWidgetBuilder ? value : resolveWidgetBuilder2Callback(evaluator, value) as ControlsWidgetBuilder?);
           break;
         case 'currentStep':
           config.currentStep = toInt(value);
@@ -15472,13 +15472,13 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
           config.onStepContinue = resolveActionCallback(evaluator, value);
           break;
         case 'onStepTapped':
-          config.onStepTapped = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onStepTapped = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'physics':
           config.physics = parseGeneratedScrollPhysics(value);
           break;
         case 'stepIconBuilder':
-          config.stepIconBuilder = (resolveGenericCallback2(evaluator, value) as StepIconBuilder?);
+          config.stepIconBuilder = (value is StepIconBuilder ? value : resolveGenericCallback2(evaluator, value) as StepIconBuilder?);
           break;
         case 'stepIconHeight':
           config.stepIconHeight = toDouble(value);
@@ -15584,7 +15584,7 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.activeThumbColor = parseGeneratedColor(value);
           break;
         case 'activeThumbImage':
-          config.activeThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.activeThumbImage = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'activeTrackColor':
           config.activeTrackColor = parseGeneratedColor(value);
@@ -15608,7 +15608,7 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.inactiveThumbColor = parseGeneratedColor(value);
           break;
         case 'inactiveThumbImage':
-          config.inactiveThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.inactiveThumbImage = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'inactiveTrackColor':
           config.inactiveTrackColor = parseGeneratedColor(value);
@@ -15623,19 +15623,19 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onActiveThumbImageError':
-          config.onActiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
+          config.onActiveThumbImageError = (value is ImageErrorListener ? value : resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onChanged = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onInactiveThumbImageError':
-          config.onInactiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
+          config.onInactiveThumbImageError = (value is ImageErrorListener ? value : resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -15644,19 +15644,19 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.splashRadius = toDouble(value);
           break;
         case 'thumbColor':
-          config.thumbColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.thumbColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'thumbIcon':
-          config.thumbIcon = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Icon?>?);
+          config.thumbIcon = (value is WidgetStateProperty<Icon?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Icon?>?);
           break;
         case 'trackColor':
-          config.trackColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.trackColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'trackOutlineColor':
-          config.trackOutlineColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.trackOutlineColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'trackOutlineWidth':
-          config.trackOutlineWidth = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<double?>?);
+          config.trackOutlineWidth = (value is WidgetStateProperty<double?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<double?>?);
           break;
         case 'value':
           config.value = toBool(value);
@@ -15771,7 +15771,7 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.activeThumbColor = parseGeneratedColor(value);
           break;
         case 'activeThumbImage':
-          config.activeThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.activeThumbImage = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'activeTrackColor':
           config.activeTrackColor = parseGeneratedColor(value);
@@ -15804,7 +15804,7 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.inactiveThumbColor = parseGeneratedColor(value);
           break;
         case 'inactiveThumbImage':
-          config.inactiveThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.inactiveThumbImage = (value is ImageProvider<Object> ? value : parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'inactiveTrackColor':
           config.inactiveTrackColor = parseGeneratedColor(value);
@@ -15825,19 +15825,19 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onActiveThumbImageError':
-          config.onActiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
+          config.onActiveThumbImageError = (value is ImageErrorListener ? value : resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onChanged = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onInactiveThumbImageError':
-          config.onInactiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
+          config.onInactiveThumbImageError = (value is ImageErrorListener ? value : resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'secondary':
           config.secondary = resolveWidget(value);
@@ -15858,10 +15858,10 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.subtitle = resolveWidget(value);
           break;
         case 'thumbColor':
-          config.thumbColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.thumbColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'thumbIcon':
-          config.thumbIcon = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Icon?>?);
+          config.thumbIcon = (value is WidgetStateProperty<Icon?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Icon?>?);
           break;
         case 'tileColor':
           config.tileColor = parseGeneratedColor(value);
@@ -15870,10 +15870,10 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.title = resolveWidget(value);
           break;
         case 'trackColor':
-          config.trackColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.trackColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'trackOutlineColor':
-          config.trackOutlineColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.trackOutlineColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'value':
           config.value = toBool(value);
@@ -16153,16 +16153,16 @@ class GeneratedTabBarTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericActionCallback2(evaluator, value) as TabValueChanged<bool>?);
+          config.onFocusChange = (value is TabValueChanged<bool> ? value : resolveGenericActionCallback2(evaluator, value) as TabValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover = (resolveGenericActionCallback2(evaluator, value) as TabValueChanged<bool>?);
+          config.onHover = (value is TabValueChanged<bool> ? value : resolveGenericActionCallback2(evaluator, value) as TabValueChanged<bool>?);
           break;
         case 'onTap':
-          config.onTap = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
+          config.onTap = (value is ValueChanged<int> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'overlayColor':
-          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
+          config.overlayColor = (value is WidgetStateProperty<Color?> ? value : parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -16639,10 +16639,10 @@ class GeneratedTextButtonTag extends WidgetTagBase with CustomTagParser, AsyncTa
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onFocusChange = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
+          config.onHover = (value is ValueChanged<bool> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -16736,7 +16736,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.autofocus = toBool(value);
           break;
         case 'buildCounter':
-          config.buildCounter = (resolveCallbackValue(evaluator, value) as InputCounterWidgetBuilder?);
+          config.buildCounter = (value is InputCounterWidgetBuilder ? value : resolveCallbackValue(evaluator, value) as InputCounterWidgetBuilder?);
           break;
         case 'canRequestFocus':
           config.canRequestFocus = toBool(value);
@@ -16748,7 +16748,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.contentInsertionConfiguration = parseGeneratedContentInsertionConfiguration(evaluator, value);
           break;
         case 'contextMenuBuilder':
-          config.contextMenuBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
+          config.contextMenuBuilder = (value is EditableTextContextMenuBuilder ? value : resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
           break;
         case 'controller':
           config.controller = parseGeneratedTextEditingController(value);
@@ -16841,16 +16841,16 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.obscuringCharacter = toStringValue(value);
           break;
         case 'onAppPrivateCommand':
-          config.onAppPrivateCommand = (resolveGenericActionCallback2(evaluator, value) as AppPrivateCommandCallback?);
+          config.onAppPrivateCommand = (value is AppPrivateCommandCallback ? value : resolveGenericActionCallback2(evaluator, value) as AppPrivateCommandCallback?);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
+          config.onChanged = (value is ValueChanged<String> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onEditingComplete':
           config.onEditingComplete = resolveActionCallback(evaluator, value);
           break;
         case 'onSubmitted':
-          config.onSubmitted = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
+          config.onSubmitted = (value is ValueChanged<String> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -17135,7 +17135,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.autovalidateMode = parseGeneratedAutovalidateMode(value);
           break;
         case 'buildCounter':
-          config.buildCounter = (resolveCallbackValue(evaluator, value) as InputCounterWidgetBuilder?);
+          config.buildCounter = (value is InputCounterWidgetBuilder ? value : resolveCallbackValue(evaluator, value) as InputCounterWidgetBuilder?);
           break;
         case 'canRequestFocus':
           config.canRequestFocus = toBool(value);
@@ -17147,7 +17147,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.contentInsertionConfiguration = parseGeneratedContentInsertionConfiguration(evaluator, value);
           break;
         case 'contextMenuBuilder':
-          config.contextMenuBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
+          config.contextMenuBuilder = (value is EditableTextContextMenuBuilder ? value : resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
           break;
         case 'controller':
           config.controller = parseGeneratedTextEditingController(value);
@@ -17189,7 +17189,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.enabled = toBool(value);
           break;
         case 'errorBuilder':
-          config.errorBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as FormFieldErrorBuilder?);
+          config.errorBuilder = (value is FormFieldErrorBuilder ? value : resolveWidgetBuilder2Callback(evaluator, value) as FormFieldErrorBuilder?);
           break;
         case 'expands':
           config.expands = toBool(value);
@@ -17249,19 +17249,19 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.obscuringCharacter = toStringValue(value);
           break;
         case 'onAppPrivateCommand':
-          config.onAppPrivateCommand = (resolveGenericActionCallback2(evaluator, value) as AppPrivateCommandCallback?);
+          config.onAppPrivateCommand = (value is AppPrivateCommandCallback ? value : resolveGenericActionCallback2(evaluator, value) as AppPrivateCommandCallback?);
           break;
         case 'onChanged':
-          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
+          config.onChanged = (value is ValueChanged<String> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onEditingComplete':
           config.onEditingComplete = resolveActionCallback(evaluator, value);
           break;
         case 'onFieldSubmitted':
-          config.onFieldSubmitted = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
+          config.onFieldSubmitted = (value is ValueChanged<String> ? value : resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onSaved':
-          config.onSaved = (resolveGenericValueChanged(evaluator, value) as FormFieldSetter<String>?);
+          config.onSaved = (value is FormFieldSetter<String> ? value : resolveGenericValueChanged(evaluator, value) as FormFieldSetter<String>?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -17351,7 +17351,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.undoController = parseGeneratedUndoHistoryController(value);
           break;
         case 'validator':
-          config.validator = (resolveGenericCallback1(evaluator, value) as FormFieldValidator<String>?);
+          config.validator = (value is FormFieldValidator<String> ? value : resolveGenericCallback1(evaluator, value) as FormFieldValidator<String>?);
           break;
         default:
           handleUnknownArg('text_form_field', name);

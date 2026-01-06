@@ -151,23 +151,18 @@ void main() {
     );
     expect(find.byType(AspectRatio), findsWidgets);
   });
-  // autocomplete requires optionsBuilder callback with specific signature
-  // Currently the generated code uses resolveGenericCallback1 which wraps the callback
-  // This will work once the generator doesn't wrap already-typed callbacks
-  // TODO: Fix generator to not wrap callbacks that are already correctly typed
   testWidgets('autocomplete renders', (tester) async {
-    AutocompleteOptionsBuilder<Object> optionsBuilder = (TextEditingValue value) async => <Object>['Option 1', 'Option 2'];
     await pumpTemplate(
       tester,
       '''
 {% autocomplete optionsBuilder: optionsBuilder %}{% endautocomplete %}
       '''
       ,data: {
-        'optionsBuilder': optionsBuilder,
+        'optionsBuilder': (TextEditingValue value) async => <Object>["Option 1", "Option 2"],
       }
     );
     expect(find.byType(Autocomplete), findsWidgets);
-  }, skip: true); // Generated code wraps callback, losing type info
+  });
   testWidgets('badge renders', (tester) async {
     await pumpTemplate(
       tester,
@@ -630,9 +625,11 @@ void main() {
     await pumpTemplate(
       tester,
       '''
-{% assign delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: 2 %}
-{% grid_view gridDelegate: delegate %}{% text data: "Item" %}{% endgrid_view %}
+{% grid_view gridDelegate: gridDelegate %}{% text data: "Item" %}{% endgrid_view %}
       '''
+      ,data: {
+        'gridDelegate': const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      }
     );
     expect(find.byType(GridView), findsWidgets);
   });
@@ -796,10 +793,9 @@ void main() {
     await pumpTemplate(
       tester,
       '''
-{% material_banner content: content actions: actions %}{% endmaterial_banner %}
+{% material_banner actions: actions content: "Sample" %}{% endmaterial_banner %}
       '''
       ,data: {
-        'content': const Text('Sample'),
         'actions': const [TextButton(onPressed: null, child: Text('OK'))],
       }
     );
@@ -998,22 +994,18 @@ void main() {
     );
     expect(find.byType(SelectableText), findsWidgets);
   });
-  // shader_mask requires shaderCallback with specific signature
-  // Currently the generated code uses resolveGenericCallback1 which wraps the callback
-  // TODO: Fix generator to not wrap callbacks that are already correctly typed
   testWidgets('shader_mask renders', (tester) async {
-    ShaderCallback shaderCallback = (Rect bounds) => const LinearGradient(colors: [Color(0xFFFF0000), Color(0xFF0000FF)]).createShader(bounds);
     await pumpTemplate(
       tester,
       '''
-{% shader_mask shaderCallback: shaderCallback %}{% text data: "Masked" %}{% endshader_mask %}
+{% shader_mask shaderCallback: shaderCallback %}{% endshader_mask %}
       '''
       ,data: {
-        'shaderCallback': shaderCallback,
+        'shaderCallback': (Rect bounds) => const LinearGradient(colors: [Color(0xFFFF0000), Color(0xFF0000FF)]).createShader(bounds),
       }
     );
     expect(find.byType(ShaderMask), findsWidgets);
-  }, skip: true); // Generated code wraps callback, losing type info
+  });
   testWidgets('simple_dialog renders', (tester) async {
     await pumpTemplate(
       tester,
@@ -1062,20 +1054,6 @@ void main() {
     );
     expect(find.byType(Slider), findsWidgets);
   });
-  // SnackBar requires ScaffoldMessenger animation to render
-  // TODO: Figure out how to test SnackBar in isolation
-  testWidgets('snack_bar renders', (tester) async {
-    await pumpTemplate(
-      tester,
-      '''
-{% snack_bar content: content %}{% endsnack_bar %}
-      '''
-      ,data: {
-        'content': const Text('Sample'),
-      }
-    );
-    expect(find.byType(SnackBar), findsOneWidget);
-  }, skip: true); // SnackBar requires ScaffoldMessenger animation
   testWidgets('spacer renders', (tester) async {
     await pumpTemplate(
       tester,
@@ -1143,9 +1121,7 @@ void main() {
     await pumpTemplate(
       tester,
       '''
-{% default_tab_controller length: 2 %}
-  {% tab_bar tabs: tabs %}{% endtab_bar %}
-{% enddefault_tab_controller %}
+{% default_tab_controller length: 2 %}{% tab_bar tabs: tabs %}{% endtab_bar %}{% enddefault_tab_controller %}
       '''
       ,data: {
         'tabs': const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')],
@@ -1157,9 +1133,7 @@ void main() {
     await pumpTemplate(
       tester,
       '''
-{% default_tab_controller length: 2 %}
-  {% tab_bar_view %}{% text data: "Page 1" %}{% text data: "Page 2" %}{% endtab_bar_view %}
-{% enddefault_tab_controller %}
+{% default_tab_controller length: 2 %}{% tab_bar_view %}{% text data: "Page 1" %}{% text data: "Page 2" %}{% endtab_bar_view %}{% enddefault_tab_controller %}
       '''
     );
     expect(find.byType(TabBarView), findsWidgets);

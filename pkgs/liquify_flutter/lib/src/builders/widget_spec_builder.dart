@@ -2930,7 +2930,9 @@ String _parseExpression(
     if (prop.parserOutputType != null &&
         prop.parserOutputType!.isNotEmpty &&
         prop.parserOutputType != prop.type) {
-      return '($parsed as ${prop.type}?)';
+      // Check if value is already the target type before wrapping/casting
+      // This preserves type info for callbacks passed directly from Dart
+      return '($valueVar is ${prop.type} ? $valueVar : $parsed as ${prop.type}?)';
     }
     return parsed;
   }
@@ -3015,6 +3017,7 @@ String _renderGeneratedTests(List<_GeneratedSpec> specs) {
     'popup_menu_divider',
     'popup_menu_item',
     'snack_bar_action',
+    'snack_bar', // SnackBar requires ScaffoldMessenger animation
     'sliver_app_bar',
     'sliver_fill_remaining',
     'sliver_grid',
@@ -3045,7 +3048,7 @@ String _renderGeneratedTests(List<_GeneratedSpec> specs) {
     buffer.writeln('    );');
     if (spec.tag == 'form_field') {
       buffer.writeln(
-          '    expect(find.byWidgetPredicate((widget) => widget is FormField<String>), findsWidgets);');
+          '    expect(find.byWidgetPredicate((widget) => widget is FormField), findsWidgets);');
     } else {
       buffer.writeln('    expect(find.byType(${spec.widget}), findsWidgets);');
     }
@@ -3078,7 +3081,7 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
     case 'colored_box':
       return _TestTemplateResult(
         '{% colored_box$argString %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endcolored_box %}',
         requiredArgs.data,
       );
@@ -3086,7 +3089,7 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
       return _TestTemplateResult(
         '{% row %}'
             '{% expanded$argString %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endexpanded %}'
             '{% endrow %}',
         requiredArgs.data,
@@ -3095,7 +3098,7 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
       return _TestTemplateResult(
         '{% row %}'
             '{% flexible$argString %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endflexible %}'
             '{% endrow %}',
         requiredArgs.data,
@@ -3110,41 +3113,90 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
     case 'page_view':
       return _TestTemplateResult(
         '{% page_view$argString %}'
-            '{% text value: "Page" %}'
+            '{% text data: "Page" %}'
             '{% endpage_view %}',
         requiredArgs.data,
       );
     case 'data_table': {
       final data = <String, String>{
         ...requiredArgs.data,
-        'columns': 'const [\'Name\']',
-        'rows': 'const [[\'Alice\']]',
+        'columns': "const [DataColumn(label: Text('Name'))]",
+        'rows': "const [DataRow(cells: [DataCell(Text('Alice'))])]",
       };
       return _TestTemplateResult(
         '{% data_table columns: columns rows: rows %}{% enddata_table %}',
         data,
       );
     }
-    case 'form_field':
+    case 'form_field': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'builder': "(dynamic state) => const Text('Field')",
+      };
       return _TestTemplateResult(
-        '{% form_field$argString %}'
-            '{% text value: "Sample" %}'
-            '{% endform_field %}',
-        requiredArgs.data,
+        '{% form_field builder: builder %}{% endform_field %}',
+        data,
       );
+    }
+    case 'decorated_box': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'decoration': "const BoxDecoration(color: Color(0xFFFF0000))",
+      };
+      return _TestTemplateResult(
+        '{% decorated_box decoration: decoration %}{% enddecorated_box %}',
+        data,
+      );
+    }
+    case 'layout_builder': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'builder': "(BuildContext context, BoxConstraints constraints) => const SizedBox()",
+      };
+      return _TestTemplateResult(
+        '{% layout_builder builder: builder %}{% endlayout_builder %}',
+        data,
+      );
+    }
+    case 'toggle_buttons': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'isSelected': "[true, false]",
+      };
+      return _TestTemplateResult(
+        '{% toggle_buttons isSelected: isSelected %}{% text data: "A" %}{% text data: "B" %}{% endtoggle_buttons %}',
+        data,
+      );
+    }
     case 'grid':
-    case 'grid_view':
       return _TestTemplateResult(
-        '{% ${spec.tag} columns: 2 %}'
-            '{% text value: "Item" %}'
-            '{% end${spec.tag} %}',
+        '{% grid columns: 2 %}'
+            '{% text data: "Item" %}'
+            '{% endgrid %}',
         requiredArgs.data,
       );
-    case 'icon_button':
+    case 'grid_view': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'gridDelegate': "const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2)",
+      };
       return _TestTemplateResult(
-        '{% icon_button icon: "add" %}{% endicon_button %}',
-        requiredArgs.data,
+        '{% grid_view gridDelegate: gridDelegate %}'
+            '{% text data: "Item" %}'
+            '{% endgrid_view %}',
+        data,
       );
+    }
+    case 'icon_button': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'onPressed': 'TapActionDrop(() {})',
+      };
+      return _TestTemplateResult(
+        '{% icon_button icon: "add" onPressed: onPressed %}{% endicon_button %}',
+        data,
+      );
+    }
     case 'icon':
       return _TestTemplateResult(
         '{% icon icon: "add" %}{% endicon %}',
@@ -3153,7 +3205,7 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
     case 'image': {
       final data = <String, String>{
         ...requiredArgs.data,
-        'bytes': 'Uint8List.fromList(const <int>['
+        'image': 'MemoryImage(Uint8List.fromList(const <int>['
             '0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,'
             '0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,'
             '0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,'
@@ -3163,10 +3215,10 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
             '0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,'
             '0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,'
             '0x42,0x60,0x82'
-            '])',
+            ']))',
       };
       return _TestTemplateResult(
-        '{% image bytes: bytes width: 1 height: 1 %}{% endimage %}',
+        '{% image image: image width: 1 height: 1 %}{% endimage %}',
         data,
       );
     }
@@ -3181,7 +3233,7 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
       return _TestTemplateResult(
         '{% stack %}'
             '{% positioned left: 0 top: 0 %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endpositioned %}'
             '{% endstack %}',
         requiredArgs.data,
@@ -3190,7 +3242,7 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
       return _TestTemplateResult(
         '{% stack %}'
             '{% animated_positioned$argString left: 0 top: 0 %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endanimated_positioned %}'
             '{% endstack %}',
         requiredArgs.data,
@@ -3204,21 +3256,21 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
     case 'sized_overflow_box':
       return _TestTemplateResult(
         '{% sized_overflow_box$argString %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endsized_overflow_box %}',
         requiredArgs.data,
       );
     case 'ignore_pointer':
       return _TestTemplateResult(
         '{% ignore_pointer ignoring: true %}'
-            '{% text value: "Sample" %}'
+            '{% text data: "Sample" %}'
             '{% endignore_pointer %}',
         requiredArgs.data,
       );
     case 'tooltip':
       return _TestTemplateResult(
         '{% tooltip message: "Hint" %}'
-            '{% text value: "Hover" %}'
+            '{% text data: "Hover" %}'
             '{% endtooltip %}',
         requiredArgs.data,
       );
@@ -3237,6 +3289,45 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
             '{% endpopup_menu %}',
         requiredArgs.data,
       );
+    case 'tab':
+      return _TestTemplateResult(
+        '{% tab text: "Tab 1" %}{% endtab %}',
+        requiredArgs.data,
+      );
+    case 'tab_bar': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'tabs': "const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')]",
+      };
+      return _TestTemplateResult(
+        '{% default_tab_controller length: 2 %}'
+            '{% tab_bar tabs: tabs %}{% endtab_bar %}'
+            '{% enddefault_tab_controller %}',
+        data,
+      );
+    }
+    case 'tab_bar_view':
+      return _TestTemplateResult(
+        '{% default_tab_controller length: 2 %}'
+            '{% tab_bar_view %}{% text data: "Page 1" %}{% text data: "Page 2" %}{% endtab_bar_view %}'
+            '{% enddefault_tab_controller %}',
+        requiredArgs.data,
+      );
+    case 'dismissible':
+      return _TestTemplateResult(
+        '{% dismissible key: "item1" %}{% text data: "Swipe me" %}{% enddismissible %}',
+        requiredArgs.data,
+      );
+    case 'reorderable_list_view': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'onReorder': '(int oldIndex, int newIndex) {}',
+      };
+      return _TestTemplateResult(
+        '{% reorderable_list_view onReorder: onReorder %}{% text data: "Item" key: "item1" %}{% endreorderable_list_view %}',
+        data,
+      );
+    }
     default:
       return _TestTemplateResult(
         '{% ${spec.tag}$argString %}{% end${spec.tag} %}',
@@ -3386,6 +3477,73 @@ _TestArgValue? _defaultValueForType(String type, String name) {
       return _TestArgValue('"loose"');
     case 'OverflowBoxFit':
       return _TestArgValue('"max"');
+    case 'AutocompleteOptionsBuilder<Object>':
+      return _TestArgValue(
+        name,
+        dataValue: '(TextEditingValue value) async => <Object>["Option 1", "Option 2"]',
+      );
+    case 'ShaderCallback':
+      return _TestArgValue(
+        name,
+        dataValue: '(Rect bounds) => const LinearGradient(colors: [Color(0xFFFF0000), Color(0xFF0000FF)]).createShader(bounds)',
+      );
+    case 'LayoutWidgetBuilder':
+      return _TestArgValue(
+        name,
+        dataValue: '(BuildContext context, BoxConstraints constraints) => const SizedBox()',
+      );
+    case 'ReorderCallback':
+      return _TestArgValue(
+        name,
+        dataValue: '(int oldIndex, int newIndex) {}',
+      );
+    case 'List<Step>':
+      return _TestArgValue(
+        name,
+        dataValue: "const [Step(title: Text('Step 1'), content: Text('Content'))]",
+      );
+    case 'List<Widget>':
+      if (name == 'tabs') {
+        return _TestArgValue(
+          name,
+          dataValue: "const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')]",
+        );
+      }
+      if (name == 'actions') {
+        return _TestArgValue(
+          name,
+          dataValue: "const [TextButton(onPressed: null, child: Text('OK'))]",
+        );
+      }
+      return _TestArgValue(
+        name,
+        dataValue: "const [Text('Item 1'), Text('Item 2')]",
+      );
+    case 'List<bool>':
+      return _TestArgValue(
+        name,
+        dataValue: "[true, false]",
+      );
+    case 'TimeOfDay':
+      return _TestArgValue(
+        name,
+        dataValue: "const TimeOfDay(hour: 10, minute: 30)",
+      );
+    case 'FormFieldBuilder<Object?>':
+      return _TestArgValue(
+        name,
+        dataValue: "(dynamic state) => const Text('Field')",
+      );
+    case 'SliverGridDelegate':
+      return _TestArgValue(
+        name,
+        dataValue: "const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2)",
+      );
+    case 'ImageProvider<Object>':
+      return _TestArgValue(
+        name,
+        dataValue: "MemoryImage(Uint8List.fromList(const <int>[0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,0x42,0x60,0x82]))",
+      );
   }
   return null;
 }
