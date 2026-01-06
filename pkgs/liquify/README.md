@@ -36,7 +36,7 @@ Add Liquify to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  liquify: ^1.3.1
+  liquify: ^1.4.1
 ```
 
 Or, for the latest development version:
@@ -92,8 +92,6 @@ final template = Template.parse('Hello {{ name }}!', data: {'name': 'World'});
 final result = template.renderWith(const StringRenderTarget());
 print(result); // Same as render()
 ```
-
-UI/SDUI rendering is provided in separate packages (for example `liquify_ui`).
 
 You can also update the template context between renders:
 

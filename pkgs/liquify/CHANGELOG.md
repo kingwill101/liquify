@@ -1,3 +1,7 @@
+## 1.4.1
+Fix: Add better handling of filtered assignments
+
+
 ## 1.4.0
 
 ### Liquid tag improvements
