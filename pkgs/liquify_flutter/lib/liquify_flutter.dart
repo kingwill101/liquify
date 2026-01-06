@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 export 'src/asset_bundle_root.dart';
 export 'src/filters/responsive.dart';
 export 'src/flutter_template.dart';
+export 'src/lua_callback_drop.dart';
 export 'src/tag_registry.dart';
 export 'src/tags/tags.dart';
 export 'src/widget_render_target.dart';

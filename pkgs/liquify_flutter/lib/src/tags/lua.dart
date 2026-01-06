@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:liquify/parser.dart';
 import 'package:lualike/lualike.dart' as lualike;
 
+import '../lua_callback_drop.dart';
 import 'tag_helpers.dart';
 
 class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
@@ -127,6 +128,43 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
       debugPrint('[lua] $message');
       return null;
     });
+
+    // Expose callback creation functions
+    // callback(fn) - creates a VoidCallback-compatible drop
+    // callback1(fn) - creates a ValueChanged-compatible drop (1 arg)
+    // callback2(fn) - creates a drop for callbacks with 2 args
+    lua.expose('callback', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('callback(fn) requires a function argument');
+      }
+      final fn = args.first;
+      if (fn is! lualike.Value) {
+        throw Exception('callback(fn) requires a Lua function');
+      }
+      return LuaCallbackDrop(fn, lua);
+    });
+
+    lua.expose('callback1', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('callback1(fn) requires a function argument');
+      }
+      final fn = args.first;
+      if (fn is! lualike.Value) {
+        throw Exception('callback1(fn) requires a Lua function');
+      }
+      return LuaValueCallbackDrop(fn, lua);
+    });
+
+    lua.expose('callback2', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('callback2(fn) requires a function argument');
+      }
+      final fn = args.first;
+      if (fn is! lualike.Value) {
+        throw Exception('callback2(fn) requires a Lua function');
+      }
+      return LuaCallback2Drop(fn, lua);
+    });
   }
 
   String _coerceKey(Object? value) {
@@ -146,6 +184,12 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
         value is String ||
         value is num ||
         value is bool) {
+      return value;
+    }
+    // Allow Lua callback drops through - they are valid callback values
+    if (value is LuaCallbackDrop || 
+        value is LuaValueCallbackDrop || 
+        value is LuaCallback2Drop) {
       return value;
     }
     if (value is Widget) {

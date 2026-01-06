@@ -5,6 +5,7 @@ import 'package:liquify/liquify.dart';
 import 'package:liquify/parser.dart';
 import '../generated/type_parser_aliases.dart';
 import '../generated/type_parsers.dart' as generated_parsers;
+import '../lua_callback_drop.dart';
 
 List<Widget> withGap(
   List<Widget> children,
@@ -608,6 +609,10 @@ Map<String, dynamic> buildWidgetEvent({
 VoidCallback? toVoidCallback(Object? value) {
   if (value is VoidCallback) {
     return value;
+  }
+  // Handle Lua callback drops - call them directly
+  if (value is LuaCallbackDrop) {
+    return () => value.execute();
   }
   if (value is Drop) {
     return () => _invokeDropAction(value, const ['tap', 'clicked']);
@@ -1886,6 +1891,13 @@ ValueChanged<bool>? toBoolCallback(Object? value) {
   if (value is ValueChanged<bool>) {
     return value;
   }
+  // Handle Lua callback drops
+  if (value is LuaValueCallbackDrop) {
+    return (bool state) => value.execute(state);
+  }
+  if (value is LuaCallbackDrop) {
+    return (bool state) => value.execute([state]);
+  }
   if (value is Function) {
     return (bool state) => value(state);
   }
@@ -1895,6 +1907,13 @@ ValueChanged<bool>? toBoolCallback(Object? value) {
 ValueChanged<double>? toDoubleCallback(Object? value) {
   if (value is ValueChanged<double>) {
     return value;
+  }
+  // Handle Lua callback drops
+  if (value is LuaValueCallbackDrop) {
+    return (double number) => value.execute(number);
+  }
+  if (value is LuaCallbackDrop) {
+    return (double number) => value.execute([number]);
   }
   if (value is Function) {
     return (double number) => value(number);
@@ -1906,6 +1925,13 @@ ValueChanged<int>? toIntCallback(Object? value) {
   if (value is ValueChanged<int>) {
     return value;
   }
+  // Handle Lua callback drops
+  if (value is LuaValueCallbackDrop) {
+    return (int number) => value.execute(number);
+  }
+  if (value is LuaCallbackDrop) {
+    return (int number) => value.execute([number]);
+  }
   if (value is Function) {
     return (int number) => value(number);
   }
@@ -1915,6 +1941,13 @@ ValueChanged<int>? toIntCallback(Object? value) {
 ValueChanged<String>? toStringCallback(Object? value) {
   if (value is ValueChanged<String>) {
     return value;
+  }
+  // Handle Lua callback drops
+  if (value is LuaValueCallbackDrop) {
+    return (String text) => value.execute(text);
+  }
+  if (value is LuaCallbackDrop) {
+    return (String text) => value.execute([text]);
   }
   if (value is Function) {
     return (String text) => value(text);
