@@ -39,6 +39,29 @@ class WidgetSpecBuilder implements Builder {
       return;
     }
 
+    // Load test metadata from YAML files
+    final testWidgetMetaId = AssetId(
+      buildStep.inputId.package,
+      'tool/test_widget_metadata.yaml',
+    );
+    final testDefaultsId = AssetId(
+      buildStep.inputId.package,
+      'tool/test_defaults.yaml',
+    );
+    String testWidgetMetaYaml = '';
+    String testDefaultsYaml = '';
+    try {
+      testWidgetMetaYaml = await buildStep.readAsString(testWidgetMetaId);
+    } catch (_) {
+      // File may not exist yet
+    }
+    try {
+      testDefaultsYaml = await buildStep.readAsString(testDefaultsId);
+    } catch (_) {
+      // File may not exist yet
+    }
+    final testMetadata = _TestMetadata.parse(testWidgetMetaYaml, testDefaultsYaml);
+
     final baseRegistry = _buildPrimitiveRegistry();
 
     final libraries = <String, LibraryElement>{};
@@ -458,7 +481,7 @@ class WidgetSpecBuilder implements Builder {
     );
     await buildStep.writeAsString(
       generatedTestsId,
-      _renderGeneratedTests(generatedSpecs),
+      _renderGeneratedTests(generatedSpecs, testMetadata),
     );
 
     final typeParsersId = AssetId(
@@ -2995,7 +3018,10 @@ String _renderGeneratedRegistry(List<_GeneratedSpec> specs) {
   return buffer.toString();
 }
 
-String _renderGeneratedTests(List<_GeneratedSpec> specs) {
+String _renderGeneratedTests(
+  List<_GeneratedSpec> specs,
+  _TestMetadata testMetadata,
+) {
   final buffer = StringBuffer();
   buffer.writeln("import 'dart:typed_data';");
   buffer.writeln("import 'package:flutter/material.dart';");
@@ -3003,34 +3029,17 @@ String _renderGeneratedTests(List<_GeneratedSpec> specs) {
   buffer.writeln("import '../test_utils.dart';");
   buffer.writeln();
   buffer.writeln('void main() {');
-  const skipTags = {
-    'bottom_navigation_bar',
-    'bottom_sheet',
-    'navigation_bar',
-    'navigation_bar_destination',
-    'navigation_destination',
-    'navigation_drawer_destination',
-    'navigation_rail',
-    'navigation_rail_destination',
-    'paginated_data_table',
-    'padding',
-    'popup_menu_divider',
-    'popup_menu_item',
-    'snack_bar_action',
-    'snack_bar', // SnackBar requires ScaffoldMessenger animation
-    'sliver_app_bar',
-    'sliver_fill_remaining',
-    'sliver_grid',
-    'sliver_list',
-    'sliver_padding',
-    'sliver_persistent_header',
-    'sliver_to_box_adapter',
-  };
+  
   for (final spec in specs) {
-    if (skipTags.contains(spec.tag)) {
+    if (testMetadata.skipTags.contains(spec.tag)) {
       continue;
     }
-    final testTemplate = _testTemplate(spec);
+    final widgetMeta = testMetadata.widgets[spec.tag];
+    if (widgetMeta?.skip == true) {
+      continue;
+    }
+    
+    final testTemplate = _buildTestTemplate(spec, widgetMeta, testMetadata);
     buffer.writeln(
         "  testWidgets('${spec.tag} renders', (tester) async {");
     buffer.writeln('    await pumpTemplate(');
@@ -3065,275 +3074,221 @@ class _TestTemplateResult {
   final Map<String, String> data;
 }
 
-_TestTemplateResult _testTemplate(_GeneratedSpec spec) {
-  final requiredArgs = _requiredArgsForSpec(spec);
-  final argString =
-      requiredArgs.args.isEmpty ? '' : ' ${requiredArgs.args.join(' ')}';
-  if (spec.tag.startsWith('sliver_')) {
-    return _TestTemplateResult(
-      '{% custom_scroll_view %}'
-          '{% ${spec.tag}$argString %}{% end${spec.tag} %}'
-          '{% endcustom_scroll_view %}',
-      requiredArgs.data,
+// Data structures for test metadata loaded from YAML
+class _TestMetadata {
+  _TestMetadata({
+    required this.skipTags,
+    required this.widgets,
+    required this.typeDefaults,
+    required this.propertyOverrides,
+  });
+
+  final Set<String> skipTags;
+  final Map<String, _WidgetTestMeta> widgets;
+  final Map<String, _TypeTestDefault> typeDefaults;
+  final Map<String, _TypeTestDefault> propertyOverrides;
+
+  factory _TestMetadata.parse(String widgetMetaYaml, String typeDefaultsYaml) {
+    final widgetMeta = loadYaml(widgetMetaYaml) as YamlMap? ?? YamlMap();
+    final typeDefaults = loadYaml(typeDefaultsYaml) as YamlMap? ?? YamlMap();
+
+    final skipTags = <String>{};
+    final skipList = widgetMeta['skipTags'] as YamlList?;
+    if (skipList != null) {
+      for (final tag in skipList) {
+        skipTags.add(tag.toString());
+      }
+    }
+
+    final widgets = <String, _WidgetTestMeta>{};
+    final widgetList = widgetMeta['widgets'] as YamlList?;
+    if (widgetList != null) {
+      for (final item in widgetList) {
+        final map = item as YamlMap;
+        final tag = map['tag']?.toString();
+        if (tag != null) {
+          widgets[tag] = _WidgetTestMeta.fromYaml(map);
+        }
+      }
+    }
+
+    final typeDefaultsMap = <String, _TypeTestDefault>{};
+    final typesList = typeDefaults['types'] as YamlList?;
+    if (typesList != null) {
+      for (final item in typesList) {
+        final map = item as YamlMap;
+        final type = map['type']?.toString();
+        if (type != null) {
+          typeDefaultsMap[type] = _TypeTestDefault.fromYaml(map);
+        }
+      }
+    }
+
+    final propertyOverrides = <String, _TypeTestDefault>{};
+    final overridesList = typeDefaults['propertyOverrides'] as YamlList?;
+    if (overridesList != null) {
+      for (final item in overridesList) {
+        final map = item as YamlMap;
+        final prop = map['property']?.toString();
+        final type = map['type']?.toString();
+        if (prop != null && type != null) {
+          propertyOverrides['$prop:$type'] = _TypeTestDefault.fromYaml(map);
+        }
+      }
+    }
+
+    return _TestMetadata(
+      skipTags: skipTags,
+      widgets: widgets,
+      typeDefaults: typeDefaultsMap,
+      propertyOverrides: propertyOverrides,
     );
   }
-  switch (spec.tag) {
-    case 'colored_box':
-      return _TestTemplateResult(
-        '{% colored_box$argString %}'
-            '{% text data: "Sample" %}'
-            '{% endcolored_box %}',
-        requiredArgs.data,
-      );
-    case 'expanded':
-      return _TestTemplateResult(
-        '{% row %}'
-            '{% expanded$argString %}'
-            '{% text data: "Sample" %}'
-            '{% endexpanded %}'
-            '{% endrow %}',
-        requiredArgs.data,
-      );
-    case 'flexible':
-      return _TestTemplateResult(
-        '{% row %}'
-            '{% flexible$argString %}'
-            '{% text data: "Sample" %}'
-            '{% endflexible %}'
-            '{% endrow %}',
-        requiredArgs.data,
-      );
-    case 'spacer':
-      return _TestTemplateResult(
-        '{% row %}'
-            '{% spacer$argString %}{% endspacer %}'
-            '{% endrow %}',
-        requiredArgs.data,
-      );
-    case 'page_view':
-      return _TestTemplateResult(
-        '{% page_view$argString %}'
-            '{% text data: "Page" %}'
-            '{% endpage_view %}',
-        requiredArgs.data,
-      );
-    case 'data_table': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'columns': "const [DataColumn(label: Text('Name'))]",
-        'rows': "const [DataRow(cells: [DataCell(Text('Alice'))])]",
-      };
-      return _TestTemplateResult(
-        '{% data_table columns: columns rows: rows %}{% enddata_table %}',
-        data,
-      );
+}
+
+class _WidgetTestMeta {
+  _WidgetTestMeta({
+    this.wrapper,
+    this.wrapperArgs,
+    this.child,
+    this.args,
+    this.data,
+    this.skip = false,
+  });
+
+  final String? wrapper;
+  final String? wrapperArgs;
+  final String? child;
+  final String? args;
+  final Map<String, String>? data;
+  final bool skip;
+
+  factory _WidgetTestMeta.fromYaml(YamlMap map) {
+    Map<String, String>? data;
+    final dataMap = map['data'] as YamlMap?;
+    if (dataMap != null) {
+      data = {};
+      for (final entry in dataMap.entries) {
+        data[entry.key.toString()] = entry.value.toString();
+      }
     }
-    case 'form_field': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'builder': "(dynamic state) => const Text('Field')",
-      };
-      return _TestTemplateResult(
-        '{% form_field builder: builder %}{% endform_field %}',
-        data,
-      );
-    }
-    case 'decorated_box': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'decoration': "const BoxDecoration(color: Color(0xFFFF0000))",
-      };
-      return _TestTemplateResult(
-        '{% decorated_box decoration: decoration %}{% enddecorated_box %}',
-        data,
-      );
-    }
-    case 'layout_builder': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'builder': "(BuildContext context, BoxConstraints constraints) => const SizedBox()",
-      };
-      return _TestTemplateResult(
-        '{% layout_builder builder: builder %}{% endlayout_builder %}',
-        data,
-      );
-    }
-    case 'toggle_buttons': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'isSelected': "[true, false]",
-      };
-      return _TestTemplateResult(
-        '{% toggle_buttons isSelected: isSelected %}{% text data: "A" %}{% text data: "B" %}{% endtoggle_buttons %}',
-        data,
-      );
-    }
-    case 'grid':
-      return _TestTemplateResult(
-        '{% grid columns: 2 %}'
-            '{% text data: "Item" %}'
-            '{% endgrid %}',
-        requiredArgs.data,
-      );
-    case 'grid_view': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'gridDelegate': "const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2)",
-      };
-      return _TestTemplateResult(
-        '{% grid_view gridDelegate: gridDelegate %}'
-            '{% text data: "Item" %}'
-            '{% endgrid_view %}',
-        data,
-      );
-    }
-    case 'icon_button': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'onPressed': 'TapActionDrop(() {})',
-      };
-      return _TestTemplateResult(
-        '{% icon_button icon: "add" onPressed: onPressed %}{% endicon_button %}',
-        data,
-      );
-    }
-    case 'icon':
-      return _TestTemplateResult(
-        '{% icon icon: "add" %}{% endicon %}',
-        requiredArgs.data,
-      );
-    case 'image': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'image': 'MemoryImage(Uint8List.fromList(const <int>['
-            '0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,'
-            '0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,'
-            '0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,'
-            '0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,'
-            '0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,'
-            '0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,'
-            '0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,'
-            '0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,'
-            '0x42,0x60,0x82'
-            ']))',
-      };
-      return _TestTemplateResult(
-        '{% image image: image width: 1 height: 1 %}{% endimage %}',
-        data,
-      );
-    }
-    case 'navigation_rail':
-      return _TestTemplateResult(
-        '{% navigation_rail$argString %}'
-            '{% navigation_destination label: "Home" icon: "home" %}'
-            '{% endnavigation_rail %}',
-        requiredArgs.data,
-      );
-    case 'positioned':
-      return _TestTemplateResult(
-        '{% stack %}'
-            '{% positioned left: 0 top: 0 %}'
-            '{% text data: "Sample" %}'
-            '{% endpositioned %}'
-            '{% endstack %}',
-        requiredArgs.data,
-      );
-    case 'animated_positioned':
-      return _TestTemplateResult(
-        '{% stack %}'
-            '{% animated_positioned$argString left: 0 top: 0 %}'
-            '{% text data: "Sample" %}'
-            '{% endanimated_positioned %}'
-            '{% endstack %}',
-        requiredArgs.data,
-      );
-    case 'sized_box':
-      return _TestTemplateResult(
-        '{% sized_box width: 120 height: 80 %}'
-            '{% endsized_box %}',
-        requiredArgs.data,
-      );
-    case 'sized_overflow_box':
-      return _TestTemplateResult(
-        '{% sized_overflow_box$argString %}'
-            '{% text data: "Sample" %}'
-            '{% endsized_overflow_box %}',
-        requiredArgs.data,
-      );
-    case 'ignore_pointer':
-      return _TestTemplateResult(
-        '{% ignore_pointer ignoring: true %}'
-            '{% text data: "Sample" %}'
-            '{% endignore_pointer %}',
-        requiredArgs.data,
-      );
-    case 'tooltip':
-      return _TestTemplateResult(
-        '{% tooltip message: "Hint" %}'
-            '{% text data: "Hover" %}'
-            '{% endtooltip %}',
-        requiredArgs.data,
-      );
-    case 'snack_bar_action':
-      return _TestTemplateResult(
-        '{% snack_bar content: "Sample" %}'
-            '{% snack_bar_action$argString %}'
-            '{% endsnack_bar_action %}'
-            '{% endsnack_bar %}',
-        requiredArgs.data,
-      );
-    case 'popup_menu_item':
-      return _TestTemplateResult(
-        '{% popup_menu %}'
-            '{% popup_menu_item$argString %}{% endpopup_menu_item %}'
-            '{% endpopup_menu %}',
-        requiredArgs.data,
-      );
-    case 'tab':
-      return _TestTemplateResult(
-        '{% tab text: "Tab 1" %}{% endtab %}',
-        requiredArgs.data,
-      );
-    case 'tab_bar': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'tabs': "const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')]",
-      };
-      return _TestTemplateResult(
-        '{% default_tab_controller length: 2 %}'
-            '{% tab_bar tabs: tabs %}{% endtab_bar %}'
-            '{% enddefault_tab_controller %}',
-        data,
-      );
-    }
-    case 'tab_bar_view':
-      return _TestTemplateResult(
-        '{% default_tab_controller length: 2 %}'
-            '{% tab_bar_view %}{% text data: "Page 1" %}{% text data: "Page 2" %}{% endtab_bar_view %}'
-            '{% enddefault_tab_controller %}',
-        requiredArgs.data,
-      );
-    case 'dismissible':
-      return _TestTemplateResult(
-        '{% dismissible key: "item1" %}{% text data: "Swipe me" %}{% enddismissible %}',
-        requiredArgs.data,
-      );
-    case 'reorderable_list_view': {
-      final data = <String, String>{
-        ...requiredArgs.data,
-        'onReorder': '(int oldIndex, int newIndex) {}',
-      };
-      return _TestTemplateResult(
-        '{% reorderable_list_view onReorder: onReorder %}{% text data: "Item" key: "item1" %}{% endreorderable_list_view %}',
-        data,
-      );
-    }
-    default:
-      return _TestTemplateResult(
-        '{% ${spec.tag}$argString %}{% end${spec.tag} %}',
-        requiredArgs.data,
-      );
+    return _WidgetTestMeta(
+      wrapper: map['wrapper']?.toString(),
+      wrapperArgs: map['wrapperArgs']?.toString(),
+      child: map['child']?.toString(),
+      args: map['args']?.toString(),
+      data: data,
+      skip: map['skip'] == true,
+    );
   }
+}
+
+class _TypeTestDefault {
+  _TypeTestDefault({required this.template, this.data});
+
+  final String template;
+  final String? data;
+
+  factory _TypeTestDefault.fromYaml(YamlMap map) {
+    return _TypeTestDefault(
+      template: map['template']?.toString() ?? '',
+      data: map['data']?.toString(),
+    );
+  }
+}
+
+_TestTemplateResult _buildTestTemplate(
+  _GeneratedSpec spec,
+  _WidgetTestMeta? widgetMeta,
+  _TestMetadata testMetadata,
+) {
+  final data = <String, String>{};
+  
+  // Get required args from spec properties using type defaults
+  final argsList = <String>[];
+  final requiredArgNames = <String>{};
+  for (final prop in spec.properties) {
+    if (!prop.required) continue;
+    requiredArgNames.add(prop.name);
+    final value = _getTestDefaultForType(prop.type, prop.name, testMetadata);
+    if (value != null) {
+      final templateValue = value.template.replaceAll(r'$name', prop.name);
+      argsList.add('${prop.name}: $templateValue');
+      if (value.data != null) {
+        data[prop.name] = value.data!;
+      }
+    }
+  }
+  
+  // Override/add args and data from widget metadata
+  String? extraArgs;
+  if (widgetMeta != null) {
+    if (widgetMeta.args != null) {
+      extraArgs = widgetMeta.args;
+      // Remove any required args that are provided in extraArgs
+      // to avoid duplicates
+      for (final argName in requiredArgNames) {
+        if (extraArgs!.contains('$argName:')) {
+          argsList.removeWhere((arg) => arg.startsWith('$argName:'));
+        }
+      }
+    }
+    if (widgetMeta.data != null) {
+      data.addAll(widgetMeta.data!);
+    }
+  }
+  
+  // Build args string - combine required args with extra args
+  final allArgs = <String>[...argsList];
+  if (extraArgs != null && extraArgs.isNotEmpty) {
+    allArgs.add(extraArgs);
+  }
+  final argString = allArgs.isEmpty ? '' : ' ${allArgs.join(' ')}';
+  
+  // Get child content
+  final child = widgetMeta?.child ?? '';
+  
+  // Build base template
+  var template = '{% ${spec.tag}$argString %}$child{% end${spec.tag} %}';
+  
+  // Handle sliver widgets - wrap in custom_scroll_view
+  if (spec.tag.startsWith('sliver_')) {
+    template = '{% custom_scroll_view %}$template{% endcustom_scroll_view %}';
+    return _TestTemplateResult(template, data);
+  }
+  
+  // Handle wrapper from widget metadata
+  if (widgetMeta?.wrapper != null) {
+    final wrapper = widgetMeta!.wrapper!;
+    final wrapperArgs = widgetMeta.wrapperArgs != null ? ' ${widgetMeta.wrapperArgs}' : '';
+    template = '{% $wrapper$wrapperArgs %}$template{% end$wrapper %}';
+  }
+  
+  return _TestTemplateResult(template, data);
+}
+
+_TypeTestDefault? _getTestDefaultForType(String type, String name, _TestMetadata metadata) {
+  // Check property-specific override first
+  final propOverride = metadata.propertyOverrides['$name:$type'];
+  if (propOverride != null) {
+    return propOverride;
+  }
+  
+  // Check exact type match
+  final exactMatch = metadata.typeDefaults[type];
+  if (exactMatch != null) {
+    return exactMatch;
+  }
+  
+  // Check for generic patterns like ValueChanged<*>
+  if (type.startsWith('ValueChanged<')) {
+    final wildcardMatch = metadata.typeDefaults['ValueChanged<*>'];
+    if (wildcardMatch != null) {
+      return wildcardMatch;
+    }
+  }
+  
+  return null;
 }
 
 class _RequiredArgsResult {
@@ -3348,204 +3303,6 @@ class _TestArgValue {
 
   final String templateValue;
   final String? dataValue;
-}
-
-_RequiredArgsResult _requiredArgsForSpec(_GeneratedSpec spec) {
-  final args = <String>[];
-  final data = <String, String>{};
-  for (final prop in spec.properties) {
-    if (!prop.required) {
-      continue;
-    }
-    final value = _defaultValueForType(prop.type, prop.name);
-    if (value != null) {
-      args.add('${prop.name}: ${value.templateValue}');
-      if (value.dataValue != null) {
-        data[prop.name] = value.dataValue!;
-      }
-    }
-  }
-  return _RequiredArgsResult(args, data);
-}
-
-_TestArgValue? _defaultValueForType(String type, String name) {
-  if (type.startsWith('ValueChanged<')) {
-    return _TestArgValue(
-      name,
-      dataValue: '(dynamic _) {}',
-    );
-  }
-  switch (type) {
-    case 'double':
-    case 'num':
-      return _TestArgValue('1');
-    case 'int':
-      return _TestArgValue('1');
-    case 'bool':
-      return _TestArgValue('true');
-    case 'String':
-      return _TestArgValue('"Sample"');
-    case 'Color':
-      return _TestArgValue('"#FF0000"');
-    case 'AlignmentGeometry':
-      return _TestArgValue('"center"');
-    case 'Axis':
-      return _TestArgValue('"horizontal"');
-    case 'TextDirection':
-      return _TestArgValue('"ltr"');
-    case 'TextBaseline':
-      return _TestArgValue('"alphabetic"');
-    case 'Matrix4':
-      return _TestArgValue('"1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"');
-    case 'Offset':
-      return _TestArgValue('"0.1,0.1"');
-    case 'Duration':
-      return _TestArgValue('"200ms"');
-    case 'Curve':
-      return _TestArgValue('"easeInOut"');
-    case 'DateTime':
-      return _TestArgValue('"2024-01-01"');
-    case 'Animation<double>':
-      return _TestArgValue(
-        name,
-        dataValue: 'const AlwaysStoppedAnimation<double>(1.0)',
-      );
-    case 'Decoration':
-      return _TestArgValue('"#FF0000"');
-    case 'Object':
-    case 'Object?':
-      return _TestArgValue('"sample"');
-    case 'BoxConstraints':
-      return _TestArgValue(
-        name,
-        dataValue: 'const BoxConstraints(minWidth: 0, maxWidth: 100, minHeight: 0, maxHeight: 100)',
-      );
-    case 'EdgeInsets':
-    case 'EdgeInsetsGeometry':
-      return _TestArgValue('8');
-    case 'IconThemeData':
-      return _TestArgValue(
-        name,
-        dataValue: 'const IconThemeData(size: 16)',
-      );
-    case 'Size':
-      return _TestArgValue('"20,20"');
-    case 'TextStyle':
-      return _TestArgValue(
-        name,
-        dataValue: 'const TextStyle(fontSize: 14)',
-      );
-    case 'VoidCallback':
-      return _TestArgValue(
-        name,
-        dataValue: 'TapActionDrop(() {})',
-      );
-    case 'List<BottomNavigationBarItem>':
-      return _TestArgValue(
-        name,
-        dataValue:
-            '[const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home")]',
-      );
-    case 'List<DropdownMenuItem<Object?>>':
-      return _TestArgValue(
-        name,
-        dataValue:
-            '[const DropdownMenuItem(value: "Sample", child: Text("Sample"))]',
-      );
-    case 'PopupMenuItemBuilder<Object?>':
-      return _TestArgValue(
-        name,
-        dataValue:
-            '(BuildContext context) => [const PopupMenuItem(value: "Sample", child: Text("Sample"))]',
-      );
-    case 'List<ButtonSegment<Object?>>':
-      return _TestArgValue(
-        name,
-        dataValue:
-            '[ButtonSegment(value: "Sample", label: const Text("Sample"))]',
-      );
-    case 'Set<Object?>':
-      return _TestArgValue(
-        name,
-        dataValue: '<Object?>{"Sample"}',
-      );
-    case 'Widget':
-      return _TestArgValue('"Sample"');
-    case 'StackFit':
-      return _TestArgValue('"loose"');
-    case 'FlexFit':
-      return _TestArgValue('"loose"');
-    case 'OverflowBoxFit':
-      return _TestArgValue('"max"');
-    case 'AutocompleteOptionsBuilder<Object>':
-      return _TestArgValue(
-        name,
-        dataValue: '(TextEditingValue value) async => <Object>["Option 1", "Option 2"]',
-      );
-    case 'ShaderCallback':
-      return _TestArgValue(
-        name,
-        dataValue: '(Rect bounds) => const LinearGradient(colors: [Color(0xFFFF0000), Color(0xFF0000FF)]).createShader(bounds)',
-      );
-    case 'LayoutWidgetBuilder':
-      return _TestArgValue(
-        name,
-        dataValue: '(BuildContext context, BoxConstraints constraints) => const SizedBox()',
-      );
-    case 'ReorderCallback':
-      return _TestArgValue(
-        name,
-        dataValue: '(int oldIndex, int newIndex) {}',
-      );
-    case 'List<Step>':
-      return _TestArgValue(
-        name,
-        dataValue: "const [Step(title: Text('Step 1'), content: Text('Content'))]",
-      );
-    case 'List<Widget>':
-      if (name == 'tabs') {
-        return _TestArgValue(
-          name,
-          dataValue: "const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')]",
-        );
-      }
-      if (name == 'actions') {
-        return _TestArgValue(
-          name,
-          dataValue: "const [TextButton(onPressed: null, child: Text('OK'))]",
-        );
-      }
-      return _TestArgValue(
-        name,
-        dataValue: "const [Text('Item 1'), Text('Item 2')]",
-      );
-    case 'List<bool>':
-      return _TestArgValue(
-        name,
-        dataValue: "[true, false]",
-      );
-    case 'TimeOfDay':
-      return _TestArgValue(
-        name,
-        dataValue: "const TimeOfDay(hour: 10, minute: 30)",
-      );
-    case 'FormFieldBuilder<Object?>':
-      return _TestArgValue(
-        name,
-        dataValue: "(dynamic state) => const Text('Field')",
-      );
-    case 'SliverGridDelegate':
-      return _TestArgValue(
-        name,
-        dataValue: "const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2)",
-      );
-    case 'ImageProvider<Object>':
-      return _TestArgValue(
-        name,
-        dataValue: "MemoryImage(Uint8List.fromList(const <int>[0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,0x42,0x60,0x82]))",
-      );
-  }
-  return null;
 }
 
 String _generatedEnumParserName(String enumName) {

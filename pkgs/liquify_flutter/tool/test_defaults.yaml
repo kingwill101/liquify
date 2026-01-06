@@ -1,0 +1,161 @@
+# Test default values for types
+# Used by the test generator to provide sample values for required parameters
+#
+# Format:
+#   type: The Dart type name
+#   template: Value to use in template (e.g., '"Sample"', '1', 'varName')
+#   data: (optional) Dart code to provide via data map when template uses a variable
+
+types:
+  # Primitives
+  - type: double
+    template: "1"
+  - type: num
+    template: "1"
+  - type: int
+    template: "1"
+  - type: bool
+    template: "true"
+  - type: String
+    template: '"Sample"'
+
+  # Colors and painting
+  - type: Color
+    template: '"#FF0000"'
+  - type: Decoration
+    template: '"#FF0000"'
+
+  # Alignment
+  - type: AlignmentGeometry
+    template: '"center"'
+  - type: Axis
+    template: '"horizontal"'
+  - type: TextDirection
+    template: '"ltr"'
+  - type: TextBaseline
+    template: '"alphabetic"'
+
+  # Transforms
+  - type: Matrix4
+    template: '"1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"'
+  - type: Offset
+    template: '"0.1,0.1"'
+  - type: Size
+    template: '"20,20"'
+
+  # Time
+  - type: Duration
+    template: '"200ms"'
+  - type: Curve
+    template: '"easeInOut"'
+  - type: DateTime
+    template: '"2024-01-01"'
+  - type: TimeOfDay
+    template: "$name"
+    data: "const TimeOfDay(hour: 10, minute: 30)"
+
+  # Layout
+  - type: EdgeInsets
+    template: "8"
+  - type: EdgeInsetsGeometry
+    template: "8"
+  - type: BoxConstraints
+    template: "$name"
+    data: "const BoxConstraints(minWidth: 0, maxWidth: 100, minHeight: 0, maxHeight: 100)"
+  - type: StackFit
+    template: '"loose"'
+  - type: FlexFit
+    template: '"loose"'
+  - type: OverflowBoxFit
+    template: '"max"'
+
+  # Widgets
+  - type: Widget
+    template: '"Sample"'
+  - type: Object
+    template: '"sample"'
+  - type: "Object?"
+    template: '"sample"'
+
+  # Animation
+  - type: Animation<double>
+    template: "$name"
+    data: "const AlwaysStoppedAnimation<double>(1.0)"
+
+  # Styling
+  - type: IconThemeData
+    template: "$name"
+    data: "const IconThemeData(size: 16)"
+  - type: TextStyle
+    template: "$name"
+    data: "const TextStyle(fontSize: 14)"
+
+  # Callbacks - void return
+  - type: VoidCallback
+    template: "$name"
+    data: "TapActionDrop(() {})"
+  - type: ValueChanged<*>
+    template: "$name"
+    data: "(dynamic _) {}"
+  - type: ReorderCallback
+    template: "$name"
+    data: "(int oldIndex, int newIndex) {}"
+
+  # Callbacks - with return value
+  - type: AutocompleteOptionsBuilder<Object>
+    template: "$name"
+    data: '(TextEditingValue value) async => <Object>["Option 1", "Option 2"]'
+  - type: ShaderCallback
+    template: "$name"
+    data: "(Rect bounds) => const LinearGradient(colors: [Color(0xFFFF0000), Color(0xFF0000FF)]).createShader(bounds)"
+  - type: LayoutWidgetBuilder
+    template: "$name"
+    data: "(BuildContext context, BoxConstraints constraints) => const SizedBox()"
+  - type: FormFieldBuilder<Object?>
+    template: "$name"
+    data: "(dynamic state) => const Text('Field')"
+  - type: PopupMenuItemBuilder<Object?>
+    template: "$name"
+    data: '(BuildContext context) => [const PopupMenuItem(value: "Sample", child: Text("Sample"))]'
+
+  # Lists
+  - type: List<bool>
+    template: "$name"
+    data: "[true, false]"
+  - type: List<Step>
+    template: "$name"
+    data: "const [Step(title: Text('Step 1'), content: Text('Content'))]"
+  - type: List<Widget>
+    template: "$name"
+    data: "const [Text('Item 1'), Text('Item 2')]"
+  - type: List<BottomNavigationBarItem>
+    template: "$name"
+    data: '[const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home")]'
+  - type: List<DropdownMenuItem<Object?>>
+    template: "$name"
+    data: '[const DropdownMenuItem(value: "Sample", child: Text("Sample"))]'
+  - type: List<ButtonSegment<Object?>>
+    template: "$name"
+    data: '[ButtonSegment(value: "Sample", label: const Text("Sample"))]'
+  - type: Set<Object?>
+    template: "$name"
+    data: '<Object?>{"Sample"}'
+
+  # Complex types
+  - type: SliverGridDelegate
+    template: "$name"
+    data: "const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2)"
+  - type: ImageProvider<Object>
+    template: "$name"
+    data: "MemoryImage(Uint8List.fromList(const <int>[0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,0x42,0x60,0x82]))"
+
+# Property-specific overrides (when a property name needs different default than its type)
+propertyOverrides:
+  - property: tabs
+    type: List<Widget>
+    template: "$name"
+    data: "const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')]"
+  - property: actions
+    type: List<Widget>
+    template: "$name"
+    data: "const [TextButton(onPressed: null, child: Text('OK'))]"

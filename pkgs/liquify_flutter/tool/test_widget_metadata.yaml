@@ -1,0 +1,188 @@
+# Widget test metadata
+# Specifies how to generate tests for widgets that need special handling
+#
+# Fields:
+#   tag: The widget tag name
+#   wrapper: Parent tag to wrap the widget in (e.g., 'row' for Expanded)
+#   child: Child content to include in the test
+#   args: Additional args to include in template
+#   data: Additional data map entries
+#   skip: Set to true to skip generating test for this widget
+
+widgets:
+  # Flex children need parent Flex
+  - tag: expanded
+    wrapper: row
+    child: '{% text data: "Sample" %}'
+
+  - tag: flexible
+    wrapper: row
+    child: '{% text data: "Sample" %}'
+
+  - tag: spacer
+    wrapper: row
+
+  # Stack children need parent Stack
+  - tag: positioned
+    wrapper: stack
+    args: "left: 0 top: 0"
+    child: '{% text data: "Sample" %}'
+
+  - tag: animated_positioned
+    wrapper: stack
+    args: "left: 0 top: 0"
+    child: '{% text data: "Sample" %}'
+
+  # Slivers need CustomScrollView - handled by prefix check in builder
+
+  # Widgets that need specific children
+  - tag: colored_box
+    child: '{% text data: "Sample" %}'
+
+  - tag: sized_overflow_box
+    child: '{% text data: "Sample" %}'
+
+  - tag: ignore_pointer
+    args: "ignoring: true"
+    child: '{% text data: "Sample" %}'
+
+  - tag: tooltip
+    args: 'message: "Hint"'
+    child: '{% text data: "Hover" %}'
+
+  - tag: page_view
+    child: '{% text data: "Page" %}'
+
+  # Widgets with fixed dimensions
+  - tag: sized_box
+    args: "width: 120 height: 80"
+
+  # Data table needs proper columns/rows
+  - tag: data_table
+    args: "columns: columns rows: rows"
+    data:
+      columns: "const [DataColumn(label: Text('Name'))]"
+      rows: "const [DataRow(cells: [DataCell(Text('Alice'))])]"
+
+  # Form field needs builder callback
+  - tag: form_field
+    args: "builder: builder"
+    data:
+      builder: "(dynamic state) => const Text('Field')"
+
+  # Decorated box needs decoration
+  - tag: decorated_box
+    args: "decoration: decoration"
+    data:
+      decoration: "const BoxDecoration(color: Color(0xFFFF0000))"
+
+  # Layout builder needs builder
+  - tag: layout_builder
+    args: "builder: builder"
+    data:
+      builder: "(BuildContext context, BoxConstraints constraints) => const SizedBox()"
+
+  # Toggle buttons needs isSelected matching children count
+  - tag: toggle_buttons
+    args: "isSelected: isSelected"
+    child: '{% text data: "A" %}{% text data: "B" %}'
+    data:
+      isSelected: "[true, false]"
+
+  # Grid uses handwritten tag with columns
+  - tag: grid
+    args: "columns: 2"
+    child: '{% text data: "Item" %}'
+
+  # GridView uses generated tag with delegate
+  - tag: grid_view
+    args: "gridDelegate: gridDelegate"
+    child: '{% text data: "Item" %}'
+    data:
+      gridDelegate: "const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2)"
+
+  # Icon button needs onPressed
+  - tag: icon_button
+    args: 'icon: "add" onPressed: onPressed'
+    data:
+      onPressed: "TapActionDrop(() {})"
+
+  # Icon needs icon
+  - tag: icon
+    args: 'icon: "add"'
+
+  # Image needs ImageProvider
+  - tag: image
+    args: "image: image width: 1 height: 1"
+    data:
+      image: "MemoryImage(Uint8List.fromList(const <int>[0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,0x42,0x60,0x82]))"
+
+  # Tab needs text
+  - tag: tab
+    args: 'text: "Tab 1"'
+
+  # Tab bar needs DefaultTabController wrapper and tabs
+  - tag: tab_bar
+    wrapper: default_tab_controller
+    wrapperArgs: "length: 2"
+    args: "tabs: tabs"
+    data:
+      tabs: "const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')]"
+
+  # Tab bar view needs DefaultTabController wrapper
+  - tag: tab_bar_view
+    wrapper: default_tab_controller
+    wrapperArgs: "length: 2"
+    child: '{% text data: "Page 1" %}{% text data: "Page 2" %}'
+
+  # Dismissible needs key
+  - tag: dismissible
+    args: 'key: "item1"'
+    child: '{% text data: "Swipe me" %}'
+
+  # Reorderable list view needs onReorder and keyed children
+  - tag: reorderable_list_view
+    args: "onReorder: onReorder"
+    child: '{% text data: "Item" key: "item1" %}'
+    data:
+      onReorder: "(int oldIndex, int newIndex) {}"
+
+  # Navigation rail needs destinations (skip for now)
+  - tag: navigation_rail
+    skip: true
+
+  # Popup menu items need popup menu wrapper
+  - tag: popup_menu_item
+    skip: true
+
+  # Snack bar action needs snack bar wrapper
+  - tag: snack_bar_action
+    skip: true
+
+  # Snack bar needs ScaffoldMessenger
+  - tag: snack_bar
+    skip: true
+
+# Tags to skip test generation entirely
+skipTags:
+  - bottom_navigation_bar
+  - bottom_sheet
+  - navigation_bar
+  - navigation_bar_destination
+  - navigation_destination
+  - navigation_drawer_destination
+  - navigation_rail
+  - navigation_rail_destination
+  - paginated_data_table
+  - padding
+  - popup_menu_divider
+  - popup_menu_item
+  - snack_bar_action
+  - snack_bar
+  - sliver_app_bar
+  - sliver_fill_remaining
+  - sliver_grid
+  - sliver_list
+  - sliver_padding
+  - sliver_persistent_header
+  - sliver_to_box_adapter
