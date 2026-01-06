@@ -6,7 +6,11 @@ import 'package:liquify/parser.dart';
 import '../generated/type_parser_aliases.dart';
 import '../generated/type_parsers.dart' as generated_parsers;
 
-List<Widget> withGap(List<Widget> children, Object? gapValue, Axis axis) {
+List<Widget> withGap(
+  List<Widget> children,
+  Object? gapValue,
+  Axis axis,
+) {
   final gap = toDouble(gapValue);
   if (gap == null || gap <= 0 || children.length < 2) {
     return children;
@@ -26,7 +30,10 @@ List<Widget> withGap(List<Widget> children, Object? gapValue, Axis axis) {
   return spaced;
 }
 
-List<Widget> withSeparator(List<Widget> children, Widget? separator) {
+List<Widget> withSeparator(
+  List<Widget> children,
+  Widget? separator,
+) {
   if (separator == null || children.length < 2) {
     return children;
   }
@@ -34,9 +41,7 @@ List<Widget> withSeparator(List<Widget> children, Widget? separator) {
   for (var i = 0; i < children.length; i++) {
     separated.add(children[i]);
     if (i < children.length - 1) {
-      separated.add(
-        KeyedSubtree(key: ValueKey('separator_$i'), child: separator),
-      );
+      separated.add(KeyedSubtree(key: ValueKey('separator_$i'), child: separator));
     }
   }
   return separated;
@@ -49,7 +54,9 @@ Widget wrapChildren(List<Widget> children) {
   if (children.length == 1) {
     return children.first;
   }
-  return Column(children: children);
+  return Column(
+    children: children,
+  );
 }
 
 EdgeInsetsGeometry edgeInsetsFromNamedValues(
@@ -254,10 +261,8 @@ ScrollPhysics? parseScrollPhysics(Object? value) {
     return value;
   }
   if (value is String) {
-    final normalized = value.toLowerCase().replaceAll(
-      RegExp(r'[^a-z0-9]+'),
-      '',
-    );
+    final normalized =
+        value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '');
     switch (normalized) {
       case 'never':
       case 'neverscrollable':
@@ -345,10 +350,8 @@ double? parseStrokeAlign(Object? value) {
     return value.toDouble();
   }
   if (value is String) {
-    final normalized = value.toLowerCase().replaceAll(
-      RegExp(r'[^a-z0-9]+'),
-      '',
-    );
+    final normalized =
+        value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '');
     switch (normalized) {
       case 'inside':
       case 'strokealigninside':
@@ -369,10 +372,8 @@ ShapeBorder? parseShapeBorder(Object? value) {
     return value;
   }
   if (value is String) {
-    final normalized = value.toLowerCase().replaceAll(
-      RegExp(r'[^a-z0-9]+'),
-      '',
-    );
+    final normalized =
+        value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '');
     switch (normalized) {
       case 'rounded':
       case 'roundedrectangle':
@@ -430,15 +431,15 @@ TextStyle? parseTextStyle(Object? value) {
       final payload = map.containsKey('args')
           ? map['args']
           : map.containsKey('values')
-          ? map['values']
-          : () {
-              final stripped = Map<String, Object?>.from(map);
-              stripped.remove('constructor');
-              stripped.remove('type');
-              stripped.remove('args');
-              stripped.remove('values');
-              return stripped;
-            }();
+              ? map['values']
+              : () {
+                  final stripped = Map<String, Object?>.from(map);
+                  stripped.remove('constructor');
+                  stripped.remove('type');
+                  stripped.remove('args');
+                  stripped.remove('values');
+                  return stripped;
+                }();
       if (payload is Map) {
         final payloadMap = <String, Object?>{};
         payload.forEach((key, val) {
@@ -547,12 +548,11 @@ String resolveWidgetId(
   final env = evaluator.context;
   final counters =
       (env.getRegister('_liquify_flutter_widget_ids') as Map<String, int>?) ??
-      <String, int>{};
+          <String, int>{};
   final next = (counters[tagName] ?? 0) + 1;
   counters[tagName] = next;
   env.setRegister('_liquify_flutter_widget_ids', counters);
-  final namespace =
-      (env.getRegister('_liquify_flutter_widget_ns') as String?) ??
+  final namespace = (env.getRegister('_liquify_flutter_widget_ns') as String?) ??
       'env${identityHashCode(env)}';
   env.setRegister('_liquify_flutter_widget_ns', namespace);
   return '${namespace}_${tagName}_$next';
@@ -566,7 +566,10 @@ Key resolveWidgetKey(String id, [String? key]) {
 Map<String, dynamic> sanitizeProps(Map<String, Object?> props) {
   final sanitized = <String, dynamic>{};
   props.forEach((key, value) {
-    if (value == null || value is String || value is num || value is bool) {
+    if (value == null ||
+        value is String ||
+        value is num ||
+        value is bool) {
       sanitized[key] = value;
       return;
     }
@@ -583,7 +586,10 @@ Map<String, dynamic> buildWidgetEvent({
   Map<String, Object?>? props,
   String? event,
 }) {
-  final payload = <String, dynamic>{'tag': tag, 'id': id};
+  final payload = <String, dynamic>{
+    'tag': tag,
+    'id': id,
+  };
   if (key != null && key.isNotEmpty) {
     payload['key'] = key;
   }
@@ -686,13 +692,13 @@ VoidCallback? resolveActionCallback(
 }) {
   if (value is Drop) {
     return () => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        value,
-        const ['tap', 'clicked'],
-        event: event,
-        actionValue: actionValue,
-      );
-    });
+          _invokeDropAction(
+            value,
+            const ['tap', 'clicked'],
+            event: event,
+            actionValue: actionValue,
+          );
+        });
   }
   final direct = toVoidCallback(value);
   if (direct != null) {
@@ -704,13 +710,13 @@ VoidCallback? resolveActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return () => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'tap', 'clicked'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'tap', 'clicked'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
@@ -720,13 +726,13 @@ VoidCallback? resolveActionCallback(
     }
     if (entry is Drop) {
       return () => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['tap', 'clicked'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['tap', 'clicked'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is VoidCallback) {
       return () => _withEvent(evaluator, event, entry);
@@ -746,7 +752,8 @@ ValueChanged<bool>? resolveBoolActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   final direct = toBoolCallback(value);
   if (direct != null) {
     return direct;
@@ -757,13 +764,13 @@ ValueChanged<bool>? resolveBoolActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (state) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
@@ -773,13 +780,13 @@ ValueChanged<bool>? resolveBoolActionCallback(
     }
     if (entry is Drop) {
       return (state) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is ValueChanged<bool>) {
       return entry;
@@ -799,7 +806,8 @@ bool Function(Object?)? resolveBoolPredicateCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is bool Function(Object?)) {
     return value;
   }
@@ -870,7 +878,8 @@ WidgetBuilder? resolveWidgetBuilderCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is WidgetBuilder) {
     return value;
   }
@@ -939,7 +948,8 @@ List<Widget> Function(BuildContext)? resolveWidgetListBuilderCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is List<Widget> Function(BuildContext)) {
     return value;
   }
@@ -956,7 +966,8 @@ List<Widget> Function(BuildContext)? resolveWidgetListBuilderCallback(
       return entry;
     }
     if (entry is Function) {
-      return (context) => _coerceWidgetList(Function.apply(entry, [context]));
+      return (context) =>
+          _coerceWidgetList(Function.apply(entry, [context]));
     }
   }
   if (actions is Drop) {
@@ -975,12 +986,14 @@ List<Widget> Function(BuildContext)? resolveWidgetListBuilderCallback(
   return null;
 }
 
-List<Widget> Function(BuildContext, Object?)? resolveWidgetListBuilder2Callback(
+List<Widget> Function(BuildContext, Object?)?
+    resolveWidgetListBuilder2Callback(
   Evaluator evaluator,
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is List<Widget> Function(BuildContext, Object?)) {
     return value;
   }
@@ -1012,8 +1025,8 @@ List<Widget> Function(BuildContext, Object?)? resolveWidgetListBuilder2Callback(
     };
   }
   if (actions is Function) {
-    return (context, payload) =>
-        _coerceWidgetList(Function.apply(actions, [value, context, payload]));
+    return (context, payload) => _coerceWidgetList(
+        Function.apply(actions, [value, context, payload]));
   }
   return null;
 }
@@ -1023,7 +1036,8 @@ Widget Function(BuildContext, Object?)? resolveWidgetBuilder2Callback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Widget Function(BuildContext, Object?)) {
     return value;
   }
@@ -1066,7 +1080,8 @@ Object? Function(BuildContext)? resolveBuildContextCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Object? Function(BuildContext)) {
     return value;
   }
@@ -1109,12 +1124,14 @@ Object? Function(BuildContext, Object?)? resolveBuildContextCallback2(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Object? Function(BuildContext, Object?)) {
     return value;
   }
   if (value is Function) {
-    return (context, payload) => Function.apply(value, [context, payload]);
+    return (context, payload) =>
+        Function.apply(value, [context, payload]);
   }
   if (value is! String || value.isEmpty) {
     return null;
@@ -1126,7 +1143,8 @@ Object? Function(BuildContext, Object?)? resolveBuildContextCallback2(
       return entry;
     }
     if (entry is Function) {
-      return (context, payload) => Function.apply(entry, [context, payload]);
+      return (context, payload) =>
+          Function.apply(entry, [context, payload]);
     }
     if (entry != null) {
       return (_, __) => entry;
@@ -1153,7 +1171,8 @@ Function? resolveCallbackValue(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Function) {
     return value;
   }
@@ -1184,7 +1203,8 @@ Object? Function()? resolveGenericCallback0(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Object? Function()) {
     return value;
   }
@@ -1227,7 +1247,8 @@ Object? Function(Object?)? resolveGenericCallback1(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Object? Function(Object?)) {
     return value;
   }
@@ -1300,7 +1321,8 @@ Object? Function(Object?, Object?)? resolveGenericCallback2(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Object? Function(Object?, Object?)) {
     return value;
   }
@@ -1343,7 +1365,8 @@ void Function(Object?, Object?)? resolveGenericActionCallback2(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is void Function(Object?, Object?)) {
     return value;
   }
@@ -1356,13 +1379,13 @@ void Function(Object?, Object?)? resolveGenericActionCallback2(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (a, b) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
@@ -1374,13 +1397,13 @@ void Function(Object?, Object?)? resolveGenericActionCallback2(
     }
     if (entry is Drop) {
       return (a, b) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
   }
   if (actions is Function) {
@@ -1394,7 +1417,8 @@ Future<bool> Function()? resolveFutureBoolCallback0(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Future<bool> Function()) {
     return value;
   }
@@ -1491,7 +1515,8 @@ Future<bool?> Function(Object?)? resolveFutureBoolCallback1(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Future<bool?> Function(Object?)) {
     return value;
   }
@@ -1588,25 +1613,26 @@ ValueChanged<dynamic>? resolveGenericValueChanged(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is Drop) {
     return (payload) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        value,
-        const ['changed'],
-        event: event,
-        actionValue: actionValue,
-      );
-    });
+          _invokeDropAction(
+            value,
+            const ['changed'],
+            event: event,
+            actionValue: actionValue,
+          );
+        });
   }
   if (value is Function) {
     return (payload) => _withEvent(evaluator, event, () {
-      try {
-        Function.apply(value, [payload]);
-      } on NoSuchMethodError {
-        Function.apply(value, const []);
-      }
-    });
+          try {
+            Function.apply(value, [payload]);
+          } on NoSuchMethodError {
+            Function.apply(value, const []);
+          }
+        });
   }
   if (value is! String || value.isEmpty) {
     return null;
@@ -1614,25 +1640,25 @@ ValueChanged<dynamic>? resolveGenericValueChanged(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (payload) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
     if (entry is Drop) {
       return (payload) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is Function) {
       return (payload) {
@@ -1655,7 +1681,8 @@ ValueChanged<String>? resolveStringActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   final direct = toStringCallback(value);
   if (direct != null) {
     return direct;
@@ -1666,13 +1693,13 @@ ValueChanged<String>? resolveStringActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (text) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
@@ -1682,13 +1709,13 @@ ValueChanged<String>? resolveStringActionCallback(
     }
     if (entry is Drop) {
       return (text) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is ValueChanged<String>) {
       return entry;
@@ -1708,7 +1735,8 @@ ReorderActionCallback? resolveReorderActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is ReorderActionCallback) {
     return value;
   }
@@ -1718,9 +1746,8 @@ ReorderActionCallback? resolveReorderActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (oldIndex, newIndex) {
-      final payload = event == null
-          ? <String, dynamic>{}
-          : Map<String, dynamic>.from(event);
+      final payload =
+          event == null ? <String, dynamic>{} : Map<String, dynamic>.from(event);
       payload['oldIndex'] = oldIndex;
       payload['newIndex'] = newIndex;
       _withEvent(evaluator, payload, () {
@@ -1772,7 +1799,8 @@ SortCallback? resolveSortActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   if (value is SortCallback) {
     return value;
   }
@@ -1782,9 +1810,8 @@ SortCallback? resolveSortActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (columnIndex, ascending) {
-      final payload = event == null
-          ? <String, dynamic>{}
-          : Map<String, dynamic>.from(event);
+      final payload =
+          event == null ? <String, dynamic>{} : Map<String, dynamic>.from(event);
       payload['columnIndex'] = columnIndex;
       payload['ascending'] = ascending;
       _withEvent(evaluator, payload, () {
@@ -1825,11 +1852,8 @@ SortCallback? resolveSortActionCallback(
     }
   }
   if (actions is Function) {
-    return (columnIndex, ascending) => _withEvent(
-      evaluator,
-      event,
-      () => actions(value, columnIndex, ascending),
-    );
+    return (columnIndex, ascending) =>
+        _withEvent(evaluator, event, () => actions(value, columnIndex, ascending));
   }
   return null;
 }
@@ -1903,7 +1927,8 @@ ValueChanged<double>? resolveDoubleActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   final direct = toDoubleCallback(value);
   if (direct != null) {
     return (number) => _withEvent(evaluator, event, () => direct(number));
@@ -1914,13 +1939,13 @@ ValueChanged<double>? resolveDoubleActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (number) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
@@ -1930,13 +1955,13 @@ ValueChanged<double>? resolveDoubleActionCallback(
     }
     if (entry is Drop) {
       return (number) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is ValueChanged<double>) {
       return (number) => _withEvent(evaluator, event, () => entry(number));
@@ -1946,8 +1971,7 @@ ValueChanged<double>? resolveDoubleActionCallback(
     }
   }
   if (actions is Function) {
-    return (number) =>
-        _withEvent(evaluator, event, () => actions(value, number));
+    return (number) => _withEvent(evaluator, event, () => actions(value, number));
   }
   return null;
 }
@@ -1957,7 +1981,8 @@ ValueChanged<int>? resolveIntActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   final direct = toIntCallback(value);
   if (direct != null) {
     return (number) => _withEvent(evaluator, event, () => direct(number));
@@ -1968,13 +1993,13 @@ ValueChanged<int>? resolveIntActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (number) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
@@ -1984,13 +2009,13 @@ ValueChanged<int>? resolveIntActionCallback(
     }
     if (entry is Drop) {
       return (number) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is ValueChanged<int>) {
       return (number) => _withEvent(evaluator, event, () => entry(number));
@@ -2000,8 +2025,7 @@ ValueChanged<int>? resolveIntActionCallback(
     }
   }
   if (actions is Function) {
-    return (number) =>
-        _withEvent(evaluator, event, () => actions(value, number));
+    return (number) => _withEvent(evaluator, event, () => actions(value, number));
   }
   return null;
 }
@@ -2021,7 +2045,8 @@ ValueChanged<Set<int>>? resolveIntSetActionCallback(
   Object? value, {
   Map<String, dynamic>? event,
   String? actionValue,
-}) {
+}
+) {
   final direct = toIntSetCallback(value);
   if (direct != null) {
     return (selection) => _withEvent(evaluator, event, () => direct(selection));
@@ -2032,38 +2057,35 @@ ValueChanged<Set<int>>? resolveIntSetActionCallback(
   final actions = _resolveActions(evaluator);
   if (actions is Drop) {
     return (selection) => _withEvent(evaluator, event, () {
-      _invokeDropAction(
-        actions,
-        [value, 'changed'],
-        event: event,
-        actionValue: value,
-      );
-    });
+          _invokeDropAction(
+            actions,
+            [value, 'changed'],
+            event: event,
+            actionValue: value,
+          );
+        });
   }
   if (actions is Map) {
     final entry = actions[value];
     final resolved = toIntSetCallback(entry);
     if (resolved != null) {
-      return (selection) =>
-          _withEvent(evaluator, event, () => resolved(selection));
+      return (selection) => _withEvent(evaluator, event, () => resolved(selection));
     }
     if (entry is Drop) {
       return (selection) => _withEvent(evaluator, event, () {
-        _invokeDropAction(
-          entry,
-          const ['changed'],
-          event: event,
-          actionValue: value,
-        );
-      });
+            _invokeDropAction(
+              entry,
+              const ['changed'],
+              event: event,
+              actionValue: value,
+            );
+          });
     }
     if (entry is ValueChanged<Set<int>>) {
-      return (selection) =>
-          _withEvent(evaluator, event, () => entry(selection));
+      return (selection) => _withEvent(evaluator, event, () => entry(selection));
     }
     if (entry is Function) {
-      return (selection) =>
-          _withEvent(evaluator, event, () => entry(selection));
+      return (selection) => _withEvent(evaluator, event, () => entry(selection));
     }
   }
   if (actions is Function) {
@@ -2157,7 +2179,10 @@ void _restoreDropAttrs(
   }
 }
 
-dynamic evaluatePositionalValue(Evaluator evaluator, List<ASTNode> content) {
+dynamic evaluatePositionalValue(
+  Evaluator evaluator,
+  List<ASTNode> content,
+) {
   final positional = content.where((node) => node is! NamedArgument).toList();
   if (positional.isEmpty) {
     return null;

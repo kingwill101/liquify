@@ -14,9 +14,7 @@ class GestureDetectorTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     final namedValues = <String, Object?>{};
     final config = _parseConfig(evaluator, namedValues);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGestureDetector(evaluator, namedValues, config, children),
-    );
+    buffer.write(_buildGestureDetector(evaluator, namedValues, config, children));
   }
 
   @override
@@ -27,15 +25,12 @@ class GestureDetectorTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     final namedValues = <String, Object?>{};
     final config = _parseConfig(evaluator, namedValues);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGestureDetector(evaluator, namedValues, config, children),
-    );
+    buffer.write(_buildGestureDetector(evaluator, namedValues, config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('gesture_detector').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -45,9 +40,8 @@ class GestureDetectorTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'gesture_detector',
         nonFilterContent,
@@ -145,9 +139,8 @@ class GestureDetectorTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (resolvedChild != null) {
       config.child = resolvedChild;
     } else if (childValue != null) {
-      config.child = childValue is Widget
-          ? childValue
-          : resolveTextWidget(childValue);
+      config.child =
+          childValue is Widget ? childValue : resolveTextWidget(childValue);
     }
 
     final ids = resolveIds(

@@ -11,10 +11,8 @@ void main() {
       '{% text value: "Align" %}{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Align'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Align'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.alignment, Alignment.center);
   });

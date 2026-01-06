@@ -11,10 +11,8 @@ void main() {
     );
 
     expect(find.byType(Card), findsOneWidget);
-    final paddingFinder = find.ancestor(
-      of: find.text('Card'),
-      matching: find.byType(Padding),
-    );
+    final paddingFinder =
+        find.ancestor(of: find.text('Card'), matching: find.byType(Padding));
     final padding = tester.widget<Padding>(paddingFinder.first);
     expect(padding.padding, const EdgeInsets.all(8));
     expect(find.text('Card'), findsOneWidget);

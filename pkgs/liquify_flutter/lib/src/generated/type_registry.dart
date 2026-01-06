@@ -7,8 +7,7 @@ import 'package:liquify_flutter/src/generated/type_parsers.dart';
 import 'package:liquify_flutter/src/tags/tag_helpers.dart';
 
 typedef GeneratedValueParser = Object? Function(Object? value);
-typedef GeneratedEvaluatorParser =
-    Object? Function(Evaluator evaluator, Object? value);
+typedef GeneratedEvaluatorParser = Object? Function(Evaluator evaluator, Object? value);
 
 class GeneratedTypeField {
   const GeneratedTypeField({
@@ -123,56 +122,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedAnimationController',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'value',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'duration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'reverseDuration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'lowerBound',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'upperBound',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'animationBehavior',
-        type: 'AnimationBehavior',
-        defaultValue: 'AnimationBehavior.normal',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'vsync',
-        type: 'TickerProvider',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'value', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'duration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'reverseDuration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'lowerBound', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'upperBound', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'animationBehavior', type: 'AnimationBehavior', defaultValue: 'AnimationBehavior.normal', required: false), GeneratedTypeField(name: 'vsync', type: 'TickerProvider', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'AnimationMax',
@@ -186,20 +136,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedAnimationMean',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'left',
-        type: 'Animation<double>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'right',
-        type: 'Animation<double>',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'left', type: 'Animation<double>', defaultValue: null, required: true), GeneratedTypeField(name: 'right', type: 'Animation<double>', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'AnimationMin',
@@ -213,32 +150,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedAnimationStyle',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'curve',
-        type: 'Curve',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'duration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'reverseCurve',
-        type: 'Curve',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'reverseDuration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'curve', type: 'Curve', defaultValue: null, required: false), GeneratedTypeField(name: 'duration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'reverseCurve', type: 'Curve', defaultValue: null, required: false), GeneratedTypeField(name: 'reverseDuration', type: 'Duration', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'AppPrivateCommandCallback',
@@ -324,52 +236,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBannerPainter',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'message',
-        type: 'String',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'textDirection',
-        type: 'TextDirection',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'location',
-        type: 'BannerLocation',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'layoutDirection',
-        type: 'TextDirection',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: 'Color.new(2696354844)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'textStyle',
-        type: 'TextStyle',
-        defaultValue:
-            'TextStyle.new(color: Color.new(4294967295), fontSize: 10.2, fontWeight: FontWeight.w900, height: 1.0)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shadow',
-        type: 'BoxShadow',
-        defaultValue:
-            'BoxShadow.new(color: Color.new(2130706432), blurRadius: 6.0)',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'message', type: 'String', defaultValue: null, required: true), GeneratedTypeField(name: 'textDirection', type: 'TextDirection', defaultValue: null, required: true), GeneratedTypeField(name: 'location', type: 'BannerLocation', defaultValue: null, required: true), GeneratedTypeField(name: 'layoutDirection', type: 'TextDirection', defaultValue: null, required: true), GeneratedTypeField(name: 'color', type: 'Color', defaultValue: 'Color.new(2696354844)', required: false), GeneratedTypeField(name: 'textStyle', type: 'TextStyle', defaultValue: 'TextStyle.new(color: Color.new(4294967295), fontSize: 10.2, fontWeight: FontWeight.w900, height: 1.0)', required: false), GeneratedTypeField(name: 'shadow', type: 'BoxShadow', defaultValue: 'BoxShadow.new(color: Color.new(2130706432), blurRadius: 6.0)', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BeveledRectangleBorder',
@@ -377,20 +244,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBeveledRectangleBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadiusGeometry',
-        defaultValue: 'BorderRadius.zero',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadiusGeometry', defaultValue: 'BorderRadius.zero', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BlendMode',
@@ -410,32 +264,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'top',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'right',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'bottom',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'left',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'top', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'right', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'bottom', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'left', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BorderDirectional',
@@ -443,32 +272,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBorderDirectional',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'top',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'start',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'end',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'bottom',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'top', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'start', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'end', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'bottom', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BorderRadius',
@@ -494,32 +298,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBorderSide',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: 'const Color(0xFF000000)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'width',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'style',
-        type: 'BorderStyle',
-        defaultValue: 'BorderStyle.solid',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'strokeAlign',
-        type: 'double',
-        defaultValue: 'BorderSide.strokeAlignInside',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: 'const Color(0xFF000000)', required: false), GeneratedTypeField(name: 'width', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'style', type: 'BorderStyle', defaultValue: 'BorderStyle.solid', required: false), GeneratedTypeField(name: 'strokeAlign', type: 'double', defaultValue: 'BorderSide.strokeAlignInside', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BorderStyle',
@@ -533,44 +312,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBottomNavigationBarItem',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'key',
-        type: 'Key',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'icon',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'label',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'activeIcon',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'backgroundColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tooltip',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'key', type: 'Key', defaultValue: null, required: false), GeneratedTypeField(name: 'icon', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'label', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'activeIcon', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'backgroundColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'tooltip', type: 'String', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BottomNavigationBarLandscapeLayout',
@@ -611,32 +353,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBoxConstraints',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'minWidth',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maxWidth',
-        type: 'double',
-        defaultValue: 'double.infinity',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'minHeight',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maxHeight',
-        type: 'double',
-        defaultValue: 'double.infinity',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'minWidth', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'maxWidth', type: 'double', defaultValue: 'double.infinity', required: false), GeneratedTypeField(name: 'minHeight', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'maxHeight', type: 'double', defaultValue: 'double.infinity', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BoxDecoration',
@@ -645,56 +362,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'image',
-        type: 'DecorationImage',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'border',
-        type: 'BoxBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadiusGeometry',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'boxShadow',
-        type: 'List<BoxShadow>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'gradient',
-        type: 'Gradient',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'backgroundBlendMode',
-        type: 'BlendMode',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shape',
-        type: 'BoxShape',
-        defaultValue: 'BoxShape.rectangle',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'image', type: 'DecorationImage', defaultValue: null, required: false), GeneratedTypeField(name: 'border', type: 'BoxBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadiusGeometry', defaultValue: null, required: false), GeneratedTypeField(name: 'boxShadow', type: 'List<BoxShadow>', defaultValue: null, required: false), GeneratedTypeField(name: 'gradient', type: 'Gradient', defaultValue: null, required: false), GeneratedTypeField(name: 'backgroundBlendMode', type: 'BlendMode', defaultValue: null, required: false), GeneratedTypeField(name: 'shape', type: 'BoxShape', defaultValue: 'BoxShape.rectangle', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BoxFit',
@@ -714,38 +382,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedBoxShadow',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'offset',
-        type: 'Offset',
-        defaultValue: 'Offset.zero',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'blurRadius',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'spreadRadius',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'blurStyle',
-        type: 'BlurStyle',
-        defaultValue: 'BlurStyle.normal',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'offset', type: 'Offset', defaultValue: 'Offset.zero', required: false), GeneratedTypeField(name: 'blurRadius', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'spreadRadius', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'blurStyle', type: 'BlurStyle', defaultValue: 'BlurStyle.normal', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'BoxShape',
@@ -780,38 +417,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'value',
-        type: 'Object',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'icon',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'label',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tooltip',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'enabled',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'value', type: 'Object', defaultValue: null, required: true), GeneratedTypeField(name: 'icon', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'label', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'tooltip', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'enabled', type: 'bool', defaultValue: 'true', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ButtonStyle',
@@ -820,158 +426,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'textStyle',
-        type: 'WidgetStateProperty<TextStyle?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'backgroundColor',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'foregroundColor',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'overlayColor',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shadowColor',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'surfaceTintColor',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'elevation',
-        type: 'WidgetStateProperty<double?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'padding',
-        type: 'WidgetStateProperty<EdgeInsetsGeometry?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'minimumSize',
-        type: 'WidgetStateProperty<Size?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fixedSize',
-        type: 'WidgetStateProperty<Size?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maximumSize',
-        type: 'WidgetStateProperty<Size?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'iconColor',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'iconSize',
-        type: 'WidgetStateProperty<double?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'iconAlignment',
-        type: 'IconAlignment',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'side',
-        type: 'WidgetStateProperty<BorderSide?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shape',
-        type: 'WidgetStateProperty<OutlinedBorder?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mouseCursor',
-        type: 'WidgetStateProperty<MouseCursor?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'visualDensity',
-        type: 'VisualDensity',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tapTargetSize',
-        type: 'MaterialTapTargetSize',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'animationDuration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'enableFeedback',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'alignment',
-        type: 'AlignmentGeometry',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'splashFactory',
-        type: 'InteractiveInkFeatureFactory',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'backgroundBuilder',
-        type: 'ButtonLayerBuilder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'foregroundBuilder',
-        type: 'ButtonLayerBuilder',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'textStyle', type: 'WidgetStateProperty<TextStyle?>', defaultValue: null, required: false), GeneratedTypeField(name: 'backgroundColor', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'foregroundColor', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'overlayColor', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'shadowColor', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'surfaceTintColor', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'elevation', type: 'WidgetStateProperty<double?>', defaultValue: null, required: false), GeneratedTypeField(name: 'padding', type: 'WidgetStateProperty<EdgeInsetsGeometry?>', defaultValue: null, required: false), GeneratedTypeField(name: 'minimumSize', type: 'WidgetStateProperty<Size?>', defaultValue: null, required: false), GeneratedTypeField(name: 'fixedSize', type: 'WidgetStateProperty<Size?>', defaultValue: null, required: false), GeneratedTypeField(name: 'maximumSize', type: 'WidgetStateProperty<Size?>', defaultValue: null, required: false), GeneratedTypeField(name: 'iconColor', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'iconSize', type: 'WidgetStateProperty<double?>', defaultValue: null, required: false), GeneratedTypeField(name: 'iconAlignment', type: 'IconAlignment', defaultValue: null, required: false), GeneratedTypeField(name: 'side', type: 'WidgetStateProperty<BorderSide?>', defaultValue: null, required: false), GeneratedTypeField(name: 'shape', type: 'WidgetStateProperty<OutlinedBorder?>', defaultValue: null, required: false), GeneratedTypeField(name: 'mouseCursor', type: 'WidgetStateProperty<MouseCursor?>', defaultValue: null, required: false), GeneratedTypeField(name: 'visualDensity', type: 'VisualDensity', defaultValue: null, required: false), GeneratedTypeField(name: 'tapTargetSize', type: 'MaterialTapTargetSize', defaultValue: null, required: false), GeneratedTypeField(name: 'animationDuration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'enableFeedback', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'alignment', type: 'AlignmentGeometry', defaultValue: null, required: false), GeneratedTypeField(name: 'splashFactory', type: 'InteractiveInkFeatureFactory', defaultValue: null, required: false), GeneratedTypeField(name: 'backgroundBuilder', type: 'ButtonLayerBuilder', defaultValue: null, required: false), GeneratedTypeField(name: 'foregroundBuilder', type: 'ButtonLayerBuilder', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'CalendarDelegate',
@@ -985,14 +440,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedCarouselController',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialItem',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialItem', type: 'int', defaultValue: '0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'CatmullRomCurve',
@@ -1000,14 +448,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedCatmullRomCurve',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'tension',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'tension', type: 'double', defaultValue: '0.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ChangeNotifier',
@@ -1030,32 +471,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedChipAnimationStyle',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'enableAnimation',
-        type: 'AnimationStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'selectAnimation',
-        type: 'AnimationStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'avatarDrawerAnimation',
-        type: 'AnimationStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'deleteDrawerAnimation',
-        type: 'AnimationStyle',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'enableAnimation', type: 'AnimationStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'selectAnimation', type: 'AnimationStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'avatarDrawerAnimation', type: 'AnimationStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'deleteDrawerAnimation', type: 'AnimationStyle', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'CircleBorder',
@@ -1063,20 +479,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedCircleBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'eccentricity',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'eccentricity', type: 'double', defaultValue: '0.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'CircularNotchedRectangle',
@@ -1084,14 +487,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedCircularNotchedRectangle',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'inverted',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'inverted', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'Clip',
@@ -1111,14 +507,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedClipboardStatusNotifier',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'value',
-        type: 'ClipboardStatus',
-        defaultValue: 'ClipboardStatus.unknown',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'value', type: 'ClipboardStatus', defaultValue: 'ClipboardStatus.unknown', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'Color',
@@ -1147,20 +536,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'onContentInserted',
-        type: 'ValueChanged<KeyboardInsertedContent>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'allowedMimeTypes',
-        type: 'List<String>',
-        defaultValue: 'kDefaultContentInsertionMimeTypes',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'onContentInserted', type: 'ValueChanged<KeyboardInsertedContent>', defaultValue: null, required: true), GeneratedTypeField(name: 'allowedMimeTypes', type: 'List<String>', defaultValue: 'kDefaultContentInsertionMimeTypes', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ContinuousRectangleBorder',
@@ -1168,20 +544,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedContinuousRectangleBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadiusGeometry',
-        defaultValue: 'BorderRadius.zero',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadiusGeometry', defaultValue: 'BorderRadius.zero', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ControlsWidgetBuilder',
@@ -1223,26 +586,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedCurvedAnimation',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'parent',
-        type: 'Animation<double>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'curve',
-        type: 'Curve',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'reverseCurve',
-        type: 'Curve',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'parent', type: 'Animation<double>', defaultValue: null, required: true), GeneratedTypeField(name: 'curve', type: 'Curve', defaultValue: null, required: true), GeneratedTypeField(name: 'reverseCurve', type: 'Curve', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'CustomClipper',
@@ -1250,14 +594,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedCustomClipper',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'reclip',
-        type: 'Listenable',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'reclip', type: 'Listenable', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'DataCell',
@@ -1265,50 +602,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedDataCell',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'placeholder',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'showEditIcon',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onTap',
-        type: 'GestureTapCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onLongPress',
-        type: 'GestureLongPressCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onTapDown',
-        type: 'GestureTapDownCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onDoubleTap',
-        type: 'GestureTapCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onTapCancel',
-        type: 'GestureTapCancelCallback',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'placeholder', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'showEditIcon', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'onTap', type: 'GestureTapCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onLongPress', type: 'GestureLongPressCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onTapDown', type: 'GestureTapDownCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onDoubleTap', type: 'GestureTapCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onTapCancel', type: 'GestureTapCancelCallback', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'DataColumn',
@@ -1316,50 +610,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedDataColumn',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'label',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'columnWidth',
-        type: 'TableColumnWidth',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tooltip',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'numeric',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onSort',
-        type: 'DataColumnSortCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mouseCursor',
-        type: 'WidgetStateProperty<MouseCursor?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'headingRowAlignment',
-        type: 'MainAxisAlignment',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'label', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'columnWidth', type: 'TableColumnWidth', defaultValue: null, required: false), GeneratedTypeField(name: 'tooltip', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'numeric', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'onSort', type: 'DataColumnSortCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'mouseCursor', type: 'WidgetStateProperty<MouseCursor?>', defaultValue: null, required: false), GeneratedTypeField(name: 'headingRowAlignment', type: 'MainAxisAlignment', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'DataColumnSortCallback',
@@ -1375,56 +626,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'key',
-        type: 'LocalKey',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'selected',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onSelectChanged',
-        type: 'ValueChanged<bool?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onLongPress',
-        type: 'GestureLongPressCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onHover',
-        type: 'ValueChanged<bool>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'color',
-        type: 'WidgetStateProperty<Color?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mouseCursor',
-        type: 'WidgetStateProperty<MouseCursor?>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'cells',
-        type: 'List<DataCell>',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'key', type: 'LocalKey', defaultValue: null, required: false), GeneratedTypeField(name: 'selected', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'onSelectChanged', type: 'ValueChanged<bool?>', defaultValue: null, required: false), GeneratedTypeField(name: 'onLongPress', type: 'GestureLongPressCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onHover', type: 'ValueChanged<bool>', defaultValue: null, required: false), GeneratedTypeField(name: 'color', type: 'WidgetStateProperty<Color?>', defaultValue: null, required: false), GeneratedTypeField(name: 'mouseCursor', type: 'WidgetStateProperty<MouseCursor?>', defaultValue: null, required: false), GeneratedTypeField(name: 'cells', type: 'List<DataCell>', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'DataTableSource',
@@ -1463,86 +665,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'image',
-        type: 'ImageProvider<Object>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'onError',
-        type: 'ImageErrorListener',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'colorFilter',
-        type: 'ColorFilter',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fit',
-        type: 'BoxFit',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'alignment',
-        type: 'AlignmentGeometry',
-        defaultValue: 'Alignment.center',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'centerSlice',
-        type: 'Rect',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'repeat',
-        type: 'ImageRepeat',
-        defaultValue: 'ImageRepeat.noRepeat',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'matchTextDirection',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'scale',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'opacity',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'filterQuality',
-        type: 'FilterQuality',
-        defaultValue: 'FilterQuality.medium',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'invertColors',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'isAntiAlias',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'image', type: 'ImageProvider<Object>', defaultValue: null, required: true), GeneratedTypeField(name: 'onError', type: 'ImageErrorListener', defaultValue: null, required: false), GeneratedTypeField(name: 'colorFilter', type: 'ColorFilter', defaultValue: null, required: false), GeneratedTypeField(name: 'fit', type: 'BoxFit', defaultValue: null, required: false), GeneratedTypeField(name: 'alignment', type: 'AlignmentGeometry', defaultValue: 'Alignment.center', required: false), GeneratedTypeField(name: 'centerSlice', type: 'Rect', defaultValue: null, required: false), GeneratedTypeField(name: 'repeat', type: 'ImageRepeat', defaultValue: 'ImageRepeat.noRepeat', required: false), GeneratedTypeField(name: 'matchTextDirection', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'scale', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'opacity', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'filterQuality', type: 'FilterQuality', defaultValue: 'FilterQuality.medium', required: false), GeneratedTypeField(name: 'invertColors', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'isAntiAlias', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'DecorationPosition',
@@ -1563,32 +686,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'delay',
-        type: 'Duration',
-        defaultValue: 'kLongPressTimeout',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'delay', type: 'Duration', defaultValue: 'kLongPressTimeout', required: false), GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'DesktopTextSelectionControls',
@@ -1623,26 +721,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'DragStartBehavior',
@@ -1682,88 +761,14 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedDropdownMenuItem',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'key',
-        type: 'Key',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onTap',
-        type: 'VoidCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'value',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'enabled',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'alignment',
-        type: 'AlignmentGeometry',
-        defaultValue: 'AlignmentDirectional.centerStart',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'child',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'key', type: 'Key', defaultValue: null, required: false), GeneratedTypeField(name: 'onTap', type: 'VoidCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'value', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'enabled', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'alignment', type: 'AlignmentGeometry', defaultValue: 'AlignmentDirectional.centerStart', required: false), GeneratedTypeField(name: 'child', type: 'Widget', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'Duration',
     kind: 'class',
     parserName: 'parseGeneratedDuration',
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'days',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hours',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'minutes',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'seconds',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'milliseconds',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'microseconds',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'days', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'hours', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'minutes', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'seconds', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'milliseconds', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'microseconds', type: 'int', defaultValue: '0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'EagerGestureRecognizer',
@@ -1772,20 +777,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'EdgeInsets',
@@ -1868,20 +860,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedFilteringTextInputFormatter',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'allow',
-        type: 'bool',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'replacementString',
-        type: 'String',
-        defaultValue: '\'\'',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'allow', type: 'bool', defaultValue: null, required: true), GeneratedTypeField(name: 'replacementString', type: 'String', defaultValue: '\'\'', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'FixedColumnWidth',
@@ -1896,38 +875,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialItem',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'keepScrollOffset',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onAttach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onDetach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialItem', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'keepScrollOffset', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'onAttach', type: 'ScrollControllerCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onDetach', type: 'ScrollControllerCallback', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'FlexColumnWidth',
@@ -1977,26 +925,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedFlutterLogoDecoration',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'textColor',
-        type: 'Color',
-        defaultValue: 'const Color(0xFF757575)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'style',
-        type: 'FlutterLogoStyle',
-        defaultValue: 'FlutterLogoStyle.markOnly',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'margin',
-        type: 'EdgeInsets',
-        defaultValue: 'EdgeInsets.zero',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'textColor', type: 'Color', defaultValue: 'const Color(0xFF757575)', required: false), GeneratedTypeField(name: 'style', type: 'FlutterLogoStyle', defaultValue: 'FlutterLogoStyle.markOnly', required: false), GeneratedTypeField(name: 'margin', type: 'EdgeInsets', defaultValue: 'EdgeInsets.zero', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'FlutterLogoStyle',
@@ -2017,50 +946,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onKey',
-        type: 'FocusOnKeyCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onKeyEvent',
-        type: 'FocusOnKeyEventCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'skipTraversal',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'canRequestFocus',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'descendantsAreFocusable',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'descendantsAreTraversable',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'onKey', type: 'FocusOnKeyCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onKeyEvent', type: 'FocusOnKeyEventCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'skipTraversal', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'canRequestFocus', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'descendantsAreFocusable', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'descendantsAreTraversable', type: 'bool', defaultValue: 'true', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'FocusOnKeyCallback',
@@ -2085,50 +971,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onKeyEvent',
-        type: 'FocusOnKeyEventCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onKey',
-        type: 'FocusOnKeyCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'skipTraversal',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'canRequestFocus',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'traversalEdgeBehavior',
-        type: 'TraversalEdgeBehavior',
-        defaultValue: 'TraversalEdgeBehavior.closedLoop',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'directionalTraversalEdgeBehavior',
-        type: 'TraversalEdgeBehavior',
-        defaultValue: 'TraversalEdgeBehavior.stop',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'onKeyEvent', type: 'FocusOnKeyEventCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onKey', type: 'FocusOnKeyCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'skipTraversal', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'canRequestFocus', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'traversalEdgeBehavior', type: 'TraversalEdgeBehavior', defaultValue: 'TraversalEdgeBehavior.closedLoop', required: false), GeneratedTypeField(name: 'directionalTraversalEdgeBehavior', type: 'TraversalEdgeBehavior', defaultValue: 'TraversalEdgeBehavior.stop', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'FontFeature',
@@ -2161,44 +1004,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'startPressure',
-        type: 'double',
-        defaultValue: '0.4',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'peakPressure',
-        type: 'double',
-        defaultValue: '0.85',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'interpolation',
-        type: 'GestureForceInterpolation',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'startPressure', type: 'double', defaultValue: '0.4', required: false), GeneratedTypeField(name: 'peakPressure', type: 'double', defaultValue: '0.85', required: false), GeneratedTypeField(name: 'interpolation', type: 'GestureForceInterpolation', defaultValue: null, required: false), GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'FormFieldBuilder',
@@ -2374,26 +1180,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'GestureScaleEndCallback',
@@ -2466,26 +1253,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedGradient',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'colors',
-        type: 'List<Color>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'stops',
-        type: 'List<double>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'transform',
-        type: 'GradientTransform',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'colors', type: 'List<Color>', defaultValue: null, required: true), GeneratedTypeField(name: 'stops', type: 'List<double>', defaultValue: null, required: false), GeneratedTypeField(name: 'transform', type: 'GradientTransform', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'GradientRotation',
@@ -2528,26 +1296,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'HorizontalMultiDragGestureRecognizer',
@@ -2556,26 +1305,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'Icon',
@@ -2584,86 +1314,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'key',
-        type: 'Key',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'size',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fill',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'weight',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'grade',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'opticalSize',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shadows',
-        type: 'List<Shadow>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'textDirection',
-        type: 'TextDirection',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'applyTextScaling',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'blendMode',
-        type: 'BlendMode',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontWeight',
-        type: 'FontWeight',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'key', type: 'Key', defaultValue: null, required: false), GeneratedTypeField(name: 'size', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'fill', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'weight', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'grade', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'opticalSize', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'shadows', type: 'List<Shadow>', defaultValue: null, required: false), GeneratedTypeField(name: 'semanticLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'textDirection', type: 'TextDirection', defaultValue: null, required: false), GeneratedTypeField(name: 'applyTextScaling', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'blendMode', type: 'BlendMode', defaultValue: null, required: false), GeneratedTypeField(name: 'fontWeight', type: 'FontWeight', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'IconAlignment',
@@ -2677,32 +1328,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedIconData',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'fontFamily',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontPackage',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'matchTextDirection',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontFamilyFallback',
-        type: 'List<String>',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'fontFamily', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'fontPackage', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'matchTextDirection', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'fontFamilyFallback', type: 'List<String>', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'IconThemeData',
@@ -2710,62 +1336,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedIconThemeData',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'size',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fill',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'weight',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'grade',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'opticalSize',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'opacity',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shadows',
-        type: 'List<Shadow>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'applyTextScaling',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'size', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'fill', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'weight', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'grade', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'opticalSize', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'opacity', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'shadows', type: 'List<Shadow>', defaultValue: null, required: false), GeneratedTypeField(name: 'applyTextScaling', type: 'bool', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ImageErrorListener',
@@ -2818,26 +1389,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'InlineSpan',
@@ -2846,14 +1398,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'style',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'style', type: 'TextStyle', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'InputBorder',
@@ -2861,14 +1406,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedInputBorder',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'borderSide',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'borderSide', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'InputCounterWidgetBuilder',
@@ -2884,350 +1422,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedInputDecoration',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'icon',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'iconColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'label',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'labelText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'labelStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'floatingLabelStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'helper',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'helperText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'helperStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'helperMaxLines',
-        type: 'int',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hintText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hint',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hintStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hintTextDirection',
-        type: 'TextDirection',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hintMaxLines',
-        type: 'int',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hintFadeDuration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maintainHintHeight',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maintainHintSize',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'error',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'errorText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'errorStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'errorMaxLines',
-        type: 'int',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'floatingLabelBehavior',
-        type: 'FloatingLabelBehavior',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'floatingLabelAlignment',
-        type: 'FloatingLabelAlignment',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'isCollapsed',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'isDense',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'contentPadding',
-        type: 'EdgeInsetsGeometry',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'prefixIcon',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'prefixIconConstraints',
-        type: 'BoxConstraints',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'prefix',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'prefixText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'prefixStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'prefixIconColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'suffixIcon',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'suffix',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'suffixText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'suffixStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'suffixIconColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'suffixIconConstraints',
-        type: 'BoxConstraints',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'counter',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'counterText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'counterStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'filled',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fillColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'focusColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'hoverColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'errorBorder',
-        type: 'InputBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'focusedBorder',
-        type: 'InputBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'focusedErrorBorder',
-        type: 'InputBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'disabledBorder',
-        type: 'InputBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'enabledBorder',
-        type: 'InputBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'border',
-        type: 'InputBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'enabled',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticCounterText',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'alignLabelWithHint',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'constraints',
-        type: 'BoxConstraints',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'visualDensity',
-        type: 'VisualDensity',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'icon', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'iconColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'label', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'labelText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'labelStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'floatingLabelStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'helper', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'helperText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'helperStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'helperMaxLines', type: 'int', defaultValue: null, required: false), GeneratedTypeField(name: 'hintText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'hint', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'hintStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'hintTextDirection', type: 'TextDirection', defaultValue: null, required: false), GeneratedTypeField(name: 'hintMaxLines', type: 'int', defaultValue: null, required: false), GeneratedTypeField(name: 'hintFadeDuration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'maintainHintHeight', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'maintainHintSize', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'error', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'errorText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'errorStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'errorMaxLines', type: 'int', defaultValue: null, required: false), GeneratedTypeField(name: 'floatingLabelBehavior', type: 'FloatingLabelBehavior', defaultValue: null, required: false), GeneratedTypeField(name: 'floatingLabelAlignment', type: 'FloatingLabelAlignment', defaultValue: null, required: false), GeneratedTypeField(name: 'isCollapsed', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'isDense', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'contentPadding', type: 'EdgeInsetsGeometry', defaultValue: null, required: false), GeneratedTypeField(name: 'prefixIcon', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'prefixIconConstraints', type: 'BoxConstraints', defaultValue: null, required: false), GeneratedTypeField(name: 'prefix', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'prefixText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'prefixStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'prefixIconColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'suffixIcon', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'suffix', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'suffixText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'suffixStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'suffixIconColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'suffixIconConstraints', type: 'BoxConstraints', defaultValue: null, required: false), GeneratedTypeField(name: 'counter', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'counterText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'counterStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'filled', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'fillColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'focusColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'hoverColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'errorBorder', type: 'InputBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'focusedBorder', type: 'InputBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'focusedErrorBorder', type: 'InputBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'disabledBorder', type: 'InputBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'enabledBorder', type: 'InputBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'border', type: 'InputBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'enabled', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'semanticCounterText', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'alignLabelWithHint', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'constraints', type: 'BoxConstraints', defaultValue: null, required: false), GeneratedTypeField(name: 'visualDensity', type: 'VisualDensity', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'InspectorSelection',
@@ -3247,14 +1442,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedInterval',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'curve',
-        type: 'Curve',
-        defaultValue: 'Curves.linear',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'curve', type: 'Curve', defaultValue: 'Curves.linear', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'IntrinsicColumnWidth',
@@ -3262,14 +1450,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedIntrinsicColumnWidth',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'flex',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'flex', type: 'double', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ItemExtentBuilder',
@@ -3332,14 +1513,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedLengthLimitingTextInputFormatter',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'maxLengthEnforcement',
-        type: 'MaxLengthEnforcement',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'maxLengthEnforcement', type: 'MaxLengthEnforcement', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'LinearBorder',
@@ -3347,38 +1521,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedLinearBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'start',
-        type: 'LinearBorderEdge',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'end',
-        type: 'LinearBorderEdge',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'top',
-        type: 'LinearBorderEdge',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'bottom',
-        type: 'LinearBorderEdge',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'start', type: 'LinearBorderEdge', defaultValue: null, required: false), GeneratedTypeField(name: 'end', type: 'LinearBorderEdge', defaultValue: null, required: false), GeneratedTypeField(name: 'top', type: 'LinearBorderEdge', defaultValue: null, required: false), GeneratedTypeField(name: 'bottom', type: 'LinearBorderEdge', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'LinearBorderEdge',
@@ -3386,20 +1529,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedLinearBorderEdge',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'size',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'alignment',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'size', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'alignment', type: 'double', defaultValue: '0.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'LinearGradient',
@@ -3407,44 +1537,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedLinearGradient',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'begin',
-        type: 'AlignmentGeometry',
-        defaultValue: 'Alignment.centerLeft',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'end',
-        type: 'AlignmentGeometry',
-        defaultValue: 'Alignment.centerRight',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'colors',
-        type: 'List<Color>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'stops',
-        type: 'List<double>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tileMode',
-        type: 'TileMode',
-        defaultValue: 'TileMode.clamp',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'transform',
-        type: 'GradientTransform',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'begin', type: 'AlignmentGeometry', defaultValue: 'Alignment.centerLeft', required: false), GeneratedTypeField(name: 'end', type: 'AlignmentGeometry', defaultValue: 'Alignment.centerRight', required: false), GeneratedTypeField(name: 'colors', type: 'List<Color>', defaultValue: null, required: true), GeneratedTypeField(name: 'stops', type: 'List<double>', defaultValue: null, required: false), GeneratedTypeField(name: 'tileMode', type: 'TileMode', defaultValue: 'TileMode.clamp', required: false), GeneratedTypeField(name: 'transform', type: 'GradientTransform', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'List<BottomNavigationBarItem>',
@@ -3582,7 +1675,10 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/services.dart'],
   ),
-  GeneratedTypeEntry(name: 'List<Widget>', kind: 'collection'),
+  GeneratedTypeEntry(
+    name: 'List<Widget>',
+    kind: 'collection',
+  ),
   GeneratedTypeEntry(
     name: 'List<bool>',
     kind: 'collection',
@@ -3635,14 +1731,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedLiveTextInputStatusNotifier',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'value',
-        type: 'LiveTextInputStatus',
-        defaultValue: 'LiveTextInputStatus.unknown',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'value', type: 'LiveTextInputStatus', defaultValue: 'LiveTextInputStatus.unknown', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'LocalKey',
@@ -3686,38 +1775,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'supportedLocales',
-        type: 'Iterable<Locale>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'locale',
-        type: 'Locale',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'localeListResolutionCallback',
-        type: 'LocaleListResolutionCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'localeResolutionCallback',
-        type: 'LocaleResolutionCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'localizationsDelegates',
-        type: 'Iterable<LocalizationsDelegate<Object?>>',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'supportedLocales', type: 'Iterable<Locale>', defaultValue: null, required: true), GeneratedTypeField(name: 'locale', type: 'Locale', defaultValue: null, required: false), GeneratedTypeField(name: 'localeListResolutionCallback', type: 'LocaleListResolutionCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'localeResolutionCallback', type: 'LocaleResolutionCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'localizationsDelegates', type: 'Iterable<LocalizationsDelegate<Object?>>', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'LongPressGestureRecognizer',
@@ -3726,38 +1784,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'duration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'postAcceptSlopTolerance',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'duration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'postAcceptSlopTolerance', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'MagnifierBuilder',
@@ -3867,32 +1894,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'longTapDelay',
-        type: 'Duration',
-        defaultValue: 'Duration.zero',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'longTapDelay', type: 'Duration', defaultValue: 'Duration.zero', required: false), GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'NavigationDestinationLabelBehavior',
@@ -3906,50 +1908,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedNavigationRailDestination',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'icon',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'selectedIcon',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'indicatorColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'indicatorShape',
-        type: 'ShapeBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'label',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'padding',
-        type: 'EdgeInsetsGeometry',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'disabled',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'icon', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'selectedIcon', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'indicatorColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'indicatorShape', type: 'ShapeBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'label', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'padding', type: 'EdgeInsetsGeometry', defaultValue: null, required: false), GeneratedTypeField(name: 'disabled', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'NavigationRailLabelType',
@@ -4022,26 +1981,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedOutlineInputBorder',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'borderSide',
-        type: 'BorderSide',
-        defaultValue: 'const BorderSide()',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadius',
-        defaultValue: 'const BorderRadius.all(Radius.circular(4.0))',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'gapPadding',
-        type: 'double',
-        defaultValue: '4.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'borderSide', type: 'BorderSide', defaultValue: 'const BorderSide()', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadius', defaultValue: 'const BorderRadius.all(Radius.circular(4.0))', required: false), GeneratedTypeField(name: 'gapPadding', type: 'double', defaultValue: '4.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'OutlinedBorder',
@@ -4049,14 +1989,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedOutlinedBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'OvalBorder',
@@ -4064,20 +1997,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedOvalBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'eccentricity',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'eccentricity', type: 'double', defaultValue: '1.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'OverflowBarAlignment',
@@ -4098,32 +2018,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'builder',
-        type: 'WidgetBuilder',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'opaque',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maintainState',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'canSizeOverlay',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'builder', type: 'WidgetBuilder', defaultValue: null, required: true), GeneratedTypeField(name: 'opaque', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'maintainState', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'canSizeOverlay', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'OverlayState',
@@ -4138,38 +2033,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialPage',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'keepPage',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'viewportFraction',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onAttach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onDetach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialPage', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'keepPage', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'viewportFraction', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'onAttach', type: 'ScrollControllerCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onDetach', type: 'ScrollControllerCallback', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'PageStorageKey',
@@ -4191,26 +2055,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'Path',
@@ -4231,14 +2076,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialRouteInformation',
-        type: 'RouteInformation',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialRouteInformation', type: 'RouteInformation', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'PointerCancelEventListener',
@@ -4392,56 +2230,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedRadialGradient',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'center',
-        type: 'AlignmentGeometry',
-        defaultValue: 'Alignment.center',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'radius',
-        type: 'double',
-        defaultValue: '0.5',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'colors',
-        type: 'List<Color>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'stops',
-        type: 'List<double>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tileMode',
-        type: 'TileMode',
-        defaultValue: 'TileMode.clamp',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'focal',
-        type: 'AlignmentGeometry',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'focalRadius',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'transform',
-        type: 'GradientTransform',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'center', type: 'AlignmentGeometry', defaultValue: 'Alignment.center', required: false), GeneratedTypeField(name: 'radius', type: 'double', defaultValue: '0.5', required: false), GeneratedTypeField(name: 'colors', type: 'List<Color>', defaultValue: null, required: true), GeneratedTypeField(name: 'stops', type: 'List<double>', defaultValue: null, required: false), GeneratedTypeField(name: 'tileMode', type: 'TileMode', defaultValue: 'TileMode.clamp', required: false), GeneratedTypeField(name: 'focal', type: 'AlignmentGeometry', defaultValue: null, required: false), GeneratedTypeField(name: 'focalRadius', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'transform', type: 'GradientTransform', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'Radius',
@@ -4532,14 +2321,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedRestorableEnum',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'values',
-        type: 'Iterable<Enum>',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'values', type: 'Iterable<Enum>', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'RestorableEnumN',
@@ -4547,14 +2329,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedRestorableEnumN',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'values',
-        type: 'Iterable<Enum>',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'values', type: 'Iterable<Enum>', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'RestorableInt',
@@ -4587,26 +2362,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'navigatorFinder',
-        type: 'NavigatorFinderCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onPresent',
-        type: 'RoutePresentationCallback',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'onComplete',
-        type: 'RouteCompletionCallback<Object?>',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'navigatorFinder', type: 'NavigatorFinderCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onPresent', type: 'RoutePresentationCallback', defaultValue: null, required: true), GeneratedTypeField(name: 'onComplete', type: 'RouteCompletionCallback<Object?>', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'RestorableString',
@@ -4626,14 +2382,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedRestorableTextEditingController',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'text',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'text', type: 'String', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'RestorableTimeOfDay',
@@ -4659,20 +2408,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedRoundedRectangleBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadiusGeometry',
-        defaultValue: 'BorderRadius.zero',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadiusGeometry', defaultValue: 'BorderRadius.zero', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'RoundedSuperellipseBorder',
@@ -4680,20 +2416,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedRoundedSuperellipseBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadiusGeometry',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadiusGeometry', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'RouteCompletionCallback',
@@ -4709,26 +2432,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'location',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'uri',
-        type: 'Uri',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'state',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'location', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'uri', type: 'Uri', defaultValue: null, required: false), GeneratedTypeField(name: 'state', type: 'Object', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'RoutePresentationCallback',
@@ -4745,20 +2449,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'name',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'arguments',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'name', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'arguments', type: 'Object', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SawTooth',
@@ -4785,44 +2476,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'dragStartBehavior',
-        type: 'DragStartBehavior',
-        defaultValue: 'DragStartBehavior.down',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'trackpadScrollCausesScale',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'trackpadScrollToScaleFactor',
-        type: 'Offset',
-        defaultValue: 'kDefaultTrackpadScrollToScaleFactor',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false), GeneratedTypeField(name: 'dragStartBehavior', type: 'DragStartBehavior', defaultValue: 'DragStartBehavior.down', required: false), GeneratedTypeField(name: 'trackpadScrollCausesScale', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'trackpadScrollToScaleFactor', type: 'Offset', defaultValue: 'kDefaultTrackpadScrollToScaleFactor', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ScrollBehavior',
@@ -4843,38 +2497,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialScrollOffset',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'keepScrollOffset',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onAttach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onDetach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialScrollOffset', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'keepScrollOffset', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'onAttach', type: 'ScrollControllerCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onDetach', type: 'ScrollControllerCallback', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ScrollControllerCallback',
@@ -4896,14 +2519,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedScrollPhysics',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'parent',
-        type: 'ScrollPhysics',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'parent', type: 'ScrollPhysics', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ScrollPosition',
@@ -4911,38 +2527,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedScrollPosition',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'physics',
-        type: 'ScrollPhysics',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'context',
-        type: 'ScrollContext',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'keepScrollOffset',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'oldPosition',
-        type: 'ScrollPosition',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'physics', type: 'ScrollPhysics', defaultValue: null, required: true), GeneratedTypeField(name: 'context', type: 'ScrollContext', defaultValue: null, required: true), GeneratedTypeField(name: 'keepScrollOffset', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'oldPosition', type: 'ScrollPosition', defaultValue: null, required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ScrollPositionWithSingleContext',
@@ -4950,44 +2535,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedScrollPositionWithSingleContext',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'physics',
-        type: 'ScrollPhysics',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'context',
-        type: 'ScrollContext',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'initialPixels',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'keepScrollOffset',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'oldPosition',
-        type: 'ScrollPosition',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'physics', type: 'ScrollPhysics', defaultValue: null, required: true), GeneratedTypeField(name: 'context', type: 'ScrollContext', defaultValue: null, required: true), GeneratedTypeField(name: 'initialPixels', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'keepScrollOffset', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'oldPosition', type: 'ScrollPosition', defaultValue: null, required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ScrollViewKeyboardDismissBehavior',
@@ -5013,104 +2561,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedScrollbarPainter',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'fadeoutOpacityAnimation',
-        type: 'Animation<double>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'trackColor',
-        type: 'Color',
-        defaultValue: 'const Color(0x00000000)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'trackBorderColor',
-        type: 'Color',
-        defaultValue: 'const Color(0x00000000)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'textDirection',
-        type: 'TextDirection',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'thickness',
-        type: 'double',
-        defaultValue: '6.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'padding',
-        type: 'EdgeInsetsGeometry',
-        defaultValue: 'EdgeInsets.zero',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mainAxisMargin',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'crossAxisMargin',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'radius',
-        type: 'Radius',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'trackRadius',
-        type: 'Radius',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shape',
-        type: 'OutlinedBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'minLength',
-        type: 'double',
-        defaultValue: '18.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'minOverscrollLength',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'scrollbarOrientation',
-        type: 'ScrollbarOrientation',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'ignorePointer',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: true), GeneratedTypeField(name: 'fadeoutOpacityAnimation', type: 'Animation<double>', defaultValue: null, required: true), GeneratedTypeField(name: 'trackColor', type: 'Color', defaultValue: 'const Color(0x00000000)', required: false), GeneratedTypeField(name: 'trackBorderColor', type: 'Color', defaultValue: 'const Color(0x00000000)', required: false), GeneratedTypeField(name: 'textDirection', type: 'TextDirection', defaultValue: null, required: false), GeneratedTypeField(name: 'thickness', type: 'double', defaultValue: '6.0', required: false), GeneratedTypeField(name: 'padding', type: 'EdgeInsetsGeometry', defaultValue: 'EdgeInsets.zero', required: false), GeneratedTypeField(name: 'mainAxisMargin', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'crossAxisMargin', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'radius', type: 'Radius', defaultValue: null, required: false), GeneratedTypeField(name: 'trackRadius', type: 'Radius', defaultValue: null, required: false), GeneratedTypeField(name: 'shape', type: 'OutlinedBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'minLength', type: 'double', defaultValue: '18.0', required: false), GeneratedTypeField(name: 'minOverscrollLength', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'scrollbarOrientation', type: 'ScrollbarOrientation', defaultValue: null, required: false), GeneratedTypeField(name: 'ignorePointer', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SearchController',
@@ -5162,14 +2613,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'onSemanticsUpdate',
-        type: 'SemanticsUpdateCallback',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'onSemanticsUpdate', type: 'SemanticsUpdateCallback', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'SemanticsUpdateCallback',
@@ -5185,26 +2629,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'Set<Object?>',
@@ -5238,26 +2663,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedShadow',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'offset',
-        type: 'Offset',
-        defaultValue: 'Offset.zero',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'blurRadius',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'offset', type: 'Offset', defaultValue: 'Offset.zero', required: false), GeneratedTypeField(name: 'blurRadius', type: 'double', defaultValue: '0.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ShapeBorder',
@@ -5271,20 +2677,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedShapeBorderClipper',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'shape',
-        type: 'ShapeBorder',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'textDirection',
-        type: 'TextDirection',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'shape', type: 'ShapeBorder', defaultValue: null, required: true), GeneratedTypeField(name: 'textDirection', type: 'TextDirection', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ShapeDecoration',
@@ -5293,38 +2686,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'image',
-        type: 'DecorationImage',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'gradient',
-        type: 'Gradient',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shadows',
-        type: 'List<BoxShadow>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shape',
-        type: 'ShapeBorder',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'image', type: 'DecorationImage', defaultValue: null, required: false), GeneratedTypeField(name: 'gradient', type: 'Gradient', defaultValue: null, required: false), GeneratedTypeField(name: 'shadows', type: 'List<BoxShadow>', defaultValue: null, required: false), GeneratedTypeField(name: 'shape', type: 'ShapeBorder', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'ShortcutManager',
@@ -5332,20 +2694,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedShortcutManager',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'shortcuts',
-        type: 'Map<ShortcutActivator, Intent>',
-        defaultValue: 'const <ShortcutActivator, Intent>{}',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'modal',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'shortcuts', type: 'Map<ShortcutActivator, Intent>', defaultValue: 'const <ShortcutActivator, Intent>{}', required: false), GeneratedTypeField(name: 'modal', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'ShortcutRegistry',
@@ -5384,50 +2733,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'findChildIndexCallback',
-        type: 'ChildIndexGetter',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'childCount',
-        type: 'int',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addAutomaticKeepAlives',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addRepaintBoundaries',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addSemanticIndexes',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticIndexCallback',
-        type: 'SemanticIndexCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticIndexOffset',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'findChildIndexCallback', type: 'ChildIndexGetter', defaultValue: null, required: false), GeneratedTypeField(name: 'childCount', type: 'int', defaultValue: null, required: false), GeneratedTypeField(name: 'addAutomaticKeepAlives', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'addRepaintBoundaries', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'addSemanticIndexes', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'semanticIndexCallback', type: 'SemanticIndexCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'semanticIndexOffset', type: 'int', defaultValue: '0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SliverChildDelegate',
@@ -5442,38 +2748,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSliverChildListDelegate',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'addAutomaticKeepAlives',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addRepaintBoundaries',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addSemanticIndexes',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticIndexCallback',
-        type: 'SemanticIndexCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticIndexOffset',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'addAutomaticKeepAlives', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'addRepaintBoundaries', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'addSemanticIndexes', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'semanticIndexCallback', type: 'SemanticIndexCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'semanticIndexOffset', type: 'int', defaultValue: '0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SliverGridDelegate',
@@ -5487,38 +2762,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSliverGridDelegateWithFixedCrossAxisCount',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'crossAxisCount',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'mainAxisSpacing',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'crossAxisSpacing',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'childAspectRatio',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mainAxisExtent',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'crossAxisCount', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'mainAxisSpacing', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'crossAxisSpacing', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'childAspectRatio', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'mainAxisExtent', type: 'double', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SliverGridDelegateWithMaxCrossAxisExtent',
@@ -5526,38 +2770,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSliverGridDelegateWithMaxCrossAxisExtent',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'maxCrossAxisExtent',
-        type: 'double',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'mainAxisSpacing',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'crossAxisSpacing',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'childAspectRatio',
-        type: 'double',
-        defaultValue: '1.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mainAxisExtent',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'maxCrossAxisExtent', type: 'double', defaultValue: null, required: true), GeneratedTypeField(name: 'mainAxisSpacing', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'crossAxisSpacing', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'childAspectRatio', type: 'double', defaultValue: '1.0', required: false), GeneratedTypeField(name: 'mainAxisExtent', type: 'double', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SliverOverlapAbsorberHandle',
@@ -5602,50 +2815,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'key',
-        type: 'Key',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'textColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'disabledTextColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'backgroundColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'disabledBackgroundColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'label',
-        type: 'String',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'onPressed',
-        type: 'VoidCallback',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'key', type: 'Key', defaultValue: null, required: false), GeneratedTypeField(name: 'textColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'disabledTextColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'backgroundColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'disabledBackgroundColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'label', type: 'String', defaultValue: null, required: true), GeneratedTypeField(name: 'onPressed', type: 'VoidCallback', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'SnackBarBehavior',
@@ -5659,14 +2829,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSnapshotController',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'allowSnapshotting',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'allowSnapshotting', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SpellCheckConfiguration',
@@ -5675,32 +2838,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'spellCheckService',
-        type: 'SpellCheckService',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'misspelledSelectionColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'misspelledTextStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'spellCheckSuggestionsToolbarBuilder',
-        type: 'EditableTextContextMenuBuilder',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'spellCheckService', type: 'SpellCheckService', defaultValue: null, required: false), GeneratedTypeField(name: 'misspelledSelectionColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'misspelledTextStyle', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'spellCheckSuggestionsToolbarBuilder', type: 'EditableTextContextMenuBuilder', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SpellCheckService',
@@ -5714,20 +2852,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSplit',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'beginCurve',
-        type: 'Curve',
-        defaultValue: 'Curves.linear',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'endCurve',
-        type: 'Curve',
-        defaultValue: 'Curves.easeOutCubic',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'beginCurve', type: 'Curve', defaultValue: 'Curves.linear', required: false), GeneratedTypeField(name: 'endCurve', type: 'Curve', defaultValue: 'Curves.easeOutCubic', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'StackFit',
@@ -5741,14 +2866,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedStadiumBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'StarBorder',
@@ -5756,50 +2874,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedStarBorder',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'side',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'points',
-        type: 'double',
-        defaultValue: '5',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'innerRadiusRatio',
-        type: 'double',
-        defaultValue: '0.4',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'pointRounding',
-        type: 'double',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'valleyRounding',
-        type: 'double',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'rotation',
-        type: 'double',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'squash',
-        type: 'double',
-        defaultValue: '0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'side', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'points', type: 'double', defaultValue: '5', required: false), GeneratedTypeField(name: 'innerRadiusRatio', type: 'double', defaultValue: '0.4', required: false), GeneratedTypeField(name: 'pointRounding', type: 'double', defaultValue: '0', required: false), GeneratedTypeField(name: 'valleyRounding', type: 'double', defaultValue: '0', required: false), GeneratedTypeField(name: 'rotation', type: 'double', defaultValue: '0', required: false), GeneratedTypeField(name: 'squash', type: 'double', defaultValue: '0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'StaticSelectionContainerDelegate',
@@ -5813,50 +2888,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedStep',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'title',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'subtitle',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'content',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'state',
-        type: 'StepState',
-        defaultValue: 'StepState.indexed',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'isActive',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'label',
-        type: 'Widget',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'stepStyle',
-        type: 'StepStyle',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'title', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'subtitle', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'content', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'state', type: 'StepState', defaultValue: 'StepState.indexed', required: false), GeneratedTypeField(name: 'isActive', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'label', type: 'Widget', defaultValue: null, required: false), GeneratedTypeField(name: 'stepStyle', type: 'StepStyle', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'StepIconBuilder',
@@ -5878,56 +2910,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedStepStyle',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'errorColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'connectorColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'connectorThickness',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'border',
-        type: 'BoxBorder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'boxShadow',
-        type: 'BoxShadow',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'gradient',
-        type: 'Gradient',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'indexStyle',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'errorColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'connectorColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'connectorThickness', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'border', type: 'BoxBorder', defaultValue: null, required: false), GeneratedTypeField(name: 'boxShadow', type: 'BoxShadow', defaultValue: null, required: false), GeneratedTypeField(name: 'gradient', type: 'Gradient', defaultValue: null, required: false), GeneratedTypeField(name: 'indexStyle', type: 'TextStyle', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'StepperType',
@@ -5952,74 +2935,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedStrutStyle',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'fontFamily',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontFamilyFallback',
-        type: 'List<String>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontSize',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'height',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'leadingDistribution',
-        type: 'TextLeadingDistribution',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'leading',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontWeight',
-        type: 'FontWeight',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontStyle',
-        type: 'FontStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'forceStrutHeight',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'package',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'fontFamily', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'fontFamilyFallback', type: 'List<String>', defaultValue: null, required: false), GeneratedTypeField(name: 'fontSize', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'height', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'leadingDistribution', type: 'TextLeadingDistribution', defaultValue: null, required: false), GeneratedTypeField(name: 'leading', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'fontWeight', type: 'FontWeight', defaultValue: null, required: false), GeneratedTypeField(name: 'fontStyle', type: 'FontStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'forceStrutHeight', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'package', type: 'String', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SweepGradient',
@@ -6027,50 +2943,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSweepGradient',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'center',
-        type: 'AlignmentGeometry',
-        defaultValue: 'Alignment.center',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'startAngle',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'endAngle',
-        type: 'double',
-        defaultValue: 'math.pi * 2',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'colors',
-        type: 'List<Color>',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'stops',
-        type: 'List<double>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'tileMode',
-        type: 'TileMode',
-        defaultValue: 'TileMode.clamp',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'transform',
-        type: 'GradientTransform',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'center', type: 'AlignmentGeometry', defaultValue: 'Alignment.center', required: false), GeneratedTypeField(name: 'startAngle', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'endAngle', type: 'double', defaultValue: 'math.pi * 2', required: false), GeneratedTypeField(name: 'colors', type: 'List<Color>', defaultValue: null, required: true), GeneratedTypeField(name: 'stops', type: 'List<double>', defaultValue: null, required: false), GeneratedTypeField(name: 'tileMode', type: 'TileMode', defaultValue: 'TileMode.clamp', required: false), GeneratedTypeField(name: 'transform', type: 'GradientTransform', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'SystemMouseCursor',
@@ -6078,14 +2951,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSystemMouseCursor',
     imports: const ['package:flutter/services.dart'],
     constructorName: '_',
-    fields: const [
-      GeneratedTypeField(
-        name: 'kind',
-        type: 'String',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'kind', type: 'String', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'SystemUiOverlayStyle',
@@ -6093,56 +2959,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedSystemUiOverlayStyle',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'systemNavigationBarColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'systemNavigationBarDividerColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'systemNavigationBarIconBrightness',
-        type: 'Brightness',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'systemNavigationBarContrastEnforced',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'statusBarColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'statusBarBrightness',
-        type: 'Brightness',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'statusBarIconBrightness',
-        type: 'Brightness',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'systemStatusBarContrastEnforced',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'systemNavigationBarColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'systemNavigationBarDividerColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'systemNavigationBarIconBrightness', type: 'Brightness', defaultValue: null, required: false), GeneratedTypeField(name: 'systemNavigationBarContrastEnforced', type: 'bool', defaultValue: null, required: false), GeneratedTypeField(name: 'statusBarColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'statusBarBrightness', type: 'Brightness', defaultValue: null, required: false), GeneratedTypeField(name: 'statusBarIconBrightness', type: 'Brightness', defaultValue: null, required: false), GeneratedTypeField(name: 'systemStatusBarContrastEnforced', type: 'bool', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TabAlignment',
@@ -6162,32 +2979,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTabController',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialIndex',
-        type: 'int',
-        defaultValue: '0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'animationDuration',
-        type: 'Duration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'length',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'vsync',
-        type: 'TickerProvider',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialIndex', type: 'int', defaultValue: '0', required: false), GeneratedTypeField(name: 'animationDuration', type: 'Duration', defaultValue: null, required: false), GeneratedTypeField(name: 'length', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'vsync', type: 'TickerProvider', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'TabIndicatorAnimation',
@@ -6209,50 +3001,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTableBorder',
     imports: const ['package:flutter/rendering.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'top',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'right',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'bottom',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'left',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'horizontalInside',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'verticalInside',
-        type: 'BorderSide',
-        defaultValue: 'BorderSide.none',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadius',
-        defaultValue: 'BorderRadius.zero',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'top', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'right', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'bottom', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'left', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'horizontalInside', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'verticalInside', type: 'BorderSide', defaultValue: 'BorderSide.none', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadius', defaultValue: 'BorderRadius.zero', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TableCellVerticalAlignment',
@@ -6273,26 +3022,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'key',
-        type: 'LocalKey',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'decoration',
-        type: 'Decoration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'children',
-        type: 'List<Widget>',
-        defaultValue: 'const <Widget>[]',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'key', type: 'LocalKey', defaultValue: null, required: false), GeneratedTypeField(name: 'decoration', type: 'Decoration', defaultValue: null, required: false), GeneratedTypeField(name: 'children', type: 'List<Widget>', defaultValue: 'const <Widget>[]', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TapAndDragGestureRecognizer',
@@ -6301,20 +3031,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TapAndHorizontalDragGestureRecognizer',
@@ -6323,20 +3040,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TapAndPanGestureRecognizer',
@@ -6345,20 +3049,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TapGestureRecognizer',
@@ -6367,38 +3058,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'preAcceptSlopTolerance',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'postAcceptSlopTolerance',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false), GeneratedTypeField(name: 'preAcceptSlopTolerance', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'postAcceptSlopTolerance', type: 'double', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TapRegionCallback',
@@ -6432,14 +3092,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextAlignVertical',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'y',
-        type: 'double',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'y', type: 'double', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'TextBaseline',
@@ -6477,14 +3130,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextEditingController',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'text',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'text', type: 'String', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextEditingValue',
@@ -6492,26 +3138,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextEditingValue',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'text',
-        type: 'String',
-        defaultValue: '\'\'',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'selection',
-        type: 'TextSelection',
-        defaultValue: 'const TextSelection.collapsed(offset: -1)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'composing',
-        type: 'TextRange',
-        defaultValue: 'TextRange.empty',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'text', type: 'String', defaultValue: '\'\'', required: false), GeneratedTypeField(name: 'selection', type: 'TextSelection', defaultValue: 'const TextSelection.collapsed(offset: -1)', required: false), GeneratedTypeField(name: 'composing', type: 'TextRange', defaultValue: 'TextRange.empty', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextHeightBehavior',
@@ -6519,26 +3146,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextHeightBehavior',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'applyHeightToFirstAscent',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'applyHeightToLastDescent',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'leadingDistribution',
-        type: 'TextLeadingDistribution',
-        defaultValue: 'TextLeadingDistribution.proportional',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'applyHeightToFirstAscent', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'applyHeightToLastDescent', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'leadingDistribution', type: 'TextLeadingDistribution', defaultValue: 'TextLeadingDistribution.proportional', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextInputAction',
@@ -6580,20 +3188,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'magnifierBuilder',
-        type: 'MagnifierBuilder',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shouldDisplayHandlesInMagnifier',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'magnifierBuilder', type: 'MagnifierBuilder', defaultValue: null, required: false), GeneratedTypeField(name: 'shouldDisplayHandlesInMagnifier', type: 'bool', defaultValue: 'true', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextOverflow',
@@ -6607,20 +3202,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextPosition',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'offset',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'affinity',
-        type: 'TextAffinity',
-        defaultValue: 'TextAffinity.downstream',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'offset', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'affinity', type: 'TextAffinity', defaultValue: 'TextAffinity.downstream', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextRange',
@@ -6628,20 +3210,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextRange',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'start',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'end',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'start', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'end', type: 'int', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'TextScaler',
@@ -6655,32 +3224,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextSelection',
     imports: const ['package:flutter/services.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'baseOffset',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'extentOffset',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'affinity',
-        type: 'TextAffinity',
-        defaultValue: 'TextAffinity.downstream',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'isDirectional',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'baseOffset', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'extentOffset', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'affinity', type: 'TextAffinity', defaultValue: 'TextAffinity.downstream', required: false), GeneratedTypeField(name: 'isDirectional', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextSelectionControls',
@@ -6695,74 +3239,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'text',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'children',
-        type: 'List<InlineSpan>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'style',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'recognizer',
-        type: 'GestureRecognizer',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'mouseCursor',
-        type: 'MouseCursor',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onEnter',
-        type: 'PointerEnterEventListener',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onExit',
-        type: 'PointerExitEventListener',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticsLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'semanticsIdentifier',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'locale',
-        type: 'Locale',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'spellOut',
-        type: 'bool',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'text', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'children', type: 'List<InlineSpan>', defaultValue: null, required: false), GeneratedTypeField(name: 'style', type: 'TextStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'recognizer', type: 'GestureRecognizer', defaultValue: null, required: false), GeneratedTypeField(name: 'mouseCursor', type: 'MouseCursor', defaultValue: null, required: false), GeneratedTypeField(name: 'onEnter', type: 'PointerEnterEventListener', defaultValue: null, required: false), GeneratedTypeField(name: 'onExit', type: 'PointerExitEventListener', defaultValue: null, required: false), GeneratedTypeField(name: 'semanticsLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'semanticsIdentifier', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'locale', type: 'Locale', defaultValue: null, required: false), GeneratedTypeField(name: 'spellOut', type: 'bool', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextStyle',
@@ -6770,164 +3247,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTextStyle',
     imports: const ['package:flutter/painting.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'inherit',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'color',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'backgroundColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontSize',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontWeight',
-        type: 'FontWeight',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontStyle',
-        type: 'FontStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'letterSpacing',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'wordSpacing',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'textBaseline',
-        type: 'TextBaseline',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'height',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'leadingDistribution',
-        type: 'TextLeadingDistribution',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'locale',
-        type: 'Locale',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'foreground',
-        type: 'Paint',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'background',
-        type: 'Paint',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'shadows',
-        type: 'List<Shadow>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontFeatures',
-        type: 'List<FontFeature>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontVariations',
-        type: 'List<FontVariation>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'decoration',
-        type: 'TextDecoration',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'decorationColor',
-        type: 'Color',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'decorationStyle',
-        type: 'TextDecorationStyle',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'decorationThickness',
-        type: 'double',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontFamily',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'fontFamilyFallback',
-        type: 'List<String>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'package',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'overflow',
-        type: 'TextOverflow',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'inherit', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'color', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'backgroundColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'fontSize', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'fontWeight', type: 'FontWeight', defaultValue: null, required: false), GeneratedTypeField(name: 'fontStyle', type: 'FontStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'letterSpacing', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'wordSpacing', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'textBaseline', type: 'TextBaseline', defaultValue: null, required: false), GeneratedTypeField(name: 'height', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'leadingDistribution', type: 'TextLeadingDistribution', defaultValue: null, required: false), GeneratedTypeField(name: 'locale', type: 'Locale', defaultValue: null, required: false), GeneratedTypeField(name: 'foreground', type: 'Paint', defaultValue: null, required: false), GeneratedTypeField(name: 'background', type: 'Paint', defaultValue: null, required: false), GeneratedTypeField(name: 'shadows', type: 'List<Shadow>', defaultValue: null, required: false), GeneratedTypeField(name: 'fontFeatures', type: 'List<FontFeature>', defaultValue: null, required: false), GeneratedTypeField(name: 'fontVariations', type: 'List<FontVariation>', defaultValue: null, required: false), GeneratedTypeField(name: 'decoration', type: 'TextDecoration', defaultValue: null, required: false), GeneratedTypeField(name: 'decorationColor', type: 'Color', defaultValue: null, required: false), GeneratedTypeField(name: 'decorationStyle', type: 'TextDecorationStyle', defaultValue: null, required: false), GeneratedTypeField(name: 'decorationThickness', type: 'double', defaultValue: null, required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'fontFamily', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'fontFamilyFallback', type: 'List<String>', defaultValue: null, required: false), GeneratedTypeField(name: 'package', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'overflow', type: 'TextOverflow', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TextWidthBasis',
@@ -6965,20 +3285,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTimeOfDay',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'hour',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'minute',
-        type: 'int',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'hour', type: 'int', defaultValue: null, required: true), GeneratedTypeField(name: 'minute', type: 'int', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'TimePickerEntryMode',
@@ -6992,32 +3299,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedToolbarOptions',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'copy',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'cut',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'paste',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'selectAll',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'copy', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'cut', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'paste', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'selectAll', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TooltipState',
@@ -7046,38 +3328,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'initialScrollOffset',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'keepScrollOffset',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'debugLabel',
-        type: 'String',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onAttach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'onDetach',
-        type: 'ScrollControllerCallback',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'initialScrollOffset', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'keepScrollOffset', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'debugLabel', type: 'String', defaultValue: null, required: false), GeneratedTypeField(name: 'onAttach', type: 'ScrollControllerCallback', defaultValue: null, required: false), GeneratedTypeField(name: 'onDetach', type: 'ScrollControllerCallback', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TrainHoppingAnimation',
@@ -7086,14 +3337,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'onSwitchedTrain',
-        type: 'VoidCallback',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'onSwitchedTrain', type: 'VoidCallback', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TransformationController',
@@ -7114,38 +3358,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'builder',
-        type: 'TwoDimensionalIndexedWidgetBuilder',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'maxXIndex',
-        type: 'int',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'maxYIndex',
-        type: 'int',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addRepaintBoundaries',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addAutomaticKeepAlives',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'builder', type: 'TwoDimensionalIndexedWidgetBuilder', defaultValue: null, required: true), GeneratedTypeField(name: 'maxXIndex', type: 'int', defaultValue: null, required: false), GeneratedTypeField(name: 'maxYIndex', type: 'int', defaultValue: null, required: false), GeneratedTypeField(name: 'addRepaintBoundaries', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'addAutomaticKeepAlives', type: 'bool', defaultValue: 'true', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'TwoDimensionalChildListDelegate',
@@ -7153,26 +3366,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedTwoDimensionalChildListDelegate',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'addRepaintBoundaries',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'addAutomaticKeepAlives',
-        type: 'bool',
-        defaultValue: 'true',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'children',
-        type: 'List<List<Widget>>',
-        defaultValue: null,
-        required: true,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'addRepaintBoundaries', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'addAutomaticKeepAlives', type: 'bool', defaultValue: 'true', required: false), GeneratedTypeField(name: 'children', type: 'List<List<Widget>>', defaultValue: null, required: true)],
   ),
   GeneratedTypeEntry(
     name: 'TwoDimensionalIndexedWidgetBuilder',
@@ -7188,21 +3382,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedUnderlineInputBorder',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'borderSide',
-        type: 'BorderSide',
-        defaultValue: 'const BorderSide()',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadius',
-        defaultValue:
-            'const BorderRadius.only(topLeft: Radius.circular(4.0), topRight: Radius.circular(4.0))',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'borderSide', type: 'BorderSide', defaultValue: 'const BorderSide()', required: false), GeneratedTypeField(name: 'borderRadius', type: 'BorderRadius', defaultValue: 'const BorderRadius.only(topLeft: Radius.circular(4.0), topRight: Radius.circular(4.0))', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'UnderlineTabIndicator',
@@ -7210,26 +3390,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedUnderlineTabIndicator',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'borderRadius',
-        type: 'BorderRadius',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'borderSide',
-        type: 'BorderSide',
-        defaultValue: 'const BorderSide(width: 2.0, color: Colors.white)',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'insets',
-        type: 'EdgeInsetsGeometry',
-        defaultValue: 'EdgeInsets.zero',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'borderRadius', type: 'BorderRadius', defaultValue: null, required: false), GeneratedTypeField(name: 'borderSide', type: 'BorderSide', defaultValue: 'const BorderSide(width: 2.0, color: Colors.white)', required: false), GeneratedTypeField(name: 'insets', type: 'EdgeInsetsGeometry', defaultValue: 'EdgeInsets.zero', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'UndoHistoryController',
@@ -7237,14 +3398,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedUndoHistoryController',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'value',
-        type: 'UndoHistoryValue',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'value', type: 'UndoHistoryValue', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'UndoHistoryValue',
@@ -7252,20 +3406,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedUndoHistoryValue',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'canUndo',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'canRedo',
-        type: 'bool',
-        defaultValue: 'false',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'canUndo', type: 'bool', defaultValue: 'false', required: false), GeneratedTypeField(name: 'canRedo', type: 'bool', defaultValue: 'false', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'UniqueKey',
@@ -7314,26 +3455,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'VerticalMultiDragGestureRecognizer',
@@ -7342,26 +3464,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     usesEvaluator: true,
     imports: const ['package:flutter/gestures.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'debugOwner',
-        type: 'Object',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'supportedDevices',
-        type: 'Set<PointerDeviceKind>',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'allowedButtonsFilter',
-        type: 'AllowedButtonsFilter',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'debugOwner', type: 'Object', defaultValue: null, required: false), GeneratedTypeField(name: 'supportedDevices', type: 'Set<PointerDeviceKind>', defaultValue: null, required: false), GeneratedTypeField(name: 'allowedButtonsFilter', type: 'AllowedButtonsFilter', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'VisualDensity',
@@ -7369,20 +3472,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedVisualDensity',
     imports: const ['package:flutter/material.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'horizontal',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'vertical',
-        type: 'double',
-        defaultValue: '0.0',
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'horizontal', type: 'double', defaultValue: '0.0', required: false), GeneratedTypeField(name: 'vertical', type: 'double', defaultValue: '0.0', required: false)],
   ),
   GeneratedTypeEntry(
     name: 'VoidCallback',
@@ -7424,32 +3514,7 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedWidgetSpan',
     imports: const ['package:flutter/widgets.dart'],
     constructorName: 'new',
-    fields: const [
-      GeneratedTypeField(
-        name: 'child',
-        type: 'Widget',
-        defaultValue: null,
-        required: true,
-      ),
-      GeneratedTypeField(
-        name: 'alignment',
-        type: 'PlaceholderAlignment',
-        defaultValue: 'ui.PlaceholderAlignment.bottom',
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'baseline',
-        type: 'TextBaseline',
-        defaultValue: null,
-        required: false,
-      ),
-      GeneratedTypeField(
-        name: 'style',
-        type: 'TextStyle',
-        defaultValue: null,
-        required: false,
-      ),
-    ],
+    fields: const [GeneratedTypeField(name: 'child', type: 'Widget', defaultValue: null, required: true), GeneratedTypeField(name: 'alignment', type: 'PlaceholderAlignment', defaultValue: 'ui.PlaceholderAlignment.bottom', required: false), GeneratedTypeField(name: 'baseline', type: 'TextBaseline', defaultValue: null, required: false), GeneratedTypeField(name: 'style', type: 'TextStyle', defaultValue: null, required: false)],
   ),
   GeneratedTypeEntry(
     name: 'WidgetState',
@@ -7489,10 +3554,26 @@ const List<GeneratedTypeEntry> generatedTypeEntries = [
     parserName: 'parseGeneratedWrapCrossAlignment',
     imports: const ['package:flutter/rendering.dart'],
   ),
-  GeneratedTypeEntry(name: 'bool', kind: 'primitive', parserName: 'toBool'),
-  GeneratedTypeEntry(name: 'double', kind: 'primitive', parserName: 'toDouble'),
-  GeneratedTypeEntry(name: 'int', kind: 'primitive', parserName: 'toInt'),
-  GeneratedTypeEntry(name: 'num', kind: 'primitive', parserName: 'toDouble'),
+  GeneratedTypeEntry(
+    name: 'bool',
+    kind: 'primitive',
+    parserName: 'toBool',
+  ),
+  GeneratedTypeEntry(
+    name: 'double',
+    kind: 'primitive',
+    parserName: 'toDouble',
+  ),
+  GeneratedTypeEntry(
+    name: 'int',
+    kind: 'primitive',
+    parserName: 'toInt',
+  ),
+  GeneratedTypeEntry(
+    name: 'num',
+    kind: 'primitive',
+    parserName: 'toDouble',
+  ),
   GeneratedTypeEntry(
     name: 'void Function(Set<T>)',
     kind: 'callback',
@@ -8001,8 +4082,7 @@ final Map<String, GeneratedTypeEntry> generatedTypeRegistry = {
   'VoidCallback': generatedTypeEntries[490],
   'Widget': generatedTypeEntries[491],
   'Widget Function(BuildContext, BoxConstraints)': generatedTypeEntries[492],
-  'Widget? Function(BuildContext, Animation<double>)':
-      generatedTypeEntries[493],
+  'Widget? Function(BuildContext, Animation<double>)': generatedTypeEntries[493],
   'WidgetBuilder': generatedTypeEntries[494],
   'WidgetSpan': generatedTypeEntries[495],
   'WidgetState': generatedTypeEntries[496],
@@ -8046,17 +4126,13 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedBorder': parseGeneratedBorder,
   'parseGeneratedBorderDirectional': parseGeneratedBorderDirectional,
   'parseGeneratedBorderRadius': parseGeneratedBorderRadius,
-  'parseGeneratedBorderRadiusDirectional':
-      parseGeneratedBorderRadiusDirectional,
+  'parseGeneratedBorderRadiusDirectional': parseGeneratedBorderRadiusDirectional,
   'parseGeneratedBorderRadiusGeometry': parseGeneratedBorderRadiusGeometry,
   'parseGeneratedBorderSide': parseGeneratedBorderSide,
   'parseGeneratedBorderStyle': parseGeneratedBorderStyle,
-  'parseGeneratedBottomNavigationBarItem':
-      parseGeneratedBottomNavigationBarItem,
-  'parseGeneratedBottomNavigationBarLandscapeLayout':
-      parseGeneratedBottomNavigationBarLandscapeLayout,
-  'parseGeneratedBottomNavigationBarType':
-      parseGeneratedBottomNavigationBarType,
+  'parseGeneratedBottomNavigationBarItem': parseGeneratedBottomNavigationBarItem,
+  'parseGeneratedBottomNavigationBarLandscapeLayout': parseGeneratedBottomNavigationBarLandscapeLayout,
+  'parseGeneratedBottomNavigationBarType': parseGeneratedBottomNavigationBarType,
   'parseGeneratedBoxBorder': parseGeneratedBoxBorder,
   'parseGeneratedBoxConstraints': parseGeneratedBoxConstraints,
   'parseGeneratedBoxFit': parseGeneratedBoxFit,
@@ -8070,16 +4146,13 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedCatmullRomCurve': parseGeneratedCatmullRomCurve,
   'parseGeneratedChipAnimationStyle': parseGeneratedChipAnimationStyle,
   'parseGeneratedCircleBorder': parseGeneratedCircleBorder,
-  'parseGeneratedCircularNotchedRectangle':
-      parseGeneratedCircularNotchedRectangle,
+  'parseGeneratedCircularNotchedRectangle': parseGeneratedCircularNotchedRectangle,
   'parseGeneratedClip': parseGeneratedClip,
   'parseGeneratedClipboardStatus': parseGeneratedClipboardStatus,
-  'parseGeneratedClipboardStatusNotifier':
-      parseGeneratedClipboardStatusNotifier,
+  'parseGeneratedClipboardStatusNotifier': parseGeneratedClipboardStatusNotifier,
   'parseGeneratedColor': parseGeneratedColor,
   'parseGeneratedColorFilter': parseGeneratedColorFilter,
-  'parseGeneratedContinuousRectangleBorder':
-      parseGeneratedContinuousRectangleBorder,
+  'parseGeneratedContinuousRectangleBorder': parseGeneratedContinuousRectangleBorder,
   'parseGeneratedCrossAxisAlignment': parseGeneratedCrossAxisAlignment,
   'parseGeneratedCubic': parseGeneratedCubic,
   'parseGeneratedCurve': parseGeneratedCurve,
@@ -8092,14 +4165,11 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedDatePickerMode': parseGeneratedDatePickerMode,
   'parseGeneratedDateTime': parseGeneratedDateTime,
   'parseGeneratedDecorationPosition': parseGeneratedDecorationPosition,
-  'parseGeneratedDefaultSpellCheckService':
-      parseGeneratedDefaultSpellCheckService,
-  'parseGeneratedDesktopTextSelectionControls':
-      parseGeneratedDesktopTextSelectionControls,
+  'parseGeneratedDefaultSpellCheckService': parseGeneratedDefaultSpellCheckService,
+  'parseGeneratedDesktopTextSelectionControls': parseGeneratedDesktopTextSelectionControls,
   'parseGeneratedDismissDirection': parseGeneratedDismissDirection,
   'parseGeneratedDragStartBehavior': parseGeneratedDragStartBehavior,
-  'parseGeneratedDraggableScrollableController':
-      parseGeneratedDraggableScrollableController,
+  'parseGeneratedDraggableScrollableController': parseGeneratedDraggableScrollableController,
   'parseGeneratedDrawerControllerState': parseGeneratedDrawerControllerState,
   'parseGeneratedDropdownMenuItem': parseGeneratedDropdownMenuItem,
   'parseGeneratedDuration': parseGeneratedDuration,
@@ -8110,20 +4180,16 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedElasticInCurve': parseGeneratedElasticInCurve,
   'parseGeneratedElasticInOutCurve': parseGeneratedElasticInOutCurve,
   'parseGeneratedElasticOutCurve': parseGeneratedElasticOutCurve,
-  'parseGeneratedEmptyTextSelectionControls':
-      parseGeneratedEmptyTextSelectionControls,
+  'parseGeneratedEmptyTextSelectionControls': parseGeneratedEmptyTextSelectionControls,
   'parseGeneratedExpansibleController': parseGeneratedExpansibleController,
   'parseGeneratedFilterQuality': parseGeneratedFilterQuality,
-  'parseGeneratedFilteringTextInputFormatter':
-      parseGeneratedFilteringTextInputFormatter,
+  'parseGeneratedFilteringTextInputFormatter': parseGeneratedFilteringTextInputFormatter,
   'parseGeneratedFixedColumnWidth': parseGeneratedFixedColumnWidth,
   'parseGeneratedFlexColumnWidth': parseGeneratedFlexColumnWidth,
   'parseGeneratedFlexFit': parseGeneratedFlexFit,
   'parseGeneratedFlippedCurve': parseGeneratedFlippedCurve,
-  'parseGeneratedFloatingActionButtonAnimator':
-      parseGeneratedFloatingActionButtonAnimator,
-  'parseGeneratedFloatingActionButtonLocation':
-      parseGeneratedFloatingActionButtonLocation,
+  'parseGeneratedFloatingActionButtonAnimator': parseGeneratedFloatingActionButtonAnimator,
+  'parseGeneratedFloatingActionButtonLocation': parseGeneratedFloatingActionButtonLocation,
   'parseGeneratedFloatingLabelAlignment': parseGeneratedFloatingLabelAlignment,
   'parseGeneratedFloatingLabelBehavior': parseGeneratedFloatingLabelBehavior,
   'parseGeneratedFlutterLogoDecoration': parseGeneratedFlutterLogoDecoration,
@@ -8147,76 +4213,62 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedInputBorder': parseGeneratedInputBorder,
   'parseGeneratedInputDecoration': parseGeneratedInputDecoration,
   'parseGeneratedInspectorSelection': parseGeneratedInspectorSelection,
-  'parseGeneratedInteractiveInkFeatureFactory':
-      parseGeneratedInteractiveInkFeatureFactory,
+  'parseGeneratedInteractiveInkFeatureFactory': parseGeneratedInteractiveInkFeatureFactory,
   'parseGeneratedInterval': parseGeneratedInterval,
   'parseGeneratedIntrinsicColumnWidth': parseGeneratedIntrinsicColumnWidth,
   'parseGeneratedIterableOfEnum': parseGeneratedIterableOfEnum,
   'parseGeneratedIterableOfLocale': parseGeneratedIterableOfLocale,
-  'parseGeneratedIterableOfLocalizationsDelegateObject':
-      parseGeneratedIterableOfLocalizationsDelegateObject,
+  'parseGeneratedIterableOfLocalizationsDelegateObject': parseGeneratedIterableOfLocalizationsDelegateObject,
   'parseGeneratedIterableOfString': parseGeneratedIterableOfString,
   'parseGeneratedKeepAliveHandle': parseGeneratedKeepAliveHandle,
   'parseGeneratedLabeledGlobalKey': parseGeneratedLabeledGlobalKey,
-  'parseGeneratedLengthLimitingTextInputFormatter':
-      parseGeneratedLengthLimitingTextInputFormatter,
+  'parseGeneratedLengthLimitingTextInputFormatter': parseGeneratedLengthLimitingTextInputFormatter,
   'parseGeneratedLinearBorder': parseGeneratedLinearBorder,
   'parseGeneratedLinearBorderEdge': parseGeneratedLinearBorderEdge,
   'parseGeneratedLinearGradient': parseGeneratedLinearGradient,
   'parseGeneratedListOfBool': parseGeneratedListOfBool,
-  'parseGeneratedListOfBottomNavigationBarItem':
-      parseGeneratedListOfBottomNavigationBarItem,
+  'parseGeneratedListOfBottomNavigationBarItem': parseGeneratedListOfBottomNavigationBarItem,
   'parseGeneratedListOfBoxShadow': parseGeneratedListOfBoxShadow,
   'parseGeneratedListOfColor': parseGeneratedListOfColor,
   'parseGeneratedListOfDataCell': parseGeneratedListOfDataCell,
   'parseGeneratedListOfDataColumn': parseGeneratedListOfDataColumn,
   'parseGeneratedListOfDouble': parseGeneratedListOfDouble,
-  'parseGeneratedListOfDropdownMenuItemObject':
-      parseGeneratedListOfDropdownMenuItemObject,
+  'parseGeneratedListOfDropdownMenuItemObject': parseGeneratedListOfDropdownMenuItemObject,
   'parseGeneratedListOfFontFeature': parseGeneratedListOfFontFeature,
   'parseGeneratedListOfFontVariation': parseGeneratedListOfFontVariation,
   'parseGeneratedListOfInt': parseGeneratedListOfInt,
   'parseGeneratedListOfListWidget': parseGeneratedListOfListWidget,
   'parseGeneratedListOfLocale': parseGeneratedListOfLocale,
-  'parseGeneratedListOfNavigationRailDestination':
-      parseGeneratedListOfNavigationRailDestination,
+  'parseGeneratedListOfNavigationRailDestination': parseGeneratedListOfNavigationRailDestination,
   'parseGeneratedListOfOffset': parseGeneratedListOfOffset,
   'parseGeneratedListOfShadow': parseGeneratedListOfShadow,
   'parseGeneratedListOfStep': parseGeneratedListOfStep,
   'parseGeneratedListOfString': parseGeneratedListOfString,
   'parseGeneratedListOfTextDecoration': parseGeneratedListOfTextDecoration,
-  'parseGeneratedListTileControlAffinity':
-      parseGeneratedListTileControlAffinity,
+  'parseGeneratedListTileControlAffinity': parseGeneratedListTileControlAffinity,
   'parseGeneratedListTileStyle': parseGeneratedListTileStyle,
   'parseGeneratedListTileTitleAlignment': parseGeneratedListTileTitleAlignment,
   'parseGeneratedLiveTextInputStatus': parseGeneratedLiveTextInputStatus,
-  'parseGeneratedLiveTextInputStatusNotifier':
-      parseGeneratedLiveTextInputStatusNotifier,
+  'parseGeneratedLiveTextInputStatusNotifier': parseGeneratedLiveTextInputStatusNotifier,
   'parseGeneratedLocale': parseGeneratedLocale,
   'parseGeneratedLocalizationsDelegate': parseGeneratedLocalizationsDelegate,
   'parseGeneratedMainAxisAlignment': parseGeneratedMainAxisAlignment,
   'parseGeneratedMainAxisSize': parseGeneratedMainAxisSize,
   'parseGeneratedMaterialTapTargetSize': parseGeneratedMaterialTapTargetSize,
-  'parseGeneratedMaterialTextSelectionControls':
-      parseGeneratedMaterialTextSelectionControls,
-  'parseGeneratedMaterialTextSelectionHandleControls':
-      parseGeneratedMaterialTextSelectionHandleControls,
+  'parseGeneratedMaterialTextSelectionControls': parseGeneratedMaterialTextSelectionControls,
+  'parseGeneratedMaterialTextSelectionHandleControls': parseGeneratedMaterialTextSelectionHandleControls,
   'parseGeneratedMatrix4': parseGeneratedMatrix4,
   'parseGeneratedMaxColumnWidth': parseGeneratedMaxColumnWidth,
   'parseGeneratedMaxLengthEnforcement': parseGeneratedMaxLengthEnforcement,
   'parseGeneratedMinColumnWidth': parseGeneratedMinColumnWidth,
   'parseGeneratedMouseCursor': parseGeneratedMouseCursor,
-  'parseGeneratedNavigationDestinationLabelBehavior':
-      parseGeneratedNavigationDestinationLabelBehavior,
-  'parseGeneratedNavigationRailDestination':
-      parseGeneratedNavigationRailDestination,
-  'parseGeneratedNavigationRailLabelType':
-      parseGeneratedNavigationRailLabelType,
+  'parseGeneratedNavigationDestinationLabelBehavior': parseGeneratedNavigationDestinationLabelBehavior,
+  'parseGeneratedNavigationRailDestination': parseGeneratedNavigationRailDestination,
+  'parseGeneratedNavigationRailLabelType': parseGeneratedNavigationRailLabelType,
   'parseGeneratedNavigatorState': parseGeneratedNavigatorState,
   'parseGeneratedNotchedShape': parseGeneratedNotchedShape,
   'parseGeneratedOffset': parseGeneratedOffset,
-  'parseGeneratedOptionsViewOpenDirection':
-      parseGeneratedOptionsViewOpenDirection,
+  'parseGeneratedOptionsViewOpenDirection': parseGeneratedOptionsViewOpenDirection,
   'parseGeneratedOrientation': parseGeneratedOrientation,
   'parseGeneratedOutlineInputBorder': parseGeneratedOutlineInputBorder,
   'parseGeneratedOutlinedBorder': parseGeneratedOutlinedBorder,
@@ -8250,14 +4302,12 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedRestorableNumN': parseGeneratedRestorableNumN,
   'parseGeneratedRestorableString': parseGeneratedRestorableString,
   'parseGeneratedRestorableStringN': parseGeneratedRestorableStringN,
-  'parseGeneratedRestorableTextEditingController':
-      parseGeneratedRestorableTextEditingController,
+  'parseGeneratedRestorableTextEditingController': parseGeneratedRestorableTextEditingController,
   'parseGeneratedRestorableTimeOfDay': parseGeneratedRestorableTimeOfDay,
   'parseGeneratedRestorationManager': parseGeneratedRestorationManager,
   'parseGeneratedReverseAnimation': parseGeneratedReverseAnimation,
   'parseGeneratedRoundedRectangleBorder': parseGeneratedRoundedRectangleBorder,
-  'parseGeneratedRoundedSuperellipseBorder':
-      parseGeneratedRoundedSuperellipseBorder,
+  'parseGeneratedRoundedSuperellipseBorder': parseGeneratedRoundedSuperellipseBorder,
   'parseGeneratedSawTooth': parseGeneratedSawTooth,
   'parseGeneratedScaffoldMessengerState': parseGeneratedScaffoldMessengerState,
   'parseGeneratedScaffoldState': parseGeneratedScaffoldState,
@@ -8265,16 +4315,13 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedScrollContext': parseGeneratedScrollContext,
   'parseGeneratedScrollPhysics': parseGeneratedScrollPhysics,
   'parseGeneratedScrollPosition': parseGeneratedScrollPosition,
-  'parseGeneratedScrollPositionWithSingleContext':
-      parseGeneratedScrollPositionWithSingleContext,
-  'parseGeneratedScrollViewKeyboardDismissBehavior':
-      parseGeneratedScrollViewKeyboardDismissBehavior,
+  'parseGeneratedScrollPositionWithSingleContext': parseGeneratedScrollPositionWithSingleContext,
+  'parseGeneratedScrollViewKeyboardDismissBehavior': parseGeneratedScrollViewKeyboardDismissBehavior,
   'parseGeneratedScrollableState': parseGeneratedScrollableState,
   'parseGeneratedScrollbarOrientation': parseGeneratedScrollbarOrientation,
   'parseGeneratedScrollbarPainter': parseGeneratedScrollbarPainter,
   'parseGeneratedSearchController': parseGeneratedSearchController,
-  'parseGeneratedSelectionListenerNotifier':
-      parseGeneratedSelectionListenerNotifier,
+  'parseGeneratedSelectionListenerNotifier': parseGeneratedSelectionListenerNotifier,
   'parseGeneratedSetOfPointerDeviceKind': parseGeneratedSetOfPointerDeviceKind,
   'parseGeneratedSetOfWidgetState': parseGeneratedSetOfWidgetState,
   'parseGeneratedShadow': parseGeneratedShadow,
@@ -8284,24 +4331,16 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedShortcutRegistry': parseGeneratedShortcutRegistry,
   'parseGeneratedSize': parseGeneratedSize,
   'parseGeneratedSliderInteraction': parseGeneratedSliderInteraction,
-  'parseGeneratedSliverAnimatedGridState':
-      parseGeneratedSliverAnimatedGridState,
-  'parseGeneratedSliverAnimatedListState':
-      parseGeneratedSliverAnimatedListState,
-  'parseGeneratedSliverChildListDelegate':
-      parseGeneratedSliverChildListDelegate,
+  'parseGeneratedSliverAnimatedGridState': parseGeneratedSliverAnimatedGridState,
+  'parseGeneratedSliverAnimatedListState': parseGeneratedSliverAnimatedListState,
+  'parseGeneratedSliverChildListDelegate': parseGeneratedSliverChildListDelegate,
   'parseGeneratedSliverGridDelegate': parseGeneratedSliverGridDelegate,
-  'parseGeneratedSliverGridDelegateWithFixedCrossAxisCount':
-      parseGeneratedSliverGridDelegateWithFixedCrossAxisCount,
-  'parseGeneratedSliverGridDelegateWithMaxCrossAxisExtent':
-      parseGeneratedSliverGridDelegateWithMaxCrossAxisExtent,
-  'parseGeneratedSliverOverlapAbsorberHandle':
-      parseGeneratedSliverOverlapAbsorberHandle,
+  'parseGeneratedSliverGridDelegateWithFixedCrossAxisCount': parseGeneratedSliverGridDelegateWithFixedCrossAxisCount,
+  'parseGeneratedSliverGridDelegateWithMaxCrossAxisExtent': parseGeneratedSliverGridDelegateWithMaxCrossAxisExtent,
+  'parseGeneratedSliverOverlapAbsorberHandle': parseGeneratedSliverOverlapAbsorberHandle,
   'parseGeneratedSliverPaintOrder': parseGeneratedSliverPaintOrder,
-  'parseGeneratedSliverPersistentHeaderDelegate':
-      parseGeneratedSliverPersistentHeaderDelegate,
-  'parseGeneratedSliverReorderableListState':
-      parseGeneratedSliverReorderableListState,
+  'parseGeneratedSliverPersistentHeaderDelegate': parseGeneratedSliverPersistentHeaderDelegate,
+  'parseGeneratedSliverReorderableListState': parseGeneratedSliverReorderableListState,
   'parseGeneratedSmartDashesType': parseGeneratedSmartDashesType,
   'parseGeneratedSmartQuotesType': parseGeneratedSmartQuotesType,
   'parseGeneratedSnackBarBehavior': parseGeneratedSnackBarBehavior,
@@ -8311,8 +4350,7 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedStackFit': parseGeneratedStackFit,
   'parseGeneratedStadiumBorder': parseGeneratedStadiumBorder,
   'parseGeneratedStarBorder': parseGeneratedStarBorder,
-  'parseGeneratedStaticSelectionContainerDelegate':
-      parseGeneratedStaticSelectionContainerDelegate,
+  'parseGeneratedStaticSelectionContainerDelegate': parseGeneratedStaticSelectionContainerDelegate,
   'parseGeneratedStep': parseGeneratedStep,
   'parseGeneratedStepState': parseGeneratedStepState,
   'parseGeneratedStepStyle': parseGeneratedStepStyle,
@@ -8327,8 +4365,7 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedTabController': parseGeneratedTabController,
   'parseGeneratedTabIndicatorAnimation': parseGeneratedTabIndicatorAnimation,
   'parseGeneratedTableBorder': parseGeneratedTableBorder,
-  'parseGeneratedTableCellVerticalAlignment':
-      parseGeneratedTableCellVerticalAlignment,
+  'parseGeneratedTableCellVerticalAlignment': parseGeneratedTableCellVerticalAlignment,
   'parseGeneratedTableColumnWidth': parseGeneratedTableColumnWidth,
   'parseGeneratedTextAffinity': parseGeneratedTextAffinity,
   'parseGeneratedTextAlign': parseGeneratedTextAlign,
@@ -8343,8 +4380,7 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedTextHeightBehavior': parseGeneratedTextHeightBehavior,
   'parseGeneratedTextInputAction': parseGeneratedTextInputAction,
   'parseGeneratedTextInputType': parseGeneratedTextInputType,
-  'parseGeneratedTextLeadingDistribution':
-      parseGeneratedTextLeadingDistribution,
+  'parseGeneratedTextLeadingDistribution': parseGeneratedTextLeadingDistribution,
   'parseGeneratedTextOverflow': parseGeneratedTextOverflow,
   'parseGeneratedTextPosition': parseGeneratedTextPosition,
   'parseGeneratedTextRange': parseGeneratedTextRange,
@@ -8362,11 +4398,9 @@ final Map<String, GeneratedValueParser> generatedValueParsers = {
   'parseGeneratedToolbarOptions': parseGeneratedToolbarOptions,
   'parseGeneratedTooltipState': parseGeneratedTooltipState,
   'parseGeneratedTooltipTriggerMode': parseGeneratedTooltipTriggerMode,
-  'parseGeneratedTransformationController':
-      parseGeneratedTransformationController,
+  'parseGeneratedTransformationController': parseGeneratedTransformationController,
   'parseGeneratedTraversalEdgeBehavior': parseGeneratedTraversalEdgeBehavior,
-  'parseGeneratedTwoDimensionalChildListDelegate':
-      parseGeneratedTwoDimensionalChildListDelegate,
+  'parseGeneratedTwoDimensionalChildListDelegate': parseGeneratedTwoDimensionalChildListDelegate,
   'parseGeneratedUnderlineInputBorder': parseGeneratedUnderlineInputBorder,
   'parseGeneratedUnderlineTabIndicator': parseGeneratedUnderlineTabIndicator,
   'parseGeneratedUndoHistoryController': parseGeneratedUndoHistoryController,
@@ -8397,97 +4431,73 @@ final Map<String, GeneratedEvaluatorParser> generatedEvaluatorParsers = {
   'parseGeneratedButtonSegment': parseGeneratedButtonSegment,
   'parseGeneratedButtonStyle': parseGeneratedButtonStyle,
   'parseGeneratedChangeNotifier': parseGeneratedChangeNotifier,
-  'parseGeneratedContentInsertionConfiguration':
-      parseGeneratedContentInsertionConfiguration,
+  'parseGeneratedContentInsertionConfiguration': parseGeneratedContentInsertionConfiguration,
   'parseGeneratedDataRow': parseGeneratedDataRow,
   'parseGeneratedDecoration': parseGeneratedDecoration,
   'parseGeneratedDecorationImage': parseGeneratedDecorationImage,
-  'parseGeneratedDelayedMultiDragGestureRecognizer':
-      parseGeneratedDelayedMultiDragGestureRecognizer,
-  'parseGeneratedDoubleTapGestureRecognizer':
-      parseGeneratedDoubleTapGestureRecognizer,
+  'parseGeneratedDelayedMultiDragGestureRecognizer': parseGeneratedDelayedMultiDragGestureRecognizer,
+  'parseGeneratedDoubleTapGestureRecognizer': parseGeneratedDoubleTapGestureRecognizer,
   'parseGeneratedEagerGestureRecognizer': parseGeneratedEagerGestureRecognizer,
-  'parseGeneratedFixedExtentScrollController':
-      parseGeneratedFixedExtentScrollController,
+  'parseGeneratedFixedExtentScrollController': parseGeneratedFixedExtentScrollController,
   'parseGeneratedFocusNode': parseGeneratedFocusNode,
   'parseGeneratedFocusScopeNode': parseGeneratedFocusScopeNode,
-  'parseGeneratedForcePressGestureRecognizer':
-      parseGeneratedForcePressGestureRecognizer,
+  'parseGeneratedForcePressGestureRecognizer': parseGeneratedForcePressGestureRecognizer,
   'parseGeneratedGestureRecognizer': parseGeneratedGestureRecognizer,
   'parseGeneratedGlobalObjectKey': parseGeneratedGlobalObjectKey,
-  'parseGeneratedHorizontalDragGestureRecognizer':
-      parseGeneratedHorizontalDragGestureRecognizer,
-  'parseGeneratedHorizontalMultiDragGestureRecognizer':
-      parseGeneratedHorizontalMultiDragGestureRecognizer,
+  'parseGeneratedHorizontalDragGestureRecognizer': parseGeneratedHorizontalDragGestureRecognizer,
+  'parseGeneratedHorizontalMultiDragGestureRecognizer': parseGeneratedHorizontalMultiDragGestureRecognizer,
   'parseGeneratedIcon': parseGeneratedIcon,
-  'parseGeneratedImmediateMultiDragGestureRecognizer':
-      parseGeneratedImmediateMultiDragGestureRecognizer,
+  'parseGeneratedImmediateMultiDragGestureRecognizer': parseGeneratedImmediateMultiDragGestureRecognizer,
   'parseGeneratedInlineSpan': parseGeneratedInlineSpan,
   'parseGeneratedIterableOfListenable': parseGeneratedIterableOfListenable,
   'parseGeneratedKey': parseGeneratedKey,
-  'parseGeneratedListOfButtonSegmentObject':
-      parseGeneratedListOfButtonSegmentObject,
+  'parseGeneratedListOfButtonSegmentObject': parseGeneratedListOfButtonSegmentObject,
   'parseGeneratedListOfDataRow': parseGeneratedListOfDataRow,
   'parseGeneratedListOfFocusNode': parseGeneratedListOfFocusNode,
   'parseGeneratedListOfInlineSpan': parseGeneratedListOfInlineSpan,
   'parseGeneratedListOfTableRow': parseGeneratedListOfTableRow,
-  'parseGeneratedListOfTextInputFormatter':
-      parseGeneratedListOfTextInputFormatter,
+  'parseGeneratedListOfTextInputFormatter': parseGeneratedListOfTextInputFormatter,
   'parseGeneratedListenable': parseGeneratedListenable,
   'parseGeneratedLocalKey': parseGeneratedLocalKey,
   'parseGeneratedLocalizationsResolver': parseGeneratedLocalizationsResolver,
-  'parseGeneratedLongPressGestureRecognizer':
-      parseGeneratedLongPressGestureRecognizer,
+  'parseGeneratedLongPressGestureRecognizer': parseGeneratedLongPressGestureRecognizer,
   'parseGeneratedMouseTracker': parseGeneratedMouseTracker,
-  'parseGeneratedMultiTapGestureRecognizer':
-      parseGeneratedMultiTapGestureRecognizer,
+  'parseGeneratedMultiTapGestureRecognizer': parseGeneratedMultiTapGestureRecognizer,
   'parseGeneratedObject': parseGeneratedObject,
   'parseGeneratedObjectKey': parseGeneratedObjectKey,
   'parseGeneratedOverlayEntry': parseGeneratedOverlayEntry,
   'parseGeneratedPageController': parseGeneratedPageController,
   'parseGeneratedPageStorageKey': parseGeneratedPageStorageKey,
   'parseGeneratedPanGestureRecognizer': parseGeneratedPanGestureRecognizer,
-  'parseGeneratedPlatformRouteInformationProvider':
-      parseGeneratedPlatformRouteInformationProvider,
+  'parseGeneratedPlatformRouteInformationProvider': parseGeneratedPlatformRouteInformationProvider,
   'parseGeneratedRestorableRouteFuture': parseGeneratedRestorableRouteFuture,
   'parseGeneratedRouteInformation': parseGeneratedRouteInformation,
   'parseGeneratedRouteSettings': parseGeneratedRouteSettings,
   'parseGeneratedScaleGestureRecognizer': parseGeneratedScaleGestureRecognizer,
   'parseGeneratedScrollController': parseGeneratedScrollController,
   'parseGeneratedSemanticsOwner': parseGeneratedSemanticsOwner,
-  'parseGeneratedSerialTapGestureRecognizer':
-      parseGeneratedSerialTapGestureRecognizer,
+  'parseGeneratedSerialTapGestureRecognizer': parseGeneratedSerialTapGestureRecognizer,
   'parseGeneratedSetOfObject': parseGeneratedSetOfObject,
   'parseGeneratedShapeDecoration': parseGeneratedShapeDecoration,
-  'parseGeneratedSliverChildBuilderDelegate':
-      parseGeneratedSliverChildBuilderDelegate,
+  'parseGeneratedSliverChildBuilderDelegate': parseGeneratedSliverChildBuilderDelegate,
   'parseGeneratedSliverChildDelegate': parseGeneratedSliverChildDelegate,
   'parseGeneratedSnackBarAction': parseGeneratedSnackBarAction,
-  'parseGeneratedSpellCheckConfiguration':
-      parseGeneratedSpellCheckConfiguration,
+  'parseGeneratedSpellCheckConfiguration': parseGeneratedSpellCheckConfiguration,
   'parseGeneratedTableRow': parseGeneratedTableRow,
-  'parseGeneratedTapAndDragGestureRecognizer':
-      parseGeneratedTapAndDragGestureRecognizer,
-  'parseGeneratedTapAndHorizontalDragGestureRecognizer':
-      parseGeneratedTapAndHorizontalDragGestureRecognizer,
-  'parseGeneratedTapAndPanGestureRecognizer':
-      parseGeneratedTapAndPanGestureRecognizer,
+  'parseGeneratedTapAndDragGestureRecognizer': parseGeneratedTapAndDragGestureRecognizer,
+  'parseGeneratedTapAndHorizontalDragGestureRecognizer': parseGeneratedTapAndHorizontalDragGestureRecognizer,
+  'parseGeneratedTapAndPanGestureRecognizer': parseGeneratedTapAndPanGestureRecognizer,
   'parseGeneratedTapGestureRecognizer': parseGeneratedTapGestureRecognizer,
   'parseGeneratedTextInputFormatter': parseGeneratedTextInputFormatter,
-  'parseGeneratedTextMagnifierConfiguration':
-      parseGeneratedTextMagnifierConfiguration,
+  'parseGeneratedTextMagnifierConfiguration': parseGeneratedTextMagnifierConfiguration,
   'parseGeneratedTextSpan': parseGeneratedTextSpan,
-  'parseGeneratedTrackingScrollController':
-      parseGeneratedTrackingScrollController,
+  'parseGeneratedTrackingScrollController': parseGeneratedTrackingScrollController,
   'parseGeneratedTrainHoppingAnimation': parseGeneratedTrainHoppingAnimation,
-  'parseGeneratedTwoDimensionalChildBuilderDelegate':
-      parseGeneratedTwoDimensionalChildBuilderDelegate,
+  'parseGeneratedTwoDimensionalChildBuilderDelegate': parseGeneratedTwoDimensionalChildBuilderDelegate,
   'parseGeneratedValueKey': parseGeneratedValueKey,
   'parseGeneratedValueNotifier': parseGeneratedValueNotifier,
-  'parseGeneratedVerticalDragGestureRecognizer':
-      parseGeneratedVerticalDragGestureRecognizer,
-  'parseGeneratedVerticalMultiDragGestureRecognizer':
-      parseGeneratedVerticalMultiDragGestureRecognizer,
+  'parseGeneratedVerticalDragGestureRecognizer': parseGeneratedVerticalDragGestureRecognizer,
+  'parseGeneratedVerticalMultiDragGestureRecognizer': parseGeneratedVerticalMultiDragGestureRecognizer,
   'resolveActionCallback': resolveActionCallback,
   'resolveBoolActionCallback': resolveBoolActionCallback,
   'resolveBoolPredicateCallback': resolveBoolPredicateCallback,

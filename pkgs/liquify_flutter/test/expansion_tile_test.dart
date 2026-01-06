@@ -5,12 +5,15 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('expansion_tile renders title and children', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% expansion_tile title: "Filters" initiallyExpanded: true %}
   {% text value: "Item A" %}
   {% text value: "Item B" %}
 {% endexpansion_tile %}
-''');
+''',
+    );
 
     expect(find.byType(ExpansionTile), findsOneWidget);
     expect(find.text('Filters'), findsOneWidget);

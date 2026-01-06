@@ -105,56 +105,49 @@ class ProgressTag extends WidgetTagBase with AsyncTag {
           break;
       }
     }
-    config.color =
-        resolvePropertyValue<Color?>(
+    config.color = resolvePropertyValue<Color?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'color',
           parser: parseColor,
         ) ??
         config.color;
-    config.backgroundColor =
-        resolvePropertyValue<Color?>(
+    config.backgroundColor = resolvePropertyValue<Color?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'backgroundColor',
           parser: parseColor,
         ) ??
         config.backgroundColor;
-    config.valueColor =
-        resolvePropertyValue<Animation<Color?>?>(
+    config.valueColor = resolvePropertyValue<Animation<Color?>?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'valueColor',
           parser: parseAnimationOfColor,
         ) ??
         config.valueColor;
-    config.borderRadius =
-        resolvePropertyValue<BorderRadiusGeometry?>(
+    config.borderRadius = resolvePropertyValue<BorderRadiusGeometry?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'borderRadius',
           parser: parseBorderRadiusGeometry,
         ) ??
         config.borderRadius;
-    config.stopIndicatorColor =
-        resolvePropertyValue<Color?>(
+    config.stopIndicatorColor = resolvePropertyValue<Color?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'stopIndicatorColor',
           parser: parseColor,
         ) ??
         config.stopIndicatorColor;
-    config.constraints =
-        resolvePropertyValue<BoxConstraints?>(
+    config.constraints = resolvePropertyValue<BoxConstraints?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'constraints',
           parser: parseBoxConstraints,
         ) ??
         config.constraints;
-    config.padding =
-        resolvePropertyValue<EdgeInsetsGeometry?>(
+    config.padding = resolvePropertyValue<EdgeInsetsGeometry?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'padding',
@@ -191,15 +184,16 @@ class _ProgressConfig {
 
 Widget _buildProgress(_ProgressConfig config) {
   final normalized = config.type?.toLowerCase().trim() ?? 'linear';
-  if (normalized == 'circular' ||
-      normalized == 'circle' ||
-      normalized == 'adaptive') {
+  if (normalized == 'circular' || normalized == 'circle' || normalized == 'adaptive') {
     final adaptive = config.adaptive ?? normalized == 'adaptive';
     final constraints =
         config.constraints ??
         (config.size == null
             ? null
-            : BoxConstraints.tightFor(width: config.size, height: config.size));
+            : BoxConstraints.tightFor(
+                width: config.size,
+                height: config.size,
+              ));
     final indicator = adaptive
         ? CircularProgressIndicator.adaptive(
             value: config.value,

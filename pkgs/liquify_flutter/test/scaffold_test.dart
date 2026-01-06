@@ -5,12 +5,15 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('scaffold tag renders app bar and body', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% scaffold backgroundColor: "#101214" %}
   {% app_bar title: "Header" elevation: 0 %}
   {% text value: "Body" %}
 {% endscaffold %}
-''');
+''',
+    );
 
     final scaffoldFinder = find.byWidgetPredicate(
       (widget) => widget is Scaffold && widget.appBar is AppBar,
@@ -22,11 +25,14 @@ void main() {
   });
 
   testWidgets('safe_area tag applies minimum padding', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% safe_area minimum: 12 %}
   {% text value: "Safe" %}
 {% endsafe_area %}
-''');
+''',
+    );
 
     final safeArea = tester.widget<SafeArea>(find.byType(SafeArea));
     expect(safeArea.minimum, const EdgeInsets.all(12));

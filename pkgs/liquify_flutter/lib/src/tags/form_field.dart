@@ -26,8 +26,7 @@ class FormFieldTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('form_field').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class FormFieldTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'form_field',
         nonFilterContent,
@@ -110,17 +108,17 @@ class FormFieldTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final onSaved =
         resolveStringActionCallback(
-          evaluator,
-          onSavedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onSavedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     if (onSaved != null) {
       config.onSaved = (value) {
         baseEvent['value'] = value;
@@ -162,9 +160,10 @@ FormField<String> _buildFormField(
       }
       if (state.hasError && state.errorText != null) {
         final theme = Theme.of(state.context);
-        final style =
-            config.errorTextStyle ??
-            theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error);
+        final style = config.errorTextStyle ??
+            theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.error,
+            );
         output.add(
           Padding(
             padding: const EdgeInsets.only(top: 4),

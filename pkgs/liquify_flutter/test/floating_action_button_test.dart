@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_utils.dart';
 
 void main() {
-  testWidgets('floating_action_button renders extended variant', (
-    tester,
-  ) async {
+  testWidgets('floating_action_button renders extended variant', (tester) async {
     await pumpTemplate(
       tester,
       '{% floating_action_button icon: "add" label: "Create" %}'

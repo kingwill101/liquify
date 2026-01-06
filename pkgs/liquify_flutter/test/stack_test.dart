@@ -10,10 +10,8 @@ void main() {
       '{% stack alignment: "center" %}{% text value: "A" %}{% endstack %}',
     );
 
-    final stackFinder = find.ancestor(
-      of: find.text('A'),
-      matching: find.byType(Stack),
-    );
+    final stackFinder =
+        find.ancestor(of: find.text('A'), matching: find.byType(Stack));
     final stack = tester.widget<Stack>(stackFinder.first);
     expect(stack.alignment, Alignment.center);
   });

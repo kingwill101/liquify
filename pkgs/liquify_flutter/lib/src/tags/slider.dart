@@ -73,10 +73,8 @@ class SliderTag extends WidgetTagBase with AsyncTag {
           config.autofocus = toBool(value);
           break;
         case 'semanticFormatterCallback':
-          config.semanticFormatterCallback = parseSliderSemanticFormatter(
-            evaluator,
-            value,
-          );
+          config.semanticFormatterCallback =
+              parseSliderSemanticFormatter(evaluator, value);
           break;
         case 'action':
           actionValue = value;
@@ -110,8 +108,8 @@ class SliderTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -120,21 +118,24 @@ class SliderTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'changed',
-      props: {'min': config.min, 'max': config.max},
+      props: {
+        'min': config.min,
+        'max': config.max,
+      },
     );
     final callback =
         resolveDoubleActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveDoubleActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveDoubleActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onChanged = callback == null
         ? null
         : (value) {
@@ -142,20 +143,23 @@ class SliderTag extends WidgetTagBase with AsyncTag {
             callback(value);
           };
 
-    final startEvent = {...baseEvent, 'event': 'start'};
+    final startEvent = {
+      ...baseEvent,
+      'event': 'start',
+    };
     final startCallback =
         resolveDoubleActionCallback(
-          evaluator,
-          onChangeStartValue,
-          event: startEvent,
-          actionValue: actionName,
-        ) ??
-        resolveDoubleActionCallback(
-          evaluator,
-          actionValue,
-          event: startEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangeStartValue,
+              event: startEvent,
+              actionValue: actionName,
+            ) ??
+            resolveDoubleActionCallback(
+              evaluator,
+              actionValue,
+              event: startEvent,
+              actionValue: actionName,
+            );
     config.onChangeStart = startCallback == null
         ? null
         : (value) {
@@ -163,20 +167,23 @@ class SliderTag extends WidgetTagBase with AsyncTag {
             startCallback(value);
           };
 
-    final endEvent = {...baseEvent, 'event': 'end'};
+    final endEvent = {
+      ...baseEvent,
+      'event': 'end',
+    };
     final endCallback =
         resolveDoubleActionCallback(
-          evaluator,
-          onChangeEndValue,
-          event: endEvent,
-          actionValue: actionName,
-        ) ??
-        resolveDoubleActionCallback(
-          evaluator,
-          actionValue,
-          event: endEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangeEndValue,
+              event: endEvent,
+              actionValue: actionName,
+            ) ??
+            resolveDoubleActionCallback(
+              evaluator,
+              actionValue,
+              event: endEvent,
+              actionValue: actionName,
+            );
     config.onChangeEnd = endCallback == null
         ? null
         : (value) {

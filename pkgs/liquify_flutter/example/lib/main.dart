@@ -72,7 +72,9 @@ class LiquifyExampleApp extends StatelessWidget {
         ),
         iconTheme: const IconThemeData(color: Color(0xFF94A3B8)),
         textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: const Color(0xFF93C5FD)),
+          style: TextButton.styleFrom(
+            foregroundColor: const Color(0xFF93C5FD),
+          ),
         ),
         scaffoldBackgroundColor: _AppShellState._backgroundColor,
       ),
@@ -111,7 +113,10 @@ class _AppShellState extends State<AppShell> {
   static const _controlsFeedbackAppId = 'controls_feedback';
   static const _controlsMotionAppId = 'controls_motion';
   static const _controlsDataAppId = 'controls_data';
-  static const Set<String> _asyncAppIds = {_homeAppId, _controlsMotionAppId};
+  static const Set<String> _asyncAppIds = {
+    _homeAppId,
+    _controlsMotionAppId,
+  };
   static const List<String> _controlsAppIds = [
     _controlsHubAppId,
     _controlsInputsAppId,
@@ -133,9 +138,8 @@ class _AppShellState extends State<AppShell> {
   final ValueNotifier<bool> _notificationsEnabled = ValueNotifier(true);
   final ValueNotifier<String> _deliveryTiming = ValueNotifier('Daily');
   final ValueNotifier<String> _chipChoice = ValueNotifier('Daily');
-  final ValueNotifier<Set<String>> _chipFilters = ValueNotifier(<String>{
-    'Email',
-  });
+  final ValueNotifier<Set<String>> _chipFilters =
+      ValueNotifier(<String>{'Email'});
   final ValueNotifier<bool> _chipInputSelected = ValueNotifier(false);
   final ValueNotifier<int> _chipActionCount = ValueNotifier(3);
   final ValueNotifier<bool> _autoSyncEnabled = ValueNotifier(true);
@@ -144,51 +148,47 @@ class _AppShellState extends State<AppShell> {
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<String> _searchQuery = ValueNotifier('');
   final ValueNotifier<String> _profileName = ValueNotifier('Avery');
-  final ValueNotifier<String> _profileEmail = ValueNotifier(
-    'avery@example.com',
-  );
+  final ValueNotifier<String> _profileEmail =
+      ValueNotifier('avery@example.com');
   final ValueNotifier<int> _buttonTapCount = ValueNotifier(0);
   final ValueNotifier<String> _dropdownValue = ValueNotifier('Morning');
   final ValueNotifier<int> _stepIndex = ValueNotifier(0);
-  final ValueNotifier<DateTime> _scheduledDate = ValueNotifier(
-    DateTime(2025, 12, 24),
-  );
-  final ValueNotifier<TimeOfDay> _scheduledTime = ValueNotifier(
-    const TimeOfDay(hour: 9, minute: 30),
-  );
+  final ValueNotifier<DateTime> _scheduledDate =
+      ValueNotifier(DateTime(2025, 12, 24));
+  final ValueNotifier<TimeOfDay> _scheduledTime =
+      ValueNotifier(const TimeOfDay(hour: 9, minute: 30));
   final ValueNotifier<int> _iconToggleIndex = ValueNotifier(0);
   final ValueNotifier<int> _navIndex = ValueNotifier(0);
   final ValueNotifier<int> _railIndex = ValueNotifier(0);
-  final ValueNotifier<List<Map<String, dynamic>>> _reorderItems = ValueNotifier(
-    [
-      {'id': 'draft', 'title': 'Draft spec', 'meta': 'PM review'},
-      {'id': 'build', 'title': 'Build widgets', 'meta': 'In progress'},
-      {'id': 'ship', 'title': 'Ship update', 'meta': 'Next sprint'},
-    ],
-  );
+  final ValueNotifier<List<Map<String, dynamic>>> _reorderItems =
+      ValueNotifier([
+    {'id': 'draft', 'title': 'Draft spec', 'meta': 'PM review'},
+    {'id': 'build', 'title': 'Build widgets', 'meta': 'In progress'},
+    {'id': 'ship', 'title': 'Ship update', 'meta': 'Next sprint'},
+  ]);
   final ValueNotifier<List<Map<String, dynamic>>> _dataTableRows =
       ValueNotifier([
-        {
-          'id': 'prototype',
-          'selected': true,
-          'cells': ['Prototype', 'Avery', 'Review'],
-        },
-        {
-          'id': 'widgets',
-          'selected': false,
-          'cells': ['Widget pass', 'Morgan', 'Build'],
-        },
-        {
-          'id': 'handoff',
-          'selected': false,
-          'cells': ['Launch prep', 'Riley', 'Ready'],
-        },
-        {
-          'id': 'publish',
-          'selected': false,
-          'cells': ['Publish', 'Kai', 'Queued'],
-        },
-      ]);
+    {
+      'id': 'prototype',
+      'selected': true,
+      'cells': ['Prototype', 'Avery', 'Review'],
+    },
+    {
+      'id': 'widgets',
+      'selected': false,
+      'cells': ['Widget pass', 'Morgan', 'Build'],
+    },
+    {
+      'id': 'handoff',
+      'selected': false,
+      'cells': ['Launch prep', 'Riley', 'Ready'],
+    },
+    {
+      'id': 'publish',
+      'selected': false,
+      'cells': ['Publish', 'Kai', 'Queued'],
+    },
+  ]);
   final ValueNotifier<int?> _dataSortColumn = ValueNotifier(0);
   final ValueNotifier<bool> _dataSortAscending = ValueNotifier(true);
   final ValueNotifier<int> _dataRowsPerPage = ValueNotifier(3);
@@ -196,8 +196,16 @@ class _AppShellState extends State<AppShell> {
   double? _lastResultValue;
   bool _justEvaluated = false;
   late final Parser<num> _calculatorParser = _buildCalculatorParser();
-  static const List<String> _segmentLabels = ['Daily', 'Weekly', 'Monthly'];
-  static const List<String> _toggleLabels = ['Focus', 'List', 'Chart'];
+  static const List<String> _segmentLabels = [
+    'Daily',
+    'Weekly',
+    'Monthly',
+  ];
+  static const List<String> _toggleLabels = [
+    'Focus',
+    'List',
+    'Chart',
+  ];
   static const List<Map<String, String>> _dropdownItems = [
     {'label': 'Morning', 'value': 'Morning', 'icon': 'star'},
     {'label': 'Afternoon', 'value': 'Afternoon', 'icon': 'favorite'},
@@ -232,7 +240,11 @@ class _AppShellState extends State<AppShell> {
         ),
       )
       .toList();
-  static const List<String> _iconToggleIcons = ['home', 'search', 'settings'];
+  static const List<String> _iconToggleIcons = [
+    'home',
+    'search',
+    'settings',
+  ];
   static const List<Map<String, String>> _navItems = [
     {'label': 'Home', 'icon': 'home'},
     {'label': 'Search', 'icon': 'search'},
@@ -319,9 +331,11 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
-    _rootFuture =
-        widget.rootFuture ??
-        AssetBundleRoot.load(basePath: 'assets/apps', throwOnMissing: true);
+    _rootFuture = widget.rootFuture ??
+        AssetBundleRoot.load(
+          basePath: 'assets/apps',
+          throwOnMissing: true,
+        );
     _searchController.addListener(_handleSearchChanged);
     _path.push(HomeRoute());
   }
@@ -394,7 +408,11 @@ class _AppShellState extends State<AppShell> {
   List<String> get debugControlAppIds =>
       List<String>.unmodifiable(_controlsAppIds);
 
-  void _handleAction(String appId, String action, Map<String, dynamic> event) {
+  void _handleAction(
+    String appId,
+    String action,
+    Map<String, dynamic> event,
+  ) {
     if (action.startsWith('page:')) {
       final target = action.substring(5);
       if (target == 'back') {
@@ -455,10 +473,8 @@ class _AppShellState extends State<AppShell> {
         break;
       case '⌫':
         if (_expression.value.isNotEmpty) {
-          _expression.value = _expression.value.substring(
-            0,
-            _expression.value.length - 1,
-          );
+          _expression.value =
+              _expression.value.substring(0, _expression.value.length - 1);
         }
         _display.value = _expression.value.isEmpty ? '0' : _expression.value;
         _justEvaluated = false;
@@ -611,7 +627,8 @@ class _AppShellState extends State<AppShell> {
             final hour = int.tryParse(parts[0]);
             final minute = int.tryParse(parts[1]);
             if (hour != null && minute != null) {
-              _scheduledTime.value = TimeOfDay(hour: hour, minute: minute);
+              _scheduledTime.value =
+                  TimeOfDay(hour: hour, minute: minute);
             }
           }
         }
@@ -864,7 +881,9 @@ class _AppShellState extends State<AppShell> {
             _buildLiquidScreen(
               appId: _homeAppId,
               template: 'home/app.liquid',
-              data: {'apps': _apps},
+              data: {
+                'apps': _apps,
+              },
             ),
           );
         }
@@ -893,96 +912,98 @@ class _AppShellState extends State<AppShell> {
                   },
                 )
               : _controlsAppIds.contains(route.appId)
-              ? AnimatedBuilder(
-                  animation: Listenable.merge([
-                    _sliderValue,
-                    _segmentIndex,
-                    _toggleIndex,
-                    _notificationsEnabled,
-                    _deliveryTiming,
-                    _chipChoice,
-                    _chipFilters,
-                    _chipInputSelected,
-                    _chipActionCount,
-                    _autoSyncEnabled,
-                    _quietHoursEnabled,
-                    _motionEnabled,
-                    _searchQuery,
-                    _profileName,
-                    _profileEmail,
-                    _buttonTapCount,
-                    _dropdownValue,
-                    _stepIndex,
-                    _scheduledDate,
-                    _scheduledTime,
-                    _iconToggleIndex,
-                    _navIndex,
-                    _railIndex,
-                    _reorderItems,
-                    _dataTableRows,
-                    _dataSortColumn,
-                    _dataSortAscending,
-                    _dataRowsPerPage,
-                    _dataPageStart,
-                  ]),
-                  builder: (context, child) {
-                    return _buildLiquidScreen(
-                      appId: route.appId,
-                      template: '${route.appId}/app.liquid',
-                      data: {
-                        'segment_labels': _segmentLabels,
-                        'segment_index': _segmentIndex.value,
-                        'toggle_labels': _toggleLabels,
-                        'toggle_index': _toggleIndex.value,
-                        'slider_value': _sliderValue.value,
-                        'notifications_enabled': _notificationsEnabled.value,
-                        'delivery_timing': _deliveryTiming.value,
-                        'chip_choice': _chipChoice.value,
-                        'chip_filter_email': _chipFilters.value.contains(
-                          'Email',
-                        ),
-                        'chip_filter_push': _chipFilters.value.contains('Push'),
-                        'chip_filter_sms': _chipFilters.value.contains('SMS'),
-                        'chip_input_selected': _chipInputSelected.value,
-                        'chip_action_count': _chipActionCount.value,
-                        'switch_auto_sync': _autoSyncEnabled.value,
-                        'switch_quiet_hours': _quietHoursEnabled.value,
-                        'motion_enabled': _motionEnabled.value,
-                        'search_controller': _searchController,
-                        'search_query': _searchQuery.value.isEmpty
-                            ? 'Start typing to see the value.'
-                            : _searchQuery.value,
-                        'profile_name': _profileName.value,
-                        'profile_email': _profileEmail.value,
-                        'button_tap_count': _buttonTapCount.value,
-                        'dropdown_items': _dropdownItems,
-                        'dropdown_menu_items': _dropdownMenuItems,
-                        'dropdown_value': _dropdownValue.value,
-                        'step_items': _stepItems,
-                        'stepper_steps': _stepperSteps,
-                        'step_index': _stepIndex.value,
-                        'scheduled_date': _scheduledDate.value,
-                        'scheduled_time': _scheduledTime.value,
-                        'icon_toggle_icons': _iconToggleIcons,
-                        'icon_toggle_index': _iconToggleIndex.value,
-                        'nav_items': _navItems,
-                        'nav_bottom_items': _navBottomItems,
-                        'nav_rail_destinations': _navRailDestinations,
-                        'nav_index': _navIndex.value,
-                        'rail_index': _railIndex.value,
-                        'list_preview_items': _listPreviewItems,
-                        'reorder_items': _reorderItems.value,
-                        'table_rows': _tableRows,
-                        'table_column_widths': _tableColumnWidths,
-                        'table_border': _tableBorder,
-                        'data_table_columns': _dataTableColumns,
-                        'data_table_rows': _dataTableRows.value,
-                        'data_sort_column': _dataSortColumn.value,
-                        'data_sort_ascending': _dataSortAscending.value,
-                        'data_rows_per_page': _dataRowsPerPage.value,
-                        'data_rows_per_page_options': _dataRowsPerPageOptions,
-                        'data_page_start': _dataPageStart.value,
-                      },
+                  ? AnimatedBuilder(
+                      animation: Listenable.merge([
+                        _sliderValue,
+                        _segmentIndex,
+                        _toggleIndex,
+                        _notificationsEnabled,
+                        _deliveryTiming,
+                        _chipChoice,
+                        _chipFilters,
+                        _chipInputSelected,
+                        _chipActionCount,
+                        _autoSyncEnabled,
+                        _quietHoursEnabled,
+                        _motionEnabled,
+                        _searchQuery,
+                        _profileName,
+                        _profileEmail,
+                        _buttonTapCount,
+                        _dropdownValue,
+                        _stepIndex,
+                        _scheduledDate,
+                        _scheduledTime,
+                        _iconToggleIndex,
+                        _navIndex,
+                        _railIndex,
+                        _reorderItems,
+                        _dataTableRows,
+                        _dataSortColumn,
+                        _dataSortAscending,
+                        _dataRowsPerPage,
+                        _dataPageStart,
+                      ]),
+                      builder: (context, child) {
+                        return _buildLiquidScreen(
+                          appId: route.appId,
+                          template: '${route.appId}/app.liquid',
+                          data: {
+                            'segment_labels': _segmentLabels,
+                            'segment_index': _segmentIndex.value,
+                            'toggle_labels': _toggleLabels,
+                            'toggle_index': _toggleIndex.value,
+                            'slider_value': _sliderValue.value,
+                            'notifications_enabled': _notificationsEnabled.value,
+                            'delivery_timing': _deliveryTiming.value,
+                            'chip_choice': _chipChoice.value,
+                            'chip_filter_email':
+                                _chipFilters.value.contains('Email'),
+                            'chip_filter_push':
+                                _chipFilters.value.contains('Push'),
+                            'chip_filter_sms':
+                                _chipFilters.value.contains('SMS'),
+                            'chip_input_selected': _chipInputSelected.value,
+                            'chip_action_count': _chipActionCount.value,
+                            'switch_auto_sync': _autoSyncEnabled.value,
+                            'switch_quiet_hours': _quietHoursEnabled.value,
+                            'motion_enabled': _motionEnabled.value,
+                            'search_controller': _searchController,
+                            'search_query': _searchQuery.value.isEmpty
+                                ? 'Start typing to see the value.'
+                                : _searchQuery.value,
+                            'profile_name': _profileName.value,
+                            'profile_email': _profileEmail.value,
+                            'button_tap_count': _buttonTapCount.value,
+                            'dropdown_items': _dropdownItems,
+                            'dropdown_menu_items': _dropdownMenuItems,
+                            'dropdown_value': _dropdownValue.value,
+                            'step_items': _stepItems,
+                            'stepper_steps': _stepperSteps,
+                            'step_index': _stepIndex.value,
+                            'scheduled_date': _scheduledDate.value,
+                            'scheduled_time': _scheduledTime.value,
+                            'icon_toggle_icons': _iconToggleIcons,
+                            'icon_toggle_index': _iconToggleIndex.value,
+                            'nav_items': _navItems,
+                            'nav_bottom_items': _navBottomItems,
+                            'nav_rail_destinations': _navRailDestinations,
+                            'nav_index': _navIndex.value,
+                            'rail_index': _railIndex.value,
+                            'list_preview_items': _listPreviewItems,
+                            'reorder_items': _reorderItems.value,
+                            'table_rows': _tableRows,
+                            'table_column_widths': _tableColumnWidths,
+                            'table_border': _tableBorder,
+                            'data_table_columns': _dataTableColumns,
+                            'data_table_rows': _dataTableRows.value,
+                            'data_sort_column': _dataSortColumn.value,
+                            'data_sort_ascending': _dataSortAscending.value,
+                            'data_rows_per_page': _dataRowsPerPage.value,
+                            'data_rows_per_page_options':
+                                _dataRowsPerPageOptions,
+                            'data_page_start': _dataPageStart.value,
+                          },
                     );
                   },
                 )
@@ -990,7 +1011,9 @@ class _AppShellState extends State<AppShell> {
                   appId: route.appId,
                   template: '${route.appId}/app.liquid',
                   data: route.appId == _imageViewerAppId
-                      ? {'demo_image_bytes': _demoImageBytes}
+                      ? {
+                          'demo_image_bytes': _demoImageBytes,
+                        }
                       : const {},
                 );
           return _transition(page);
@@ -999,7 +1022,9 @@ class _AppShellState extends State<AppShell> {
           _buildLiquidScreen(
             appId: _homeAppId,
             template: 'home/app.liquid',
-            data: {'apps': _apps},
+            data: {
+              'apps': _apps,
+            },
           ),
         );
       },
@@ -1055,10 +1080,8 @@ class _LiquidScreenState extends State<LiquidScreen> {
   int? _lastDataHash;
   Size? _lastSize;
   String? _lastTemplate;
-  static const bool _verbose = bool.fromEnvironment(
-    'LIQUIFY_TEST_VERBOSE',
-    defaultValue: false,
-  );
+  static const bool _verbose =
+      bool.fromEnvironment('LIQUIFY_TEST_VERBOSE', defaultValue: false);
 
   Widget _decorateEmptyRender(Widget widget) {
     if (!kDebugMode) {
@@ -1094,22 +1117,18 @@ class _LiquidScreenState extends State<LiquidScreen> {
   int _hashData(Map<String, dynamic> data) {
     final entries = data.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
-    return Object.hashAll(
-      entries.map((entry) {
-        return Object.hash(entry.key, _hashValue(entry.value));
-      }),
-    );
+    return Object.hashAll(entries.map((entry) {
+      return Object.hash(entry.key, _hashValue(entry.value));
+    }));
   }
 
   int _hashValue(Object? value) {
     if (value is Map) {
       final entries = value.entries.toList()
         ..sort((a, b) => a.key.toString().compareTo(b.key.toString()));
-      return Object.hashAll(
-        entries.map((entry) {
-          return Object.hash(entry.key.toString(), _hashValue(entry.value));
-        }),
-      );
+      return Object.hashAll(entries.map((entry) {
+        return Object.hash(entry.key.toString(), _hashValue(entry.value));
+      }));
     }
     if (value is Iterable) {
       return Object.hashAll(value.map(_hashValue));
@@ -1177,8 +1196,7 @@ class _LiquidScreenState extends State<LiquidScreen> {
         }
 
         final dataHash = _hashData(mergedData);
-        final shouldRefresh =
-            _renderFuture == null ||
+        final shouldRefresh = _renderFuture == null ||
             _lastTemplate != widget.template ||
             _lastDataHash != dataHash ||
             _lastSize != size;

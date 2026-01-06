@@ -31,7 +31,10 @@ List<DataColumn> buildDataColumns(
         key: tagName,
         action: onSortValue is String ? onSortValue : actionValue,
         event: 'sort',
-        props: {'columnIndex': index, 'label': labelValue},
+        props: {
+          'columnIndex': index,
+          'label': labelValue,
+        },
       );
       final onSort = resolveSortActionCallback(
         evaluator,
@@ -39,14 +42,12 @@ List<DataColumn> buildDataColumns(
         event: event,
         actionValue: onSortValue is String ? onSortValue : actionValue,
       );
-      columns.add(
-        DataColumn(
-          label: label,
-          numeric: numeric,
-          tooltip: tooltip,
-          onSort: onSort,
-        ),
-      );
+      columns.add(DataColumn(
+        label: label,
+        numeric: numeric,
+        tooltip: tooltip,
+        onSort: onSort,
+      ));
       index++;
       continue;
     }
@@ -74,13 +75,7 @@ List<DataRow> buildDataRows(
     }
     if (entry is Map) {
       final cellsValue = entry['cells'] ?? entry['values'] ?? entry['children'];
-      final cells = _buildCells(
-        evaluator,
-        cellsValue,
-        tagName,
-        actionValue,
-        index,
-      );
+      final cells = _buildCells(evaluator, cellsValue, tagName, actionValue, index);
       if (cells.isEmpty) {
         index++;
         continue;
@@ -88,15 +83,17 @@ List<DataRow> buildDataRows(
       final selected = toBool(entry['selected']) ?? false;
       final color = _resolveRowColor(entry['color']);
       final rowKey = _resolveKey(entry['key'] ?? entry['id'] ?? index);
-      final onSelectValue =
-          entry['onSelectChanged'] ?? entry['action'] ?? actionValue;
+      final onSelectValue = entry['onSelectChanged'] ?? entry['action'] ?? actionValue;
       final event = buildWidgetEvent(
         tag: tagName,
         id: tagName,
         key: tagName,
         action: onSelectValue is String ? onSelectValue : actionValue,
         event: 'row_selected',
-        props: {'rowIndex': index, 'row': entry},
+        props: {
+          'rowIndex': index,
+          'row': entry,
+        },
       );
       final onSelect = resolveBoolActionCallback(
         evaluator,
@@ -110,15 +107,13 @@ List<DataRow> buildDataRows(
               event['value'] = value;
               onSelect(value);
             };
-      rows.add(
-        DataRow(
-          key: rowKey,
-          selected: selected,
-          onSelectChanged: resolvedOnSelect,
-          color: color,
-          cells: cells,
-        ),
-      );
+      rows.add(DataRow(
+        key: rowKey,
+        selected: selected,
+        onSelectChanged: resolvedOnSelect,
+        color: color,
+        cells: cells,
+      ));
       index++;
       continue;
     }
@@ -146,16 +141,7 @@ List<DataCell> _buildCells(
     final cells = <DataCell>[];
     var columnIndex = 0;
     for (final entry in value) {
-      cells.add(
-        _buildCell(
-          evaluator,
-          entry,
-          tagName,
-          actionValue,
-          rowIndex,
-          columnIndex,
-        ),
-      );
+      cells.add(_buildCell(evaluator, entry, tagName, actionValue, rowIndex, columnIndex));
       columnIndex++;
     }
     return cells;
@@ -163,7 +149,9 @@ List<DataCell> _buildCells(
   if (value == null) {
     return const [];
   }
-  return [_buildCell(evaluator, value, tagName, actionValue, rowIndex, 0)];
+  return [
+    _buildCell(evaluator, value, tagName, actionValue, rowIndex, 0),
+  ];
 }
 
 DataCell _buildCell(
@@ -189,7 +177,10 @@ DataCell _buildCell(
       key: tagName,
       action: onTapValue is String ? onTapValue : actionValue,
       event: 'cell_tap',
-      props: {'rowIndex': rowIndex, 'columnIndex': columnIndex},
+      props: {
+        'rowIndex': rowIndex,
+        'columnIndex': columnIndex,
+      },
     );
     final onTap = resolveActionCallback(
       evaluator,

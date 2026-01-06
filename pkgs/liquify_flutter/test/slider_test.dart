@@ -11,9 +11,7 @@ void main() {
     expect(slider.value, closeTo(0.4, 0.001));
   });
 
-  testWidgets('slider tag wires start/end callbacks and semantics', (
-    tester,
-  ) async {
+  testWidgets('slider tag wires start/end callbacks and semantics', (tester) async {
     double? startValue;
     double? endValue;
     await pumpTemplate(

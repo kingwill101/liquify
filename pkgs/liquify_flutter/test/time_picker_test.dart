@@ -10,11 +10,15 @@ void main() {
       tester,
       '{% time_picker value: "09:30" entryMode: "input" action: "pick" confirmText: "Select" helpText: "Pick a time" %}',
       data: {
-        'actions': {'pick': (String value) => selected = value},
+        'actions': {
+          'pick': (String value) => selected = value,
+        },
       },
     );
 
-    await tester.tap(find.byWidgetPredicate((widget) => widget is TextButton));
+    await tester.tap(
+      find.byWidgetPredicate((widget) => widget is TextButton),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Pick a time'), findsOneWidget);
     await tester.tap(find.text('Select'));

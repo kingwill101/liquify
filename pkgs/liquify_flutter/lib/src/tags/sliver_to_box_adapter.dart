@@ -44,8 +44,7 @@ class SliverToBoxAdapterTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_to_box_adapter').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -56,9 +55,8 @@ class SliverToBoxAdapterTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_to_box_adapter',
         nonFilterContent,

@@ -8,7 +8,10 @@ Future<Widget> _renderLuaTemplate(String template) async {
   env.setRegister('_liquify_flutter_strict_props', true);
   env.setRegister('_liquify_flutter_strict_tags', true);
   registerFlutterTags(environment: env);
-  return FlutterTemplate.parse(template, environment: env).renderAsync();
+  return FlutterTemplate.parse(
+    template,
+    environment: env,
+  ).renderAsync();
 }
 
 void main() {
@@ -17,8 +20,8 @@ void main() {
 {% lua assign: payload %}
   return { label = "Lua", count = 3 }
 {% endlua %}
-{% text value: payload.label %}
-{% text value: payload.count %}
+{% text data: payload.label %}
+{% text data: payload.count %}
 ''';
     final widget = await _renderLuaTemplate(template);
     await tester.pumpWidget(MaterialApp(home: Scaffold(body: widget)));
@@ -32,6 +35,9 @@ void main() {
   unknown_api()
 {% endlua %}
 ''';
-    await expectLater(_renderLuaTemplate(template), throwsA(isA<Exception>()));
+    await expectLater(
+      _renderLuaTemplate(template),
+      throwsA(isA<Exception>()),
+    );
   });
 }

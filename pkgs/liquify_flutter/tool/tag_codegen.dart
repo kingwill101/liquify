@@ -81,7 +81,10 @@ void main(List<String> args) {
   for (final spec in specs) {
     final outPath = 'lib/src/tags/${spec.tag}.dart';
     _writeFile(outPath, _renderTag(spec));
-    _writeFile('test/generated/${spec.tag}_test.dart', _renderTest(spec));
+    _writeFile(
+      'test/generated/${spec.tag}_test.dart',
+      _renderTest(spec),
+    );
   }
 
   _writeFile('lib/src/generated_tags.dart', _renderGeneratedExports(specs));
@@ -138,8 +141,10 @@ TagSpec _loadSpec(YamlMap raw, String sourcePath) {
   }
   final className = raw['className']?.toString() ?? '${widget}Tag';
   final importsRaw = raw['imports'] as YamlList?;
-  final imports =
-      importsRaw?.map((entry) => entry.toString()).toList() ?? const <String>[];
+  final imports = importsRaw
+          ?.map((entry) => entry.toString())
+          .toList() ??
+      const <String>[];
 
   final childrenRaw = raw['children'] as YamlMap?;
   ChildSpec? children;
@@ -164,8 +169,9 @@ TagSpec _loadSpec(YamlMap raw, String sourcePath) {
       final aliasesRaw = map['aliases'] as YamlList?;
       final defaultValue = _formatDefault(map['default']);
       final parser = map['parser']?.toString();
-      final aliases =
-          aliasesRaw?.map((alias) => alias.toString()).toList() ??
+      final aliases = aliasesRaw
+              ?.map((alias) => alias.toString())
+              .toList() ??
           const <String>[];
       properties.add(
         PropertySpec(
@@ -195,8 +201,7 @@ String _renderTag(TagSpec spec) {
   final importSet = <String>{};
   importSet.addAll(spec.imports);
   if (!importSet.any(
-    (value) =>
-        value.contains('package:flutter/material.dart') ||
+    (value) => value.contains('package:flutter/material.dart') ||
         value.contains('package:flutter/widgets.dart'),
   )) {
     importSet.add('package:flutter/widgets.dart');
@@ -208,16 +213,12 @@ String _renderTag(TagSpec spec) {
   buffer.writeln("import 'tag_helpers.dart';");
   buffer.writeln("import 'widget_tag_base.dart';\n");
 
-  buffer.writeln(
-    'class ${spec.className} extends WidgetTagBase '
-    'with CustomTagParser, AsyncTag {',
-  );
+  buffer.writeln('class ${spec.className} extends WidgetTagBase '
+      'with CustomTagParser, AsyncTag {');
   buffer.writeln('  ${spec.className}(super.content, super.filters);\n');
 
   buffer.writeln('  @override');
-  buffer.writeln(
-    '  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {',
-  );
+  buffer.writeln('  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {');
   buffer.writeln('    final config = _parseConfig(evaluator);');
   buffer.writeln('    final children = captureChildrenSync(evaluator);');
   buffer.writeln('    buffer.write(_build${spec.widget}(config, children));');
@@ -225,8 +226,7 @@ String _renderTag(TagSpec spec) {
 
   buffer.writeln('  @override');
   buffer.writeln(
-    '  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {',
-  );
+      '  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {');
   buffer.writeln('    final config = _parseConfig(evaluator);');
   buffer.writeln('    final children = await captureChildrenAsync(evaluator);');
   buffer.writeln('    buffer.write(_build${spec.widget}(config, children));');
@@ -240,19 +240,14 @@ String _renderTag(TagSpec spec) {
   buffer.writeln('        ref0(filter).star().trim() &');
   buffer.writeln('        tagEnd();');
   buffer.writeln(
-    "    final endTag = tagStart() & string('end${spec.tag}').trim() & tagEnd();",
-  );
+      "    final endTag = tagStart() & string('end${spec.tag}').trim() & tagEnd();");
   buffer.writeln(
-    '    return (start & ref0(element).starLazy(endTag) & endTag).map((values) {',
-  );
+      '    return (start & ref0(element).starLazy(endTag) & endTag).map((values) {');
   buffer.writeln(
-    '      final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);',
-  );
+      '      final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);');
   buffer.writeln('      final filters = (values[3] as List).cast<Filter>();');
   buffer.writeln('      final nonFilterContent =');
-  buffer.writeln(
-    '          content.where((node) => node is! Filter).toList();',
-  );
+  buffer.writeln('          content.where((node) => node is! Filter).toList();');
   buffer.writeln('      return Tag(');
   buffer.writeln("        '${spec.tag}',");
   buffer.writeln('        nonFilterContent,');
@@ -274,8 +269,7 @@ String _renderTag(TagSpec spec) {
       buffer.writeln("        case '$alias':");
     }
     buffer.writeln(
-      '          config.${prop.name} = ${_parseExpression(prop, 'value')};',
-    );
+        '          config.${prop.name} = ${_parseExpression(prop, 'value')};');
     buffer.writeln('          break;');
   }
   buffer.writeln('        default:');
@@ -286,8 +280,7 @@ String _renderTag(TagSpec spec) {
   for (final prop in spec.properties.where((p) => p.required)) {
     buffer.writeln('    if (config.${prop.name} == null) {');
     buffer.writeln(
-      "      throw Exception('${spec.tag} tag requires \"${prop.name}\"');",
-    );
+        "      throw Exception('${spec.tag} tag requires \"${prop.name}\"');");
     buffer.writeln('    }');
   }
   buffer.writeln('    return config;');
@@ -301,8 +294,7 @@ String _renderTag(TagSpec spec) {
   buffer.writeln('}\n');
 
   buffer.writeln(
-    'Widget _build${spec.widget}(_${spec.widget}Config config, List<Widget> children) {',
-  );
+      'Widget _build${spec.widget}(_${spec.widget}Config config, List<Widget> children) {');
   final childSpec = spec.children;
   if (childSpec != null && childSpec.kind != 'none') {
     buffer.writeln('  final child = children.isNotEmpty');
@@ -333,7 +325,8 @@ String _renderGeneratedExports(List<TagSpec> specs) {
   buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.');
   buffer.writeln('// Run: dart run tool/tag_codegen.dart\n');
   for (final spec in specs) {
-    buffer.writeln("export 'tags/${spec.tag}.dart' show ${spec.className};");
+    buffer.writeln(
+        "export 'tags/${spec.tag}.dart' show ${spec.className};");
   }
   return buffer.toString();
 }
@@ -349,8 +342,7 @@ String _renderGeneratedRegistry(List<TagSpec> specs) {
   buffer.writeln('\nvoid registerGeneratedTags(Environment? environment) {');
   for (final spec in specs) {
     buffer.writeln(
-      "  _registerGeneratedTag('${spec.tag}', (content, filters) => ${spec.className}(content, filters), environment);",
-    );
+        "  _registerGeneratedTag('${spec.tag}', (content, filters) => ${spec.className}(content, filters), environment);");
   }
   buffer.writeln('}');
   buffer.writeln('\nvoid _registerGeneratedTag(');

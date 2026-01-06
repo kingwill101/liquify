@@ -10,7 +10,11 @@ class SnackBarActionTag extends WidgetTagBase with AsyncTag {
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    setPropertyValue(evaluator.context, 'action', _buildAction(evaluator));
+    setPropertyValue(
+      evaluator.context,
+      'action',
+      _buildAction(evaluator),
+    );
   }
 
   @override
@@ -18,7 +22,11 @@ class SnackBarActionTag extends WidgetTagBase with AsyncTag {
     Evaluator evaluator,
     Buffer buffer,
   ) async {
-    setPropertyValue(evaluator.context, 'action', _buildAction(evaluator));
+    setPropertyValue(
+      evaluator.context,
+      'action',
+      _buildAction(evaluator),
+    );
   }
 
   SnackBarAction _buildAction(Evaluator evaluator) {

@@ -43,20 +43,19 @@ class IntrinsicWidthTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('intrinsic_width').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag = tagStart() & string('endintrinsic_width').trim() & tagEnd();
+    final endTag =
+        tagStart() & string('endintrinsic_width').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'intrinsic_width',
         nonFilterContent,
@@ -125,3 +124,4 @@ Widget _buildIntrinsicWidth(
     child: child,
   );
 }
+

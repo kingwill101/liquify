@@ -108,8 +108,8 @@ class DatePickerTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -122,17 +122,17 @@ class DatePickerTag extends WidgetTagBase with AsyncTag {
     config.event = baseEvent;
     config.onChanged =
         resolveStringActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     return config;
   }
 }
@@ -160,8 +160,10 @@ class _DatePickerConfig {
 
 Widget _buildDatePicker(_DatePickerConfig config) {
   final resolved = config.value ?? DateTime.now();
-  final firstDate = config.firstDate ?? DateTime(resolved.year - 5, 1, 1);
-  final lastDate = config.lastDate ?? DateTime(resolved.year + 5, 12, 31);
+  final firstDate = config.firstDate ??
+      DateTime(resolved.year - 5, 1, 1);
+  final lastDate = config.lastDate ??
+      DateTime(resolved.year + 5, 12, 31);
   final clamped = _clampDate(resolved, firstDate, lastDate);
   final label = config.label ?? formatDate(clamped);
   final enabled = config.enabled ?? true;

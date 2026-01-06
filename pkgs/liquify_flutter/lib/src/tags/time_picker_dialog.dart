@@ -24,21 +24,18 @@ class TimePickerDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('time_picker_dialog').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endtime_picker_dialog').trim() & tagEnd();
+    final endTag = tagStart() & string('endtime_picker_dialog').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'time_picker_dialog',
         nonFilterContent,
@@ -85,10 +82,7 @@ class TimePickerDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.minuteLabelText = toStringValue(value);
           break;
         case 'onEntryModeChanged':
-          config.onEntryModeChanged = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onEntryModeChanged = resolveGenericValueChanged(evaluator, value);
           break;
         case 'orientation':
           config.orientation = parseOrientation(value);

@@ -44,8 +44,7 @@ class SliverFillRemainingTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_fill_remaining').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -56,9 +55,8 @@ class SliverFillRemainingTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_fill_remaining',
         nonFilterContent,
@@ -110,13 +108,12 @@ Widget _buildSliver(
     parser: (value) => value is Widget ? value : null,
   );
 
-  final child =
-      childOverride ??
+  final child = childOverride ??
       (children.isEmpty
           ? const SizedBox.shrink()
           : children.length == 1
-          ? children.first
-          : wrapChildren(children));
+              ? children.first
+              : wrapChildren(children));
 
   return SliverFillRemaining(
     hasScrollBody: config.hasScrollBody ?? true,

@@ -28,10 +28,8 @@ List<String> _listPageIds(String appId) {
 
 void main() {
   testWidgets('demo navigation harness (opt-in)', (tester) async {
-    const enabled = bool.fromEnvironment(
-      'LIQUIFY_DEMO_HARNESS',
-      defaultValue: false,
-    );
+    const enabled =
+        bool.fromEnvironment('LIQUIFY_DEMO_HARNESS', defaultValue: false);
     if (!enabled) {
       return;
     }
@@ -60,7 +58,8 @@ void main() {
     final appIds = <String>{
       ...state.debugAppIds as List<String>,
       ...state.debugControlAppIds as List<String>,
-    }.toList()..sort();
+    }.toList()
+      ..sort();
 
     Future<void> assertNoErrors(String label) async {
       await pumpForRender(tester);

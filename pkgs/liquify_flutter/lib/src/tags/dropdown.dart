@@ -146,8 +146,8 @@ class DropdownTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -156,21 +156,23 @@ class DropdownTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'changed',
-      props: {'count': config.items!.length},
+      props: {
+        'count': config.items!.length,
+      },
     );
     final callback =
         resolveStringActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onChanged = callback == null
         ? null
         : (value) {
@@ -204,7 +206,11 @@ class _DropdownConfig {
 }
 
 class _DropdownItem {
-  _DropdownItem({required this.label, required this.value, this.icon});
+  _DropdownItem({
+    required this.label,
+    required this.value,
+    this.icon,
+  });
 
   final String label;
   final String value;
@@ -219,7 +225,11 @@ class _DropdownItem {
     }
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [icon!, const SizedBox(width: 8), Text(label)],
+      children: [
+        icon!,
+        const SizedBox(width: 8),
+        Text(label),
+      ],
     );
   }
 }
@@ -236,8 +246,7 @@ Widget _buildDropdown(_DropdownConfig config) {
   return Builder(
     builder: (context) {
       final theme = Theme.of(context);
-      final defaultStyle =
-          theme.textTheme.bodyMedium?.copyWith(
+      final defaultStyle = theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurface,
           ) ??
           TextStyle(color: theme.colorScheme.onSurface);
@@ -284,7 +293,12 @@ List<_DropdownItem> _parseItems(Object? value) {
   if (value is Map) {
     value.forEach((key, entry) {
       final label = entry?.toString() ?? key.toString();
-      items.add(_DropdownItem(label: label, value: key.toString()));
+      items.add(
+        _DropdownItem(
+          label: label,
+          value: key.toString(),
+        ),
+      );
     });
     return items;
   }
@@ -316,6 +330,11 @@ List<_DropdownItem> _parseItems(Object? value) {
   if (value == null) {
     return items;
   }
-  items.add(_DropdownItem(label: value.toString(), value: value.toString()));
+  items.add(
+    _DropdownItem(
+      label: value.toString(),
+      value: value.toString(),
+    ),
+  );
   return items;
 }

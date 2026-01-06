@@ -6,25 +6,20 @@ import '../generated/type_filters.dart';
 import '../tags/tag_helpers.dart';
 
 void registerFlutterFilters(Environment environment) {
+  environment.registerLocalFilter('responsive',
+      (value, args, namedArgs) => _responsiveValue(environment, value, args, namedArgs));
   environment.registerLocalFilter(
-    'responsive',
-    (value, args, namedArgs) =>
-        _responsiveValue(environment, value, args, namedArgs),
-  );
+      'value_for',
+      (value, args, namedArgs) =>
+          _responsiveValue(environment, value, args, namedArgs));
   environment.registerLocalFilter(
-    'value_for',
-    (value, args, namedArgs) =>
-        _responsiveValue(environment, value, args, namedArgs),
-  );
+      'breakpoint_value',
+      (value, args, namedArgs) =>
+          _responsiveValue(environment, value, args, namedArgs));
   environment.registerLocalFilter(
-    'breakpoint_value',
-    (value, args, namedArgs) =>
-        _responsiveValue(environment, value, args, namedArgs),
-  );
-  environment.registerLocalFilter(
-    'edge_inset',
-    (value, args, namedArgs) => _edgeInsetValue(value, args, namedArgs),
-  );
+      'edge_inset',
+      (value, args, namedArgs) =>
+          _edgeInsetValue(value, args, namedArgs));
   registerGeneratedTypeFilters(environment);
 }
 

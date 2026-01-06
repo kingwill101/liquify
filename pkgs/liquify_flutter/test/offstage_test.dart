@@ -5,11 +5,14 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('offstage renders child when false', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% offstage offstage: false %}
   {% text value: "Onstage" %}
 {% endoffstage %}
-''');
+''',
+    );
 
     final widget = tester.widget<Offstage>(find.byType(Offstage).first);
     expect(widget.offstage, isFalse);

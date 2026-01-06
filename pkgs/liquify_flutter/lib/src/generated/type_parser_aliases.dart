@@ -23,10 +23,7 @@ AlignmentGeometry? parseAlignmentGeometry(Object? value) {
   return parseGeneratedAlignmentGeometry(value);
 }
 
-AlwaysStoppedAnimation? parseAlwaysStoppedAnimation(
-  Evaluator evaluator,
-  Object? value,
-) {
+AlwaysStoppedAnimation? parseAlwaysStoppedAnimation(Evaluator evaluator, Object? value) {
   return parseGeneratedAlwaysStoppedAnimation(evaluator, value);
 }
 
@@ -138,9 +135,7 @@ BottomNavigationBarItem? parseBottomNavigationBarItem(Object? value) {
   return parseGeneratedBottomNavigationBarItem(value);
 }
 
-BottomNavigationBarLandscapeLayout? parseBottomNavigationBarLandscapeLayout(
-  Object? value,
-) {
+BottomNavigationBarLandscapeLayout? parseBottomNavigationBarLandscapeLayout(Object? value) {
   return parseGeneratedBottomNavigationBarLandscapeLayout(value);
 }
 
@@ -240,10 +235,7 @@ ColorFilter? parseColorFilter(Object? value) {
   return parseGeneratedColorFilter(value);
 }
 
-ContentInsertionConfiguration? parseContentInsertionConfiguration(
-  Evaluator evaluator,
-  Object? value,
-) {
+ContentInsertionConfiguration? parseContentInsertionConfiguration(Evaluator evaluator, Object? value) {
   return parseGeneratedContentInsertionConfiguration(evaluator, value);
 }
 
@@ -315,10 +307,7 @@ DefaultSpellCheckService? parseDefaultSpellCheckService(Object? value) {
   return parseGeneratedDefaultSpellCheckService(value);
 }
 
-DelayedMultiDragGestureRecognizer? parseDelayedMultiDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+DelayedMultiDragGestureRecognizer? parseDelayedMultiDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedDelayedMultiDragGestureRecognizer(evaluator, value);
 }
 
@@ -330,10 +319,7 @@ DismissDirection? parseDismissDirection(Object? value) {
   return parseGeneratedDismissDirection(value);
 }
 
-DoubleTapGestureRecognizer? parseDoubleTapGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+DoubleTapGestureRecognizer? parseDoubleTapGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedDoubleTapGestureRecognizer(evaluator, value);
 }
 
@@ -341,9 +327,7 @@ DragStartBehavior? parseDragStartBehavior(Object? value) {
   return parseGeneratedDragStartBehavior(value);
 }
 
-DraggableScrollableController? parseDraggableScrollableController(
-  Object? value,
-) {
+DraggableScrollableController? parseDraggableScrollableController(Object? value) {
   return parseGeneratedDraggableScrollableController(value);
 }
 
@@ -359,10 +343,7 @@ Duration? parseDuration(Object? value) {
   return parseGeneratedDuration(value);
 }
 
-EagerGestureRecognizer? parseEagerGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+EagerGestureRecognizer? parseEagerGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedEagerGestureRecognizer(evaluator, value);
 }
 
@@ -414,10 +395,7 @@ FixedColumnWidth? parseFixedColumnWidth(Object? value) {
   return parseGeneratedFixedColumnWidth(value);
 }
 
-FixedExtentScrollController? parseFixedExtentScrollController(
-  Evaluator evaluator,
-  Object? value,
-) {
+FixedExtentScrollController? parseFixedExtentScrollController(Evaluator evaluator, Object? value) {
   return parseGeneratedFixedExtentScrollController(evaluator, value);
 }
 
@@ -485,10 +463,7 @@ FontWeight? parseFontWeight(Object? value) {
   return parseGeneratedFontWeight(value);
 }
 
-ForcePressGestureRecognizer? parseForcePressGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+ForcePressGestureRecognizer? parseForcePressGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedForcePressGestureRecognizer(evaluator, value);
 }
 
@@ -524,17 +499,11 @@ HitTestBehavior? parseHitTestBehavior(Object? value) {
   return parseGeneratedHitTestBehavior(value);
 }
 
-HorizontalDragGestureRecognizer? parseHorizontalDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+HorizontalDragGestureRecognizer? parseHorizontalDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedHorizontalDragGestureRecognizer(evaluator, value);
 }
 
-HorizontalMultiDragGestureRecognizer? parseHorizontalMultiDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+HorizontalMultiDragGestureRecognizer? parseHorizontalMultiDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedHorizontalMultiDragGestureRecognizer(evaluator, value);
 }
 
@@ -562,10 +531,7 @@ ImageRepeat? parseImageRepeat(Object? value) {
   return parseGeneratedImageRepeat(value);
 }
 
-ImmediateMultiDragGestureRecognizer? parseImmediateMultiDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+ImmediateMultiDragGestureRecognizer? parseImmediateMultiDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedImmediateMultiDragGestureRecognizer(evaluator, value);
 }
 
@@ -601,10 +567,7 @@ Iterable<Enum>? parseIterableOfEnum(Object? value) {
   return parseGeneratedIterableOfEnum(value);
 }
 
-Iterable<Listenable?>? parseIterableOfListenable(
-  Evaluator evaluator,
-  Object? value,
-) {
+Iterable<Listenable?>? parseIterableOfListenable(Evaluator evaluator, Object? value) {
   return parseGeneratedIterableOfListenable(evaluator, value);
 }
 
@@ -612,8 +575,7 @@ Iterable<Locale>? parseIterableOfLocale(Object? value) {
   return parseGeneratedIterableOfLocale(value);
 }
 
-Iterable<LocalizationsDelegate<Object?>>?
-parseIterableOfLocalizationsDelegateObject(Object? value) {
+Iterable<LocalizationsDelegate<Object?>>? parseIterableOfLocalizationsDelegateObject(Object? value) {
   return parseGeneratedIterableOfLocalizationsDelegateObject(value);
 }
 
@@ -633,9 +595,7 @@ LabeledGlobalKey? parseLabeledGlobalKey(Object? value) {
   return parseGeneratedLabeledGlobalKey(value);
 }
 
-LengthLimitingTextInputFormatter? parseLengthLimitingTextInputFormatter(
-  Object? value,
-) {
+LengthLimitingTextInputFormatter? parseLengthLimitingTextInputFormatter(Object? value) {
   return parseGeneratedLengthLimitingTextInputFormatter(value);
 }
 
@@ -655,9 +615,7 @@ List<bool>? parseListOfBool(Object? value) {
   return parseGeneratedListOfBool(value);
 }
 
-List<BottomNavigationBarItem>? parseListOfBottomNavigationBarItem(
-  Object? value,
-) {
+List<BottomNavigationBarItem>? parseListOfBottomNavigationBarItem(Object? value) {
   return parseGeneratedListOfBottomNavigationBarItem(value);
 }
 
@@ -665,10 +623,7 @@ List<BoxShadow>? parseListOfBoxShadow(Object? value) {
   return parseGeneratedListOfBoxShadow(value);
 }
 
-List<ButtonSegment<Object?>>? parseListOfButtonSegmentObject(
-  Evaluator evaluator,
-  Object? value,
-) {
+List<ButtonSegment<Object?>>? parseListOfButtonSegmentObject(Evaluator evaluator, Object? value) {
   return parseGeneratedListOfButtonSegmentObject(evaluator, value);
 }
 
@@ -692,9 +647,7 @@ List<double>? parseListOfDouble(Object? value) {
   return parseGeneratedListOfDouble(value);
 }
 
-List<DropdownMenuItem<Object?>>? parseListOfDropdownMenuItemObject(
-  Object? value,
-) {
+List<DropdownMenuItem<Object?>>? parseListOfDropdownMenuItemObject(Object? value) {
   return parseGeneratedListOfDropdownMenuItemObject(value);
 }
 
@@ -726,9 +679,7 @@ List<Locale>? parseListOfLocale(Object? value) {
   return parseGeneratedListOfLocale(value);
 }
 
-List<NavigationRailDestination>? parseListOfNavigationRailDestination(
-  Object? value,
-) {
+List<NavigationRailDestination>? parseListOfNavigationRailDestination(Object? value) {
   return parseGeneratedListOfNavigationRailDestination(value);
 }
 
@@ -756,10 +707,7 @@ List<TextDecoration>? parseListOfTextDecoration(Object? value) {
   return parseGeneratedListOfTextDecoration(value);
 }
 
-List<TextInputFormatter>? parseListOfTextInputFormatter(
-  Evaluator evaluator,
-  Object? value,
-) {
+List<TextInputFormatter>? parseListOfTextInputFormatter(Evaluator evaluator, Object? value) {
   return parseGeneratedListOfTextInputFormatter(evaluator, value);
 }
 
@@ -799,17 +747,11 @@ LocalizationsDelegate? parseLocalizationsDelegate(Object? value) {
   return parseGeneratedLocalizationsDelegate(value);
 }
 
-LocalizationsResolver? parseLocalizationsResolver(
-  Evaluator evaluator,
-  Object? value,
-) {
+LocalizationsResolver? parseLocalizationsResolver(Evaluator evaluator, Object? value) {
   return parseGeneratedLocalizationsResolver(evaluator, value);
 }
 
-LongPressGestureRecognizer? parseLongPressGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+LongPressGestureRecognizer? parseLongPressGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedLongPressGestureRecognizer(evaluator, value);
 }
 
@@ -825,15 +767,11 @@ MaterialTapTargetSize? parseMaterialTapTargetSize(Object? value) {
   return parseGeneratedMaterialTapTargetSize(value);
 }
 
-MaterialTextSelectionControls? parseMaterialTextSelectionControls(
-  Object? value,
-) {
+MaterialTextSelectionControls? parseMaterialTextSelectionControls(Object? value) {
   return parseGeneratedMaterialTextSelectionControls(value);
 }
 
-MaterialTextSelectionHandleControls? parseMaterialTextSelectionHandleControls(
-  Object? value,
-) {
+MaterialTextSelectionHandleControls? parseMaterialTextSelectionHandleControls(Object? value) {
   return parseGeneratedMaterialTextSelectionHandleControls(value);
 }
 
@@ -861,16 +799,11 @@ MouseTracker? parseMouseTracker(Evaluator evaluator, Object? value) {
   return parseGeneratedMouseTracker(evaluator, value);
 }
 
-MultiTapGestureRecognizer? parseMultiTapGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+MultiTapGestureRecognizer? parseMultiTapGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedMultiTapGestureRecognizer(evaluator, value);
 }
 
-NavigationDestinationLabelBehavior? parseNavigationDestinationLabelBehavior(
-  Object? value,
-) {
+NavigationDestinationLabelBehavior? parseNavigationDestinationLabelBehavior(Object? value) {
   return parseGeneratedNavigationDestinationLabelBehavior(value);
 }
 
@@ -950,10 +883,7 @@ Paint? parsePaint(Object? value) {
   return parseGeneratedPaint(value);
 }
 
-PanGestureRecognizer? parsePanGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+PanGestureRecognizer? parsePanGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedPanGestureRecognizer(evaluator, value);
 }
 
@@ -965,10 +895,7 @@ PlaceholderAlignment? parsePlaceholderAlignment(Object? value) {
   return parseGeneratedPlaceholderAlignment(value);
 }
 
-PlatformRouteInformationProvider? parsePlatformRouteInformationProvider(
-  Evaluator evaluator,
-  Object? value,
-) {
+PlatformRouteInformationProvider? parsePlatformRouteInformationProvider(Evaluator evaluator, Object? value) {
   return parseGeneratedPlatformRouteInformationProvider(evaluator, value);
 }
 
@@ -1056,10 +983,7 @@ RestorableNumN? parseRestorableNumN(Object? value) {
   return parseGeneratedRestorableNumN(value);
 }
 
-RestorableRouteFuture? parseRestorableRouteFuture(
-  Evaluator evaluator,
-  Object? value,
-) {
+RestorableRouteFuture? parseRestorableRouteFuture(Evaluator evaluator, Object? value) {
   return parseGeneratedRestorableRouteFuture(evaluator, value);
 }
 
@@ -1071,9 +995,7 @@ RestorableStringN? parseRestorableStringN(Object? value) {
   return parseGeneratedRestorableStringN(value);
 }
 
-RestorableTextEditingController? parseRestorableTextEditingController(
-  Object? value,
-) {
+RestorableTextEditingController? parseRestorableTextEditingController(Object? value) {
   return parseGeneratedRestorableTextEditingController(value);
 }
 
@@ -1117,10 +1039,7 @@ ScaffoldState? parseScaffoldState(Object? value) {
   return parseGeneratedScaffoldState(value);
 }
 
-ScaleGestureRecognizer? parseScaleGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+ScaleGestureRecognizer? parseScaleGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedScaleGestureRecognizer(evaluator, value);
 }
 
@@ -1144,15 +1063,11 @@ ScrollPosition? parseScrollPosition(Object? value) {
   return parseGeneratedScrollPosition(value);
 }
 
-ScrollPositionWithSingleContext? parseScrollPositionWithSingleContext(
-  Object? value,
-) {
+ScrollPositionWithSingleContext? parseScrollPositionWithSingleContext(Object? value) {
   return parseGeneratedScrollPositionWithSingleContext(value);
 }
 
-ScrollViewKeyboardDismissBehavior? parseScrollViewKeyboardDismissBehavior(
-  Object? value,
-) {
+ScrollViewKeyboardDismissBehavior? parseScrollViewKeyboardDismissBehavior(Object? value) {
   return parseGeneratedScrollViewKeyboardDismissBehavior(value);
 }
 
@@ -1180,10 +1095,7 @@ SemanticsOwner? parseSemanticsOwner(Evaluator evaluator, Object? value) {
   return parseGeneratedSemanticsOwner(evaluator, value);
 }
 
-SerialTapGestureRecognizer? parseSerialTapGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+SerialTapGestureRecognizer? parseSerialTapGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedSerialTapGestureRecognizer(evaluator, value);
 }
 
@@ -1239,17 +1151,11 @@ SliverAnimatedListState? parseSliverAnimatedListState(Object? value) {
   return parseGeneratedSliverAnimatedListState(value);
 }
 
-SliverChildBuilderDelegate? parseSliverChildBuilderDelegate(
-  Evaluator evaluator,
-  Object? value,
-) {
+SliverChildBuilderDelegate? parseSliverChildBuilderDelegate(Evaluator evaluator, Object? value) {
   return parseGeneratedSliverChildBuilderDelegate(evaluator, value);
 }
 
-SliverChildDelegate? parseSliverChildDelegate(
-  Evaluator evaluator,
-  Object? value,
-) {
+SliverChildDelegate? parseSliverChildDelegate(Evaluator evaluator, Object? value) {
   return parseGeneratedSliverChildDelegate(evaluator, value);
 }
 
@@ -1261,13 +1167,11 @@ SliverGridDelegate? parseSliverGridDelegate(Object? value) {
   return parseGeneratedSliverGridDelegate(value);
 }
 
-SliverGridDelegateWithFixedCrossAxisCount?
-parseSliverGridDelegateWithFixedCrossAxisCount(Object? value) {
+SliverGridDelegateWithFixedCrossAxisCount? parseSliverGridDelegateWithFixedCrossAxisCount(Object? value) {
   return parseGeneratedSliverGridDelegateWithFixedCrossAxisCount(value);
 }
 
-SliverGridDelegateWithMaxCrossAxisExtent?
-parseSliverGridDelegateWithMaxCrossAxisExtent(Object? value) {
+SliverGridDelegateWithMaxCrossAxisExtent? parseSliverGridDelegateWithMaxCrossAxisExtent(Object? value) {
   return parseGeneratedSliverGridDelegateWithMaxCrossAxisExtent(value);
 }
 
@@ -1279,9 +1183,7 @@ SliverPaintOrder? parseSliverPaintOrder(Object? value) {
   return parseGeneratedSliverPaintOrder(value);
 }
 
-SliverPersistentHeaderDelegate? parseSliverPersistentHeaderDelegate(
-  Object? value,
-) {
+SliverPersistentHeaderDelegate? parseSliverPersistentHeaderDelegate(Object? value) {
   return parseGeneratedSliverPersistentHeaderDelegate(value);
 }
 
@@ -1309,10 +1211,7 @@ SnapshotController? parseSnapshotController(Object? value) {
   return parseGeneratedSnapshotController(value);
 }
 
-SpellCheckConfiguration? parseSpellCheckConfiguration(
-  Evaluator evaluator,
-  Object? value,
-) {
+SpellCheckConfiguration? parseSpellCheckConfiguration(Evaluator evaluator, Object? value) {
   return parseGeneratedSpellCheckConfiguration(evaluator, value);
 }
 
@@ -1336,9 +1235,7 @@ StarBorder? parseStarBorder(Object? value) {
   return parseGeneratedStarBorder(value);
 }
 
-StaticSelectionContainerDelegate? parseStaticSelectionContainerDelegate(
-  Object? value,
-) {
+StaticSelectionContainerDelegate? parseStaticSelectionContainerDelegate(Object? value) {
   return parseGeneratedStaticSelectionContainerDelegate(value);
 }
 
@@ -1410,29 +1307,19 @@ TableRow? parseTableRow(Evaluator evaluator, Object? value) {
   return parseGeneratedTableRow(evaluator, value);
 }
 
-TapAndDragGestureRecognizer? parseTapAndDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+TapAndDragGestureRecognizer? parseTapAndDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedTapAndDragGestureRecognizer(evaluator, value);
 }
 
-TapAndHorizontalDragGestureRecognizer?
-parseTapAndHorizontalDragGestureRecognizer(Evaluator evaluator, Object? value) {
+TapAndHorizontalDragGestureRecognizer? parseTapAndHorizontalDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedTapAndHorizontalDragGestureRecognizer(evaluator, value);
 }
 
-TapAndPanGestureRecognizer? parseTapAndPanGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+TapAndPanGestureRecognizer? parseTapAndPanGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedTapAndPanGestureRecognizer(evaluator, value);
 }
 
-TapGestureRecognizer? parseTapGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+TapGestureRecognizer? parseTapGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedTapGestureRecognizer(evaluator, value);
 }
 
@@ -1484,10 +1371,7 @@ TextInputAction? parseTextInputAction(Object? value) {
   return parseGeneratedTextInputAction(value);
 }
 
-TextInputFormatter? parseTextInputFormatter(
-  Evaluator evaluator,
-  Object? value,
-) {
+TextInputFormatter? parseTextInputFormatter(Evaluator evaluator, Object? value) {
   return parseGeneratedTextInputFormatter(evaluator, value);
 }
 
@@ -1499,10 +1383,7 @@ TextLeadingDistribution? parseTextLeadingDistribution(Object? value) {
   return parseGeneratedTextLeadingDistribution(value);
 }
 
-TextMagnifierConfiguration? parseTextMagnifierConfiguration(
-  Evaluator evaluator,
-  Object? value,
-) {
+TextMagnifierConfiguration? parseTextMagnifierConfiguration(Evaluator evaluator, Object? value) {
   return parseGeneratedTextMagnifierConfiguration(evaluator, value);
 }
 
@@ -1578,17 +1459,11 @@ TooltipTriggerMode? parseTooltipTriggerMode(Object? value) {
   return parseGeneratedTooltipTriggerMode(value);
 }
 
-TrackingScrollController? parseTrackingScrollController(
-  Evaluator evaluator,
-  Object? value,
-) {
+TrackingScrollController? parseTrackingScrollController(Evaluator evaluator, Object? value) {
   return parseGeneratedTrackingScrollController(evaluator, value);
 }
 
-TrainHoppingAnimation? parseTrainHoppingAnimation(
-  Evaluator evaluator,
-  Object? value,
-) {
+TrainHoppingAnimation? parseTrainHoppingAnimation(Evaluator evaluator, Object? value) {
   return parseGeneratedTrainHoppingAnimation(evaluator, value);
 }
 
@@ -1600,16 +1475,11 @@ TraversalEdgeBehavior? parseTraversalEdgeBehavior(Object? value) {
   return parseGeneratedTraversalEdgeBehavior(value);
 }
 
-TwoDimensionalChildBuilderDelegate? parseTwoDimensionalChildBuilderDelegate(
-  Evaluator evaluator,
-  Object? value,
-) {
+TwoDimensionalChildBuilderDelegate? parseTwoDimensionalChildBuilderDelegate(Evaluator evaluator, Object? value) {
   return parseGeneratedTwoDimensionalChildBuilderDelegate(evaluator, value);
 }
 
-TwoDimensionalChildListDelegate? parseTwoDimensionalChildListDelegate(
-  Object? value,
-) {
+TwoDimensionalChildListDelegate? parseTwoDimensionalChildListDelegate(Object? value) {
   return parseGeneratedTwoDimensionalChildListDelegate(value);
 }
 
@@ -1645,17 +1515,11 @@ VerticalDirection? parseVerticalDirection(Object? value) {
   return parseGeneratedVerticalDirection(value);
 }
 
-VerticalDragGestureRecognizer? parseVerticalDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+VerticalDragGestureRecognizer? parseVerticalDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedVerticalDragGestureRecognizer(evaluator, value);
 }
 
-VerticalMultiDragGestureRecognizer? parseVerticalMultiDragGestureRecognizer(
-  Evaluator evaluator,
-  Object? value,
-) {
+VerticalMultiDragGestureRecognizer? parseVerticalMultiDragGestureRecognizer(Evaluator evaluator, Object? value) {
   return parseGeneratedVerticalMultiDragGestureRecognizer(evaluator, value);
 }
 
@@ -1686,3 +1550,4 @@ WrapAlignment? parseWrapAlignment(Object? value) {
 WrapCrossAlignment? parseWrapCrossAlignment(Object? value) {
   return parseGeneratedWrapCrossAlignment(value);
 }
+

@@ -34,8 +34,7 @@ class MouseRegionTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('mouse_region').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -45,9 +44,8 @@ class MouseRegionTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'mouse_region',
         nonFilterContent,
@@ -114,9 +112,8 @@ class MouseRegionTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (resolvedChild != null) {
       config.child = resolvedChild;
     } else if (childValue != null) {
-      config.child = childValue is Widget
-          ? childValue
-          : resolveTextWidget(childValue);
+      config.child =
+          childValue is Widget ? childValue : resolveTextWidget(childValue);
     }
 
     final ids = resolveIds(
@@ -133,7 +130,12 @@ class MouseRegionTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       ids,
       'enter',
     );
-    config.onExit = _wrapMouseExitCallback(evaluator, onExitValue, ids, 'exit');
+    config.onExit = _wrapMouseExitCallback(
+      evaluator,
+      onExitValue,
+      ids,
+      'exit',
+    );
     config.onHover = _wrapMouseHoverCallback(
       evaluator,
       onHoverValue,

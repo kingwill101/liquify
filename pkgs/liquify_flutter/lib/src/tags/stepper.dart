@@ -91,8 +91,8 @@ class StepperTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -101,21 +101,23 @@ class StepperTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'changed',
-      props: {'count': config.steps!.length},
+      props: {
+        'count': config.steps!.length,
+      },
     );
     final tappedCallback =
         resolveIntActionCallback(
-          evaluator,
-          onStepTappedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveIntActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onStepTappedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveIntActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onStepTapped = tappedCallback == null
         ? null
         : (index) {
@@ -203,9 +205,8 @@ Widget _buildStepper(_StepperConfig config) {
         .map(
           (step) => Step(
             title: Text(step.title),
-            subtitle: step.subtitle == null
-                ? null
-                : Text(step.subtitle!.trim()),
+            subtitle:
+                step.subtitle == null ? null : Text(step.subtitle!.trim()),
             content: step.content ?? const SizedBox.shrink(),
             isActive: step.isActive ?? true,
             state: step.state ?? StepState.indexed,

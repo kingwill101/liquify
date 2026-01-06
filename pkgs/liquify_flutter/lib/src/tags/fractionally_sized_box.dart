@@ -5,8 +5,7 @@ import 'property_resolver.dart';
 import 'tag_helpers.dart';
 import 'widget_tag_base.dart';
 
-class FractionallySizedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+class FractionallySizedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   FractionallySizedBoxTag(super.content, super.filters);
 
   @override
@@ -18,9 +17,7 @@ class FractionallySizedBoxTag extends WidgetTagBase
       evaluator.evaluateNodes(body);
       final captured = evaluator.popBufferValue();
       final children = WidgetTagBase.asWidgets(captured);
-      buffer.write(
-        _buildFractionallySizedBox(evaluator.context, config, children),
-      );
+      buffer.write(_buildFractionallySizedBox(evaluator.context, config, children));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -38,9 +35,7 @@ class FractionallySizedBoxTag extends WidgetTagBase
       await evaluator.evaluateNodesAsync(body);
       final captured = evaluator.popBufferValue();
       final children = WidgetTagBase.asWidgets(captured);
-      buffer.write(
-        _buildFractionallySizedBox(evaluator.context, config, children),
-      );
+      buffer.write(_buildFractionallySizedBox(evaluator.context, config, children));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -48,8 +43,7 @@ class FractionallySizedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('fractionally_sized_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -60,9 +54,8 @@ class FractionallySizedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'fractionally_sized_box',
         nonFilterContent,

@@ -26,8 +26,7 @@ class TableTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('table').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class TableTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'table',
         nonFilterContent,
@@ -68,9 +66,8 @@ class TableTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.border = parseTableBorder(value);
           break;
         case 'defaultVerticalAlignment':
-          config.defaultVerticalAlignment = parseTableCellVerticalAlignment(
-            value,
-          );
+          config.defaultVerticalAlignment =
+              parseTableCellVerticalAlignment(value);
           break;
         case 'textDirection':
           config.textDirection = parseTextDirection(value);
@@ -156,7 +153,8 @@ class _TableConfig {
 Table _buildTable(_TableConfig config, List<TableRow> rows) {
   return Table(
     columnWidths: config.columnWidths,
-    defaultColumnWidth: config.defaultColumnWidth ?? const FlexColumnWidth(1.0),
+    defaultColumnWidth:
+        config.defaultColumnWidth ?? const FlexColumnWidth(1.0),
     textDirection: config.textDirection,
     border: config.border,
     defaultVerticalAlignment:

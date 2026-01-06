@@ -123,7 +123,7 @@ class ToggleButtonsTag extends WidgetTagBase with AsyncTag {
 
     config.items =
         _resolveItems(itemsValue, config.labels, iconsValue) ??
-        _buildLabelItems(config.labels);
+            _buildLabelItems(config.labels);
     if (config.items!.isEmpty) {
       config.items = _buildLabelItems(const ['One', 'Two', 'Three']);
     }
@@ -143,8 +143,8 @@ class ToggleButtonsTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -153,21 +153,23 @@ class ToggleButtonsTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'changed',
-      props: {'count': config.items!.length},
+      props: {
+        'count': config.items!.length,
+      },
     );
     final callback =
         resolveIntActionCallback(
-          evaluator,
-          onPressedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveIntActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onPressedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveIntActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onPressed = callback == null
         ? null
         : (index) {
@@ -177,8 +179,7 @@ class ToggleButtonsTag extends WidgetTagBase with AsyncTag {
             }
             callback(index);
           };
-    config.color =
-        resolvePropertyValue<Color?>(
+    config.color = resolvePropertyValue<Color?>(
           environment: evaluator.context,
           namedArgs: namedValues,
           name: 'color',
@@ -245,7 +246,11 @@ Widget _buildToggleButtons(_ToggleButtonsConfig config) {
 }
 
 class _ToggleItem {
-  _ToggleItem({required this.label, required this.value, this.icon});
+  _ToggleItem({
+    required this.label,
+    required this.value,
+    this.icon,
+  });
 
   final String label;
   final String value;
@@ -260,7 +265,11 @@ class _ToggleItem {
     }
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [icon!, const SizedBox(width: 6), Text(label)],
+      children: [
+        icon!,
+        const SizedBox(width: 6),
+        Text(label),
+      ],
     );
   }
 }
@@ -297,7 +306,11 @@ List<_ToggleItem>? _resolveItems(
     return List<_ToggleItem>.generate(icons.length, (index) {
       final label = index < values.length ? values[index] : '';
       final value = label.isNotEmpty ? label : 'item_$index';
-      return _ToggleItem(label: label, value: value, icon: icons[index]);
+      return _ToggleItem(
+        label: label,
+        value: value,
+        icon: icons[index],
+      );
     });
   }
   return null;

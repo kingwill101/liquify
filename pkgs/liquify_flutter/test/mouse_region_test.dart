@@ -15,13 +15,14 @@ void main() {
 {% endmouse_region %}
 ''',
       data: {
-        'actions': {'hover': () => hovered = true},
+        'actions': {
+          'hover': () => hovered = true,
+        }
       },
     );
 
-    final widget = tester.widget<MouseRegion>(
-      find.byKey(const ValueKey('mouse-test')),
-    );
+    final widget =
+        tester.widget<MouseRegion>(find.byKey(const ValueKey('mouse-test')));
     expect(widget.onHover, isNotNull);
     widget.onHover!(const PointerHoverEvent());
     expect(hovered, isTrue);

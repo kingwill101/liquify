@@ -29,8 +29,7 @@ class OffstageTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('offstage').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -40,9 +39,8 @@ class OffstageTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'offstage',
         nonFilterContent,
@@ -85,9 +83,8 @@ class OffstageTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (resolvedChild != null) {
       config.child = resolvedChild;
     } else if (childValue != null) {
-      config.child = childValue is Widget
-          ? childValue
-          : resolveTextWidget(childValue);
+      config.child =
+          childValue is Widget ? childValue : resolveTextWidget(childValue);
     }
 
     return config;
@@ -113,5 +110,8 @@ Widget _buildOffstage(
   );
   final child = resolvedChild ?? config.child ?? wrapChildren(children);
 
-  return Offstage(offstage: config.offstage ?? true, child: child);
+  return Offstage(
+    offstage: config.offstage ?? true,
+    child: child,
+  );
 }

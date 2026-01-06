@@ -26,8 +26,7 @@ class ClipRRectTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_rrect').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class ClipRRectTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_rrect',
         nonFilterContent,
@@ -108,8 +106,7 @@ class ClipOvalTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_oval').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -119,9 +116,8 @@ class ClipOvalTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_oval',
         nonFilterContent,
@@ -189,8 +185,7 @@ class ClipRectTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_rect').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -200,9 +195,8 @@ class ClipRectTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_rect',
         nonFilterContent,
@@ -267,12 +261,18 @@ Widget _build(_ClipRRectConfig config, List<Widget> children) {
 
 Widget _buildClipOval(Clip clip, List<Widget> children) {
   final child = wrapChildren(children);
-  return ClipOval(clipBehavior: clip, child: child);
+  return ClipOval(
+    clipBehavior: clip,
+    child: child,
+  );
 }
 
 Widget _buildClipRect(Clip clip, List<Widget> children) {
   final child = wrapChildren(children);
-  return ClipRect(clipBehavior: clip, child: child);
+  return ClipRect(
+    clipBehavior: clip,
+    child: child,
+  );
 }
 
 List<Widget> _asWidgets(Object? value) {

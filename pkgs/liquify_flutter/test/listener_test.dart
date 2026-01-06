@@ -14,13 +14,14 @@ void main() {
 {% endlistener %}
 ''',
       data: {
-        'actions': {'pressed': () => fired = true},
+        'actions': {
+          'pressed': () => fired = true,
+        }
       },
     );
 
-    final widget = tester.widget<Listener>(
-      find.byKey(const ValueKey('listener-test')),
-    );
+    final widget =
+        tester.widget<Listener>(find.byKey(const ValueKey('listener-test')));
     expect(widget.onPointerDown, isNotNull);
     widget.onPointerDown!(const PointerDownEvent());
     expect(fired, isTrue);

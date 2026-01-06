@@ -4,7 +4,8 @@ import 'package:liquify/parser.dart';
 import 'tag_helpers.dart';
 import 'widget_tag_base.dart';
 
-class MaterialBannerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
+class MaterialBannerTag extends WidgetTagBase
+    with CustomTagParser, AsyncTag {
   MaterialBannerTag(super.content, super.filters);
 
   @override
@@ -26,20 +27,19 @@ class MaterialBannerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('material_banner').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag = tagStart() & string('endmaterial_banner').trim() & tagEnd();
+    final endTag =
+        tagStart() & string('endmaterial_banner').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'material_banner',
         nonFilterContent,
@@ -105,7 +105,10 @@ class _MaterialBannerConfig {
   OverflowBarAlignment? overflowAlignment;
 }
 
-Widget _buildBanner(_MaterialBannerConfig config, List<Widget> children) {
+Widget _buildBanner(
+  _MaterialBannerConfig config,
+  List<Widget> children,
+) {
   Widget? content = config.content;
   List<Widget>? actions = config.actions;
   if (content == null && children.isNotEmpty) {

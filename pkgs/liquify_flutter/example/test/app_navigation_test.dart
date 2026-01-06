@@ -97,7 +97,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.tap(controlsButton);
     await pumpForRender(tester);
-    await pumpUntilFound(tester, find.text('Controls Hub'), maxPumps: 150);
+    await pumpUntilFound(
+      tester,
+      find.text('Controls Hub'),
+      maxPumps: 150,
+    );
   }
 
   Future<void> openControlsDemo(
@@ -108,11 +112,7 @@ void main() {
     final demoButton = find.byKey(ValueKey(demoId));
     final scrollable = find.byType(Scrollable);
     if (scrollable.evaluate().isNotEmpty) {
-      await tester.scrollUntilVisible(
-        demoButton,
-        240,
-        scrollable: scrollable.first,
-      );
+      await tester.scrollUntilVisible(demoButton, 240, scrollable: scrollable.first);
     } else {
       await tester.ensureVisible(demoButton);
     }
@@ -161,10 +161,8 @@ void main() {
       await pumpUntilFound(tester, find.text(expected));
       FlutterError.onError = originalOnError;
       if (capturedError != null) {
-        fail(
-          'Flutter error while opening tab "$label": '
-          '${capturedError!.exception}',
-        );
+        fail('Flutter error while opening tab "$label": '
+            '${capturedError!.exception}');
       }
       final exception = tester.takeException();
       if (exception != null) {
@@ -198,16 +196,13 @@ void main() {
       await openApp(tester, 'calculator', find.text('FC'));
     });
 
-    await runWithoutFlutterErrors(
-      tester,
-      'opening calculator history',
-      () async {
-        final historyButton = find.text('History');
-        await tester.tap(historyButton);
-        await tester.pump(const Duration(milliseconds: 300));
-        await pumpUntilFound(tester, find.text('Recent'));
-      },
-    );
+    await runWithoutFlutterErrors(tester, 'opening calculator history',
+        () async {
+      final historyButton = find.text('History');
+      await tester.tap(historyButton);
+      await tester.pump(const Duration(milliseconds: 300));
+      await pumpUntilFound(tester, find.text('Recent'));
+    });
 
     await runWithoutFlutterErrors(tester, 'returning from history', () async {
       final backButton = find.text('Back');
@@ -291,7 +286,11 @@ void main() {
         tester,
         'opening controls ${demo['id']}',
         () async {
-          await openControlsDemo(tester, demo['id']!, demo['ready']!);
+          await openControlsDemo(
+            tester,
+            demo['id']!,
+            demo['ready']!,
+          );
         },
       );
       await runWithoutFlutterErrors(

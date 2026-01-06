@@ -12,9 +12,8 @@ void main() {
     );
 
     expect(find.byType(RadioListTile<String>), findsOneWidget);
-    final tile = tester.widget<RadioListTile<String>>(
-      find.byType(RadioListTile<String>),
-    );
+    final tile =
+        tester.widget<RadioListTile<String>>(find.byType(RadioListTile<String>));
     expect(tile.groupValue, 'Daily');
   });
 }

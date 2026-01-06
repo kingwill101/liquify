@@ -29,8 +29,7 @@ class VisibilityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('visibility').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -40,9 +39,8 @@ class VisibilityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'visibility',
         nonFilterContent,
@@ -105,9 +103,8 @@ class VisibilityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (resolvedChild != null) {
       config.child = resolvedChild;
     } else if (childValue != null) {
-      config.child = childValue is Widget
-          ? childValue
-          : resolveTextWidget(childValue);
+      config.child =
+          childValue is Widget ? childValue : resolveTextWidget(childValue);
     }
 
     final resolvedReplacement = resolvePropertyValue<Widget?>(

@@ -22,8 +22,7 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         name: 'padding',
         parser: parseEdgeInsetsGeometry,
       );
-      config.contentHeight =
-          resolvePropertyValue<double?>(
+      config.contentHeight = resolvePropertyValue<double?>(
             environment: evaluator.context,
             namedArgs: namedValues,
             name: 'height',
@@ -52,8 +51,7 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         name: 'padding',
         parser: parseEdgeInsetsGeometry,
       );
-      config.contentHeight =
-          resolvePropertyValue<double?>(
+      config.contentHeight = resolvePropertyValue<double?>(
             environment: evaluator.context,
             namedArgs: namedValues,
             name: 'height',
@@ -68,8 +66,7 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tabs').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -79,9 +76,8 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tabs',
         nonFilterContent,
@@ -127,9 +123,7 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.labelColor = parseColor(evaluator.evaluate(arg.value));
           break;
         case 'unselectedLabelColor':
-          config.unselectedLabelColor = parseColor(
-            evaluator.evaluate(arg.value),
-          );
+          config.unselectedLabelColor = parseColor(evaluator.evaluate(arg.value));
           break;
         case 'labelSize':
           config.labelSize = toDouble(evaluator.evaluate(arg.value));
@@ -180,7 +174,10 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     final tabs = entries.map((entry) => entry.tab).toList();
     final views = entries.map((entry) => entry.view).toList();
     final labelStyle = (config.labelSize != null || config.labelWeight != null)
-        ? TextStyle(fontSize: config.labelSize, fontWeight: config.labelWeight)
+        ? TextStyle(
+            fontSize: config.labelSize,
+            fontWeight: config.labelWeight,
+          )
         : null;
 
     Widget buildView(double? height, BoxConstraints constraints) {
@@ -211,7 +208,8 @@ class TabsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
                 labelStyle: labelStyle,
                 tabs: tabs,
               ),
-              if ((config.gap ?? 0) > 0) SizedBox(height: config.gap ?? 0),
+              if ((config.gap ?? 0) > 0)
+                SizedBox(height: config.gap ?? 0),
               buildView(config.contentHeight, constraints),
             ],
           );
@@ -252,8 +250,7 @@ class TabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tab').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -263,9 +260,8 @@ class TabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tab',
         nonFilterContent,
@@ -293,10 +289,7 @@ class TabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       label = 'Tab';
     }
     final view = wrapChildren(children);
-    return TabEntry(
-      tab: Tab(text: label),
-      view: view,
-    );
+    return TabEntry(tab: Tab(text: label), view: view);
   }
 
   List<Widget> _captureChildrenSync(Evaluator evaluator) {

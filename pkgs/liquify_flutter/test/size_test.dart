@@ -11,10 +11,8 @@ void main() {
       '{% text value: "Size" %}{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Size'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Size'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     final constraints = container.constraints;
     expect(constraints, isNotNull);

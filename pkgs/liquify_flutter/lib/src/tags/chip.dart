@@ -11,24 +11,24 @@ class ChipTag extends WidgetTagBase with AsyncTag {
   ChipTag(this.tagName, this._variant, super.content, super.filters);
 
   ChipTag.chip(super.content, super.filters)
-    : tagName = 'chip',
-      _variant = ChipVariant.chip;
+      : tagName = 'chip',
+        _variant = ChipVariant.chip;
 
   ChipTag.action(super.content, super.filters)
-    : tagName = 'action_chip',
-      _variant = ChipVariant.action;
+      : tagName = 'action_chip',
+        _variant = ChipVariant.action;
 
   ChipTag.choice(super.content, super.filters)
-    : tagName = 'choice_chip',
-      _variant = ChipVariant.choice;
+      : tagName = 'choice_chip',
+        _variant = ChipVariant.choice;
 
   ChipTag.filter(super.content, super.filters)
-    : tagName = 'filter_chip',
-      _variant = ChipVariant.filter;
+      : tagName = 'filter_chip',
+        _variant = ChipVariant.filter;
 
   ChipTag.input(super.content, super.filters)
-    : tagName = 'input_chip',
-      _variant = ChipVariant.input;
+      : tagName = 'input_chip',
+        _variant = ChipVariant.input;
 
   final String tagName;
   final ChipVariant _variant;
@@ -168,16 +168,14 @@ class ChipTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
-    final selectActionName = selectActionValue is String
-        ? selectActionValue
-        : null;
-    final deleteActionName = deleteActionValue is String
-        ? deleteActionValue
-        : null;
+    final selectActionName =
+        selectActionValue is String ? selectActionValue : null;
+    final deleteActionName =
+        deleteActionValue is String ? deleteActionValue : null;
 
     final baseEvent = buildWidgetEvent(
       tag: tagName,
@@ -185,7 +183,10 @@ class ChipTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'pressed',
-      props: {'label': config.label, 'value': config.value ?? config.label},
+      props: {
+        'label': config.label,
+        'value': config.value ?? config.label,
+      },
     );
     config.onPressed = resolveActionCallback(
       evaluator,
@@ -200,21 +201,24 @@ class ChipTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: selectActionName ?? actionName,
       event: 'changed',
-      props: {'label': config.label, 'value': config.value ?? config.label},
+      props: {
+        'label': config.label,
+        'value': config.value ?? config.label,
+      },
     );
     final selectionCallback =
         resolveBoolActionCallback(
-          evaluator,
-          selectActionValue,
-          event: selectionEvent,
-          actionValue: selectActionName,
-        ) ??
-        resolveBoolActionCallback(
-          evaluator,
-          actionValue,
-          event: selectionEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              selectActionValue,
+              event: selectionEvent,
+              actionValue: selectActionName,
+            ) ??
+            resolveBoolActionCallback(
+              evaluator,
+              actionValue,
+              event: selectionEvent,
+              actionValue: actionName,
+            );
     config.onSelected = selectionCallback == null
         ? null
         : (selected) {
@@ -229,7 +233,10 @@ class ChipTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: deleteActionName,
       event: 'deleted',
-      props: {'label': config.label, 'value': config.value ?? config.label},
+      props: {
+        'label': config.label,
+        'value': config.value ?? config.label,
+      },
     );
     config.onDeleted = resolveActionCallback(
       evaluator,

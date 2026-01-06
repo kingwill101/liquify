@@ -17,12 +17,8 @@ void main() {
           {'label': 'Score', 'numeric': true},
         ],
         'rows': [
-          {
-            'cells': ['Alpha', '1'],
-          },
-          {
-            'cells': ['Beta', '2'],
-          },
+          {'cells': ['Alpha', '1']},
+          {'cells': ['Beta', '2']},
         ],
         'actions': {
           'sort': (int columnIndex, bool ascending) {

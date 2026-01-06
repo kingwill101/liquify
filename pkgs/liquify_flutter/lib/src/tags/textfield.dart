@@ -292,8 +292,7 @@ class TextFieldTag extends WidgetTagBase with AsyncTag {
         case 'contextMenuBuilder':
           config.contextMenuBuilderProvided = true;
           if (value == null || value is EditableTextContextMenuBuilder) {
-            config.contextMenuBuilder =
-                value as EditableTextContextMenuBuilder?;
+            config.contextMenuBuilder = value as EditableTextContextMenuBuilder?;
           }
           break;
         case 'canRequestFocus':
@@ -403,16 +402,13 @@ TextField _buildTextField(_TextFieldConfig config) {
   final readOnly = config.readOnly ?? false;
   final maxLines = config.maxLines ?? 1;
   final keyboardType =
-      config.keyboardType ??
-      (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
-  final smartDashesType =
-      config.smartDashesType ??
+      config.keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
+  final smartDashesType = config.smartDashesType ??
       (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled);
-  final smartQuotesType =
-      config.smartQuotesType ??
+  final smartQuotesType = config.smartQuotesType ??
       (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled);
-  final enableInteractiveSelection =
-      config.enableInteractiveSelection ?? (!readOnly || !obscureText);
+  final enableInteractiveSelection = config.enableInteractiveSelection ??
+      (!readOnly || !obscureText);
   InputDecoration? decoration = config.decoration;
   if (!config.decorationProvided) {
     if (config.label != null || config.hint != null) {
@@ -423,8 +419,7 @@ TextField _buildTextField(_TextFieldConfig config) {
     } else {
       decoration = const InputDecoration();
     }
-  } else if (decoration != null &&
-      (config.label != null || config.hint != null)) {
+  } else if (decoration != null && (config.label != null || config.hint != null)) {
     decoration = decoration.copyWith(
       labelText: config.label,
       hintText: config.hint,
@@ -496,8 +491,7 @@ TextField _buildTextField(_TextFieldConfig config) {
       clipBehavior: config.clipBehavior ?? Clip.hardEdge,
       restorationId: config.restorationId,
       scribbleEnabled: config.scribbleEnabled ?? true,
-      stylusHandwritingEnabled:
-          config.stylusHandwritingEnabled ??
+      stylusHandwritingEnabled: config.stylusHandwritingEnabled ??
           EditableText.defaultStylusHandwritingEnabled,
       enableIMEPersonalizedLearning:
           config.enableIMEPersonalizedLearning ?? true,
@@ -573,8 +567,7 @@ TextField _buildTextField(_TextFieldConfig config) {
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     restorationId: config.restorationId,
     scribbleEnabled: config.scribbleEnabled ?? true,
-    stylusHandwritingEnabled:
-        config.stylusHandwritingEnabled ??
+    stylusHandwritingEnabled: config.stylusHandwritingEnabled ??
         EditableText.defaultStylusHandwritingEnabled,
     enableIMEPersonalizedLearning: config.enableIMEPersonalizedLearning ?? true,
     canRequestFocus: config.canRequestFocus ?? true,

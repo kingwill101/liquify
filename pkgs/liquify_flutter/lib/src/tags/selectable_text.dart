@@ -130,9 +130,8 @@ class SelectableTextTag extends WidgetTagBase with AsyncTag {
           textWidthBasis = parseTextWidthBasis(evaluator.evaluate(arg.value));
           break;
         case 'textHeightBehavior':
-          textHeightBehavior = parseTextHeightBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          textHeightBehavior =
+              parseTextHeightBehavior(evaluator.evaluate(arg.value));
           break;
         default:
           handleUnknownArg('selectable_text', name);
@@ -154,13 +153,13 @@ class SelectableTextTag extends WidgetTagBase with AsyncTag {
 
     final resolvedStyle = style == null
         ? (size != null || color != null || weight != null || fontStyle != null)
-              ? TextStyle(
-                  fontSize: size,
-                  color: color,
-                  fontWeight: weight,
-                  fontStyle: fontStyle,
-                )
-              : null
+            ? TextStyle(
+                fontSize: size,
+                color: color,
+                fontWeight: weight,
+                fontStyle: fontStyle,
+              )
+            : null
         : style.copyWith(
             fontSize: size ?? style.fontSize,
             color: color ?? style.color,
@@ -217,7 +216,10 @@ class SelectableTextTag extends WidgetTagBase with AsyncTag {
   }
 }
 
-dynamic _evaluatePositionalValue(Evaluator evaluator, List<ASTNode> content) {
+dynamic _evaluatePositionalValue(
+  Evaluator evaluator,
+  List<ASTNode> content,
+) {
   final positional = content.where((node) => node is! NamedArgument).toList();
   if (positional.isEmpty) {
     return null;

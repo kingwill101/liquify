@@ -26,8 +26,7 @@ class ShaderMaskTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('shader_mask').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class ShaderMaskTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'shader_mask',
         nonFilterContent,
@@ -88,20 +86,19 @@ class _ShaderMaskConfig {
 }
 
 Widget _buildMask(_ShaderMaskConfig config, List<Widget> children) {
-  final child =
-      config.child ??
+  final child = config.child ??
       (children.isEmpty
           ? const SizedBox.shrink()
           : children.length == 1
-          ? children.first
-          : wrapChildren(children));
+              ? children.first
+              : wrapChildren(children));
 
-  final shaderCallback =
-      config.shaderCallback ??
+  final shaderCallback = config.shaderCallback ??
       (Rect bounds) {
-        final gradient =
-            config.gradient ??
-            const LinearGradient(colors: [Colors.white, Colors.white]);
+        final gradient = config.gradient ??
+            const LinearGradient(
+              colors: [Colors.white, Colors.white],
+            );
         return gradient.createShader(bounds);
       };
 
@@ -136,12 +133,7 @@ Gradient? _parseGradient(Object? value) {
           : null;
       final begin = parseAlignmentGeometry(map['begin']) ?? Alignment.topLeft;
       final end = parseAlignmentGeometry(map['end']) ?? Alignment.bottomRight;
-      return LinearGradient(
-        colors: colors,
-        stops: stops,
-        begin: begin,
-        end: end,
-      );
+      return LinearGradient(colors: colors, stops: stops, begin: begin, end: end);
     }
   }
   return null;

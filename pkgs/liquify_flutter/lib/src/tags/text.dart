@@ -109,9 +109,7 @@ class TextTag extends WidgetTagBase with AsyncTag {
           textWidthBasis = parseTextWidthBasis(evaluator.evaluate(arg.value));
           break;
         case 'textHeightBehavior':
-          textHeightBehavior = parseTextHeightBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          textHeightBehavior = parseTextHeightBehavior(evaluator.evaluate(arg.value));
           break;
         case 'selectionColor':
           selectionColor = parseColor(evaluator.evaluate(arg.value));
@@ -133,13 +131,13 @@ class TextTag extends WidgetTagBase with AsyncTag {
         : applyFilters(textValue, evaluator).toString();
     final resolvedStyle = style == null
         ? (size != null || color != null || weight != null || fontStyle != null)
-              ? TextStyle(
-                  fontSize: size,
-                  color: color,
-                  fontWeight: weight,
-                  fontStyle: fontStyle,
-                )
-              : null
+            ? TextStyle(
+                fontSize: size,
+                color: color,
+                fontWeight: weight,
+                fontStyle: fontStyle,
+              )
+            : null
         : style.copyWith(
             fontSize: size ?? style.fontSize,
             color: color ?? style.color,
@@ -147,9 +145,7 @@ class TextTag extends WidgetTagBase with AsyncTag {
             fontStyle: fontStyle ?? style.fontStyle,
           );
     if (textScaleFactor != null && textScaler != null) {
-      throw Exception(
-        'text tag cannot specify both textScaleFactor and textScaler',
-      );
+      throw Exception('text tag cannot specify both textScaleFactor and textScaler');
     }
     if (textSpan != null) {
       buffer.write(
@@ -299,9 +295,7 @@ class TextTag extends WidgetTagBase with AsyncTag {
           textWidthBasis = parseTextWidthBasis(evaluator.evaluate(arg.value));
           break;
         case 'textHeightBehavior':
-          textHeightBehavior = parseTextHeightBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          textHeightBehavior = parseTextHeightBehavior(evaluator.evaluate(arg.value));
           break;
         case 'selectionColor':
           selectionColor = parseColor(evaluator.evaluate(arg.value));
@@ -323,13 +317,13 @@ class TextTag extends WidgetTagBase with AsyncTag {
         : (await applyFiltersAsync(textValue, evaluator)).toString();
     final resolvedStyle = style == null
         ? (size != null || color != null || weight != null || fontStyle != null)
-              ? TextStyle(
-                  fontSize: size,
-                  color: color,
-                  fontWeight: weight,
-                  fontStyle: fontStyle,
-                )
-              : null
+            ? TextStyle(
+                fontSize: size,
+                color: color,
+                fontWeight: weight,
+                fontStyle: fontStyle,
+              )
+            : null
         : style.copyWith(
             fontSize: size ?? style.fontSize,
             color: color ?? style.color,
@@ -337,9 +331,7 @@ class TextTag extends WidgetTagBase with AsyncTag {
             fontStyle: fontStyle ?? style.fontStyle,
           );
     if (textScaleFactor != null && textScaler != null) {
-      throw Exception(
-        'text tag cannot specify both textScaleFactor and textScaler',
-      );
+      throw Exception('text tag cannot specify both textScaleFactor and textScaler');
     }
     if (textSpan != null) {
       buffer.write(
@@ -387,7 +379,10 @@ class TextTag extends WidgetTagBase with AsyncTag {
   }
 }
 
-dynamic _evaluatePositionalValue(Evaluator evaluator, List<ASTNode> content) {
+dynamic _evaluatePositionalValue(
+  Evaluator evaluator,
+  List<ASTNode> content,
+) {
   final positional = content.where((node) => node is! NamedArgument).toList();
   if (positional.isEmpty) {
     return null;

@@ -199,14 +199,14 @@ class MaterialButtonTag extends WidgetTagBase with AsyncTag {
 
     final textStyle =
         (config.fontSize != null ||
-            config.fontWeight != null ||
-            config.fontStyle != null)
-        ? TextStyle(
-            fontSize: config.fontSize,
-            fontWeight: config.fontWeight,
-            fontStyle: config.fontStyle,
-          )
-        : null;
+                config.fontWeight != null ||
+                config.fontStyle != null)
+            ? TextStyle(
+                fontSize: config.fontSize,
+                fontWeight: config.fontWeight,
+                fontStyle: config.fontStyle,
+              )
+            : null;
 
     final styleOverride = _buildStyle(
       variant,
@@ -221,8 +221,8 @@ class MaterialButtonTag extends WidgetTagBase with AsyncTag {
     final style = styleOverride == null
         ? config.style
         : (config.style == null
-              ? styleOverride
-              : config.style!.merge(styleOverride));
+            ? styleOverride
+            : config.style!.merge(styleOverride));
 
     final child = childWidget ?? labelWidget ?? const SizedBox.shrink();
     final label = labelWidget ?? childWidget ?? const SizedBox.shrink();

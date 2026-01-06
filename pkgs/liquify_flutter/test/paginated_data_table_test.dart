@@ -25,15 +25,9 @@ void main() {
           {'label': 'Owner'},
         ],
         'rows': [
-          {
-            'cells': ['Alpha', 'Avery'],
-          },
-          {
-            'cells': ['Beta', 'Morgan'],
-          },
-          {
-            'cells': ['Gamma', 'Riley'],
-          },
+          {'cells': ['Alpha', 'Avery']},
+          {'cells': ['Beta', 'Morgan']},
+          {'cells': ['Gamma', 'Riley']},
         ],
         'rows_per_page': [3, 5, 10],
         'actions': {
@@ -47,9 +41,8 @@ void main() {
       },
     );
 
-    final table = tester.widget<PaginatedDataTable>(
-      find.byType(PaginatedDataTable),
-    );
+    final table =
+        tester.widget<PaginatedDataTable>(find.byType(PaginatedDataTable));
     expect(table.rowsPerPage, 3);
     table.onRowsPerPageChanged?.call(5);
     table.onPageChanged?.call(0);

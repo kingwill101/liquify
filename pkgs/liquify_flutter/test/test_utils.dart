@@ -25,7 +25,9 @@ Future<void> pumpTemplate(
   ).render();
   await tester.pumpWidget(
     MaterialApp(
-      home: ScaffoldMessenger(child: Scaffold(body: widget)),
+      home: ScaffoldMessenger(
+        child: Scaffold(body: widget),
+      ),
     ),
   );
 }

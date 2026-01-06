@@ -215,9 +215,10 @@ class ButtonTag extends WidgetTagBase with AsyncTag {
       key: widgetKeyValue,
     );
     final widgetKeyText = widgetKeyValue?.trim();
-    final resolvedKeyValue = (widgetKeyText != null && widgetKeyText.isNotEmpty)
-        ? widgetKeyText
-        : resolvedId;
+    final resolvedKeyValue =
+        (widgetKeyText != null && widgetKeyText.isNotEmpty)
+            ? widgetKeyText
+            : resolvedId;
     final widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = action is String ? action : null;
     final baseEvent = buildWidgetEvent(
@@ -561,9 +562,10 @@ class ButtonTag extends WidgetTagBase with AsyncTag {
       key: widgetKeyValue,
     );
     final widgetKeyText = widgetKeyValue?.trim();
-    final resolvedKeyValue = (widgetKeyText != null && widgetKeyText.isNotEmpty)
-        ? widgetKeyText
-        : resolvedId;
+    final resolvedKeyValue =
+        (widgetKeyText != null && widgetKeyText.isNotEmpty)
+            ? widgetKeyText
+            : resolvedId;
     final widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = action is String ? action : null;
     final baseEvent = buildWidgetEvent(

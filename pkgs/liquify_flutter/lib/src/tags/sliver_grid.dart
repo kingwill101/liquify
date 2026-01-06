@@ -27,8 +27,7 @@ class SliverGridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_grid').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -38,9 +37,8 @@ class SliverGridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_grid',
         nonFilterContent,
@@ -136,7 +134,10 @@ class SliverGridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return _wrapSliver(config, children);
   }
 
-  List<Widget> _buildChildren(Evaluator evaluator, _SliverGridConfig config) {
+  List<Widget> _buildChildren(
+    Evaluator evaluator,
+    _SliverGridConfig config,
+  ) {
     final items = _resolveItems(config.items);
     if (items.isEmpty) {
       return captureChildrenSync(evaluator);
@@ -190,12 +191,10 @@ List<Widget> _buildItems(
   List<Object?> items,
   List<ASTNode> body,
 ) {
-  final itemName = config.itemName?.trim().isNotEmpty == true
-      ? config.itemName!
-      : 'item';
-  final indexName = config.indexName?.trim().isNotEmpty == true
-      ? config.indexName!
-      : 'index';
+  final itemName =
+      config.itemName?.trim().isNotEmpty == true ? config.itemName! : 'item';
+  final indexName =
+      config.indexName?.trim().isNotEmpty == true ? config.indexName! : 'index';
   final widgets = <Widget>[];
   for (var i = 0; i < items.length; i++) {
     final scope = pushPropertyScope(evaluator.context);
@@ -210,9 +209,8 @@ List<Widget> _buildItems(
       if (children.isEmpty) {
         continue;
       }
-      final widget = children.length == 1
-          ? children.first
-          : wrapChildren(children);
+      final widget =
+          children.length == 1 ? children.first : wrapChildren(children);
       widgets.add(widget);
     } finally {
       evaluator.context.popScope();
@@ -228,12 +226,10 @@ Future<List<Widget>> _buildItemsAsync(
   List<Object?> items,
   List<ASTNode> body,
 ) async {
-  final itemName = config.itemName?.trim().isNotEmpty == true
-      ? config.itemName!
-      : 'item';
-  final indexName = config.indexName?.trim().isNotEmpty == true
-      ? config.indexName!
-      : 'index';
+  final itemName =
+      config.itemName?.trim().isNotEmpty == true ? config.itemName! : 'item';
+  final indexName =
+      config.indexName?.trim().isNotEmpty == true ? config.indexName! : 'index';
   final widgets = <Widget>[];
   for (var i = 0; i < items.length; i++) {
     final scope = pushPropertyScope(evaluator.context);
@@ -248,9 +244,8 @@ Future<List<Widget>> _buildItemsAsync(
       if (children.isEmpty) {
         continue;
       }
-      final widget = children.length == 1
-          ? children.first
-          : wrapChildren(children);
+      final widget =
+          children.length == 1 ? children.first : wrapChildren(children);
       widgets.add(widget);
     } finally {
       evaluator.context.popScope();
@@ -260,15 +255,17 @@ Future<List<Widget>> _buildItemsAsync(
   return widgets;
 }
 
-Widget _wrapSliver(_SliverGridConfig config, List<Widget> children) {
+Widget _wrapSliver(
+  _SliverGridConfig config,
+  List<Widget> children,
+) {
   final delegate = SliverChildListDelegate(
     children,
     addAutomaticKeepAlives: config.addAutomaticKeepAlives ?? true,
     addRepaintBoundaries: config.addRepaintBoundaries ?? true,
     addSemanticIndexes: config.addSemanticIndexes ?? true,
   );
-  final gridDelegate =
-      config.gridDelegate ??
+  final gridDelegate = config.gridDelegate ??
       _resolveGridDelegate(
         crossAxisCount: config.crossAxisCount,
         maxCrossAxisExtent: config.maxCrossAxisExtent,

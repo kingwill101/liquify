@@ -15,10 +15,8 @@ void main() {
       '{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Box'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Box'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.padding, const EdgeInsets.all(4));
   });
@@ -32,10 +30,8 @@ void main() {
       '{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Box'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Box'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.padding, const EdgeInsets.all(10));
   });
@@ -64,7 +60,9 @@ void main() {
 
     final sizedBoxFinder = find.byWidgetPredicate(
       (widget) =>
-          widget is SizedBox && widget.width == 120 && widget.height == 80,
+          widget is SizedBox &&
+          widget.width == 120 &&
+          widget.height == 80,
     );
     expect(sizedBoxFinder, findsOneWidget);
   });
@@ -78,10 +76,8 @@ void main() {
       '{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Box'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Box'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.padding, const EdgeInsets.all(6));
   });

@@ -26,20 +26,19 @@ class ExpansionTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('expansion_tile').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag = tagStart() & string('endexpansion_tile').trim() & tagEnd();
+    final endTag =
+        tagStart() & string('endexpansion_tile').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'expansion_tile',
         nonFilterContent,
@@ -116,7 +115,8 @@ class ExpansionTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           }
           break;
         case 'expandedCrossAxisAlignment':
-          config.expandedCrossAxisAlignment = parseCrossAxisAlignment(value);
+          config.expandedCrossAxisAlignment =
+              parseCrossAxisAlignment(value);
           break;
         case 'controlAffinity':
           config.controlAffinity = parseListTileControlAffinity(value);
@@ -157,16 +157,14 @@ class ExpansionTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     config.title =
         resolveTextWidget(titleValue) ?? resolveIconWidget(titleValue);
     config.subtitle = resolveTextWidget(subtitleValue);
-    config.leading = leadingValue is Widget
-        ? leadingValue
-        : resolveIconWidget(leadingValue);
-    config.trailing = trailingValue is Widget
-        ? trailingValue
-        : resolveIconWidget(trailingValue);
+    config.leading =
+        leadingValue is Widget ? leadingValue : resolveIconWidget(leadingValue);
+    config.trailing =
+        trailingValue is Widget ? trailingValue : resolveIconWidget(trailingValue);
 
     config.title ??=
         resolveTextWidget(evaluatePositionalValue(evaluator, content)) ??
-        const Text('');
+            const Text('');
 
     final ids = resolveIds(
       evaluator,

@@ -10,7 +10,11 @@ class MarginTag extends WidgetTagBase with AsyncTag {
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    setPropertyValue(evaluator.context, 'margin', _parseInsets(evaluator));
+    setPropertyValue(
+      evaluator.context,
+      'margin',
+      _parseInsets(evaluator),
+    );
   }
 
   @override
@@ -18,7 +22,11 @@ class MarginTag extends WidgetTagBase with AsyncTag {
     Evaluator evaluator,
     Buffer buffer,
   ) async {
-    setPropertyValue(evaluator.context, 'margin', _parseInsets(evaluator));
+    setPropertyValue(
+      evaluator.context,
+      'margin',
+      _parseInsets(evaluator),
+    );
   }
 
   EdgeInsetsGeometry _parseInsets(Evaluator evaluator) {

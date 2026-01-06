@@ -5,11 +5,14 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('visibility toggles child', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% visibility visible: false replacement: "Hidden" %}
   {% text value: "Visible" %}
 {% endvisibility %}
-''');
+''',
+    );
 
     final widget = tester.widget<Visibility>(find.byType(Visibility));
     expect(widget.visible, isFalse);

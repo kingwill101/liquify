@@ -81,7 +81,8 @@ List<Map<String, Object?>> _mergeTypes(
     merged[name] = Map<String, Object?>.from(entry);
   }
   final entries = merged.values.toList()
-    ..sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+    ..sort((a, b) =>
+        (a['name'] as String).compareTo(b['name'] as String));
   return entries;
 }
 
@@ -135,7 +136,11 @@ class _YamlWriter {
     buffer.writeln('${_indent(indent)}${_scalar(value)}');
   }
 
-  void _writeInlineOrIndented(StringBuffer buffer, Object? value, int indent) {
+  void _writeInlineOrIndented(
+    StringBuffer buffer,
+    Object? value,
+    int indent,
+  ) {
     if (value is Map || value is List) {
       buffer.writeln();
       _writeValue(buffer, value, indent);

@@ -111,14 +111,13 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           semanticChildCount = toInt(evaluator.evaluate(arg.value));
           break;
         case 'dragStartBehavior':
-          dragStartBehavior = parseDragStartBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          dragStartBehavior = parseDragStartBehavior(evaluator.evaluate(arg.value));
           break;
         case 'keyboardDismissBehavior':
-          keyboardDismissBehavior = parseScrollViewKeyboardDismissBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          keyboardDismissBehavior =
+              parseScrollViewKeyboardDismissBehavior(
+                evaluator.evaluate(arg.value),
+              );
           break;
         case 'restorationId':
           restorationId = evaluator.evaluate(arg.value)?.toString();
@@ -158,8 +157,7 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           physics: physics,
           shrinkWrap: shrinkWrap ?? false,
           padding: padding,
-          gridDelegate:
-              gridDelegate ??
+          gridDelegate: gridDelegate ??
               _resolveGridDelegate(
                 tagName,
                 columns,
@@ -176,8 +174,7 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           semanticChildCount: semanticChildCount,
           dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
           keyboardDismissBehavior:
-              keyboardDismissBehavior ??
-              ScrollViewKeyboardDismissBehavior.manual,
+              keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
           restorationId: restorationId,
           clipBehavior: clipBehavior ?? Clip.hardEdge,
           hitTestBehavior: hitTestBehavior ?? HitTestBehavior.opaque,
@@ -292,14 +289,13 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           semanticChildCount = toInt(evaluator.evaluate(arg.value));
           break;
         case 'dragStartBehavior':
-          dragStartBehavior = parseDragStartBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          dragStartBehavior = parseDragStartBehavior(evaluator.evaluate(arg.value));
           break;
         case 'keyboardDismissBehavior':
-          keyboardDismissBehavior = parseScrollViewKeyboardDismissBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          keyboardDismissBehavior =
+              parseScrollViewKeyboardDismissBehavior(
+                evaluator.evaluate(arg.value),
+              );
           break;
         case 'restorationId':
           restorationId = evaluator.evaluate(arg.value)?.toString();
@@ -339,8 +335,7 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           physics: physics,
           shrinkWrap: shrinkWrap ?? false,
           padding: padding,
-          gridDelegate:
-              gridDelegate ??
+          gridDelegate: gridDelegate ??
               _resolveGridDelegate(
                 tagName,
                 columns,
@@ -357,8 +352,7 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           semanticChildCount: semanticChildCount,
           dragStartBehavior: dragStartBehavior ?? DragStartBehavior.start,
           keyboardDismissBehavior:
-              keyboardDismissBehavior ??
-              ScrollViewKeyboardDismissBehavior.manual,
+              keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
           restorationId: restorationId,
           clipBehavior: clipBehavior ?? Clip.hardEdge,
           hitTestBehavior: hitTestBehavior ?? HitTestBehavior.opaque,
@@ -372,8 +366,7 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string(tagName).trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -383,9 +376,8 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         tagName,
         nonFilterContent,
@@ -394,6 +386,7 @@ class GridTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       );
     });
   }
+
 }
 
 SliverGridDelegate _resolveGridDelegate(

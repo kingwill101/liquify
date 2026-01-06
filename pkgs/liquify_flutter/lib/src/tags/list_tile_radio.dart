@@ -158,17 +158,17 @@ class RadioListTileTag extends WidgetTagBase with AsyncTag {
     );
     final callback =
         resolveStringActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     if (callback != null) {
       config.onChanged = (value) {
         baseEvent['value'] = value;

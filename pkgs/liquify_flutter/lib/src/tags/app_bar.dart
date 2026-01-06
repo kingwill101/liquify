@@ -145,7 +145,10 @@ class _AppBarConfig {
   PreferredSizeWidget? bottom;
 }
 
-PreferredSizeWidget _buildAppBar(_AppBarConfig config, {Widget? title}) {
+PreferredSizeWidget _buildAppBar(
+  _AppBarConfig config, {
+  Widget? title,
+}) {
   return AppBar(
     title: title,
     centerTitle: config.centerTitle,

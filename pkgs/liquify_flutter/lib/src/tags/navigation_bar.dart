@@ -27,8 +27,7 @@ class NavigationBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('navigation_bar').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -38,9 +37,8 @@ class NavigationBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'navigation_bar',
         nonFilterContent,
@@ -107,8 +105,8 @@ class NavigationBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -178,10 +176,9 @@ class NavigationBarDestinationTag extends WidgetTagBase with AsyncTag {
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final destination = _buildDestination(evaluator);
-    requireNavigationBarSpec(
-      evaluator,
-      'navigation_bar_destination',
-    ).destinations.add(destination);
+    requireNavigationBarSpec(evaluator, 'navigation_bar_destination')
+        .destinations
+        .add(destination);
   }
 
   @override
@@ -190,10 +187,9 @@ class NavigationBarDestinationTag extends WidgetTagBase with AsyncTag {
     Buffer buffer,
   ) async {
     final destination = _buildDestination(evaluator);
-    requireNavigationBarSpec(
-      evaluator,
-      'navigation_bar_destination',
-    ).destinations.add(destination);
+    requireNavigationBarSpec(evaluator, 'navigation_bar_destination')
+        .destinations
+        .add(destination);
   }
 
   NavigationDestination _buildDestination(Evaluator evaluator) {

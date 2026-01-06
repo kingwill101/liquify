@@ -201,21 +201,24 @@ class SwitchListTileTag extends WidgetTagBase with AsyncTag {
       key: ids.keyValue,
       action: actionName,
       event: 'changed',
-      props: {'title': config.titleLabel, 'subtitle': config.subtitleLabel},
+      props: {
+        'title': config.titleLabel,
+        'subtitle': config.subtitleLabel,
+      },
     );
     final callback =
         resolveBoolActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveBoolActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveBoolActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     if (callback != null) {
       config.onChanged = (value) {
         baseEvent['value'] = value;

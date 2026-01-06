@@ -18,9 +18,7 @@ class BottomAppBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       evaluator.evaluateNodes(body);
       final captured = evaluator.popBufferValue();
       final children = WidgetTagBase.asWidgets(captured);
-      buffer.write(
-        _buildBottomAppBar(evaluator, namedValues, config, children),
-      );
+      buffer.write(_buildBottomAppBar(evaluator, namedValues, config, children));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -39,9 +37,7 @@ class BottomAppBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       await evaluator.evaluateNodesAsync(body);
       final captured = evaluator.popBufferValue();
       final children = WidgetTagBase.asWidgets(captured);
-      buffer.write(
-        _buildBottomAppBar(evaluator, namedValues, config, children),
-      );
+      buffer.write(_buildBottomAppBar(evaluator, namedValues, config, children));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -49,8 +45,7 @@ class BottomAppBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('bottom_app_bar').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -60,9 +55,8 @@ class BottomAppBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'bottom_app_bar',
         nonFilterContent,
@@ -138,9 +132,8 @@ class BottomAppBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (resolvedChild != null) {
       config.child = resolvedChild;
     } else if (childValue != null) {
-      config.child = childValue is Widget
-          ? childValue
-          : resolveTextWidget(childValue);
+      config.child =
+          childValue is Widget ? childValue : resolveTextWidget(childValue);
     }
 
     final ids = resolveIds(

@@ -16,9 +16,7 @@ void main() {
     await pumpForRender(tester);
 
     expect(find.text('Liquify Apps'), findsWidgets);
-    expect(
-      find.text('Pick a module to explore widgets and layouts.'),
-      findsOneWidget,
-    );
+    expect(find.text('Pick a module to explore widgets and layouts.'),
+        findsOneWidget);
   });
 }

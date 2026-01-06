@@ -44,21 +44,20 @@ class SliverPersistentHeaderTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_persistent_header').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endsliver_persistent_header').trim() & tagEnd();
+    final endTag = tagStart() &
+        string('endsliver_persistent_header').trim() &
+        tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_persistent_header',
         nonFilterContent,
@@ -112,9 +111,7 @@ Widget _buildSliver(
   List<Widget> children,
 ) {
   if (config.minExtent == null || config.maxExtent == null) {
-    throw Exception(
-      'sliver_persistent_header requires minExtent and maxExtent',
-    );
+    throw Exception('sliver_persistent_header requires minExtent and maxExtent');
   }
 
   final childOverride = resolvePropertyValue<Widget?>(
@@ -124,13 +121,12 @@ Widget _buildSliver(
     parser: (value) => value is Widget ? value : null,
   );
 
-  final child =
-      childOverride ??
+  final child = childOverride ??
       (children.isEmpty
           ? const SizedBox.shrink()
           : children.length == 1
-          ? children.first
-          : wrapChildren(children));
+              ? children.first
+              : wrapChildren(children));
 
   return SliverPersistentHeader(
     pinned: config.pinned ?? false,

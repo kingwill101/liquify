@@ -26,8 +26,7 @@ class IndexedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('indexed_stack').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class IndexedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'indexed_stack',
         nonFilterContent,
@@ -87,7 +85,10 @@ class _IndexedStackConfig {
   Clip? clipBehavior;
 }
 
-Widget _buildIndexedStack(_IndexedStackConfig config, List<Widget> children) {
+Widget _buildIndexedStack(
+  _IndexedStackConfig config,
+  List<Widget> children,
+) {
   if (children.isEmpty) {
     return const SizedBox.shrink();
   }

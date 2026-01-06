@@ -24,9 +24,7 @@ class DrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         name: 'child',
         parser: (value) => value is Widget ? value : null,
       );
-      buffer.write(
-        _buildDrawer(config, children, childOverride: resolvedChild),
-      );
+      buffer.write(_buildDrawer(config, children, childOverride: resolvedChild));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -51,9 +49,7 @@ class DrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         name: 'child',
         parser: (value) => value is Widget ? value : null,
       );
-      buffer.write(
-        _buildDrawer(config, children, childOverride: resolvedChild),
-      );
+      buffer.write(_buildDrawer(config, children, childOverride: resolvedChild));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -61,8 +57,7 @@ class DrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('drawer').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -72,9 +67,8 @@ class DrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'drawer',
         nonFilterContent,
@@ -151,8 +145,7 @@ Widget _buildDrawer(
   List<Widget> children, {
   Widget? childOverride,
 }) {
-  final child =
-      childOverride ??
+  final child = childOverride ??
       config.child ??
       (children.isEmpty ? const SizedBox.shrink() : wrapChildren(children));
   return Drawer(

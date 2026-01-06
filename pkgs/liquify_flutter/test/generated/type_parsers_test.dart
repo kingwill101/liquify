@@ -5,7 +5,10 @@ import 'package:liquify_flutter/src/generated/type_parsers.dart';
 
 void main() {
   test('parseGeneratedMainAxisAlignment resolves strings', () {
-    expect(parseGeneratedMainAxisAlignment('center'), MainAxisAlignment.center);
+    expect(
+      parseGeneratedMainAxisAlignment('center'),
+      MainAxisAlignment.center,
+    );
     expect(
       parseGeneratedMainAxisAlignment('SpaceBetween'),
       MainAxisAlignment.spaceBetween,

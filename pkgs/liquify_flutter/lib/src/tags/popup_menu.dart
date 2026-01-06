@@ -56,8 +56,7 @@ class PopupMenuTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('popup_menu').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -67,9 +66,8 @@ class PopupMenuTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'popup_menu',
         nonFilterContent,
@@ -152,8 +150,8 @@ class PopupMenuTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -166,17 +164,17 @@ class PopupMenuTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final selectedCallback =
         resolveStringActionCallback(
-          evaluator,
-          onSelectedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onSelectedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onSelected = selectedCallback == null
         ? null
         : (value) {

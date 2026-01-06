@@ -11,10 +11,8 @@ void main() {
       '{% text value: "BG" %}{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('BG'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('BG'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.color, const Color(0xff00ff00));
   });

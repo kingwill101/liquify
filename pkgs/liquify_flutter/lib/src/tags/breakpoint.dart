@@ -33,8 +33,7 @@ class BreakpointTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('breakpoint').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -44,9 +43,8 @@ class BreakpointTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'breakpoint',
         nonFilterContent,
@@ -94,15 +92,17 @@ class BreakpointTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           hasCondition = true;
           break;
         case 'only':
-          allowed.addAll(
-            _parseBreakpointSet(evaluator.evaluate(arg.value), name),
-          );
+          allowed.addAll(_parseBreakpointSet(
+            evaluator.evaluate(arg.value),
+            name,
+          ));
           hasCondition = true;
           break;
         case 'except':
-          excluded.addAll(
-            _parseBreakpointSet(evaluator.evaluate(arg.value), name),
-          );
+          excluded.addAll(_parseBreakpointSet(
+            evaluator.evaluate(arg.value),
+            name,
+          ));
           hasCondition = true;
           break;
         default:
@@ -185,7 +185,10 @@ BreakPoint _requireBreakpoint(Object? value, String label) {
 
 Set<BreakPoint> _parseBreakpointSet(Object? value, String label) {
   if (value is Iterable) {
-    final parsed = value.map(_parseBreakpoint).whereType<BreakPoint>().toSet();
+    final parsed = value
+        .map(_parseBreakpoint)
+        .whereType<BreakPoint>()
+        .toSet();
     if (parsed.isEmpty) {
       throw Exception('breakpoint tag "$label" expects breakpoint values');
     }

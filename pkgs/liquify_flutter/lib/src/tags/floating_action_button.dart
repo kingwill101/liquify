@@ -28,8 +28,7 @@ class FloatingActionButtonTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('floating_action_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -40,9 +39,8 @@ class FloatingActionButtonTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'floating_action_button',
         nonFilterContent,
@@ -187,8 +185,7 @@ class FloatingActionButtonTag extends WidgetTagBase
     if (resolvedChild != null) {
       childValue = resolvedChild;
     }
-    config.child =
-        resolveTextWidget(childValue) ?? resolveIconWidget(childValue);
+    config.child = resolveTextWidget(childValue) ?? resolveIconWidget(childValue);
     config.icon = resolveIconWidget(iconValue);
     config.label = resolveTextWidget(labelValue);
 
@@ -209,17 +206,17 @@ class FloatingActionButtonTag extends WidgetTagBase
     );
     config.onPressed =
         resolveActionCallback(
-          evaluator,
-          onPressedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onPressedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
 
     return config;
   }
@@ -262,11 +259,10 @@ Widget _buildFab(
   _FabConfig config,
   List<Widget> children,
 ) {
-  final childFromBody = children.isEmpty
-      ? null
-      : WidgetTagBase.asWidgets(children).length == 1
-      ? children.first
-      : Column(children: children);
+  final childFromBody =
+      children.isEmpty ? null : WidgetTagBase.asWidgets(children).length == 1
+          ? children.first
+          : Column(children: children);
   final resolvedChild = config.child ?? childFromBody;
 
   final useExtended = config.isExtended == true || config.label != null;

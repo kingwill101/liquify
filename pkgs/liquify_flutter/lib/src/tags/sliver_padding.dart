@@ -43,8 +43,7 @@ class SliverPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_padding').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -54,9 +53,8 @@ class SliverPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_padding',
         nonFilterContent,
@@ -133,10 +131,15 @@ Widget _buildSliverPadding(
   } else if (slivers.length == 1) {
     sliver = slivers.first;
   } else {
-    sliver = SliverList(delegate: SliverChildListDelegate(slivers));
+    sliver = SliverList(
+      delegate: SliverChildListDelegate(slivers),
+    );
   }
 
-  return SliverPadding(padding: config.padding!, sliver: sliver);
+  return SliverPadding(
+    padding: config.padding!,
+    sliver: sliver,
+  );
 }
 
 List<Widget> _wrapSlivers(List<Widget> children) {
@@ -144,9 +147,9 @@ List<Widget> _wrapSlivers(List<Widget> children) {
     return const <Widget>[];
   }
   return children
-      .map(
-        (child) => _isSliver(child) ? child : SliverToBoxAdapter(child: child),
-      )
+      .map((child) => _isSliver(child)
+          ? child
+          : SliverToBoxAdapter(child: child))
       .toList();
 }
 

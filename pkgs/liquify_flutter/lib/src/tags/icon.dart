@@ -127,8 +127,9 @@ List<Shadow>? _parseShadows(Object? value) {
               toDouble(entry['dx']) ?? toDouble(entry['x']) ?? 0,
               toDouble(entry['dy']) ?? toDouble(entry['y']) ?? 0,
             ),
-            blurRadius:
-                toDouble(entry['blurRadius']) ?? toDouble(entry['blur']) ?? 0,
+            blurRadius: toDouble(entry['blurRadius']) ??
+                toDouble(entry['blur']) ??
+                0,
           ),
         );
       }

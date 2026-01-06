@@ -29,8 +29,7 @@ class DismissibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('dismissible').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -40,9 +39,8 @@ class DismissibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'dismissible',
         nonFilterContent,
@@ -129,9 +127,8 @@ class DismissibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (resolvedChild != null) {
       config.child = resolvedChild;
     } else if (childValue != null) {
-      config.child = childValue is Widget
-          ? childValue
-          : resolveTextWidget(childValue);
+      config.child =
+          childValue is Widget ? childValue : resolveTextWidget(childValue);
     }
 
     final resolvedBackground = resolvePropertyValue<Widget?>(
@@ -231,9 +228,7 @@ Widget _buildDismissible(
     child = config.child!;
   } else if (children.length >= 2 && background == null) {
     background = children.first;
-    child = children.length > 2
-        ? Column(children: children.sublist(1))
-        : children[1];
+    child = children.length > 2 ? Column(children: children.sublist(1)) : children[1];
   } else {
     child = wrapChildren(children);
   }
@@ -244,8 +239,7 @@ Widget _buildDismissible(
     background: background,
     secondaryBackground: secondaryBackground,
     resizeDuration: config.resizeDuration ?? const Duration(milliseconds: 300),
-    movementDuration:
-        config.movementDuration ?? const Duration(milliseconds: 200),
+    movementDuration: config.movementDuration ?? const Duration(milliseconds: 200),
     crossAxisEndOffset: config.crossAxisEndOffset ?? 0.0,
     confirmDismiss: config.confirmDismiss,
     onDismissed: config.onDismissed,

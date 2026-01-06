@@ -26,25 +26,22 @@ class ColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           spacing = toDouble(evaluator.evaluate(arg.value));
           break;
         case 'mainAxisAlignment':
-          mainAxisAlignment = parseMainAxisAlignment(
-            evaluator.evaluate(arg.value),
-          );
+          mainAxisAlignment =
+              parseMainAxisAlignment(evaluator.evaluate(arg.value));
           break;
         case 'mainAxisSize':
           mainAxisSize = parseMainAxisSize(evaluator.evaluate(arg.value));
           break;
         case 'crossAxisAlignment':
-          crossAxisAlignment = parseCrossAxisAlignment(
-            evaluator.evaluate(arg.value),
-          );
+          crossAxisAlignment =
+              parseCrossAxisAlignment(evaluator.evaluate(arg.value));
           break;
         case 'textDirection':
           textDirection = parseTextDirection(evaluator.evaluate(arg.value));
           break;
         case 'verticalDirection':
-          verticalDirection = parseVerticalDirection(
-            evaluator.evaluate(arg.value),
-          );
+          verticalDirection =
+              parseVerticalDirection(evaluator.evaluate(arg.value));
           break;
         case 'textBaseline':
           textBaseline = parseTextBaseline(evaluator.evaluate(arg.value));
@@ -91,25 +88,22 @@ class ColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           spacing = toDouble(evaluator.evaluate(arg.value));
           break;
         case 'mainAxisAlignment':
-          mainAxisAlignment = parseMainAxisAlignment(
-            evaluator.evaluate(arg.value),
-          );
+          mainAxisAlignment =
+              parseMainAxisAlignment(evaluator.evaluate(arg.value));
           break;
         case 'mainAxisSize':
           mainAxisSize = parseMainAxisSize(evaluator.evaluate(arg.value));
           break;
         case 'crossAxisAlignment':
-          crossAxisAlignment = parseCrossAxisAlignment(
-            evaluator.evaluate(arg.value),
-          );
+          crossAxisAlignment =
+              parseCrossAxisAlignment(evaluator.evaluate(arg.value));
           break;
         case 'textDirection':
           textDirection = parseTextDirection(evaluator.evaluate(arg.value));
           break;
         case 'verticalDirection':
-          verticalDirection = parseVerticalDirection(
-            evaluator.evaluate(arg.value),
-          );
+          verticalDirection =
+              parseVerticalDirection(evaluator.evaluate(arg.value));
           break;
         case 'textBaseline':
           textBaseline = parseTextBaseline(evaluator.evaluate(arg.value));
@@ -136,8 +130,7 @@ class ColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('column').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -147,9 +140,8 @@ class ColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'column',
         nonFilterContent,

@@ -26,8 +26,7 @@ class AboutDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('about_dialog').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class AboutDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'about_dialog',
         nonFilterContent,
@@ -65,9 +63,8 @@ class AboutDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.applicationLegalese = value?.toString();
           break;
         case 'applicationIcon':
-          config.applicationIcon = value is Widget
-              ? value
-              : resolveIconWidget(value);
+          config.applicationIcon =
+              value is Widget ? value : resolveIconWidget(value);
           break;
         default:
           handleUnknownArg('about_dialog', name);
@@ -85,7 +82,10 @@ class _AboutDialogConfig {
   Widget? applicationIcon;
 }
 
-Widget _buildDialog(_AboutDialogConfig config, List<Widget> children) {
+Widget _buildDialog(
+  _AboutDialogConfig config,
+  List<Widget> children,
+) {
   return AboutDialog(
     applicationName: config.applicationName,
     applicationVersion: config.applicationVersion,

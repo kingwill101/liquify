@@ -12,14 +12,14 @@ export 'src/tags/tags.dart';
 export 'src/widget_render_target.dart';
 
 typedef UiElementBuilder =
-    Widget Function(
-      BuildContext context,
-      UiElement element,
-      UiNodeRenderer renderer,
+Widget Function(
+    BuildContext context,
+    UiElement element,
+    UiNodeRenderer renderer,
     );
 
 typedef UiActionHandler =
-    FutureOr<void> Function(BuildContext context, Map<String, dynamic> action);
+FutureOr<void> Function(BuildContext context, Map<String, dynamic> action);
 
 class UiWidgetRegistry {
   final Map<String, UiElementBuilder> _builders = {};
@@ -43,8 +43,8 @@ class UiActionRegistry {
 
 class UiNodeRenderer {
   UiNodeRenderer({UiWidgetRegistry? widgets, UiActionRegistry? actions})
-    : widgets = widgets ?? UiWidgetRegistry(),
-      actions = actions ?? UiActionRegistry();
+      : widgets = widgets ?? UiWidgetRegistry(),
+        actions = actions ?? UiActionRegistry();
 
   final UiWidgetRegistry widgets;
   final UiActionRegistry actions;
@@ -74,9 +74,9 @@ class UiNodeRenderer {
   }
 
   Future<void> handleAction(
-    BuildContext context,
-    Map<String, dynamic> action,
-  ) async {
+      BuildContext context,
+      Map<String, dynamic> action,
+      ) async {
     final type = action['type'];
     if (type is! String) {
       return;

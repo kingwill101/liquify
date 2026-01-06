@@ -26,8 +26,7 @@ class ListTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('list_tile').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class ListTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'list_tile',
         nonFilterContent,
@@ -148,8 +146,8 @@ class ListTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -158,21 +156,24 @@ class ListTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'tap',
-      props: {'title': config.title, 'subtitle': config.subtitle},
+      props: {
+        'title': config.title,
+        'subtitle': config.subtitle,
+      },
     );
     config.onTap =
         resolveActionCallback(
-          evaluator,
-          onTapValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onTapValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     return config;
   }
 

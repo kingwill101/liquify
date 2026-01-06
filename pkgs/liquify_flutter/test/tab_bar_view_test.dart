@@ -5,12 +5,15 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('tab_bar_view renders children with controller', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% tab_bar_view length: 2 %}
   {% text value: "Tab A" %}
   {% text value: "Tab B" %}
 {% endtab_bar_view %}
-''');
+''',
+    );
 
     expect(find.byType(TabBarView), findsOneWidget);
     expect(find.byType(DefaultTabController), findsOneWidget);

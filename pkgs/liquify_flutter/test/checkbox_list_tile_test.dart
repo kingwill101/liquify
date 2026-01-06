@@ -14,10 +14,7 @@ void main() {
     expect(find.text('Alerts'), findsOneWidget);
     final tile = tester.widget<CheckboxListTile>(find.byType(CheckboxListTile));
     expect(tile.value, isTrue);
-    expect(
-      tile.fillColor?.resolve(const <WidgetState>{}),
-      const Color(0xff2563eb),
-    );
+    expect(tile.fillColor?.resolve(const <WidgetState>{}), const Color(0xff2563eb));
     expect(
       tile.overlayColor?.resolve(const <WidgetState>{}),
       const Color(0xff22c55e),

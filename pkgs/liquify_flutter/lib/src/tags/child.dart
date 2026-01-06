@@ -10,7 +10,11 @@ class ChildTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final children = _captureChildrenSync(evaluator);
-    setPropertyValue(evaluator.context, 'child', _wrapChildren(children));
+    setPropertyValue(
+      evaluator.context,
+      'child',
+      _wrapChildren(children),
+    );
   }
 
   @override
@@ -19,13 +23,16 @@ class ChildTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     Buffer buffer,
   ) async {
     final children = await _captureChildrenAsync(evaluator);
-    setPropertyValue(evaluator.context, 'child', _wrapChildren(children));
+    setPropertyValue(
+      evaluator.context,
+      'child',
+      _wrapChildren(children),
+    );
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('child').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -35,9 +42,8 @@ class ChildTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'child',
         nonFilterContent,

@@ -29,19 +29,13 @@ void main() {
       '{% center %}{% text value: "Y" %}{% endcenter %}',
     );
 
-    final alignFinder = find.ancestor(
-      of: find.text('X'),
-      matching: find.byType(Align),
-    );
+    final alignFinder = find.ancestor(of: find.text('X'), matching: find.byType(Align));
     final align = tester.widget<Align>(alignFinder.first);
     expect(align.alignment, Alignment.topLeft);
     expect(align.widthFactor, 0.5);
     expect(align.heightFactor, 0.25);
 
-    final centerFinder = find.ancestor(
-      of: find.text('Y'),
-      matching: find.byType(Center),
-    );
+    final centerFinder = find.ancestor(of: find.text('Y'), matching: find.byType(Center));
     expect(centerFinder, findsOneWidget);
   });
 
@@ -80,17 +74,15 @@ void main() {
     expect(positioned.height, 30);
   });
 
-  testWidgets('fitted_box and aspect_ratio tags set properties', (
-    tester,
-  ) async {
+  testWidgets('fitted_box and aspect_ratio tags set properties', (tester) async {
     const template =
-        '{% container width: 100 height: 50 %}'
-        '{% aspect_ratio aspectRatio: 2 %}'
-        '{% fitted_box fit: "cover" alignment: "bottomRight" clipBehavior: "hardEdge" %}'
-        '{% text value: "AR" %}'
-        '{% endfitted_box %}'
-        '{% endaspect_ratio %}'
-        '{% endcontainer %}';
+      '{% container width: 100 height: 50 %}'
+      '{% aspect_ratio aspectRatio: 2 %}'
+      '{% fitted_box fit: "cover" alignment: "bottomRight" clipBehavior: "hardEdge" %}'
+      '{% text value: "AR" %}'
+      '{% endfitted_box %}'
+      '{% endaspect_ratio %}'
+      '{% endcontainer %}';
 
     await pumpTemplate(tester, template);
 

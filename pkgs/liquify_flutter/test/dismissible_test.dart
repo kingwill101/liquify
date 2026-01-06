@@ -17,7 +17,9 @@ void main() {
 {% enddismissible %}
 ''',
       data: {
-        'actions': {'dismissed': () => dismissed = true},
+        'actions': {
+          'dismissed': () => dismissed = true,
+        }
       },
     );
 

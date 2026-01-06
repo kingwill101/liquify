@@ -365,65 +365,69 @@ class TextFormFieldTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     config.validator = _resolveValidator(validatorValue);
     final actionName = actionValue is String ? actionValue : null;
-    final changeActionName = onChangedValue is String
-        ? onChangedValue
-        : actionName;
+    final changeActionName =
+        onChangedValue is String ? onChangedValue : actionName;
     final changeEvent = buildWidgetEvent(
       tag: 'text_form_field',
       id: resolvedId,
       key: resolvedKeyValue,
       action: changeActionName,
       event: 'changed',
-      props: {'label': config.label, 'hint': config.hint},
+      props: {
+        'label': config.label,
+        'hint': config.hint,
+      },
     );
     final changeCallback =
         resolveStringActionCallback(
-          evaluator,
-          onChangedValue,
-          event: changeEvent,
-          actionValue: changeActionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: changeEvent,
-          actionValue: changeActionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: changeEvent,
+              actionValue: changeActionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: changeEvent,
+              actionValue: changeActionName,
+            );
     if (changeCallback != null) {
       config.onChanged = (value) {
         changeEvent['value'] = value;
         changeCallback(value);
       };
     }
-    final submitActionName = onSubmittedValue is String
-        ? onSubmittedValue
-        : actionName;
+    final submitActionName =
+        onSubmittedValue is String ? onSubmittedValue : actionName;
     final submitEvent = buildWidgetEvent(
       tag: 'text_form_field',
       id: resolvedId,
       key: resolvedKeyValue,
       action: submitActionName,
       event: 'submitted',
-      props: {'label': config.label, 'hint': config.hint},
+      props: {
+        'label': config.label,
+        'hint': config.hint,
+      },
     );
     final submitCallback =
         resolveStringActionCallback(
-          evaluator,
-          onSubmittedValue,
-          event: submitEvent,
-          actionValue: submitActionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: submitEvent,
-          actionValue: submitActionName,
-        );
+              evaluator,
+              onSubmittedValue,
+              event: submitEvent,
+              actionValue: submitActionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: submitEvent,
+              actionValue: submitActionName,
+            );
     if (submitCallback != null) {
       config.onFieldSubmitted = (value) {
         submitEvent['value'] = value;
@@ -433,30 +437,32 @@ class TextFormFieldTag extends WidgetTagBase with AsyncTag {
     if (onSavedValue is FormFieldSetter<String>) {
       config.onSaved = onSavedValue;
     } else {
-      final savedActionName = onSavedValue is String
-          ? onSavedValue
-          : actionName;
+      final savedActionName =
+          onSavedValue is String ? onSavedValue : actionName;
       final savedEvent = buildWidgetEvent(
         tag: 'text_form_field',
         id: resolvedId,
         key: resolvedKeyValue,
         action: savedActionName,
         event: 'saved',
-        props: {'label': config.label, 'hint': config.hint},
+        props: {
+          'label': config.label,
+          'hint': config.hint,
+        },
       );
       final savedCallback =
           resolveStringActionCallback(
-            evaluator,
-            onSavedValue,
-            event: savedEvent,
-            actionValue: savedActionName,
-          ) ??
-          resolveStringActionCallback(
-            evaluator,
-            actionValue,
-            event: savedEvent,
-            actionValue: savedActionName,
-          );
+                evaluator,
+                onSavedValue,
+                event: savedEvent,
+                actionValue: savedActionName,
+              ) ??
+              resolveStringActionCallback(
+                evaluator,
+                actionValue,
+                event: savedEvent,
+                actionValue: savedActionName,
+              );
       if (savedCallback != null) {
         config.onSaved = (value) {
           savedEvent['value'] = value;
@@ -555,16 +561,13 @@ TextFormField _buildTextFormField(_TextFormFieldConfig config) {
   final readOnly = config.readOnly ?? false;
   final maxLines = config.maxLines ?? 1;
   final keyboardType =
-      config.keyboardType ??
-      (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
-  final smartDashesType =
-      config.smartDashesType ??
+      config.keyboardType ?? (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
+  final smartDashesType = config.smartDashesType ??
       (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled);
-  final smartQuotesType =
-      config.smartQuotesType ??
+  final smartQuotesType = config.smartQuotesType ??
       (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled);
-  final enableInteractiveSelection =
-      config.enableInteractiveSelection ?? (!readOnly || !obscureText);
+  final enableInteractiveSelection = config.enableInteractiveSelection ??
+      (!readOnly || !obscureText);
   InputDecoration? decoration = config.decoration;
   if (!config.decorationProvided) {
     if (config.label != null || config.hint != null) {
@@ -575,17 +578,15 @@ TextFormField _buildTextFormField(_TextFormFieldConfig config) {
     } else {
       decoration = const InputDecoration();
     }
-  } else if (decoration != null &&
-      (config.label != null || config.hint != null)) {
+  } else if (decoration != null && (config.label != null || config.hint != null)) {
     decoration = decoration.copyWith(
       labelText: config.label,
       hintText: config.hint,
     );
   }
 
-  final resolvedInitialValue = config.controller == null
-      ? config.initialValue
-      : null;
+  final resolvedInitialValue =
+      config.controller == null ? config.initialValue : null;
 
   if (config.contextMenuBuilderProvided) {
     return TextFormField(
@@ -657,8 +658,7 @@ TextFormField _buildTextFormField(_TextFormFieldConfig config) {
       clipBehavior: config.clipBehavior ?? Clip.hardEdge,
       restorationId: config.restorationId,
       scribbleEnabled: config.scribbleEnabled ?? true,
-      stylusHandwritingEnabled:
-          config.stylusHandwritingEnabled ??
+      stylusHandwritingEnabled: config.stylusHandwritingEnabled ??
           EditableText.defaultStylusHandwritingEnabled,
       enableIMEPersonalizedLearning:
           config.enableIMEPersonalizedLearning ?? true,
@@ -739,10 +739,10 @@ TextFormField _buildTextFormField(_TextFormFieldConfig config) {
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     restorationId: config.restorationId,
     scribbleEnabled: config.scribbleEnabled ?? true,
-    stylusHandwritingEnabled:
-        config.stylusHandwritingEnabled ??
+    stylusHandwritingEnabled: config.stylusHandwritingEnabled ??
         EditableText.defaultStylusHandwritingEnabled,
-    enableIMEPersonalizedLearning: config.enableIMEPersonalizedLearning ?? true,
+    enableIMEPersonalizedLearning:
+        config.enableIMEPersonalizedLearning ?? true,
     canRequestFocus: config.canRequestFocus ?? true,
     spellCheckConfiguration: config.spellCheckConfiguration,
     magnifierConfiguration: config.magnifierConfiguration,

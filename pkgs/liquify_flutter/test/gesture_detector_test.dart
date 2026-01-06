@@ -14,7 +14,9 @@ void main() {
 {% endgesture_detector %}
 ''',
       data: {
-        'actions': {'tap': () => tapped = true},
+        'actions': {
+          'tap': () => tapped = true,
+        }
       },
     );
 

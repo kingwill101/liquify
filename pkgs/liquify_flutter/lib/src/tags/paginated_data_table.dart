@@ -196,7 +196,8 @@ class PaginatedDataTableTag extends WidgetTagBase with AsyncTag {
       evaluator,
       rowsPerPageAction,
       event: rowsPerPageEvent,
-      actionValue: rowsPerPageAction is String ? rowsPerPageAction : actionName,
+      actionValue:
+          rowsPerPageAction is String ? rowsPerPageAction : actionName,
     );
     config.onRowsPerPageChanged = rowsPerPageCallback == null
         ? null
@@ -271,8 +272,7 @@ PaginatedDataTable _buildTable(
 ) {
   final rowsPerPage =
       config.rowsPerPage ?? PaginatedDataTable.defaultRowsPerPage;
-  final availableRows =
-      config.availableRowsPerPage ??
+  final availableRows = config.availableRowsPerPage ??
       <int>[
         PaginatedDataTable.defaultRowsPerPage,
         PaginatedDataTable.defaultRowsPerPage * 2,
@@ -281,8 +281,7 @@ PaginatedDataTable _buildTable(
       ];
   final dataRowMinHeight = config.dataRowMinHeight ?? config.dataRowHeight;
   final dataRowMaxHeight = config.dataRowMaxHeight ?? config.dataRowHeight;
-  final header =
-      config.header ??
+  final header = config.header ??
       (config.actions == null || config.actions!.isEmpty
           ? null
           : const Text(''));

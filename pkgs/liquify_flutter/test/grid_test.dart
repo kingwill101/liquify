@@ -12,8 +12,8 @@ void main() {
     );
 
     final grid = tester.widget<GridView>(find.byType(GridView));
-    final delegate =
-        grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+    final delegate = grid.gridDelegate
+        as SliverGridDelegateWithFixedCrossAxisCount;
     expect(delegate.crossAxisCount, 3);
     expect(delegate.crossAxisSpacing, 5);
     expect(delegate.mainAxisSpacing, 5);

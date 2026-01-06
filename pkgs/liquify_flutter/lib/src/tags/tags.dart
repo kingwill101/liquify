@@ -68,7 +68,8 @@ export 'margin.dart' show MarginTag;
 export 'material_banner.dart' show MaterialBannerTag;
 export 'mouse_region.dart' show MouseRegionTag;
 export 'navigator.dart' show NavigatorTag;
-export 'navigation_bar.dart' show NavigationBarTag, NavigationBarDestinationTag;
+export 'navigation_bar.dart'
+    show NavigationBarTag, NavigationBarDestinationTag;
 export 'navigation_drawer.dart'
     show NavigationDrawerTag, NavigationDrawerDestinationTag, DrawerHeaderTag;
 export 'navigation_rail.dart' show NavigationRailTag, NavigationDestinationTag;

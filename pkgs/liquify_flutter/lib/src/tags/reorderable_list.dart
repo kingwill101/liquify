@@ -32,20 +32,19 @@ class ReorderableListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string(tagName).trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag = tagStart() & string('end$tagName').trim() & tagEnd();
+    final endTag =
+        tagStart() & string('end$tagName').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         tagName,
         nonFilterContent,
@@ -121,9 +120,8 @@ class ReorderableListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.cacheExtent = toDouble(evaluator.evaluate(arg.value));
           break;
         case 'dragStartBehavior':
-          config.dragStartBehavior = parseDragStartBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          config.dragStartBehavior =
+              parseDragStartBehavior(evaluator.evaluate(arg.value));
           break;
         case 'keyboardDismissBehavior':
           config.keyboardDismissBehavior =
@@ -139,9 +137,7 @@ class ReorderableListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.clipBehavior = parseClip(evaluator.evaluate(arg.value));
           break;
         case 'buildDefaultDragHandles':
-          config.buildDefaultDragHandles = toBool(
-            evaluator.evaluate(arg.value),
-          );
+          config.buildDefaultDragHandles = toBool(evaluator.evaluate(arg.value));
           break;
         case 'action':
           actionValue = evaluator.evaluate(arg.value);
@@ -173,17 +169,17 @@ class ReorderableListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     config.onReorder =
         resolveReorderActionCallback(
-          evaluator,
-          onReorderValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveReorderActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onReorderValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveReorderActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     return config;
   }
 
@@ -195,15 +191,12 @@ class ReorderableListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (items.isEmpty) {
       return const [];
     }
-    final itemName = config.itemName?.trim().isNotEmpty == true
-        ? config.itemName!
-        : 'item';
-    final indexName = config.indexName?.trim().isNotEmpty == true
-        ? config.indexName!
-        : 'index';
-    final keyName = config.itemKey?.trim().isNotEmpty == true
-        ? config.itemKey!
-        : 'id';
+    final itemName =
+        config.itemName?.trim().isNotEmpty == true ? config.itemName! : 'item';
+    final indexName =
+        config.indexName?.trim().isNotEmpty == true ? config.indexName! : 'index';
+    final keyName =
+        config.itemKey?.trim().isNotEmpty == true ? config.itemKey! : 'id';
     final widgets = <Widget>[];
     for (var i = 0; i < items.length; i++) {
       final scope = pushPropertyScope(evaluator.context);
@@ -218,12 +211,8 @@ class ReorderableListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         if (children.isEmpty) {
           continue;
         }
-        final widget = children.length == 1
-            ? children.first
-            : wrapChildren(children);
-        widgets.add(
-          KeyedSubtree(key: _resolveKey(items[i], keyName, i), child: widget),
-        );
+        final widget = children.length == 1 ? children.first : wrapChildren(children);
+        widgets.add(KeyedSubtree(key: _resolveKey(items[i], keyName, i), child: widget));
       } finally {
         evaluator.context.popScope();
         popPropertyScope(evaluator.context, scope);
@@ -277,8 +266,7 @@ ReorderableListView _buildList(
     cacheExtent: config.cacheExtent,
     dragStartBehavior: config.dragStartBehavior ?? DragStartBehavior.start,
     keyboardDismissBehavior:
-        config.keyboardDismissBehavior ??
-        ScrollViewKeyboardDismissBehavior.manual,
+        config.keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
     restorationId: config.restorationId,
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     buildDefaultDragHandles: config.buildDefaultDragHandles ?? true,

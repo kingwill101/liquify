@@ -13,7 +13,9 @@ void main() {
       '{% endnavigation_rail %}',
     );
 
-    final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
+    final rail = tester.widget<NavigationRail>(
+      find.byType(NavigationRail),
+    );
     expect(rail.destinations.length, 2);
     expect(rail.selectedIndex, 1);
   });

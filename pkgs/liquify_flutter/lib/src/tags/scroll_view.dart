@@ -27,9 +27,7 @@ class ScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         name: 'padding',
         parser: parseEdgeInsetsGeometry,
       );
-      buffer.write(
-        _buildScrollView(config, children, paddingOverride: padding),
-      );
+      buffer.write(_buildScrollView(config, children, paddingOverride: padding));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -54,9 +52,7 @@ class ScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         name: 'padding',
         parser: parseEdgeInsetsGeometry,
       );
-      buffer.write(
-        _buildScrollView(config, children, paddingOverride: padding),
-      );
+      buffer.write(_buildScrollView(config, children, paddingOverride: padding));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -64,8 +60,7 @@ class ScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string(tagName).trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -75,9 +70,8 @@ class ScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         tagName,
         nonFilterContent,
@@ -130,25 +124,25 @@ class ScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           }
           break;
         case 'dragStartBehavior':
-          dragStartBehavior = parseDragStartBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          dragStartBehavior =
+              parseDragStartBehavior(evaluator.evaluate(arg.value));
           break;
         case 'clip':
         case 'clipBehavior':
-          clipBehavior =
-              parseClip(evaluator.evaluate(arg.value)) ?? clipBehavior;
+          clipBehavior = parseClip(evaluator.evaluate(arg.value)) ?? clipBehavior;
           break;
         case 'hitTestBehavior':
-          hitTestBehavior = parseHitTestBehavior(evaluator.evaluate(arg.value));
+          hitTestBehavior =
+              parseHitTestBehavior(evaluator.evaluate(arg.value));
           break;
         case 'restorationId':
           restorationId = evaluator.evaluate(arg.value)?.toString();
           break;
         case 'keyboardDismissBehavior':
-          keyboardDismissBehavior = parseScrollViewKeyboardDismissBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          keyboardDismissBehavior =
+              parseScrollViewKeyboardDismissBehavior(
+                evaluator.evaluate(arg.value),
+              );
           break;
         default:
           handleUnknownArg(tagName, name);
@@ -192,6 +186,7 @@ class ScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       child: wrapChildren(children),
     );
   }
+
 }
 
 class _ScrollConfig {

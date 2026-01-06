@@ -30,9 +30,8 @@ void main() {
       },
     );
 
-    final segmented = tester.widget<SegmentedButton<int>>(
-      find.byType(SegmentedButton<int>),
-    );
+    final segmented =
+        tester.widget<SegmentedButton<int>>(find.byType(SegmentedButton<int>));
     expect(segmented.multiSelectionEnabled, isTrue);
     expect(segmented.direction, Axis.vertical);
     expect(segmented.selected, {0, 2});

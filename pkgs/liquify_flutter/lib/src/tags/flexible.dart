@@ -26,8 +26,7 @@ class FlexibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('flexible').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class FlexibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'flexible',
         nonFilterContent,
@@ -95,7 +93,11 @@ Widget _buildFlexible(_FlexibleConfig config, List<Widget> children) {
     null => FlexFit.loose,
     final resolved => resolved,
   };
-  return Flexible(flex: config.flex, fit: fit, child: child);
+  return Flexible(
+    flex: config.flex,
+    fit: fit,
+    child: child,
+  );
 }
 
 List<Widget> _asWidgets(Object? value) {

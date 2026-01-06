@@ -10,7 +10,9 @@ void main() {
       tester,
       '{% action_chip label: "New" action: "tap" %}',
       data: {
-        'actions': {'tap': () => pressed = true},
+        'actions': {
+          'tap': () => pressed = true,
+        },
       },
     );
 
@@ -26,7 +28,9 @@ void main() {
       tester,
       '{% choice_chip label: "Daily" selected: true selectAction: "select" %}',
       data: {
-        'actions': {'select': (bool value) => selected = value},
+        'actions': {
+          'select': (bool value) => selected = value,
+        },
       },
     );
 
@@ -42,7 +46,10 @@ void main() {
       tester,
       '{% chip label: "New" labelStyle: style shape: "stadium" %}',
       data: {
-        'style': {'fontSize': 14, 'color': '#ff0000'},
+        'style': {
+          'fontSize': 14,
+          'color': '#ff0000',
+        },
       },
     );
 
@@ -52,9 +59,8 @@ void main() {
     expect(chip.shape, isA<StadiumBorder>());
   });
 
-  testWidgets('chip tag rejects unknown label style keys in strict mode', (
-    tester,
-  ) async {
+  testWidgets('chip tag rejects unknown label style keys in strict mode',
+      (tester) async {
     expect(
       () => pumpTemplate(
         tester,

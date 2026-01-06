@@ -141,11 +141,9 @@ class SwitchTag extends WidgetTagBase with AsyncTag {
     }
     config.onChanged =
         resolveBoolActionCallback(evaluator, onChangedValue) ??
-        resolveBoolActionCallback(evaluator, actionValue);
-    config.onFocusChange = resolveBoolActionCallback(
-      evaluator,
-      onFocusChangeValue,
-    );
+            resolveBoolActionCallback(evaluator, actionValue);
+    config.onFocusChange =
+        resolveBoolActionCallback(evaluator, onFocusChangeValue);
     config.padding = resolvePropertyValue<EdgeInsetsGeometry?>(
       environment: evaluator.context,
       namedArgs: namedValues,

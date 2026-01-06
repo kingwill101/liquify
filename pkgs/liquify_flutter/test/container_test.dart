@@ -12,10 +12,8 @@ void main() {
       '{% text value: "Box" %}{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Box'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Box'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.margin, const EdgeInsets.all(4));
     expect(container.padding, const EdgeInsets.all(8));

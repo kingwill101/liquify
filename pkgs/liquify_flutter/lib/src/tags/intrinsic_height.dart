@@ -17,9 +17,7 @@ class IntrinsicHeightTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       evaluator.evaluateNodes(body);
       final captured = evaluator.popBufferValue();
       final children = WidgetTagBase.asWidgets(captured);
-      buffer.write(
-        _buildIntrinsicHeight(evaluator.context, namedValues, children),
-      );
+      buffer.write(_buildIntrinsicHeight(evaluator.context, namedValues, children));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -37,9 +35,7 @@ class IntrinsicHeightTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       await evaluator.evaluateNodesAsync(body);
       final captured = evaluator.popBufferValue();
       final children = WidgetTagBase.asWidgets(captured);
-      buffer.write(
-        _buildIntrinsicHeight(evaluator.context, namedValues, children),
-      );
+      buffer.write(_buildIntrinsicHeight(evaluator.context, namedValues, children));
     } finally {
       popPropertyScope(evaluator.context, scope);
     }
@@ -47,20 +43,19 @@ class IntrinsicHeightTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('intrinsic_height').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag = tagStart() & string('endintrinsic_height').trim() & tagEnd();
+    final endTag =
+        tagStart() & string('endintrinsic_height').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'intrinsic_height',
         nonFilterContent,
@@ -113,3 +108,4 @@ Widget _buildIntrinsicHeight(
 
   return IntrinsicHeight(child: child);
 }
+

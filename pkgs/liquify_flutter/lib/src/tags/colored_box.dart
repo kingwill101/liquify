@@ -15,10 +15,7 @@ class ColoredBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildColoredBox(config, children));
@@ -26,8 +23,7 @@ class ColoredBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('colored_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -36,9 +32,8 @@ class ColoredBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'colored_box',
         nonFilterContent,
@@ -77,5 +72,8 @@ Widget _buildColoredBox(_ColoredBoxConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
-  return ColoredBox(color: config.color!, child: child);
+  return ColoredBox(
+    color: config.color!,
+    child: child,
+  );
 }

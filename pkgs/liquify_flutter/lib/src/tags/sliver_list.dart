@@ -27,8 +27,7 @@ class SliverListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_list').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -38,9 +37,8 @@ class SliverListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_list',
         nonFilterContent,
@@ -126,7 +124,10 @@ class SliverListTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         : SliverPadding(padding: config.padding!, sliver: sliver);
   }
 
-  List<Widget> _buildChildren(Evaluator evaluator, _SliverListConfig config) {
+  List<Widget> _buildChildren(
+    Evaluator evaluator,
+    _SliverListConfig config,
+  ) {
     final items = _resolveItems(config.items);
     if (items.isEmpty) {
       return captureChildrenSync(evaluator);
@@ -173,12 +174,10 @@ List<Widget> _buildItems(
   List<Object?> items,
   List<ASTNode> body,
 ) {
-  final itemName = config.itemName?.trim().isNotEmpty == true
-      ? config.itemName!
-      : 'item';
-  final indexName = config.indexName?.trim().isNotEmpty == true
-      ? config.indexName!
-      : 'index';
+  final itemName =
+      config.itemName?.trim().isNotEmpty == true ? config.itemName! : 'item';
+  final indexName =
+      config.indexName?.trim().isNotEmpty == true ? config.indexName! : 'index';
   final padding = config.gap == null || config.gap == 0
       ? null
       : EdgeInsets.only(bottom: config.gap!);
@@ -196,12 +195,10 @@ List<Widget> _buildItems(
       if (children.isEmpty) {
         continue;
       }
-      final widget = children.length == 1
-          ? children.first
-          : wrapChildren(children);
-      widgets.add(
-        padding == null ? widget : Padding(padding: padding, child: widget),
-      );
+      final widget =
+          children.length == 1 ? children.first : wrapChildren(children);
+      widgets
+          .add(padding == null ? widget : Padding(padding: padding, child: widget));
     } finally {
       evaluator.context.popScope();
       popPropertyScope(evaluator.context, scope);
@@ -216,12 +213,10 @@ Future<List<Widget>> _buildItemsAsync(
   List<Object?> items,
   List<ASTNode> body,
 ) async {
-  final itemName = config.itemName?.trim().isNotEmpty == true
-      ? config.itemName!
-      : 'item';
-  final indexName = config.indexName?.trim().isNotEmpty == true
-      ? config.indexName!
-      : 'index';
+  final itemName =
+      config.itemName?.trim().isNotEmpty == true ? config.itemName! : 'item';
+  final indexName =
+      config.indexName?.trim().isNotEmpty == true ? config.indexName! : 'index';
   final padding = config.gap == null || config.gap == 0
       ? null
       : EdgeInsets.only(bottom: config.gap!);
@@ -239,12 +234,10 @@ Future<List<Widget>> _buildItemsAsync(
       if (children.isEmpty) {
         continue;
       }
-      final widget = children.length == 1
-          ? children.first
-          : wrapChildren(children);
-      widgets.add(
-        padding == null ? widget : Padding(padding: padding, child: widget),
-      );
+      final widget =
+          children.length == 1 ? children.first : wrapChildren(children);
+      widgets
+          .add(padding == null ? widget : Padding(padding: padding, child: widget));
     } finally {
       evaluator.context.popScope();
       popPropertyScope(evaluator.context, scope);

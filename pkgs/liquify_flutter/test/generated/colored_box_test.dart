@@ -5,9 +5,12 @@ import '../test_utils.dart';
 
 void main() {
   testWidgets('colored_box renders', (tester) async {
-    await pumpTemplate(tester, '''
-{% colored_box color: "#FF0000" %}{% text value: "Sample" %}{% endcolored_box %}
-      ''');
+    await pumpTemplate(
+      tester,
+      '''
+{% colored_box color: "#FF0000" %}{% text data: "Sample" %}{% endcolored_box %}
+      '''
+    );
     expect(find.byType(ColoredBox), findsWidgets);
   });
 }

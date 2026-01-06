@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_utils.dart';
 
 void main() {
-  testWidgets('bottom_nav builds items and respects currentIndex', (
-    tester,
-  ) async {
+  testWidgets('bottom_nav builds items and respects currentIndex', (tester) async {
     await pumpTemplate(
       tester,
       '{% bottom_nav currentIndex: 1 %}'

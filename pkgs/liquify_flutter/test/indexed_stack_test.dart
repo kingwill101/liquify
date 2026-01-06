@@ -5,13 +5,16 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('indexed_stack renders with selected index', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% indexed_stack index: 1 %}
   {% text value: "First" %}
   {% text value: "Second" %}
   {% text value: "Third" %}
 {% endindexed_stack %}
-''');
+''',
+    );
 
     final widget = tester.widget<IndexedStack>(find.byType(IndexedStack));
     expect(widget.index, 1);

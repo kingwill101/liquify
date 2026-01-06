@@ -64,8 +64,8 @@ class AutocompleteTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -98,23 +98,24 @@ class AutocompleteTag extends WidgetTagBase with AsyncTag {
     return config;
   }
 
-  Widget _buildAutocomplete(Evaluator evaluator, _AutocompleteConfig config) {
+  Widget _buildAutocomplete(
+    Evaluator evaluator,
+    _AutocompleteConfig config,
+  ) {
     final options = config.options;
     final initialValue = config.initialValue;
     return Autocomplete<Object>(
       key: config.widgetKey,
-      initialValue: initialValue == null
-          ? null
-          : TextEditingValue(text: initialValue),
+      initialValue:
+          initialValue == null ? null : TextEditingValue(text: initialValue),
       optionsBuilder: (TextEditingValue textEditingValue) {
         final query = textEditingValue.text.trim();
         if (query.isEmpty) {
           return options;
         }
         final lowered = query.toLowerCase();
-        return options.where(
-          (option) => option.toLowerCase().contains(lowered),
-        );
+        return options.where((option) =>
+            option.toLowerCase().contains(lowered));
       },
       displayStringForOption: (option) => option.toString(),
       onSelected: (value) {

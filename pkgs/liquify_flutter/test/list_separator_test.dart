@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_utils.dart';
 
 void main() {
-  testWidgets('list_separator adds separators to list_view_builder', (
-    tester,
-  ) async {
+  testWidgets('list_separator adds separators to list_view_builder', (tester) async {
     await pumpTemplate(
       tester,
       '''

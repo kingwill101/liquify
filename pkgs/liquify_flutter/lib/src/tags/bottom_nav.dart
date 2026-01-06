@@ -29,8 +29,7 @@ class BottomNavTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string(tagName).trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -40,9 +39,8 @@ class BottomNavTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         tagName,
         nonFilterContent,
@@ -109,9 +107,7 @@ class BottomNavTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.mouseCursor = parseMouseCursor(value);
           break;
         case 'landscapeLayout':
-          config.landscapeLayout = parseBottomNavigationBarLandscapeLayout(
-            value,
-          );
+          config.landscapeLayout = parseBottomNavigationBarLandscapeLayout(value);
           break;
         case 'action':
           actionValue = value;
@@ -139,8 +135,8 @@ class BottomNavTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -153,17 +149,17 @@ class BottomNavTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final callback =
         resolveIntActionCallback(
-          evaluator,
-          onTapValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveIntActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onTapValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveIntActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onTap = callback == null
         ? null
         : (index) {

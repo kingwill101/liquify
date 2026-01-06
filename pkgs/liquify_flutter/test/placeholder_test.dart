@@ -5,9 +5,12 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('placeholder renders', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% placeholder fallbackWidth: 80 fallbackHeight: 60 %}
-''');
+''',
+    );
 
     expect(find.byType(Placeholder), findsOneWidget);
   });

@@ -15,3 +15,4 @@ void main() {
     expect(find.byType(IntrinsicHeight), findsOneWidget);
   });
 }
+

@@ -109,8 +109,8 @@ class SegmentedControlTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -119,21 +119,23 @@ class SegmentedControlTag extends WidgetTagBase with AsyncTag {
       key: resolvedKeyValue,
       action: actionName,
       event: 'changed',
-      props: {'count': config.labels!.length},
+      props: {
+        'count': config.labels!.length,
+      },
     );
     final callback =
         resolveIntSetActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveIntSetActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveIntSetActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     config.onChanged = callback == null
         ? null
         : (selection) {
@@ -174,7 +176,12 @@ Widget _buildSegmented(_SegmentedConfig config) {
   final selected = config.selected ?? const {0};
   final segments = <ButtonSegment<int>>[];
   for (var i = 0; i < labels.length; i++) {
-    segments.add(ButtonSegment<int>(value: i, label: Text(labels[i])));
+    segments.add(
+      ButtonSegment<int>(
+        value: i,
+        label: Text(labels[i]),
+      ),
+    );
   }
   return SegmentedButton<int>(
     key: config.widgetKey,

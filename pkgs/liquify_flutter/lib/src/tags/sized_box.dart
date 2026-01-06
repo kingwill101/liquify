@@ -15,10 +15,7 @@ class SizedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildSizedBox(config, children));
@@ -26,8 +23,7 @@ class SizedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sized_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -36,9 +32,8 @@ class SizedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sized_box',
         nonFilterContent,
@@ -75,6 +70,12 @@ class _SizedBoxConfig {
 }
 
 Widget _buildSizedBox(_SizedBoxConfig config, List<Widget> children) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return SizedBox(width: config.width, height: config.height, child: child);
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return SizedBox(
+    width: config.width,
+    height: config.height,
+    child: child,
+  );
 }

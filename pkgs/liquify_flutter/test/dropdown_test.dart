@@ -14,14 +14,17 @@ void main() {
           {'label': 'Daily', 'value': 'Daily'},
           {'label': 'Weekly', 'value': 'Weekly'},
         ],
-        'actions': {'pick': (String value) => selected = value},
+        'actions': {
+          'pick': (String value) => selected = value,
+        },
       },
     );
 
     final dropdownFinder = find.byWidgetPredicate(
       (widget) => widget is DropdownButton<String>,
     );
-    final dropdown = tester.widget<DropdownButton<String>>(dropdownFinder);
+    final dropdown =
+        tester.widget<DropdownButton<String>>(dropdownFinder);
     expect(dropdown.value, 'Daily');
     expect(dropdown.onChanged, isNotNull);
     dropdown.onChanged?.call('Weekly');
@@ -40,9 +43,8 @@ void main() {
       },
     );
 
-    final dropdown = tester.widget<DropdownButton<String>>(
-      find.byType(DropdownButton<String>),
-    );
+    final dropdown =
+        tester.widget<DropdownButton<String>>(find.byType(DropdownButton<String>));
     expect(dropdown.iconSize, 30);
     expect(dropdown.elevation, 4);
     expect(dropdown.menuMaxHeight, 240);

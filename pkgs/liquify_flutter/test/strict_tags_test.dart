@@ -14,9 +14,8 @@ void main() {
     );
   });
 
-  testWidgets('strict tag parsing rejects unknown args on generated tags', (
-    tester,
-  ) async {
+  testWidgets('strict tag parsing rejects unknown args on generated tags',
+      (tester) async {
     expect(
       () => pumpTemplate(
         tester,

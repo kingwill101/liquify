@@ -7,9 +7,8 @@ void main() {
   testWidgets('progress tag renders linear indicator', (tester) async {
     await pumpTemplate(tester, '{% progress type: "linear" value: 0.6 %}');
 
-    final indicator = tester.widget<LinearProgressIndicator>(
-      find.byType(LinearProgressIndicator),
-    );
+    final indicator =
+        tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator));
     expect(indicator.value, closeTo(0.6, 0.001));
   });
 
@@ -17,14 +16,11 @@ void main() {
     await pumpTemplate(tester, '{% progress type: "circular" value: 0.3 %}');
 
     final indicator = tester.widget<CircularProgressIndicator>(
-      find.byType(CircularProgressIndicator, skipOffstage: false),
-    );
+        find.byType(CircularProgressIndicator, skipOffstage: false));
     expect(indicator.value, closeTo(0.3, 0.001));
   });
 
-  testWidgets('progress tag supports linear advanced properties', (
-    tester,
-  ) async {
+  testWidgets('progress tag supports linear advanced properties', (tester) async {
     await pumpTemplate(
       tester,
       '{% progress type: "linear" value: 0.4 minHeight: 6 '
@@ -33,9 +29,8 @@ void main() {
       'semanticsValue: "40%" valueColor: "#00ff00" %}',
     );
 
-    final indicator = tester.widget<LinearProgressIndicator>(
-      find.byType(LinearProgressIndicator),
-    );
+    final indicator =
+        tester.widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator));
     expect(indicator.minHeight, 6);
     expect(indicator.borderRadius, BorderRadius.circular(8));
     expect(indicator.trackGap, 3);
@@ -46,9 +41,7 @@ void main() {
     expect(indicator.valueColor?.value, const Color(0xff00ff00));
   });
 
-  testWidgets('progress tag supports circular advanced properties', (
-    tester,
-  ) async {
+  testWidgets('progress tag supports circular advanced properties', (tester) async {
     await pumpTemplate(
       tester,
       '{% progress type: "circular" value: 0.2 strokeWidth: 5 '
@@ -65,15 +58,11 @@ void main() {
     );
 
     final indicator = tester.widget<CircularProgressIndicator>(
-      find.byType(CircularProgressIndicator, skipOffstage: false),
-    );
+        find.byType(CircularProgressIndicator, skipOffstage: false));
     expect(indicator.strokeWidth, 5);
     expect(indicator.strokeAlign, CircularProgressIndicator.strokeAlignInside);
     expect(indicator.strokeCap, StrokeCap.round);
-    expect(
-      indicator.constraints,
-      const BoxConstraints.tightFor(width: 32, height: 32),
-    );
+    expect(indicator.constraints, const BoxConstraints.tightFor(width: 32, height: 32));
     expect(indicator.padding, const EdgeInsets.symmetric(horizontal: 4));
     expect(indicator.trackGap, 2);
   });

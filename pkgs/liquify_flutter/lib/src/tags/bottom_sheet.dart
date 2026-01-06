@@ -26,8 +26,7 @@ class BottomSheetTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('bottom_sheet').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class BottomSheetTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'bottom_sheet',
         nonFilterContent,
@@ -99,8 +97,7 @@ class _BottomSheetConfig {
 }
 
 Widget _buildBottomSheet(_BottomSheetConfig config, List<Widget> children) {
-  final child =
-      config.child ??
+  final child = config.child ??
       (children.isEmpty ? const SizedBox.shrink() : wrapChildren(children));
   return BottomSheet(
     onClosing: () {},

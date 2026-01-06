@@ -5,7 +5,9 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('navigation_drawer renders destinations', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% navigation_drawer selectedIndex: 0 %}
   {% drawer_header %}
     {% text value: "Header" %}
@@ -13,7 +15,8 @@ void main() {
   {% navigation_drawer_destination label: "Inbox" icon: "inbox" %}
   {% navigation_drawer_destination label: "Starred" icon: "star" %}
 {% endnavigation_drawer %}
-''');
+''',
+    );
 
     expect(find.byType(NavigationDrawer), findsOneWidget);
     expect(find.byType(NavigationDrawerDestination), findsNWidgets(2));

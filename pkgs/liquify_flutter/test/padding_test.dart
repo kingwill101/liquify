@@ -11,10 +11,8 @@ void main() {
       '{% text value: "Pad" %}{% endcontainer %}',
     );
 
-    final containerFinder = find.ancestor(
-      of: find.text('Pad'),
-      matching: find.byType(Container),
-    );
+    final containerFinder =
+        find.ancestor(of: find.text('Pad'), matching: find.byType(Container));
     final container = tester.widget<Container>(containerFinder.first);
     expect(container.padding, const EdgeInsets.all(12));
   });

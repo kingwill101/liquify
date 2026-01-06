@@ -23,7 +23,10 @@ void main() {
       tester,
       '{% badge label: "New" labelStyle: style %}{% endbadge %}',
       data: {
-        'style': {'color': '#00ff00', 'fontSize': 12},
+        'style': {
+          'color': '#00ff00',
+          'fontSize': 12,
+        },
       },
     );
 

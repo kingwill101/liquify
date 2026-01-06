@@ -26,8 +26,7 @@ class TabBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tab_bar').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -36,9 +35,8 @@ class TabBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tab_bar',
         nonFilterContent,
@@ -153,8 +151,7 @@ class TabBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       action: actionName,
       event: 'tap',
     );
-    config.onTap =
-        resolveIntActionCallback(
+    config.onTap = resolveIntActionCallback(
           evaluator,
           onTapValue,
           event: baseEvent,
@@ -194,11 +191,12 @@ class _TabBarConfig {
 }
 
 Widget _buildTabBar(_TabBarConfig config, List<Widget> capturedChildren) {
-  var tabs =
-      config.tabs ??
-      (capturedChildren.isEmpty ? const <Widget>[] : capturedChildren);
+  var tabs = config.tabs ?? (capturedChildren.isEmpty ? const <Widget>[] : capturedChildren);
   if (tabs.isEmpty) {
-    tabs = const [Tab(text: 'Tab 1'), Tab(text: 'Tab 2')];
+    tabs = const [
+      Tab(text: 'Tab 1'),
+      Tab(text: 'Tab 2'),
+    ];
   }
   final tabBar = TabBar(
     key: config.widgetKey,

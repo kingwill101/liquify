@@ -26,8 +26,7 @@ class SimpleDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('simple_dialog').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -37,9 +36,8 @@ class SimpleDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'simple_dialog',
         nonFilterContent,
@@ -95,17 +93,19 @@ class _SimpleDialogConfig {
   EdgeInsetsGeometry? contentPadding;
 }
 
-Widget _buildDialog(_SimpleDialogConfig config, List<Widget> children) {
+Widget _buildDialog(
+  _SimpleDialogConfig config,
+  List<Widget> children,
+) {
   return SimpleDialog(
     title: config.title,
     backgroundColor: config.backgroundColor,
     elevation: config.elevation,
     shape: config.shape,
     clipBehavior: config.clipBehavior,
-    titlePadding:
-        config.titlePadding ?? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-    contentPadding:
-        config.contentPadding ??
+    titlePadding: config.titlePadding ??
+        const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+    contentPadding: config.contentPadding ??
         const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 16.0),
     children: children.isEmpty ? null : children,
   );

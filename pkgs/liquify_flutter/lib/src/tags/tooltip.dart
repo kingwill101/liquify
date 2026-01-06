@@ -27,8 +27,7 @@ class TooltipTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tooltip').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -38,9 +37,8 @@ class TooltipTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tooltip',
         nonFilterContent,
@@ -123,8 +121,7 @@ class _TooltipConfig {
 }
 
 Widget _buildTooltip(_TooltipConfig config, List<Widget> children) {
-  final child =
-      config.child ??
+  final child = config.child ??
       (children.isEmpty ? const SizedBox.shrink() : wrapChildren(children));
   return Tooltip(
     message: config.message ?? '',

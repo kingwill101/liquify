@@ -5,9 +5,8 @@ import 'package:liquify/liquify.dart';
 import 'test_utils.dart';
 
 void main() {
-  testWidgets('button tag renders label and invokes drop action', (
-    tester,
-  ) async {
+  testWidgets('button tag renders label and invokes drop action',
+      (tester) async {
     var tapped = false;
     await pumpTemplate(
       tester,
@@ -23,13 +22,16 @@ void main() {
     expect(tapped, isTrue);
   });
 
-  testWidgets('button action string resolves from actions map', (tester) async {
+  testWidgets('button action string resolves from actions map',
+      (tester) async {
     var tapped = false;
     await pumpTemplate(
       tester,
       '{% text_button text: "Tap", action: "do_it" %}',
       data: {
-        'actions': {'do_it': () => tapped = true},
+        'actions': {
+          'do_it': () => tapped = true,
+        },
       },
     );
 
@@ -39,9 +41,8 @@ void main() {
     expect(tapped, isTrue);
   });
 
-  testWidgets('button action string resolves from actions drop', (
-    tester,
-  ) async {
+  testWidgets('button action string resolves from actions drop',
+      (tester) async {
     var tapped = false;
     await pumpTemplate(
       tester,
@@ -56,12 +57,12 @@ void main() {
   });
 
   testWidgets('text_button renders icon variant', (tester) async {
-    await pumpTemplate(tester, '{% text_button text: "Add" icon: "add" %}');
-
-    expect(
-      find.byWidgetPredicate((widget) => widget is TextButton),
-      findsOneWidget,
+    await pumpTemplate(
+      tester,
+      '{% text_button text: "Add" icon: "add" %}',
     );
+
+    expect(find.byWidgetPredicate((widget) => widget is TextButton), findsOneWidget);
     expect(find.text('Add'), findsOneWidget);
     expect(find.byIcon(Icons.add), findsOneWidget);
   });

@@ -8,7 +8,8 @@ void main() {
     WidgetTester tester,
     String template, {
     required Size size,
-  }) async {
+  }
+  ) async {
     await tester.pumpWidget(
       MediaQuery(
         data: MediaQueryData(size: size, devicePixelRatio: 1.0),
@@ -18,7 +19,10 @@ void main() {
               final env = Environment();
               env.setRegister('_liquify_flutter_context', context);
               registerFlutterTags(environment: env);
-              return FlutterTemplate.parse(template, environment: env).render();
+              return FlutterTemplate.parse(
+                template,
+                environment: env,
+              ).render();
             },
           ),
         ),

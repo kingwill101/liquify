@@ -15,21 +15,21 @@ class WidgetSpecBuilder implements Builder {
 
   @override
   Map<String, List<String>> get buildExtensions => const {
-    'tool/widgets_to_port.yaml': [
-      'tool/tag_specs/generated/widgets.yaml',
-      'tool/tag_specs/generated/widgets.report.json',
-      'lib/src/generated/widget_tags.dart',
-      'lib/src/generated/widget_tag_registry.dart',
-      'test/generated/widget_tags_test.dart',
-      'lib/src/generated/type_parsers.dart',
-      'lib/src/generated/type_parser_aliases.dart',
-      'lib/src/generated/type_filters.dart',
-      'lib/src/generated/callback_drops.dart',
-      'lib/src/generated/type_registry.dart',
-      'tool/type_registry.generated.yaml',
-      'tool/type_registry.yaml',
-    ],
-  };
+        'tool/widgets_to_port.yaml': [
+          'tool/tag_specs/generated/widgets.yaml',
+          'tool/tag_specs/generated/widgets.report.json',
+          'lib/src/generated/widget_tags.dart',
+          'lib/src/generated/widget_tag_registry.dart',
+          'test/generated/widget_tags_test.dart',
+          'lib/src/generated/type_parsers.dart',
+          'lib/src/generated/type_parser_aliases.dart',
+          'lib/src/generated/type_filters.dart',
+          'lib/src/generated/callback_drops.dart',
+          'lib/src/generated/type_registry.dart',
+          'tool/type_registry.generated.yaml',
+          'tool/type_registry.yaml',
+        ],
+      };
 
   @override
   Future<void> build(BuildStep buildStep) async {
@@ -110,15 +110,19 @@ class WidgetSpecBuilder implements Builder {
       typedefIndex: typedefIndex,
       constIndex: constIndex,
     );
-    final generatedRegistry = _registryFromMaps(generatedRegistryMaps);
-    final mergedRegistry = _mergeRegistries(baseRegistry, generatedRegistry);
+    final generatedRegistry =
+        _registryFromMaps(generatedRegistryMaps);
+    final mergedRegistry =
+        _mergeRegistries(baseRegistry, generatedRegistry);
 
     final specs = <Map<String, Object?>>[];
     final enumParsers = <String, _ResolvedEnum>{};
     final classParsers = <String, _ClassParserSpec>{};
     final callbackDrops = <String, _CallbackDropSpec>{};
     final generatedSpecs = <_GeneratedSpec>[];
-    final report = <String, Object?>{'widgets': <Map<String, Object?>>[]};
+    final report = <String, Object?>{
+      'widgets': <Map<String, Object?>>[],
+    };
     final typeGraph = _TypeGraph(
       registry: mergedRegistry,
       classIndex: classIndex,
@@ -145,8 +149,8 @@ class WidgetSpecBuilder implements Builder {
 
       final isWidgetClass = _isWidgetType(classElement.thisType);
       final returnType = isWidgetClass ? 'Widget' : request.name;
-      final constructor =
-          classElement.unnamedConstructor ?? classElement.constructors.first;
+      final constructor = classElement.unnamedConstructor ??
+          classElement.constructors.first;
       final staticConstNames = classElement.fields
           .where((field) => field.isStatic && field.isConst && !field.isPrivate)
           .map((field) => field.name ?? '')
@@ -159,7 +163,9 @@ class WidgetSpecBuilder implements Builder {
       var childNullable = true;
       var positionalIndex = 0;
       final widgetImports = <String>{
-        request.libraryOverride ?? resolved?.library ?? config.libraries.first,
+        request.libraryOverride ??
+            resolved?.library ??
+            config.libraries.first,
       };
 
       for (final param in constructor.formalParameters) {
@@ -173,19 +179,15 @@ class WidgetSpecBuilder implements Builder {
         final isNullable = type.nullabilitySuffix == NullabilitySuffix.question;
         final rawDefault = param.defaultValueCode;
         final hasDefault =
-            rawDefault != null &&
-            rawDefault.trim().isNotEmpty &&
-            rawDefault.trim() != 'null';
+            rawDefault != null && rawDefault.trim().isNotEmpty && rawDefault.trim() != 'null';
         final defaultValueCode = _resolveDefaultValue(
           param,
           classElement.name ?? request.name,
           staticConstNames,
         );
         final typeLookup = _normalizeTypeName(typeName);
-        final registryEntry = mergedRegistry.lookup(
-          typeLookup,
-          fullTypeName: typeName,
-        );
+        final registryEntry =
+            mergedRegistry.lookup(typeLookup, fullTypeName: typeName);
 
         typeGraph.resolveDartType(type, source: '${request.name}.$name');
 
@@ -253,7 +255,10 @@ class WidgetSpecBuilder implements Builder {
               );
         if (mapping == null ||
             mapping.parser == null && registryEntry?.kind == 'callback') {
-          final skippedEntry = <String, String>{'name': name, 'type': typeName};
+          final skippedEntry = <String, String>{
+            'name': name,
+            'type': typeName,
+          };
           if (typeLibrary != null) {
             skippedEntry['typeLibrary'] = typeLibrary;
           }
@@ -265,22 +270,23 @@ class WidgetSpecBuilder implements Builder {
           }
           if (registryEntry == null) {
             skippedEntry['reason'] = 'missing_registry_entry';
-          } else if (registryEntry.kind == 'callback' &&
-              mapping?.parser == null) {
+          } else if (registryEntry.kind == 'callback' && mapping?.parser == null) {
             skippedEntry['reason'] = 'callback_missing_parser';
           } else if (registryEntry.kind == 'enum' && mapping?.parser == null) {
             skippedEntry['reason'] = 'enum_missing_parser';
           } else if (registryEntry.kind == 'class' && mapping?.parser == null) {
             skippedEntry['reason'] = 'class_missing_parser';
-          } else if (registryEntry.kind == 'wrapper' &&
-              mapping?.parser == null) {
+          } else if (registryEntry.kind == 'wrapper' && mapping?.parser == null) {
             skippedEntry['reason'] = 'wrapper_missing_parser';
           }
           skipped.add(skippedEntry);
           continue;
         }
 
-        final prop = <String, Object?>{'name': name, 'type': mapping.type};
+        final prop = <String, Object?>{
+          'name': name,
+          'type': mapping.type,
+        };
         if (typeLibrary != null) {
           prop['typeLibrary'] = typeLibrary;
         }
@@ -304,8 +310,7 @@ class WidgetSpecBuilder implements Builder {
           prop['nullable'] = false;
         }
         properties.add(prop);
-        final parserOutputType =
-            registryEntry?.outputType ??
+        final parserOutputType = registryEntry?.outputType ??
             (registryEntry?.name.isNotEmpty == true
                 ? _normalizeTypeName(registryEntry!.name)
                 : null);
@@ -313,8 +318,7 @@ class WidgetSpecBuilder implements Builder {
           _GeneratedProperty(
             name: name,
             type: mapping.type,
-            required:
-                (isPositional && param.isRequiredPositional) ||
+            required: (isPositional && param.isRequiredPositional) ||
                 (!isPositional && param.isRequiredNamed),
             positionalIndex: position,
             parser: mapping.parser,
@@ -327,9 +331,8 @@ class WidgetSpecBuilder implements Builder {
         );
       }
 
-      properties.sort(
-        (a, b) => a['name'].toString().compareTo(b['name'].toString()),
-      );
+      properties.sort((a, b) =>
+          a['name'].toString().compareTo(b['name'].toString()));
       generatedProperties.sort((a, b) => a.name.compareTo(b.name));
 
       final spec = <String, Object?>{
@@ -394,25 +397,32 @@ class WidgetSpecBuilder implements Builder {
       }
     }
 
-    specs.sort((a, b) => a['tag'].toString().compareTo(b['tag'].toString()));
+    specs.sort((a, b) =>
+        a['tag'].toString().compareTo(b['tag'].toString()));
     generatedSpecs.sort((a, b) => a.tag.compareTo(b.tag));
 
-    final resolvedTypes =
-        typeGraph.resolved.values.map((entry) => entry.toJson()).toList()..sort(
-          (a, b) => a['type'].toString().compareTo(b['type'].toString()),
-        );
-    final skippedTypes =
-        typeGraph.skipped.values.map((entry) => entry.toJson()).toList()..sort(
-          (a, b) => a['type'].toString().compareTo(b['type'].toString()),
-        );
+    final resolvedTypes = typeGraph.resolved.values
+        .map((entry) => entry.toJson())
+        .toList()
+      ..sort((a, b) =>
+          a['type'].toString().compareTo(b['type'].toString()));
+    final skippedTypes = typeGraph.skipped.values
+        .map((entry) => entry.toJson())
+        .toList()
+      ..sort((a, b) =>
+          a['type'].toString().compareTo(b['type'].toString()));
 
-    report['generatedTags'] = generatedSpecs.map((spec) => spec.tag).toList();
+    report['generatedTags'] =
+        generatedSpecs.map((spec) => spec.tag).toList();
     final callbackDropList = callbackDrops.values.toList()
       ..sort((a, b) => a.name.compareTo(b.name));
     report['generatedDrops'] = callbackDropList
         .map((spec) => _callbackDropClassName(spec.name))
         .toList();
-    report['typeGraph'] = {'resolved': resolvedTypes, 'skipped': skippedTypes};
+    report['typeGraph'] = {
+      'resolved': resolvedTypes,
+      'skipped': skippedTypes,
+    };
 
     final usesGeneratedParsers = generatedSpecs.any(
       (spec) => spec.properties.any(
@@ -431,10 +441,7 @@ class WidgetSpecBuilder implements Builder {
       buildStep.inputId.package,
       'tool/tag_specs/generated/widgets.report.json',
     );
-    await buildStep.writeAsString(
-      reportId,
-      const JsonEncoder.withIndent('  ').convert(report),
-    );
+    await buildStep.writeAsString(reportId, const JsonEncoder.withIndent('  ').convert(report));
 
     final generatedRegistryId = AssetId(
       buildStep.inputId.package,
@@ -459,7 +466,8 @@ class WidgetSpecBuilder implements Builder {
       'lib/src/generated/type_parsers.dart',
     );
     final enumParserList = enumParsers.values.toList()
-      ..sort((a, b) => (a.element.name ?? '').compareTo(b.element.name ?? ''));
+      ..sort((a, b) =>
+          (a.element.name ?? '').compareTo(b.element.name ?? ''));
     final classParserList = classParsers.values.toList()
       ..sort((a, b) => a.name.compareTo(b.name));
     final collectionParsers = _collectCollectionParsers(mergedRegistry);
@@ -470,10 +478,8 @@ class WidgetSpecBuilder implements Builder {
       collectionParsers,
       wrapperParsers,
     );
-    final missingParsers = _collectMissingParserSpecs(
-      mergedRegistry,
-      generatedParsers,
-    );
+    final missingParsers =
+        _collectMissingParserSpecs(mergedRegistry, generatedParsers);
     final evaluatorParsers = _expandEvaluatorParsers(
       {
         ...generatedParsers.evaluator,
@@ -577,8 +583,7 @@ class _WidgetSpecConfig {
     if (raw is! YamlMap) {
       return _WidgetSpecConfig(libraries: _defaultLibraries, widgets: const []);
     }
-    final libraries =
-        (raw['libraries'] as YamlList?)
+    final libraries = (raw['libraries'] as YamlList?)
             ?.map((entry) => entry.toString())
             .toList() ??
         _defaultLibraries;
@@ -587,7 +592,8 @@ class _WidgetSpecConfig {
     if (widgetRaw is YamlList) {
       for (final entry in widgetRaw) {
         if (entry is YamlMap) {
-          final name = entry['name']?.toString() ?? entry['widget']?.toString();
+          final name = entry['name']?.toString() ??
+              entry['widget']?.toString();
           if (name == null) {
             continue;
           }
@@ -603,7 +609,10 @@ class _WidgetSpecConfig {
           if (name.trim().isEmpty) {
             continue;
           }
-          widgets.add(_WidgetRequest(name: name, tag: _toSnakeCase(name)));
+          widgets.add(_WidgetRequest(
+            name: name,
+            tag: _toSnakeCase(name),
+          ));
         }
       }
     }
@@ -612,14 +621,20 @@ class _WidgetSpecConfig {
 }
 
 class _WidgetRequest {
-  _WidgetRequest({required this.name, required this.tag, this.libraryOverride});
+  _WidgetRequest({
+    required this.name,
+    required this.tag,
+    this.libraryOverride,
+  });
 
   final String name;
   final String tag;
   final String? libraryOverride;
 }
 
-List<_ConstFieldSpec> _buildConstIndex(Map<String, _ResolvedClass> classIndex) {
+List<_ConstFieldSpec> _buildConstIndex(
+  Map<String, _ResolvedClass> classIndex,
+) {
   final fields = <_ConstFieldSpec>[];
   for (final entry in classIndex.values) {
     final element = entry.element;
@@ -726,8 +741,8 @@ _TypeGraph _scanWidgetTypes({
     if (classElement == null) {
       continue;
     }
-    final constructor =
-        classElement.unnamedConstructor ?? classElement.constructors.first;
+    final constructor = classElement.unnamedConstructor ??
+        classElement.constructors.first;
     for (final param in constructor.formalParameters) {
       if (!param.isNamed) {
         continue;
@@ -740,7 +755,8 @@ _TypeGraph _scanWidgetTypes({
           (name == 'children' && _isWidgetList(param.type))) {
         continue;
       }
-      typeGraph.resolveDartType(param.type, source: '${request.name}.$name');
+      typeGraph.resolveDartType(param.type,
+          source: '${request.name}.$name');
     }
   }
   return typeGraph;
@@ -875,7 +891,10 @@ class _TypeRegistryConstructor {
 }
 
 class _CollectionTypeInfo {
-  _CollectionTypeInfo({required this.base, required this.elementType});
+  _CollectionTypeInfo({
+    required this.base,
+    required this.elementType,
+  });
 
   final String base;
   final String elementType;
@@ -900,7 +919,10 @@ class _CollectionParserSpec {
 }
 
 class _WrapperTypeInfo {
-  _WrapperTypeInfo({required this.base, required this.elementType});
+  _WrapperTypeInfo({
+    required this.base,
+    required this.elementType,
+  });
 
   final String base;
   final String elementType;
@@ -952,7 +974,9 @@ class _TypeGraphEntry {
   }
 
   Map<String, Object?> toJson() {
-    final data = <String, Object?>{'type': name};
+    final data = <String, Object?>{
+      'type': name,
+    };
     if (kind != null) {
       data['kind'] = kind!;
     }
@@ -1021,7 +1045,10 @@ class _TypeGraph {
     }
   }
 
-  void resolveDartType(DartType type, {required String source}) {
+  void resolveDartType(
+    DartType type, {
+    required String source,
+  }) {
     _ensureIndexedType(type);
     if (_isWidgetType(type)) {
       final typeName = _normalizeTypeName(_typeDisplayName(type));
@@ -1077,7 +1104,11 @@ class _TypeGraph {
     }
 
     final typeName = _normalizeTypeName(_typeDisplayName(type));
-    resolveTypeName(typeName, source: source, typeLibrary: _typeLibrary(type));
+    resolveTypeName(
+      typeName,
+      source: source,
+      typeLibrary: _typeLibrary(type),
+    );
 
     if (type is InterfaceType) {
       for (final arg in type.typeArguments) {
@@ -1183,12 +1214,9 @@ class _TypeGraph {
       constructors = const [];
     }
 
-    final usesEvaluator =
-        constructors.any(
-          (ctor) =>
-              ctor.positional.any((field) => field.usesEvaluator) ||
-              ctor.named.any((field) => field.usesEvaluator),
-        ) ||
+    final usesEvaluator = constructors.any((ctor) =>
+            ctor.positional.any((field) => field.usesEvaluator) ||
+            ctor.named.any((field) => field.usesEvaluator)) ||
         subtypeParsers.any((parser) => parser.usesEvaluator);
     final isGeneric = classElement?.typeParameters.isNotEmpty ?? false;
 
@@ -1332,7 +1360,10 @@ class _TypeGraph {
           if (stopPositional) {
             continue;
           }
-          final resolved = _resolveFieldFromRegistry(className, field);
+          final resolved = _resolveFieldFromRegistry(
+            className,
+            field,
+          );
           if (resolved == null) {
             if (field.required) {
               invalid = true;
@@ -1350,7 +1381,10 @@ class _TypeGraph {
           continue;
         }
         for (final field in constructor.named) {
-          final resolved = _resolveFieldFromRegistry(className, field);
+          final resolved = _resolveFieldFromRegistry(
+            className,
+            field,
+          );
           if (resolved == null) {
             if (field.required) {
               invalid = true;
@@ -1376,7 +1410,10 @@ class _TypeGraph {
       final named = <_ClassParserField>[];
       var invalid = false;
       for (final field in entry.fields) {
-        final resolved = _resolveFieldFromRegistry(className, field);
+        final resolved = _resolveFieldFromRegistry(
+          className,
+          field,
+        );
         if (resolved == null) {
           if (field.required) {
             invalid = true;
@@ -1457,8 +1494,7 @@ class _TypeGraph {
       }
       return null;
     }
-    final nullable =
-        fieldTypeName.trim().endsWith('?') ||
+    final nullable = fieldTypeName.trim().endsWith('?') ||
         (fieldEntry.outputType?.trim().endsWith('?') ?? false);
     return _resolveFieldParser(
       className,
@@ -1495,9 +1531,7 @@ class _TypeGraph {
       final fieldClassName = _baseTypeName(fieldEntry.name);
       final generatedName = _generatedClassParserName(fieldClassName);
       final expectsGenerated =
-          parserName == null ||
-          parserName.isEmpty ||
-          parserName == generatedName;
+          parserName == null || parserName.isEmpty || parserName == generatedName;
       if (expectsGenerated) {
         final nestedSpec = _ensureClassParserSpec(fieldEntry);
         if (nestedSpec != null) {
@@ -1607,7 +1641,9 @@ class _TypeGraph {
             continue;
           }
           final ctorName = ctor.name ?? '';
-          final call = ctorName.isEmpty ? '$name()' : '$name.$ctorName()';
+          final call = ctorName.isEmpty
+              ? '$name()'
+              : '$name.$ctorName()';
           final expression = ctor.isConst ? 'const $call' : call;
           final keys = keyMap[name] ?? const <String>[];
           for (final key in keys) {
@@ -1700,8 +1736,8 @@ class _TypeGraph {
       }
       return;
     }
-    final resolvedLibrary =
-        typeLibrary ?? (entry.imports.isNotEmpty ? entry.imports.first : null);
+    final resolvedLibrary = typeLibrary ??
+        (entry.imports.isNotEmpty ? entry.imports.first : null);
     final record = _TypeGraphEntry(
       name: typeName,
       kind: entry.kind,
@@ -1919,7 +1955,11 @@ _TypeRegistry _buildPrimitiveRegistry() {
       kind: 'primitive',
       parser: 'toDouble',
     ),
-    'int': _TypeRegistryEntry(name: 'int', kind: 'primitive', parser: 'toInt'),
+    'int': _TypeRegistryEntry(
+      name: 'int',
+      kind: 'primitive',
+      parser: 'toInt',
+    ),
     'num': _TypeRegistryEntry(
       name: 'num',
       kind: 'primitive',
@@ -1980,7 +2020,10 @@ _TypeRegistry _buildPrimitiveRegistry() {
   return _TypeRegistry(entries, const {});
 }
 
-_TypeRegistry _mergeRegistries(_TypeRegistry base, _TypeRegistry next) {
+_TypeRegistry _mergeRegistries(
+  _TypeRegistry base,
+  _TypeRegistry next,
+) {
   final entries = <String, _TypeRegistryEntry>{...base.entries};
   for (final entry in next.entries.entries) {
     entries.putIfAbsent(entry.key, () => entry.value);
@@ -2033,11 +2076,10 @@ _TypeRegistry _registryFromMaps(List<Map<String, Object?>> maps) {
 }
 
 List<Map<String, Object?>> _registryToMaps(_TypeRegistry registry) {
-  final entries =
-      registry.entries.values
-          .map((entry) => _registryEntryToMap(entry))
-          .toList()
-        ..sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+  final entries = registry.entries.values
+      .map((entry) => _registryEntryToMap(entry))
+      .toList()
+    ..sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
   return entries;
 }
 
@@ -2120,9 +2162,7 @@ _TypeRegistryEntry? _registryEntryFromMap(Map<String, Object?> entry) {
         continue;
       }
       final name = constructorEntry['name']?.toString() ?? '';
-      final positional = _parseConstructorFields(
-        constructorEntry['positional'],
-      );
+      final positional = _parseConstructorFields(constructorEntry['positional']);
       final named = _parseConstructorFields(constructorEntry['named']);
       constructors.add(
         _TypeRegistryConstructor(
@@ -2177,7 +2217,10 @@ List<_TypeRegistryField> _parseConstructorFields(Object? raw) {
 }
 
 Map<String, Object?> _registryEntryToMap(_TypeRegistryEntry entry) {
-  final data = <String, Object?>{'name': entry.name, 'kind': entry.kind};
+  final data = <String, Object?>{
+    'name': entry.name,
+    'kind': entry.kind,
+  };
   if (entry.parser != null) {
     data['parser'] = entry.parser!;
   }
@@ -2201,47 +2244,39 @@ Map<String, Object?> _registryEntryToMap(_TypeRegistryEntry entry) {
   }
   if (entry.fields.isNotEmpty) {
     data['fields'] = entry.fields
-        .map(
-          (field) => <String, Object?>{
-            'name': field.name,
-            'type': field.type,
-            if (field.defaultValue != null) 'default': field.defaultValue,
-            if (field.required) 'required': true,
-          },
-        )
+        .map((field) => <String, Object?>{
+              'name': field.name,
+              'type': field.type,
+              if (field.defaultValue != null) 'default': field.defaultValue,
+              if (field.required) 'required': true,
+            })
         .toList();
   }
   if (entry.constructors.isNotEmpty) {
     data['constructors'] = entry.constructors
-        .map(
-          (ctor) => <String, Object?>{
-            'name': ctor.name,
-            if (ctor.positional.isNotEmpty)
-              'positional': ctor.positional
-                  .map(
-                    (field) => <String, Object?>{
-                      'name': field.name,
-                      'type': field.type,
-                      if (field.defaultValue != null)
-                        'default': field.defaultValue,
-                      if (field.required) 'required': true,
-                    },
-                  )
-                  .toList(),
-            if (ctor.named.isNotEmpty)
-              'named': ctor.named
-                  .map(
-                    (field) => <String, Object?>{
-                      'name': field.name,
-                      'type': field.type,
-                      if (field.defaultValue != null)
-                        'default': field.defaultValue,
-                      if (field.required) 'required': true,
-                    },
-                  )
-                  .toList(),
-          },
-        )
+        .map((ctor) => <String, Object?>{
+              'name': ctor.name,
+              if (ctor.positional.isNotEmpty)
+                'positional': ctor.positional
+                    .map((field) => <String, Object?>{
+                          'name': field.name,
+                          'type': field.type,
+                          if (field.defaultValue != null)
+                            'default': field.defaultValue,
+                          if (field.required) 'required': true,
+                        })
+                    .toList(),
+              if (ctor.named.isNotEmpty)
+                'named': ctor.named
+                    .map((field) => <String, Object?>{
+                          'name': field.name,
+                          'type': field.type,
+                          if (field.defaultValue != null)
+                            'default': field.defaultValue,
+                          if (field.required) 'required': true,
+                        })
+                    .toList(),
+            })
         .toList();
   }
   return data;
@@ -2254,7 +2289,10 @@ String _normalizeTypeName(String typeName) {
 }
 
 String _normalizeLookupKey(String value) {
-  return value.trim().toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  return value
+      .trim()
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9]'), '');
 }
 
 List<String> _splitTypeTokens(String value) {
@@ -2281,9 +2319,8 @@ Map<String, List<String>> _buildSubtypeKeyMap(
     if (tokens.isEmpty) {
       continue;
     }
-    final filtered = tokens
-        .where((token) => !baseTokens.contains(token))
-        .toList();
+    final filtered =
+        tokens.where((token) => !baseTokens.contains(token)).toList();
     final firstToken = (filtered.isNotEmpty ? filtered.first : tokens.first);
     firstTokenCounts[firstToken] = (firstTokenCounts[firstToken] ?? 0) + 1;
     candidates[name] = filtered.isNotEmpty ? filtered : tokens;
@@ -2488,7 +2525,9 @@ String? _dartObjectToLiteral(DartObject? value) {
   }
   final stringValue = value.toStringValue();
   if (stringValue != null) {
-    final escaped = stringValue.replaceAll(r'\', r'\\').replaceAll("'", r"\'");
+    final escaped = stringValue
+        .replaceAll(r'\', r'\\')
+        .replaceAll("'", r"\'");
     return "'$escaped'";
   }
   final variable = value.variable;
@@ -2528,9 +2567,8 @@ String? _dartObjectToLiteral(DartObject? value) {
       parts.add('${entry.key}: $literal');
     }
     final ctorName = ctor.name;
-    final ctorSuffix = (ctorName == null || ctorName.isEmpty)
-        ? ''
-        : '.$ctorName';
+    final ctorSuffix =
+        (ctorName == null || ctorName.isEmpty) ? '' : '.$ctorName';
     return '$typeName$ctorSuffix(${parts.join(', ')})';
   }
   return null;
@@ -2580,8 +2618,7 @@ bool _isWidgetList(DartType type) {
     }
   }
   final display = type.getDisplayString();
-  return display.startsWith('List<Widget') ||
-      display.startsWith('Iterable<Widget');
+  return display.startsWith('List<Widget') || display.startsWith('Iterable<Widget');
 }
 
 bool _looksLikeWidgetTypeName(String typeName) {
@@ -2659,7 +2696,11 @@ class _YamlWriter {
     buffer.writeln('${_indent(indent)}${_scalar(value)}');
   }
 
-  void _writeInlineOrIndented(StringBuffer buffer, Object? value, int indent) {
+  void _writeInlineOrIndented(
+    StringBuffer buffer,
+    Object? value,
+    int indent,
+  ) {
     if (value is Map || value is List) {
       buffer.writeln();
       _writeValue(buffer, value, indent);
@@ -2728,23 +2769,23 @@ String _renderGeneratedTags(
   return buffer.toString();
 }
 
-String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
+String _renderGeneratedTag(
+  _GeneratedSpec spec,
+  Set<String> evaluatorParsers,
+) {
   final buffer = StringBuffer();
   final className = spec.className;
   final configName = '_${className}Config';
   final buildName = '_build${className}Widget';
   final supportsChildren = spec.children != null;
 
-  buffer.writeln(
-    'class $className extends WidgetTagBase '
-    'with ${supportsChildren ? 'CustomTagParser, ' : ''}AsyncTag {',
-  );
+  buffer.writeln('class $className extends WidgetTagBase '
+      'with ${supportsChildren ? 'CustomTagParser, ' : ''}AsyncTag {');
   buffer.writeln('  $className(super.content, super.filters);\n');
 
   buffer.writeln('  @override');
   buffer.writeln(
-    '  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {',
-  );
+      '  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {');
   buffer.writeln('    final config = _parseConfig(evaluator);');
   if (supportsChildren) {
     buffer.writeln('    final children = captureChildrenSync(evaluator);');
@@ -2756,13 +2797,10 @@ String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
 
   buffer.writeln('  @override');
   buffer.writeln(
-    '  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {',
-  );
+      '  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {');
   buffer.writeln('    final config = _parseConfig(evaluator);');
   if (supportsChildren) {
-    buffer.writeln(
-      '    final children = await captureChildrenAsync(evaluator);',
-    );
+    buffer.writeln('    final children = await captureChildrenAsync(evaluator);');
   } else {
     buffer.writeln('    const children = <Widget>[];');
   }
@@ -2778,19 +2816,14 @@ String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
     buffer.writeln('        ref0(filter).star().trim() &');
     buffer.writeln('        tagEnd();');
     buffer.writeln(
-      "    final endTag = tagStart() & string('end${spec.tag}').trim() & tagEnd();",
-    );
+        "    final endTag = tagStart() & string('end${spec.tag}').trim() & tagEnd();");
     buffer.writeln(
-      '    return (start & ref0(element).starLazy(endTag) & endTag).map((values) {',
-    );
+        '    return (start & ref0(element).starLazy(endTag) & endTag).map((values) {');
     buffer.writeln(
-      '      final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);',
-    );
+        '      final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);');
     buffer.writeln('      final filters = (values[3] as List).cast<Filter>();');
     buffer.writeln('      final nonFilterContent =');
-    buffer.writeln(
-      '          content.where((node) => node is! Filter).toList();',
-    );
+    buffer.writeln('          content.where((node) => node is! Filter).toList();');
     buffer.writeln('      return Tag(');
     buffer.writeln("        '${spec.tag}',");
     buffer.writeln('        nonFilterContent,');
@@ -2805,9 +2838,7 @@ String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
   buffer.writeln('    final config = $configName();');
   if (spec.properties.isEmpty) {
     buffer.writeln('    for (final arg in namedArgs) {');
-    buffer.writeln(
-      '      handleUnknownArg(\'${spec.tag}\', arg.identifier.name);',
-    );
+    buffer.writeln('      handleUnknownArg(\'${spec.tag}\', arg.identifier.name);');
     buffer.writeln('    }');
   } else {
     buffer.writeln('    for (final arg in namedArgs) {');
@@ -2817,8 +2848,7 @@ String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
     for (final prop in spec.properties) {
       buffer.writeln("        case '${prop.name}':");
       buffer.writeln(
-        '          config.${prop.name} = ${_parseExpression(prop, 'value', evaluatorParsers)};',
-      );
+          '          config.${prop.name} = ${_parseExpression(prop, 'value', evaluatorParsers)};');
       buffer.writeln('          break;');
     }
     buffer.writeln('        default:');
@@ -2830,8 +2860,7 @@ String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
   for (final prop in spec.properties.where((p) => p.required)) {
     buffer.writeln('    if (config.${prop.name} == null) {');
     buffer.writeln(
-      "      throw Exception('${spec.tag} tag requires \"${prop.name}\"');",
-    );
+        "      throw Exception('${spec.tag} tag requires \"${prop.name}\"');");
     buffer.writeln('    }');
   }
   buffer.writeln('    return config;');
@@ -2845,12 +2874,10 @@ String _renderGeneratedTag(_GeneratedSpec spec, Set<String> evaluatorParsers) {
   buffer.writeln('}\n');
 
   buffer.writeln(
-    '${spec.returnType} $buildName($configName config, List<Widget> children) {',
-  );
+      '${spec.returnType} $buildName($configName config, List<Widget> children) {');
   final positionalProps =
-      spec.properties.where((prop) => prop.isPositional).toList()..sort(
-        (a, b) => (a.positionalIndex ?? 0).compareTo(b.positionalIndex ?? 0),
-      );
+      spec.properties.where((prop) => prop.isPositional).toList()
+        ..sort((a, b) => (a.positionalIndex ?? 0).compareTo(b.positionalIndex ?? 0));
   final namedProps = spec.properties.where((prop) => !prop.isPositional);
   if (spec.children != null && spec.children!.kind == 'single') {
     buffer.writeln('  final child = children.isNotEmpty');
@@ -2895,8 +2922,7 @@ String _parseExpression(
   Set<String> evaluatorParsers,
 ) {
   if (prop.parser != null && prop.parser!.isNotEmpty) {
-    final usesEvaluator =
-        prop.usesEvaluator ||
+    final usesEvaluator = prop.usesEvaluator ||
         (prop.parser != null && evaluatorParsers.contains(prop.parser));
     final parsed = usesEvaluator
         ? '${prop.parser}(evaluator, $valueVar)'
@@ -2938,21 +2964,18 @@ String _renderGeneratedRegistry(List<_GeneratedSpec> specs) {
   buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.');
   buffer.writeln('// Generated by widget_spec_builder.');
   buffer.writeln(
-    '// ignore_for_file: unnecessary_non_null_assertion, no_leading_underscores_for_local_identifiers, prefer_is_empty, prefer_is_not_empty',
-  );
+      '// ignore_for_file: unnecessary_non_null_assertion, no_leading_underscores_for_local_identifiers, prefer_is_empty, prefer_is_not_empty');
   buffer.writeln();
   buffer.writeln("import 'package:liquify/parser.dart';");
   buffer.writeln("import 'widget_tags.dart';");
   buffer.writeln();
-  buffer.writeln(
-    'void registerGeneratedWidgetTags(Environment? environment) {',
-  );
+  buffer.writeln('void registerGeneratedWidgetTags(Environment? environment) {');
   buffer.writeln('  final existing = TagRegistry.tags.toSet();');
   for (final spec in specs) {
-    buffer.writeln("  if (!existing.contains('${spec.tag}')) {");
     buffer.writeln(
-      "    _registerGeneratedTag('${spec.tag}', (content, filters) => ${spec.className}(content, filters), environment);",
-    );
+        "  if (!existing.contains('${spec.tag}')) {");
+    buffer.writeln(
+        "    _registerGeneratedTag('${spec.tag}', (content, filters) => ${spec.className}(content, filters), environment);");
     buffer.writeln('  }');
   }
   buffer.writeln('}');
@@ -3005,7 +3028,8 @@ String _renderGeneratedTests(List<_GeneratedSpec> specs) {
       continue;
     }
     final testTemplate = _testTemplate(spec);
-    buffer.writeln("  testWidgets('${spec.tag} renders', (tester) async {");
+    buffer.writeln(
+        "  testWidgets('${spec.tag} renders', (tester) async {");
     buffer.writeln('    await pumpTemplate(');
     buffer.writeln('      tester,');
     buffer.writeln("      '''");
@@ -3016,13 +3040,12 @@ String _renderGeneratedTests(List<_GeneratedSpec> specs) {
       testTemplate.data.forEach((key, value) {
         buffer.writeln("        '$key': $value,");
       });
-      buffer.writeln('      }');
+    buffer.writeln('      }');
     }
     buffer.writeln('    );');
     if (spec.tag == 'form_field') {
       buffer.writeln(
-        '    expect(find.byWidgetPredicate((widget) => widget is FormField<String>), findsWidgets);',
-      );
+          '    expect(find.byWidgetPredicate((widget) => widget is FormField<String>), findsWidgets);');
     } else {
       buffer.writeln('    expect(find.byType(${spec.widget}), findsWidgets);');
     }
@@ -3041,14 +3064,13 @@ class _TestTemplateResult {
 
 _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
   final requiredArgs = _requiredArgsForSpec(spec);
-  final argString = requiredArgs.args.isEmpty
-      ? ''
-      : ' ${requiredArgs.args.join(' ')}';
+  final argString =
+      requiredArgs.args.isEmpty ? '' : ' ${requiredArgs.args.join(' ')}';
   if (spec.tag.startsWith('sliver_')) {
     return _TestTemplateResult(
       '{% custom_scroll_view %}'
-      '{% ${spec.tag}$argString %}{% end${spec.tag} %}'
-      '{% endcustom_scroll_view %}',
+          '{% ${spec.tag}$argString %}{% end${spec.tag} %}'
+          '{% endcustom_scroll_view %}',
       requiredArgs.data,
     );
   }
@@ -3056,67 +3078,66 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
     case 'colored_box':
       return _TestTemplateResult(
         '{% colored_box$argString %}'
-        '{% text value: "Sample" %}'
-        '{% endcolored_box %}',
+            '{% text value: "Sample" %}'
+            '{% endcolored_box %}',
         requiredArgs.data,
       );
     case 'expanded':
       return _TestTemplateResult(
         '{% row %}'
-        '{% expanded$argString %}'
-        '{% text value: "Sample" %}'
-        '{% endexpanded %}'
-        '{% endrow %}',
+            '{% expanded$argString %}'
+            '{% text value: "Sample" %}'
+            '{% endexpanded %}'
+            '{% endrow %}',
         requiredArgs.data,
       );
     case 'flexible':
       return _TestTemplateResult(
         '{% row %}'
-        '{% flexible$argString %}'
-        '{% text value: "Sample" %}'
-        '{% endflexible %}'
-        '{% endrow %}',
+            '{% flexible$argString %}'
+            '{% text value: "Sample" %}'
+            '{% endflexible %}'
+            '{% endrow %}',
         requiredArgs.data,
       );
     case 'spacer':
       return _TestTemplateResult(
         '{% row %}'
-        '{% spacer$argString %}{% endspacer %}'
-        '{% endrow %}',
+            '{% spacer$argString %}{% endspacer %}'
+            '{% endrow %}',
         requiredArgs.data,
       );
     case 'page_view':
       return _TestTemplateResult(
         '{% page_view$argString %}'
-        '{% text value: "Page" %}'
-        '{% endpage_view %}',
+            '{% text value: "Page" %}'
+            '{% endpage_view %}',
         requiredArgs.data,
       );
-    case 'data_table':
-      {
-        final data = <String, String>{
-          ...requiredArgs.data,
-          'columns': 'const [\'Name\']',
-          'rows': 'const [[\'Alice\']]',
-        };
-        return _TestTemplateResult(
-          '{% data_table columns: columns rows: rows %}{% enddata_table %}',
-          data,
-        );
-      }
+    case 'data_table': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'columns': 'const [\'Name\']',
+        'rows': 'const [[\'Alice\']]',
+      };
+      return _TestTemplateResult(
+        '{% data_table columns: columns rows: rows %}{% enddata_table %}',
+        data,
+      );
+    }
     case 'form_field':
       return _TestTemplateResult(
         '{% form_field$argString %}'
-        '{% text value: "Sample" %}'
-        '{% endform_field %}',
+            '{% text value: "Sample" %}'
+            '{% endform_field %}',
         requiredArgs.data,
       );
     case 'grid':
     case 'grid_view':
       return _TestTemplateResult(
         '{% ${spec.tag} columns: 2 %}'
-        '{% text value: "Item" %}'
-        '{% end${spec.tag} %}',
+            '{% text value: "Item" %}'
+            '{% end${spec.tag} %}',
         requiredArgs.data,
       );
     case 'icon_button':
@@ -3129,93 +3150,91 @@ _TestTemplateResult _testTemplate(_GeneratedSpec spec) {
         '{% icon icon: "add" %}{% endicon %}',
         requiredArgs.data,
       );
-    case 'image':
-      {
-        final data = <String, String>{
-          ...requiredArgs.data,
-          'bytes':
-              'Uint8List.fromList(const <int>['
-              '0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,'
-              '0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,'
-              '0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,'
-              '0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,'
-              '0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,'
-              '0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,'
-              '0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,'
-              '0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,'
-              '0x42,0x60,0x82'
-              '])',
-        };
-        return _TestTemplateResult(
-          '{% image bytes: bytes width: 1 height: 1 %}{% endimage %}',
-          data,
-        );
-      }
+    case 'image': {
+      final data = <String, String>{
+        ...requiredArgs.data,
+        'bytes': 'Uint8List.fromList(const <int>['
+            '0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,'
+            '0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,'
+            '0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,'
+            '0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,'
+            '0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,'
+            '0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,'
+            '0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,'
+            '0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,'
+            '0x42,0x60,0x82'
+            '])',
+      };
+      return _TestTemplateResult(
+        '{% image bytes: bytes width: 1 height: 1 %}{% endimage %}',
+        data,
+      );
+    }
     case 'navigation_rail':
       return _TestTemplateResult(
         '{% navigation_rail$argString %}'
-        '{% navigation_destination label: "Home" icon: "home" %}'
-        '{% endnavigation_rail %}',
+            '{% navigation_destination label: "Home" icon: "home" %}'
+            '{% endnavigation_rail %}',
         requiredArgs.data,
       );
     case 'positioned':
       return _TestTemplateResult(
         '{% stack %}'
-        '{% positioned left: 0 top: 0 %}'
-        '{% text value: "Sample" %}'
-        '{% endpositioned %}'
-        '{% endstack %}',
+            '{% positioned left: 0 top: 0 %}'
+            '{% text value: "Sample" %}'
+            '{% endpositioned %}'
+            '{% endstack %}',
         requiredArgs.data,
       );
     case 'animated_positioned':
       return _TestTemplateResult(
         '{% stack %}'
-        '{% animated_positioned$argString left: 0 top: 0 %}'
-        '{% text value: "Sample" %}'
-        '{% endanimated_positioned %}'
-        '{% endstack %}',
+            '{% animated_positioned$argString left: 0 top: 0 %}'
+            '{% text value: "Sample" %}'
+            '{% endanimated_positioned %}'
+            '{% endstack %}',
         requiredArgs.data,
       );
     case 'sized_box':
       return _TestTemplateResult(
         '{% sized_box width: 120 height: 80 %}'
-        '{% endsized_box %}',
+            '{% endsized_box %}',
         requiredArgs.data,
       );
     case 'sized_overflow_box':
       return _TestTemplateResult(
         '{% sized_overflow_box$argString %}'
-        '{% text value: "Sample" %}'
-        '{% endsized_overflow_box %}',
+            '{% text value: "Sample" %}'
+            '{% endsized_overflow_box %}',
         requiredArgs.data,
       );
     case 'ignore_pointer':
       return _TestTemplateResult(
         '{% ignore_pointer ignoring: true %}'
-        '{% text value: "Sample" %}'
-        '{% endignore_pointer %}',
+            '{% text value: "Sample" %}'
+            '{% endignore_pointer %}',
         requiredArgs.data,
       );
     case 'tooltip':
       return _TestTemplateResult(
         '{% tooltip message: "Hint" %}'
-        '{% text value: "Hover" %}'
-        '{% endtooltip %}',
+            '{% text value: "Hover" %}'
+            '{% endtooltip %}',
         requiredArgs.data,
       );
     case 'snack_bar_action':
       return _TestTemplateResult(
         '{% snack_bar content: "Sample" %}'
-        '{% snack_bar_action$argString %}'
-        '{% endsnack_bar_action %}'
-        '{% endsnack_bar %}',
+            '{% snack_bar_action$argString %}'
+            '{% endsnack_bar_action %}'
+            '{% endsnack_bar %}',
         requiredArgs.data,
       );
     case 'popup_menu_item':
       return _TestTemplateResult(
         '{% popup_menu %}'
-        '{% popup_menu_item$argString %}{% endpopup_menu_item %}'
-        '{% endpopup_menu %}',
+            '{% popup_menu_item$argString %}{% endpopup_menu_item %}'
+            '{% endpopup_menu %}',
         requiredArgs.data,
       );
     default:
@@ -3260,7 +3279,10 @@ _RequiredArgsResult _requiredArgsForSpec(_GeneratedSpec spec) {
 
 _TestArgValue? _defaultValueForType(String type, String name) {
   if (type.startsWith('ValueChanged<')) {
-    return _TestArgValue(name, dataValue: '(dynamic _) {}');
+    return _TestArgValue(
+      name,
+      dataValue: '(dynamic _) {}',
+    );
   }
   switch (type) {
     case 'double':
@@ -3305,20 +3327,28 @@ _TestArgValue? _defaultValueForType(String type, String name) {
     case 'BoxConstraints':
       return _TestArgValue(
         name,
-        dataValue:
-            'const BoxConstraints(minWidth: 0, maxWidth: 100, minHeight: 0, maxHeight: 100)',
+        dataValue: 'const BoxConstraints(minWidth: 0, maxWidth: 100, minHeight: 0, maxHeight: 100)',
       );
     case 'EdgeInsets':
     case 'EdgeInsetsGeometry':
       return _TestArgValue('8');
     case 'IconThemeData':
-      return _TestArgValue(name, dataValue: 'const IconThemeData(size: 16)');
+      return _TestArgValue(
+        name,
+        dataValue: 'const IconThemeData(size: 16)',
+      );
     case 'Size':
       return _TestArgValue('"20,20"');
     case 'TextStyle':
-      return _TestArgValue(name, dataValue: 'const TextStyle(fontSize: 14)');
+      return _TestArgValue(
+        name,
+        dataValue: 'const TextStyle(fontSize: 14)',
+      );
     case 'VoidCallback':
-      return _TestArgValue(name, dataValue: 'TapActionDrop(() {})');
+      return _TestArgValue(
+        name,
+        dataValue: 'TapActionDrop(() {})',
+      );
     case 'List<BottomNavigationBarItem>':
       return _TestArgValue(
         name,
@@ -3344,7 +3374,10 @@ _TestArgValue? _defaultValueForType(String type, String name) {
             '[ButtonSegment(value: "Sample", label: const Text("Sample"))]',
       );
     case 'Set<Object?>':
-      return _TestArgValue(name, dataValue: '<Object?>{"Sample"}');
+      return _TestArgValue(
+        name,
+        dataValue: '<Object?>{"Sample"}',
+      );
     case 'Widget':
       return _TestArgValue('"Sample"');
     case 'StackFit':
@@ -3377,16 +3410,14 @@ String _renderTypeParsers(
   buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.');
   buffer.writeln('// Generated by widget_spec_builder.');
   buffer.writeln(
-    '// ignore_for_file: unnecessary_non_null_assertion, no_leading_underscores_for_local_identifiers, prefer_is_empty, prefer_is_not_empty',
-  );
+      '// ignore_for_file: unnecessary_non_null_assertion, no_leading_underscores_for_local_identifiers, prefer_is_empty, prefer_is_not_empty');
   buffer.writeln();
 
   final importSet = <String>{};
   for (final resolvedEnum in enums) {
     importSet.add(resolvedEnum.library);
   }
-  final usesEvaluator =
-      evaluatorParsers.isNotEmpty ||
+  final usesEvaluator = evaluatorParsers.isNotEmpty ||
       collectionParsers.any((parser) => parser.usesEvaluator) ||
       wrapperParsers.any((parser) => parser.usesEvaluator);
   if (usesEvaluator) {
@@ -3573,18 +3604,11 @@ Set<String> _expandEvaluatorParsers(
       if (expanded.contains(parserName)) {
         continue;
       }
-      final needsEvaluator =
-          spec.usesEvaluator ||
-          spec.subtypeParsers.any(
-            (parser) => expanded.contains(parser.parser),
-          ) ||
-          spec.constructors.any(
-            (ctor) =>
-                ctor.positional.any(
-                  (field) => expanded.contains(field.parser),
-                ) ||
-                ctor.named.any((field) => expanded.contains(field.parser)),
-          );
+      final needsEvaluator = spec.usesEvaluator ||
+          spec.subtypeParsers.any((parser) => expanded.contains(parser.parser)) ||
+          spec.constructors.any((ctor) =>
+              ctor.positional.any((field) => expanded.contains(field.parser)) ||
+              ctor.named.any((field) => expanded.contains(field.parser)));
       if (needsEvaluator && expanded.add(parserName)) {
         changed = true;
       }
@@ -3618,10 +3642,7 @@ String _renderParserAliases(
   buffer.writeln('// Generated by widget_spec_builder.');
   buffer.writeln();
 
-  final aliases =
-      <
-        ({String alias, String target, String returnType, bool usesEvaluator})
-      >[];
+  final aliases = <({String alias, String target, String returnType, bool usesEvaluator})>[];
   for (final entry in registry.entries.values) {
     final parser = entry.parser;
     if (parser == null || !parser.startsWith('parseGenerated')) {
@@ -3665,11 +3686,11 @@ String _renderParserAliases(
   for (final alias in aliases) {
     if (alias.usesEvaluator) {
       buffer.writeln(
-        '${alias.returnType}? ${alias.alias}(Evaluator evaluator, Object? value) {',
-      );
+          '${alias.returnType}? ${alias.alias}(Evaluator evaluator, Object? value) {');
       buffer.writeln('  return ${alias.target}(evaluator, value);');
     } else {
-      buffer.writeln('${alias.returnType}? ${alias.alias}(Object? value) {');
+      buffer.writeln(
+          '${alias.returnType}? ${alias.alias}(Object? value) {');
       buffer.writeln('  return ${alias.target}(value);');
     }
     buffer.writeln('}');
@@ -3728,30 +3749,22 @@ String _renderTypeFilters(
   buffer.writeln("import '../tags/tag_helpers.dart';");
   buffer.writeln("import 'type_parsers.dart';");
   buffer.writeln();
-  buffer.writeln(
-    'void registerGeneratedTypeFilters(Environment environment) {',
-  );
+  buffer.writeln('void registerGeneratedTypeFilters(Environment environment) {');
   for (final filter in filters) {
     buffer.writeln(
-      "  environment.registerLocalFilter('${filter.name}', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, ${filter.parser}));",
-    );
+        "  environment.registerLocalFilter('${filter.name}', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, ${filter.parser}));");
   }
   buffer.writeln('}');
   buffer.writeln();
   buffer.writeln(
-    'dynamic _parseFilterValue(Object? value, List<dynamic> args, Map<String, dynamic> namedArgs, dynamic Function(Object?) parser) {',
-  );
+      'dynamic _parseFilterValue(Object? value, List<dynamic> args, Map<String, dynamic> namedArgs, dynamic Function(Object?) parser) {');
   buffer.writeln('  if (namedArgs.isNotEmpty) {');
   buffer.writeln('    final parsed = parser(namedArgs);');
   buffer.writeln('    if (parsed != null) {');
   buffer.writeln('      return parsed;');
   buffer.writeln('    }');
-  buffer.writeln(
-    '    if (!namedArgs.containsKey(\'constructor\') && !namedArgs.containsKey(\'type\')) {',
-  );
-  buffer.writeln(
-    '      final wrapped = <String, dynamic>{\'constructor\': \'new\'};',
-  );
+  buffer.writeln('    if (!namedArgs.containsKey(\'constructor\') && !namedArgs.containsKey(\'type\')) {');
+  buffer.writeln('      final wrapped = <String, dynamic>{\'constructor\': \'new\'};');
   buffer.writeln('      wrapped.addAll(namedArgs);');
   buffer.writeln('      final fallback = parser(wrapped);');
   buffer.writeln('      if (fallback != null) {');
@@ -3784,7 +3797,8 @@ bool _containsTypeParameter(String typeName) {
   if (RegExp(r'^[A-Z][A-Z0-9_]*\??$').hasMatch(typeName)) {
     return true;
   }
-  return RegExp(r'(<|,)\s*[A-Z][A-Z0-9_]*\s*\??\s*(,|>)').hasMatch(typeName);
+  return RegExp(r'(<|,)\s*[A-Z][A-Z0-9_]*\s*\??\s*(,|>)')
+      .hasMatch(typeName);
 }
 
 String _sanitizeTypeName(String typeName) {
@@ -3911,17 +3925,13 @@ String _renderGeneratedTypeRegistry(
   buffer.writeln('// ignore_for_file: unnecessary_const');
   buffer.writeln();
   buffer.writeln("import 'package:liquify/parser.dart';");
-  buffer.writeln(
-    "import 'package:liquify_flutter/src/generated/type_parsers.dart';",
-  );
+  buffer.writeln("import 'package:liquify_flutter/src/generated/type_parsers.dart';");
   buffer.writeln("import 'package:liquify_flutter/src/tags/tag_helpers.dart';");
   buffer.writeln();
   buffer.writeln(
-    'typedef GeneratedValueParser = Object? Function(Object? value);',
-  );
+      'typedef GeneratedValueParser = Object? Function(Object? value);');
   buffer.writeln(
-    'typedef GeneratedEvaluatorParser = Object? Function(Evaluator evaluator, Object? value);',
-  );
+      'typedef GeneratedEvaluatorParser = Object? Function(Evaluator evaluator, Object? value);');
   buffer.writeln();
   buffer.writeln('class GeneratedTypeField {');
   buffer.writeln('  const GeneratedTypeField({');
@@ -3966,9 +3976,8 @@ String _renderGeneratedTypeRegistry(
     if (values.isEmpty) {
       return 'const []';
     }
-    final entries = values
-        .map((value) => "'${value.replaceAll("'", "\\'")}'")
-        .join(', ');
+    final entries =
+        values.map((value) => "'${value.replaceAll("'", "\\'")}'").join(', ');
     return 'const [$entries]';
   }
 
@@ -3976,25 +3985,22 @@ String _renderGeneratedTypeRegistry(
     if (fields.isEmpty) {
       return 'const []';
     }
-    final entries = fields
-        .map((field) {
-          final defaultValue = field.defaultValue == null
-              ? 'null'
-              : "'${field.defaultValue!.replaceAll("'", "\\'")}'";
-          return 'GeneratedTypeField(name: '
-              "'${field.name}', "
-              "type: '${field.type}', "
-              'defaultValue: $defaultValue, '
-              'required: ${field.required ? 'true' : 'false'})';
-        })
-        .join(', ');
+    final entries = fields.map((field) {
+      final defaultValue = field.defaultValue == null
+          ? 'null'
+          : "'${field.defaultValue!.replaceAll("'", "\\'")}'";
+      return 'GeneratedTypeField(name: '
+          "'${field.name}', "
+          "type: '${field.type}', "
+          'defaultValue: $defaultValue, '
+          'required: ${field.required ? 'true' : 'false'})';
+    }).join(', ');
     return 'const [$entries]';
   }
 
   buffer.writeln('const List<GeneratedTypeEntry> generatedTypeEntries = [');
   for (final entry in entries) {
-    final effectiveUsesEvaluator =
-        entry.usesEvaluator ||
+    final effectiveUsesEvaluator = entry.usesEvaluator ||
         (entry.parser != null && evaluatorParsers.contains(entry.parser));
     buffer.writeln('  GeneratedTypeEntry(');
     buffer.writeln("    name: '${entry.name}',");
@@ -4012,9 +4018,7 @@ String _renderGeneratedTypeRegistry(
       buffer.writeln('    aliases: ${renderStringList(entry.aliases)},');
     }
     if (entry.dropSymbols.isNotEmpty) {
-      buffer.writeln(
-        '    dropSymbols: ${renderStringList(entry.dropSymbols)},',
-      );
+      buffer.writeln('    dropSymbols: ${renderStringList(entry.dropSymbols)},');
     }
     if (entry.imports.isNotEmpty) {
       buffer.writeln('    imports: ${renderStringList(entry.imports)},');
@@ -4030,8 +4034,7 @@ String _renderGeneratedTypeRegistry(
   buffer.writeln('];');
   buffer.writeln();
   buffer.writeln(
-    'final Map<String, GeneratedTypeEntry> generatedTypeRegistry = {',
-  );
+      'final Map<String, GeneratedTypeEntry> generatedTypeRegistry = {');
   for (var i = 0; i < entries.length; i++) {
     final entry = entries[i];
     buffer.writeln("  '${entry.name}': generatedTypeEntries[$i],");
@@ -4056,16 +4059,14 @@ String _renderGeneratedTypeRegistry(
   }
 
   buffer.writeln(
-    'final Map<String, GeneratedValueParser> generatedValueParsers = {',
-  );
+      'final Map<String, GeneratedValueParser> generatedValueParsers = {');
   for (final parser in valueParsers.toList()..sort()) {
     buffer.writeln("  '$parser': $parser,");
   }
   buffer.writeln('};');
   buffer.writeln();
   buffer.writeln(
-    'final Map<String, GeneratedEvaluatorParser> generatedEvaluatorParsers = {',
-  );
+      'final Map<String, GeneratedEvaluatorParser> generatedEvaluatorParsers = {');
   for (final parser in evaluatorParserNames.toList()..sort()) {
     buffer.writeln("  '$parser': $parser,");
   }
@@ -4078,36 +4079,32 @@ String _renderStringListLiteral(List<String> values) {
   if (values.isEmpty) {
     return 'const []';
   }
-  final entries = values
-      .map((value) => "'${value.replaceAll("'", "\\'")}'")
-      .join(', ');
+  final entries =
+      values.map((value) => "'${value.replaceAll("'", "\\'")}'").join(', ');
   return 'const [$entries]';
 }
 
-String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
+String _renderClassParser(
+  _ClassParserSpec spec,
+  Set<String> evaluatorParsers,
+) {
   final buffer = StringBuffer();
   final className = spec.name;
   final parserName = _generatedClassParserName(className);
   final returnType = spec.isGeneric ? 'dynamic' : className;
   final isObject = className == 'Object';
-  final needsEvaluator =
-      spec.usesEvaluator ||
-      spec.subtypeParsers.any(
-        (parser) => evaluatorParsers.contains(parser.parser),
-      ) ||
-      spec.constructors.any(
-        (ctor) =>
-            ctor.positional.any(
-              (field) => evaluatorParsers.contains(field.parser),
-            ) ||
-            ctor.named.any((field) => evaluatorParsers.contains(field.parser)),
-      );
+  final needsEvaluator = spec.usesEvaluator ||
+      spec.subtypeParsers
+          .any((parser) => evaluatorParsers.contains(parser.parser)) ||
+      spec.constructors.any((ctor) =>
+          ctor.positional
+              .any((field) => evaluatorParsers.contains(field.parser)) ||
+          ctor.named.any((field) => evaluatorParsers.contains(field.parser)));
   final signature = needsEvaluator
       ? '$returnType? $parserName(Evaluator evaluator, Object? value)'
       : '$returnType? $parserName(Object? value)';
-  final supportsCommaSplit = spec.constructors.any(
-    (ctor) => ctor.positional.length > 1,
-  );
+  final supportsCommaSplit =
+      spec.constructors.any((ctor) => ctor.positional.length > 1);
   final inputVar = supportsCommaSplit ? 'normalizedValue' : 'value';
   final constMapName = '_${parserName}ConstLookup';
   bool hasDefault(_ClassParserField field) =>
@@ -4121,11 +4118,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     return '$className.$name';
   }
 
-  String renderMapCall(
-    _ClassConstructorSpec ctor,
-    String mapVar, {
-    String indent = '      ',
-  }) {
+  String renderMapCall(_ClassConstructorSpec ctor, String mapVar,
+      {String indent = '      '}) {
     final buffer = StringBuffer();
     var index = 0;
     String fieldVar() => '_p${index++}';
@@ -4169,9 +4163,7 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
 
     final namedGroups = <String, List<_ClassParserField>>{};
     for (final field in ctor.named) {
-      namedGroups
-          .putIfAbsent(field.name, () => <_ClassParserField>[])
-          .add(field);
+      namedGroups.putIfAbsent(field.name, () => <_ClassParserField>[]).add(field);
     }
     final mergedVars = <_ClassParserField, String>{};
     final skipFields = <_ClassParserField>{};
@@ -4217,11 +4209,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     return buffer.toString();
   }
 
-  String renderListCall(
-    _ClassConstructorSpec ctor,
-    String listVar, {
-    String indent = '      ',
-  }) {
+  String renderListCall(_ClassConstructorSpec ctor, String listVar,
+      {String indent = '      '}) {
     final buffer = StringBuffer();
     var index = 0;
     for (var i = 0; i < ctor.positional.length; i++) {
@@ -4252,11 +4241,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     return buffer.toString();
   }
 
-  String renderScalarCall(
-    _ClassConstructorSpec ctor,
-    String valueExpr, {
-    String indent = '      ',
-  }) {
+  String renderScalarCall(_ClassConstructorSpec ctor, String valueExpr,
+      {String indent = '      '}) {
     final field = ctor.positional.first;
     final parsed = _renderClassFieldParse(
       field,
@@ -4273,15 +4259,13 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
       buffer.writeln('$indent }');
     }
     final value = _renderFieldValueExpression(field, varName);
-    buffer.writeln('$indent return ${constructorCall(ctor)}($value);');
+    buffer.writeln(
+        '$indent return ${constructorCall(ctor)}($value);');
     return buffer.toString();
   }
 
-  String renderPayloadParse(
-    _ClassConstructorSpec ctor,
-    String payloadVar, {
-    String indent = '      ',
-  }) {
+  String renderPayloadParse(_ClassConstructorSpec ctor, String payloadVar,
+      {String indent = '      '}) {
     final buffer = StringBuffer();
     final namedKeys = [
       ...ctor.positional.map((field) => field.name),
@@ -4297,11 +4281,9 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     buffer.writeln('$indent if ($payloadVar is Map) {');
     buffer.writeln('$indent  final payloadMap = <String, Object?>{};');
     buffer.writeln(
-      '$indent  $payloadVar.forEach((key, val) { payloadMap[key.toString()] = val; });',
-    );
+        '$indent  $payloadVar.forEach((key, val) { payloadMap[key.toString()] = val; });');
     buffer.writeln(
-      '$indent  if (_matchesConstructorKeys(payloadMap, $allowedLiteral, $requiredLiteral)) {',
-    );
+        '$indent  if (_matchesConstructorKeys(payloadMap, $allowedLiteral, $requiredLiteral)) {');
     buffer.write(renderMapCall(ctor, 'payloadMap', indent: '$indent    '));
     buffer.writeln('$indent  }');
     buffer.writeln('$indent }');
@@ -4310,16 +4292,15 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
       buffer.writeln('$indent if ($payloadVar is Iterable) {');
       buffer.writeln('$indent  final items = $payloadVar.toList();');
       buffer.writeln(
-        '$indent  if (items.length >= ${ctor.requiredPositional}) {',
-      );
+          '$indent  if (items.length >= ${ctor.requiredPositional}) {');
       buffer.write(renderListCall(ctor, 'items', indent: '$indent    '));
       buffer.writeln('$indent  }');
       buffer.writeln('$indent }');
       if (ctor.positional.length == 1 && ctor.requiredPositional <= 1) {
         buffer.writeln(
-          '$indent if ($payloadVar != null && $payloadVar is! Map && $payloadVar is! Iterable) {',
-        );
-        buffer.write(renderScalarCall(ctor, payloadVar, indent: '$indent  '));
+            '$indent if ($payloadVar != null && $payloadVar is! Map && $payloadVar is! Iterable) {');
+        buffer.write(
+            renderScalarCall(ctor, payloadVar, indent: '$indent  '));
         buffer.writeln('$indent }');
       }
     }
@@ -4334,19 +4315,14 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     final buffer = StringBuffer();
     buffer.writeln('$indent final subtypeTagValue = $mapVar[\'type\'];');
     buffer.writeln('$indent if (subtypeTagValue is String) {');
-    buffer.writeln(
-      '$indent  final normalizedSubtype = _normalizeTypeKey(subtypeTagValue);',
-    );
-    buffer.writeln(
-      '$indent  final payload = $mapVar.containsKey(\'args\')'
-      " ? $mapVar['args'] : $mapVar.containsKey('values') ? $mapVar['values'] : $mapVar;",
-    );
+    buffer.writeln('$indent  final normalizedSubtype = _normalizeTypeKey(subtypeTagValue);');
+    buffer.writeln('$indent  final payload = $mapVar.containsKey(\'args\')'
+        " ? $mapVar['args'] : $mapVar.containsKey('values') ? $mapVar['values'] : $mapVar;");
     buffer.writeln('$indent  Object? normalizedPayload = payload;');
     buffer.writeln('$indent  if (payload is Map) {');
     buffer.writeln('$indent    final payloadMap = <String, Object?>{};');
     buffer.writeln(
-      '$indent    payload.forEach((key, val) { payloadMap[key.toString()] = val; });',
-    );
+        '$indent    payload.forEach((key, val) { payloadMap[key.toString()] = val; });');
     buffer.writeln('$indent    payloadMap.remove(\'type\');');
     buffer.writeln('$indent    normalizedPayload = payloadMap;');
     buffer.writeln('$indent  }');
@@ -4355,8 +4331,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
       for (final key in subtype.keys) {
         buffer.writeln('$indent    case \'$key\':');
       }
-      final needsEvaluator =
-          subtype.usesEvaluator || evaluatorParsers.contains(subtype.parser);
+      final needsEvaluator = subtype.usesEvaluator ||
+          evaluatorParsers.contains(subtype.parser);
       final call = needsEvaluator
           ? '${subtype.parser}(evaluator, normalizedPayload)'
           : '${subtype.parser}(normalizedPayload)';
@@ -4365,23 +4341,16 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     buffer.writeln('$indent  }');
     buffer.writeln('$indent }');
 
-    buffer.writeln(
-      '$indent final subtypeConstructorValue = $mapVar[\'constructor\'];',
-    );
+    buffer.writeln('$indent final subtypeConstructorValue = $mapVar[\'constructor\'];');
     buffer.writeln('$indent if (subtypeConstructorValue is String) {');
-    buffer.writeln(
-      '$indent  final normalizedSubtype = _normalizeTypeKey(subtypeConstructorValue);',
-    );
-    buffer.writeln(
-      '$indent  final payload = $mapVar.containsKey(\'args\')'
-      " ? $mapVar['args'] : $mapVar.containsKey('values') ? $mapVar['values'] : $mapVar;",
-    );
+    buffer.writeln('$indent  final normalizedSubtype = _normalizeTypeKey(subtypeConstructorValue);');
+    buffer.writeln('$indent  final payload = $mapVar.containsKey(\'args\')'
+        " ? $mapVar['args'] : $mapVar.containsKey('values') ? $mapVar['values'] : $mapVar;");
     buffer.writeln('$indent  Object? normalizedPayload = payload;');
     buffer.writeln('$indent  if (payload is Map) {');
     buffer.writeln('$indent    final payloadMap = <String, Object?>{};');
     buffer.writeln(
-      '$indent    payload.forEach((key, val) { payloadMap[key.toString()] = val; });',
-    );
+        '$indent    payload.forEach((key, val) { payloadMap[key.toString()] = val; });');
     buffer.writeln('$indent    payloadMap.remove(\'constructor\');');
     buffer.writeln('$indent    normalizedPayload = payloadMap;');
     buffer.writeln('$indent  }');
@@ -4390,8 +4359,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
       for (final key in subtype.keys) {
         buffer.writeln('$indent    case \'$key\':');
       }
-      final needsEvaluator =
-          subtype.usesEvaluator || evaluatorParsers.contains(subtype.parser);
+      final needsEvaluator = subtype.usesEvaluator ||
+          evaluatorParsers.contains(subtype.parser);
       final call = needsEvaluator
           ? '${subtype.parser}(evaluator, normalizedPayload)'
           : '${subtype.parser}(normalizedPayload)';
@@ -4433,31 +4402,29 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
 
   if (className == 'Duration') {
     buffer.writeln('  if ($inputVar is num) {');
-    buffer.writeln('    return Duration(milliseconds: $inputVar.round());');
+    buffer.writeln(
+        '    return Duration(milliseconds: $inputVar.round());');
     buffer.writeln('  }');
     buffer.writeln('  if ($inputVar is String) {');
     buffer.writeln('    final trimmed = $inputVar.trim().toLowerCase();');
     buffer.writeln('    if (trimmed.isNotEmpty) {');
     buffer.writeln('      if (trimmed.endsWith(\'ms\')) {');
     buffer.writeln(
-      '        final parsed = double.tryParse(trimmed.substring(0, trimmed.length - 2).trim());',
-    );
+        '        final parsed = double.tryParse(trimmed.substring(0, trimmed.length - 2).trim());');
     buffer.writeln(
-      '        if (parsed != null) { return Duration(milliseconds: parsed.round()); }',
-    );
+        '        if (parsed != null) { return Duration(milliseconds: parsed.round()); }');
     buffer.writeln('      } else if (trimmed.endsWith(\'s\')) {');
     buffer.writeln(
-      '        final parsed = double.tryParse(trimmed.substring(0, trimmed.length - 1).trim());',
-    );
+        '        final parsed = double.tryParse(trimmed.substring(0, trimmed.length - 1).trim());');
     buffer.writeln(
-      '        if (parsed != null) { return Duration(milliseconds: (parsed * 1000).round()); }',
-    );
+        '        if (parsed != null) { return Duration(milliseconds: (parsed * 1000).round()); }');
     buffer.writeln('      }');
     buffer.writeln('    }');
     buffer.writeln('  }');
   } else if (className == 'DateTime') {
     buffer.writeln('  if ($inputVar is String) {');
-    buffer.writeln('    final parsed = DateTime.tryParse($inputVar.trim());');
+    buffer.writeln(
+        '    final parsed = DateTime.tryParse($inputVar.trim());');
     buffer.writeln('    if (parsed != null) {');
     buffer.writeln('      return parsed;');
     buffer.writeln('    }');
@@ -4470,7 +4437,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     buffer.writeln('      final hour = int.tryParse(parts[0]);');
     buffer.writeln('      final minute = int.tryParse(parts[1]);');
     buffer.writeln('      if (hour != null && minute != null) {');
-    buffer.writeln('        return TimeOfDay(hour: hour, minute: minute);');
+    buffer.writeln(
+        '        return TimeOfDay(hour: hour, minute: minute);');
     buffer.writeln('      }');
     buffer.writeln('    }');
     buffer.writeln('  }');
@@ -4479,32 +4447,26 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
   if (spec.constructors.isNotEmpty || spec.subtypeParsers.isNotEmpty) {
     buffer.writeln('  if ($inputVar is Map) {');
     buffer.writeln('    final map = <String, Object?>{};');
-    buffer.writeln(
-      '    $inputVar.forEach((key, val) { map[key.toString()] = val; });',
-    );
+    buffer.writeln('    $inputVar.forEach((key, val) { map[key.toString()] = val; });');
     final subtypeDispatch = renderSubtypeDispatch('map', indent: '    ');
     if (subtypeDispatch.isNotEmpty) {
       buffer.writeln(subtypeDispatch);
     }
     if (spec.constructors.isNotEmpty) {
       buffer.writeln(
-        "    final constructorValue = map.remove('constructor') ?? map.remove('type');",
-      );
+          "    final constructorValue = map.remove('constructor') ?? map.remove('type');");
 
       buffer.writeln('    if (constructorValue is String) {');
       buffer.writeln('      switch (_normalizeTypeKey(constructorValue)) {');
       for (final ctor in spec.constructors) {
-        final ctorKey = _normalizeLookupKey(
-          ctor.name.isEmpty ? 'default' : ctor.name,
-        );
+        final ctorKey =
+            _normalizeLookupKey(ctor.name.isEmpty ? 'default' : ctor.name);
         if (ctorKey.isEmpty) {
           continue;
         }
         buffer.writeln("        case '$ctorKey': {");
-        buffer.writeln(
-          '          final payload = map.containsKey(\'args\')'
-          " ? map['args'] : map.containsKey('values') ? map['values'] : map;",
-        );
+        buffer.writeln('          final payload = map.containsKey(\'args\')'
+            " ? map['args'] : map.containsKey('values') ? map['values'] : map;");
         buffer.write(renderPayloadParse(ctor, 'payload', indent: '          '));
         buffer.writeln('        }');
       }
@@ -4516,9 +4478,8 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
       buffer.writeln('      final normalized = _normalizeTypeKey(key);');
       buffer.writeln('      final payload = map.values.first;');
       for (final ctor in spec.constructors) {
-        final ctorKey = _normalizeLookupKey(
-          ctor.name.isEmpty ? 'default' : ctor.name,
-        );
+        final ctorKey =
+            _normalizeLookupKey(ctor.name.isEmpty ? 'default' : ctor.name);
         if (ctorKey.isEmpty) {
           continue;
         }
@@ -4529,38 +4490,34 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
       buffer.writeln('    }');
 
       for (final ctor in spec.constructors.where((c) => c.positional.isEmpty)) {
-        final allowed = _renderStringListLiteral(
-          ctor.named.map((f) => f.name).toList(),
-        );
+        final allowed =
+            _renderStringListLiteral(ctor.named.map((f) => f.name).toList());
         final required = _renderStringListLiteral(
-          ctor.named.where((f) => f.required).map((f) => f.name).toList(),
-        );
-        buffer.writeln(
-          '    if (_matchesConstructorKeys(map, $allowed, $required)) {',
-        );
+            ctor.named.where((f) => f.required).map((f) => f.name).toList());
+        buffer.writeln('    if (_matchesConstructorKeys(map, $allowed, $required)) {');
         buffer.write(renderMapCall(ctor, 'map', indent: '      '));
         buffer.writeln('    }');
       }
     }
     buffer.writeln('  }');
 
-    final positionalConstructors =
-        spec.constructors.where((ctor) => ctor.positional.isNotEmpty).toList()
-          ..sort((a, b) {
-            final required = b.requiredPositional.compareTo(
-              a.requiredPositional,
-            );
-            if (required != 0) {
-              return required;
-            }
-            return b.positional.length.compareTo(a.positional.length);
-          });
+    final positionalConstructors = spec.constructors
+        .where((ctor) => ctor.positional.isNotEmpty)
+        .toList()
+      ..sort((a, b) {
+        final required = b.requiredPositional.compareTo(a.requiredPositional);
+        if (required != 0) {
+          return required;
+        }
+        return b.positional.length.compareTo(a.positional.length);
+      });
 
     if (positionalConstructors.isNotEmpty) {
       buffer.writeln('  if ($inputVar is Iterable) {');
       buffer.writeln('    final items = $inputVar.toList();');
       for (final ctor in positionalConstructors) {
-        buffer.writeln('    if (items.length >= ${ctor.requiredPositional}) {');
+        buffer.writeln(
+            '    if (items.length >= ${ctor.requiredPositional}) {');
         buffer.write(renderListCall(ctor, 'items', indent: '      '));
         buffer.writeln('    }');
       }
@@ -4568,15 +4525,13 @@ String _renderClassParser(_ClassParserSpec spec, Set<String> evaluatorParsers) {
     }
 
     final scalarConstructors = positionalConstructors
-        .where(
-          (ctor) => ctor.positional.length == 1 && ctor.requiredPositional <= 1,
-        )
+        .where((ctor) =>
+            ctor.positional.length == 1 && ctor.requiredPositional <= 1)
         .toList();
     if (scalarConstructors.isNotEmpty) {
       final ctor = scalarConstructors.first;
       buffer.writeln(
-        '  if ($inputVar != null && $inputVar is! Map && $inputVar is! Iterable) {',
-      );
+          '  if ($inputVar != null && $inputVar is! Map && $inputVar is! Iterable) {');
       buffer.write(renderScalarCall(ctor, inputVar, indent: '    '));
       buffer.writeln('  }');
     }
@@ -4610,8 +4565,7 @@ List<_CollectionParserSpec> _collectCollectionParsers(_TypeRegistry registry) {
     if (elementEntry == null || elementEntry.parser == null) {
       continue;
     }
-    final parserName =
-        entry.parser ??
+    final parserName = entry.parser ??
         _generatedCollectionParserName(info.base, info.elementType);
     final rawElementType =
         elementEntry.outputType ?? _normalizeTypeName(info.elementType);
@@ -4674,8 +4628,7 @@ String _renderCollectionParser(
     buffer.writeln('  }');
   }
   buffer.writeln(
-    '  if (value is ${spec.collectionType}<${spec.elementType}>) {',
-  );
+      '  if (value is ${spec.collectionType}<${spec.elementType}>) {');
   buffer.writeln('    return value;');
   buffer.writeln('  }');
   buffer.writeln('  if (value is Iterable) {');
@@ -4719,8 +4672,7 @@ List<_WrapperParserSpec> _collectWrapperParsers(_TypeRegistry registry) {
       continue;
     }
     final parserName =
-        entry.parser ??
-        _generatedWrapperParserName(info.base, info.elementType);
+        entry.parser ?? _generatedWrapperParserName(info.base, info.elementType);
     final rawElementType =
         elementEntry.outputType ?? _normalizeTypeName(info.elementType);
     final elementType = _containsTypeParameter(rawElementType)
@@ -4763,7 +4715,8 @@ String _renderWrapperParser(
   buffer.writeln('  if (value == null) {');
   buffer.writeln('    return null;');
   buffer.writeln('  }');
-  buffer.writeln('  if (value is ${spec.wrapperType}<${spec.elementType}>) {');
+  buffer.writeln(
+      '  if (value is ${spec.wrapperType}<${spec.elementType}>) {');
   buffer.writeln('    return value;');
   buffer.writeln('  }');
   buffer.writeln('  final parsed = ${parserCall('value')};');
@@ -4771,8 +4724,7 @@ String _renderWrapperParser(
   buffer.writeln('    return null;');
   buffer.writeln('  }');
   buffer.writeln(
-    '  return AlwaysStoppedAnimation<${spec.elementType}>(parsed);',
-  );
+      '  return AlwaysStoppedAnimation<${spec.elementType}>(parsed);');
   buffer.writeln('}');
   return buffer.toString();
 }
@@ -4782,7 +4734,8 @@ String _renderClassFieldParse(
   String valueExpr, {
   String? ownerClassName,
   required Set<String> evaluatorParsers,
-}) {
+}
+) {
   final usesEvaluator =
       field.usesEvaluator || evaluatorParsers.contains(field.parser);
   var parsed = usesEvaluator
@@ -4799,7 +4752,10 @@ String _renderClassFieldParse(
   return parsed;
 }
 
-String _renderFieldValueExpression(_ClassParserField field, String varName) {
+String _renderFieldValueExpression(
+  _ClassParserField field,
+  String varName,
+) {
   var expr = varName;
   if (field.defaultValue != null && field.defaultValue!.isNotEmpty) {
     expr = '$varName ?? ${field.defaultValue}';
@@ -4970,10 +4926,8 @@ List<Map<String, Object?>> _buildRegistryBootstrap({
 
     final resolvedAlias = typedefIndex[baseName];
     if (resolvedAlias != null) {
-      final callbackSuggestion = _buildCallbackSuggestion(
-        resolvedAlias.element,
-        resolvedAlias.library,
-      );
+      final callbackSuggestion =
+          _buildCallbackSuggestion(resolvedAlias.element, resolvedAlias.library);
       if (callbackSuggestion != null) {
         suggestions.add(callbackSuggestion);
         seen.add(baseName);
@@ -4993,10 +4947,8 @@ List<Map<String, Object?>> _buildRegistryBootstrap({
         suggestions.add(classSuggestion);
         seen.add(baseName);
         if (resolvedClass.element.isAbstract) {
-          final subtypes = _collectConcreteSubtypes(
-            resolvedClass.element,
-            classIndex,
-          );
+          final subtypes =
+              _collectConcreteSubtypes(resolvedClass.element, classIndex);
           for (final subtype in subtypes) {
             enqueueTypeName(subtype.element.name ?? '');
           }
@@ -5006,11 +4958,9 @@ List<Map<String, Object?>> _buildRegistryBootstrap({
       }
     }
 
-    if (_looksLikeFunctionType(normalizedName) &&
-        !seen.contains(normalizedName)) {
-      final callbackSuggestion = _buildFunctionSignatureSuggestion(
-        normalizedName,
-      );
+    if (_looksLikeFunctionType(normalizedName) && !seen.contains(normalizedName)) {
+      final callbackSuggestion =
+          _buildFunctionSignatureSuggestion(normalizedName);
       if (callbackSuggestion != null) {
         suggestions.add(callbackSuggestion);
         seen.add(normalizedName);
@@ -5042,7 +4992,10 @@ Map<String, Object?>? _buildCallbackSuggestion(
     return null;
   }
   final parserSpec = _suggestCallbackParser(aliased);
-  final entry = <String, Object?>{'name': alias.name ?? '', 'kind': 'callback'};
+  final entry = <String, Object?>{
+    'name': alias.name ?? '',
+    'kind': 'callback',
+  };
   if (library.isNotEmpty && !library.startsWith('dart:core')) {
     entry['imports'] = [library];
   }
@@ -5063,11 +5016,15 @@ Map<String, Object?>? _buildCallbackSuggestion(
 
 Map<String, Object?>? _buildFunctionSignatureSuggestion(String name) {
   final trimmedName = name.trim();
-  final entry = <String, Object?>{'name': trimmedName, 'kind': 'callback'};
+  final entry = <String, Object?>{
+    'name': trimmedName,
+    'kind': 'callback',
+  };
   if (trimmedName.isEmpty) {
     return entry;
   }
-  final match = RegExp(r'^(.+?)\s+Function\((.*)\)$').firstMatch(trimmedName);
+  final match =
+      RegExp(r'^(.+?)\s+Function\((.*)\)$').firstMatch(trimmedName);
   if (match == null) {
     return entry;
   }
@@ -5086,7 +5043,10 @@ Map<String, Object?>? _buildFunctionSignatureSuggestion(String name) {
   final paramTypes = rawParams.isEmpty
       ? const <String>[]
       : _splitFunctionParamTypes(rawParams);
-  final parserSpec = _suggestCallbackParserFromSignature(rawReturn, paramTypes);
+  final parserSpec = _suggestCallbackParserFromSignature(
+    rawReturn,
+    paramTypes,
+  );
   if (parserSpec != null) {
     entry['parser'] = parserSpec.parser;
     if (parserSpec.usesEvaluator) {
@@ -5338,12 +5298,12 @@ Map<String, Object?>? _buildClassSuggestion(
         continue;
       }
       final typeName = _normalizeTypeName(_typeDisplayName(param.type));
-      final field = <String, Object?>{'name': paramName, 'type': typeName};
-      final defaultValue = _resolveDefaultValue(
-        param,
-        className,
-        staticConstNames,
-      );
+      final field = <String, Object?>{
+        'name': paramName,
+        'type': typeName,
+      };
+      final defaultValue =
+          _resolveDefaultValue(param, className, staticConstNames);
       if (defaultValue != null) {
         field['default'] = defaultValue;
       }
@@ -5376,8 +5336,7 @@ Map<String, Object?>? _buildClassSuggestion(
     'parser': _generatedClassParserName(className),
   };
 
-  final legacyConstructor =
-      element.unnamedConstructor ??
+  final legacyConstructor = element.unnamedConstructor ??
       (element.constructors.isNotEmpty ? element.constructors.first : null);
   if (legacyConstructor != null) {
     final legacyFields = <Map<String, Object?>>[];
@@ -5390,12 +5349,12 @@ Map<String, Object?>? _buildClassSuggestion(
         continue;
       }
       final typeName = _normalizeTypeName(_typeDisplayName(param.type));
-      final field = <String, Object?>{'name': paramName, 'type': typeName};
-      final defaultValue = _resolveDefaultValue(
-        param,
-        className,
-        staticConstNames,
-      );
+      final field = <String, Object?>{
+        'name': paramName,
+        'type': typeName,
+      };
+      final defaultValue =
+          _resolveDefaultValue(param, className, staticConstNames);
       if (defaultValue != null) {
         field['default'] = defaultValue;
       }
@@ -5406,7 +5365,8 @@ Map<String, Object?>? _buildClassSuggestion(
     }
     if (legacyFields.isNotEmpty) {
       final legacyName = legacyConstructor.name ?? '';
-      entry['constructor'] = legacyName.isEmpty ? 'default' : legacyName;
+      entry['constructor'] =
+          legacyName.isEmpty ? 'default' : legacyName;
       entry['fields'] = legacyFields;
     }
   }
@@ -5469,10 +5429,7 @@ Map<String, Object?>? _buildCollectionSuggestion(
   if (info.base == 'Map') {
     return null;
   }
-  final parserName = _generatedCollectionParserName(
-    info.base,
-    info.elementType,
-  );
+  final parserName = _generatedCollectionParserName(info.base, info.elementType);
   final entry = <String, Object?>{
     'name': typeName,
     'kind': 'collection',
@@ -5569,7 +5526,8 @@ _WrapperTypeInfo? _parseWrapperType(String typeName) {
 }
 
 String _generatedCollectionParserName(String base, String elementType) {
-  final sanitized = elementType.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+  final sanitized =
+      elementType.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   final suffix = sanitized.isEmpty
       ? 'Value'
       : '${sanitized[0].toUpperCase()}${sanitized.substring(1)}';
@@ -5577,7 +5535,8 @@ String _generatedCollectionParserName(String base, String elementType) {
 }
 
 String _generatedWrapperParserName(String base, String elementType) {
-  final sanitized = elementType.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+  final sanitized =
+      elementType.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   final suffix = sanitized.isEmpty
       ? 'Value'
       : '${sanitized[0].toUpperCase()}${sanitized.substring(1)}';

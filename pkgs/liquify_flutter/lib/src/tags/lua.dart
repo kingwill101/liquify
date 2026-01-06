@@ -11,7 +11,7 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final allowSync =
         evaluator.context.getRegister('_liquify_flutter_allow_sync_lua') ==
-        true;
+            true;
     if (allowSync) {
       return null;
     }
@@ -56,7 +56,10 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
       throw Exception('lua tag failed: $error');
     }
 
-    final converted = _sanitizeData(lualike.fromLuaValue(result), path: 'lua');
+    final converted = _sanitizeData(
+      lualike.fromLuaValue(result),
+      path: 'lua',
+    );
 
     if (assignName != null && assignName.isNotEmpty) {
       evaluator.context.setVariable(assignName, converted);
@@ -139,7 +142,10 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
     if (value is lualike.Value) {
       return _sanitizeData(lualike.fromLuaValue(value), path: path);
     }
-    if (value == null || value is String || value is num || value is bool) {
+    if (value == null ||
+        value is String ||
+        value is num ||
+        value is bool) {
       return value;
     }
     if (value is Widget) {
@@ -150,7 +156,10 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
       var index = 0;
       for (final entry in value) {
         items.add(
-          _sanitizeData(lualike.fromLuaValue(entry), path: '$path[$index]'),
+          _sanitizeData(
+            lualike.fromLuaValue(entry),
+            path: '$path[$index]',
+          ),
         );
         index += 1;
       }
@@ -207,9 +216,9 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
             string('endlua').trim() &
             tagEnd())
         .map((values) {
-          final content = values[2] as List<ASTNode>? ?? const [];
-          final script = values[4] as String? ?? '';
-          return Tag('lua', content, body: [TextNode(script)]);
-        });
+      final content = values[2] as List<ASTNode>? ?? const [];
+      final script = values[4] as String? ?? '';
+      return Tag('lua', content, body: [TextNode(script)]);
+    });
   }
 }

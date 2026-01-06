@@ -69,7 +69,11 @@ class SpacerTag extends WidgetTagBase with AsyncTag {
       return;
     }
     buffer.write(
-      SizedBox(width: width ?? size, height: height ?? size, child: child),
+      SizedBox(
+        width: width ?? size,
+        height: height ?? size,
+        child: child,
+      ),
     );
   }
 
@@ -137,7 +141,11 @@ class SpacerTag extends WidgetTagBase with AsyncTag {
       return;
     }
     buffer.write(
-      SizedBox(width: width ?? size, height: height ?? size, child: child),
+      SizedBox(
+        width: width ?? size,
+        height: height ?? size,
+        child: child,
+      ),
     );
   }
 }

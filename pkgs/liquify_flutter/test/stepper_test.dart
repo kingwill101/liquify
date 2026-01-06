@@ -15,7 +15,9 @@ void main() {
           {'title': 'Build', 'content': 'Implement'},
           {'title': 'Ship', 'content': 'Release'},
         ],
-        'actions': {'step': (int index) => selected = index},
+        'actions': {
+          'step': (int index) => selected = index,
+        },
       },
     );
 

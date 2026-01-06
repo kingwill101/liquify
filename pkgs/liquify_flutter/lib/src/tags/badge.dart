@@ -69,8 +69,7 @@ class BadgeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('badge').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -80,9 +79,8 @@ class BadgeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'badge',
         nonFilterContent,
@@ -207,7 +205,10 @@ Widget? _resolveBadgeLabel(String? label, TextStyle? style) {
   if (label == null || label.trim().isEmpty) {
     return null;
   }
-  return Text(label, style: style);
+  return Text(
+    label,
+    style: style,
+  );
 }
 
 List<Widget> _asWidgets(Object? value) {

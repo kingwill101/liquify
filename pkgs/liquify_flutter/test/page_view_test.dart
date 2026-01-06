@@ -5,12 +5,15 @@ import 'test_utils.dart';
 
 void main() {
   testWidgets('page_view renders pages with properties', (tester) async {
-    await pumpTemplate(tester, '''
+    await pumpTemplate(
+      tester,
+      '''
 {% page_view scrollDirection: "vertical" pageSnapping: false %}
   {% text value: "One" %}
   {% text value: "Two" %}
 {% endpage_view %}
-''');
+''',
+    );
 
     expect(find.byType(PageView), findsOneWidget);
     final widget = tester.widget<PageView>(find.byType(PageView));

@@ -96,8 +96,8 @@ class TimePickerTag extends WidgetTagBase with AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -110,17 +110,17 @@ class TimePickerTag extends WidgetTagBase with AsyncTag {
     config.event = baseEvent;
     config.onChanged =
         resolveStringActionCallback(
-          evaluator,
-          onChangedValue,
-          event: baseEvent,
-          actionValue: actionName,
-        ) ??
-        resolveStringActionCallback(
-          evaluator,
-          actionValue,
-          event: baseEvent,
-          actionValue: actionName,
-        );
+              evaluator,
+              onChangedValue,
+              event: baseEvent,
+              actionValue: actionName,
+            ) ??
+            resolveStringActionCallback(
+              evaluator,
+              actionValue,
+              event: baseEvent,
+              actionValue: actionName,
+            );
     return config;
   }
 }
@@ -152,7 +152,8 @@ Widget _buildTimePicker(_TimePickerConfig config) {
         final picked = await showTimePicker(
           context: context,
           initialTime: resolved,
-          initialEntryMode: config.entryMode ?? TimePickerEntryMode.dial,
+          initialEntryMode:
+              config.entryMode ?? TimePickerEntryMode.dial,
           helpText: config.helpText,
           cancelText: config.cancelText,
           confirmText: config.confirmText,
@@ -163,9 +164,8 @@ Widget _buildTimePicker(_TimePickerConfig config) {
                     return const SizedBox.shrink();
                   }
                   return MediaQuery(
-                    data: MediaQuery.of(
-                      context,
-                    ).copyWith(alwaysUse24HourFormat: true),
+                    data: MediaQuery.of(context)
+                        .copyWith(alwaysUse24HourFormat: true),
                     child: child,
                   );
                 }

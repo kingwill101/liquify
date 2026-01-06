@@ -31,21 +31,18 @@ class ListViewBuilderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('list_view_builder').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endlist_view_builder').trim() & tagEnd();
+    final endTag = tagStart() & string('endlist_view_builder').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'list_view_builder',
         nonFilterContent,
@@ -133,9 +130,8 @@ class ListViewBuilderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.semanticChildCount = toInt(evaluator.evaluate(arg.value));
           break;
         case 'dragStartBehavior':
-          config.dragStartBehavior = parseDragStartBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          config.dragStartBehavior =
+              parseDragStartBehavior(evaluator.evaluate(arg.value));
           break;
         case 'keyboardDismissBehavior':
           config.keyboardDismissBehavior =
@@ -151,9 +147,8 @@ class ListViewBuilderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.clipBehavior = parseClip(evaluator.evaluate(arg.value));
           break;
         case 'hitTestBehavior':
-          config.hitTestBehavior = parseHitTestBehavior(
-            evaluator.evaluate(arg.value),
-          );
+          config.hitTestBehavior =
+              parseHitTestBehavior(evaluator.evaluate(arg.value));
           break;
         default:
           handleUnknownArg('list_view_builder', name);
@@ -183,12 +178,10 @@ class ListViewBuilderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     if (items.isEmpty) {
       return const [];
     }
-    final itemName = config.itemName?.trim().isNotEmpty == true
-        ? config.itemName!
-        : 'item';
-    final indexName = config.indexName?.trim().isNotEmpty == true
-        ? config.indexName!
-        : 'index';
+    final itemName =
+        config.itemName?.trim().isNotEmpty == true ? config.itemName! : 'item';
+    final indexName =
+        config.indexName?.trim().isNotEmpty == true ? config.indexName! : 'index';
     final axis = config.scrollDirection ?? Axis.vertical;
     final padding = config.gap == null || config.gap == 0
         ? null
@@ -210,12 +203,8 @@ class ListViewBuilderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
         if (children.isEmpty) {
           continue;
         }
-        final widget = children.length == 1
-            ? children.first
-            : wrapChildren(children);
-        widgets.add(
-          padding == null ? widget : Padding(padding: padding, child: widget),
-        );
+        final widget = children.length == 1 ? children.first : wrapChildren(children);
+        widgets.add(padding == null ? widget : Padding(padding: padding, child: widget));
       } finally {
         evaluator.context.popScope();
         popPropertyScope(evaluator.context, scope);
@@ -274,8 +263,7 @@ ListView _buildListView(
       cacheExtent: config.cacheExtent,
       dragStartBehavior: config.dragStartBehavior ?? DragStartBehavior.start,
       keyboardDismissBehavior:
-          config.keyboardDismissBehavior ??
-          ScrollViewKeyboardDismissBehavior.manual,
+          config.keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
       restorationId: config.restorationId,
       clipBehavior: config.clipBehavior ?? Clip.hardEdge,
       hitTestBehavior: config.hitTestBehavior ?? HitTestBehavior.opaque,
@@ -307,8 +295,7 @@ ListView _buildListView(
     semanticChildCount: semanticChildCount,
     dragStartBehavior: config.dragStartBehavior ?? DragStartBehavior.start,
     keyboardDismissBehavior:
-        config.keyboardDismissBehavior ??
-        ScrollViewKeyboardDismissBehavior.manual,
+        config.keyboardDismissBehavior ?? ScrollViewKeyboardDismissBehavior.manual,
     restorationId: config.restorationId,
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     hitTestBehavior: config.hitTestBehavior ?? HitTestBehavior.opaque,

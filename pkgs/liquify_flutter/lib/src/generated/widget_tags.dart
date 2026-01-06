@@ -14,8 +14,7 @@ import 'package:liquify_flutter/src/generated/type_parsers.dart';
 import 'package:liquify_flutter/src/tags/tag_helpers.dart';
 import 'package:liquify_flutter/src/tags/widget_tag_base.dart';
 
-class GeneratedAboutDialogTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+class GeneratedAboutDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAboutDialogTag(super.content, super.filters);
 
   @override
@@ -26,10 +25,7 @@ class GeneratedAboutDialogTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAboutDialogTagWidget(config, children));
@@ -37,8 +33,7 @@ class GeneratedAboutDialogTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('about_dialog').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -47,9 +42,8 @@ class GeneratedAboutDialogTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'about_dialog',
         nonFilterContent,
@@ -97,10 +91,7 @@ class _GeneratedAboutDialogTagConfig {
   Key? key;
 }
 
-AboutDialog _buildGeneratedAboutDialogTagWidget(
-  _GeneratedAboutDialogTagConfig config,
-  List<Widget> children,
-) {
+AboutDialog _buildGeneratedAboutDialogTagWidget(_GeneratedAboutDialogTagConfig config, List<Widget> children) {
   return AboutDialog(
     applicationIcon: config.applicationIcon,
     applicationLegalese: config.applicationLegalese,
@@ -111,8 +102,8 @@ AboutDialog _buildGeneratedAboutDialogTagWidget(
   );
 }
 
-class GeneratedAbsorbPointerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAbsorbPointerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAbsorbPointerTag(super.content, super.filters);
 
   @override
@@ -123,10 +114,7 @@ class GeneratedAbsorbPointerTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAbsorbPointerTagWidget(config, children));
@@ -134,8 +122,7 @@ class GeneratedAbsorbPointerTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('absorb_pointer').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -144,9 +131,8 @@ class GeneratedAbsorbPointerTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'absorb_pointer',
         nonFilterContent,
@@ -186,11 +172,10 @@ class _GeneratedAbsorbPointerTagConfig {
   Key? key;
 }
 
-AbsorbPointer _buildGeneratedAbsorbPointerTagWidget(
-  _GeneratedAbsorbPointerTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AbsorbPointer _buildGeneratedAbsorbPointerTagWidget(_GeneratedAbsorbPointerTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AbsorbPointer(
     absorbing: config.absorbing ?? true,
     ignoringSemantics: config.ignoringSemantics,
@@ -198,6 +183,7 @@ AbsorbPointer _buildGeneratedAbsorbPointerTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedActionChipTag extends WidgetTagBase with AsyncTag {
   GeneratedActionChipTag(super.content, super.filters);
@@ -210,10 +196,7 @@ class GeneratedActionChipTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedActionChipTagWidget(config, children));
@@ -244,9 +227,7 @@ class GeneratedActionChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'disabledColor':
           config.disabledColor = parseGeneratedColor(value);
@@ -273,9 +254,7 @@ class GeneratedActionChipTag extends WidgetTagBase with AsyncTag {
           config.labelStyle = parseGeneratedTextStyle(value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -348,10 +327,7 @@ class _GeneratedActionChipTagConfig {
   VisualDensity? visualDensity;
 }
 
-ActionChip _buildGeneratedActionChipTagWidget(
-  _GeneratedActionChipTagConfig config,
-  List<Widget> children,
-) {
+ActionChip _buildGeneratedActionChipTagWidget(_GeneratedActionChipTagConfig config, List<Widget> children) {
   return ActionChip(
     autofocus: config.autofocus ?? false,
     avatar: config.avatar,
@@ -382,6 +358,7 @@ ActionChip _buildGeneratedActionChipTagWidget(
   );
 }
 
+
 class GeneratedAlertDialogTag extends WidgetTagBase with AsyncTag {
   GeneratedAlertDialogTag(super.content, super.filters);
 
@@ -393,10 +370,7 @@ class GeneratedAlertDialogTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedAlertDialogTagWidget(config, children));
@@ -415,17 +389,13 @@ class GeneratedAlertDialogTag extends WidgetTagBase with AsyncTag {
           config.actionsAlignment = parseGeneratedMainAxisAlignment(value);
           break;
         case 'actionsOverflowAlignment':
-          config.actionsOverflowAlignment = parseGeneratedOverflowBarAlignment(
-            value,
-          );
+          config.actionsOverflowAlignment = parseGeneratedOverflowBarAlignment(value);
           break;
         case 'actionsOverflowButtonSpacing':
           config.actionsOverflowButtonSpacing = toDouble(value);
           break;
         case 'actionsOverflowDirection':
-          config.actionsOverflowDirection = parseGeneratedVerticalDirection(
-            value,
-          );
+          config.actionsOverflowDirection = parseGeneratedVerticalDirection(value);
           break;
         case 'actionsPadding':
           config.actionsPadding = parseGeneratedEdgeInsetsGeometry(value);
@@ -536,10 +506,7 @@ class _GeneratedAlertDialogTagConfig {
   TextStyle? titleTextStyle;
 }
 
-AlertDialog _buildGeneratedAlertDialogTagWidget(
-  _GeneratedAlertDialogTagConfig config,
-  List<Widget> children,
-) {
+AlertDialog _buildGeneratedAlertDialogTagWidget(_GeneratedAlertDialogTagConfig config, List<Widget> children) {
   return AlertDialog(
     actions: config.actions,
     actionsAlignment: config.actionsAlignment,
@@ -572,6 +539,7 @@ AlertDialog _buildGeneratedAlertDialogTagWidget(
   );
 }
 
+
 class GeneratedAlignTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAlignTag(super.content, super.filters);
 
@@ -583,10 +551,7 @@ class GeneratedAlignTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAlignTagWidget(config, children));
@@ -594,8 +559,7 @@ class GeneratedAlignTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('align').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -604,9 +568,8 @@ class GeneratedAlignTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'align',
         nonFilterContent,
@@ -650,11 +613,10 @@ class _GeneratedAlignTagConfig {
   double? widthFactor;
 }
 
-Align _buildGeneratedAlignTagWidget(
-  _GeneratedAlignTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Align _buildGeneratedAlignTagWidget(_GeneratedAlignTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Align(
     alignment: config.alignment ?? Alignment.center,
     heightFactor: config.heightFactor,
@@ -664,8 +626,8 @@ Align _buildGeneratedAlignTagWidget(
   );
 }
 
-class GeneratedAnimatedAlignTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedAlignTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedAlignTag(super.content, super.filters);
 
   @override
@@ -676,10 +638,7 @@ class GeneratedAnimatedAlignTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedAlignTagWidget(config, children));
@@ -687,8 +646,7 @@ class GeneratedAnimatedAlignTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_align').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -697,9 +655,8 @@ class GeneratedAnimatedAlignTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_align',
         nonFilterContent,
@@ -761,11 +718,10 @@ class _GeneratedAnimatedAlignTagConfig {
   double? widthFactor;
 }
 
-AnimatedAlign _buildGeneratedAnimatedAlignTagWidget(
-  _GeneratedAnimatedAlignTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedAlign _buildGeneratedAnimatedAlignTagWidget(_GeneratedAnimatedAlignTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedAlign(
     alignment: config.alignment!,
     curve: config.curve ?? Curves.linear,
@@ -778,8 +734,8 @@ AnimatedAlign _buildGeneratedAnimatedAlignTagWidget(
   );
 }
 
-class GeneratedAnimatedContainerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedContainerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedContainerTag(super.content, super.filters);
 
   @override
@@ -790,10 +746,7 @@ class GeneratedAnimatedContainerTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedContainerTagWidget(config, children));
@@ -801,20 +754,17 @@ class GeneratedAnimatedContainerTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_container').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endanimated_container').trim() & tagEnd();
+    final endTag = tagStart() & string('endanimated_container').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_container',
         nonFilterContent,
@@ -852,10 +802,7 @@ class GeneratedAnimatedContainerTag extends WidgetTagBase
           config.duration = parseGeneratedDuration(value);
           break;
         case 'foregroundDecoration':
-          config.foregroundDecoration = parseGeneratedDecoration(
-            evaluator,
-            value,
-          );
+          config.foregroundDecoration = parseGeneratedDecoration(evaluator, value);
           break;
         case 'height':
           config.height = toDouble(value);
@@ -912,11 +859,10 @@ class _GeneratedAnimatedContainerTagConfig {
   double? width;
 }
 
-AnimatedContainer _buildGeneratedAnimatedContainerTagWidget(
-  _GeneratedAnimatedContainerTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedContainer _buildGeneratedAnimatedContainerTagWidget(_GeneratedAnimatedContainerTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedContainer(
     alignment: config.alignment,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -938,47 +884,37 @@ AnimatedContainer _buildGeneratedAnimatedContainerTagWidget(
   );
 }
 
-class GeneratedAnimatedDefaultTextStyleTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedDefaultTextStyleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedDefaultTextStyleTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGeneratedAnimatedDefaultTextStyleTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedAnimatedDefaultTextStyleTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGeneratedAnimatedDefaultTextStyleTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedAnimatedDefaultTextStyleTagWidget(config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_default_text_style').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endanimated_default_text_style').trim() & tagEnd();
+    final endTag = tagStart() & string('endanimated_default_text_style').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_default_text_style',
         nonFilterContent,
@@ -988,9 +924,7 @@ class GeneratedAnimatedDefaultTextStyleTag extends WidgetTagBase
     });
   }
 
-  _GeneratedAnimatedDefaultTextStyleTagConfig _parseConfig(
-    Evaluator evaluator,
-  ) {
+  _GeneratedAnimatedDefaultTextStyleTagConfig _parseConfig(Evaluator evaluator) {
     final config = _GeneratedAnimatedDefaultTextStyleTagConfig();
     for (final arg in namedArgs) {
       final name = arg.identifier.name;
@@ -1058,10 +992,7 @@ class _GeneratedAnimatedDefaultTextStyleTagConfig {
   TextWidthBasis? textWidthBasis;
 }
 
-AnimatedDefaultTextStyle _buildGeneratedAnimatedDefaultTextStyleTagWidget(
-  _GeneratedAnimatedDefaultTextStyleTagConfig config,
-  List<Widget> children,
-) {
+AnimatedDefaultTextStyle _buildGeneratedAnimatedDefaultTextStyleTagWidget(_GeneratedAnimatedDefaultTextStyleTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -1081,8 +1012,8 @@ AnimatedDefaultTextStyle _buildGeneratedAnimatedDefaultTextStyleTagWidget(
   );
 }
 
-class GeneratedAnimatedOpacityTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedOpacityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedOpacityTag(super.content, super.filters);
 
   @override
@@ -1093,10 +1024,7 @@ class GeneratedAnimatedOpacityTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedOpacityTagWidget(config, children));
@@ -1104,8 +1032,7 @@ class GeneratedAnimatedOpacityTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_opacity').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -1114,9 +1041,8 @@ class GeneratedAnimatedOpacityTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_opacity',
         nonFilterContent,
@@ -1174,11 +1100,10 @@ class _GeneratedAnimatedOpacityTagConfig {
   double? opacity;
 }
 
-AnimatedOpacity _buildGeneratedAnimatedOpacityTagWidget(
-  _GeneratedAnimatedOpacityTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedOpacity _buildGeneratedAnimatedOpacityTagWidget(_GeneratedAnimatedOpacityTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedOpacity(
     alwaysIncludeSemantics: config.alwaysIncludeSemantics ?? false,
     curve: config.curve ?? Curves.linear,
@@ -1190,8 +1115,8 @@ AnimatedOpacity _buildGeneratedAnimatedOpacityTagWidget(
   );
 }
 
-class GeneratedAnimatedPaddingTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedPaddingTag(super.content, super.filters);
 
   @override
@@ -1202,10 +1127,7 @@ class GeneratedAnimatedPaddingTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedPaddingTagWidget(config, children));
@@ -1213,8 +1135,7 @@ class GeneratedAnimatedPaddingTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_padding').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -1223,9 +1144,8 @@ class GeneratedAnimatedPaddingTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_padding',
         nonFilterContent,
@@ -1279,11 +1199,10 @@ class _GeneratedAnimatedPaddingTagConfig {
   EdgeInsetsGeometry? padding;
 }
 
-AnimatedPadding _buildGeneratedAnimatedPaddingTagWidget(
-  _GeneratedAnimatedPaddingTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedPadding _buildGeneratedAnimatedPaddingTagWidget(_GeneratedAnimatedPaddingTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedPadding(
     curve: config.curve ?? Curves.linear,
     duration: config.duration!,
@@ -1294,8 +1213,8 @@ AnimatedPadding _buildGeneratedAnimatedPaddingTagWidget(
   );
 }
 
-class GeneratedAnimatedPositionedTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedPositionedTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedPositionedTag(super.content, super.filters);
 
   @override
@@ -1306,10 +1225,7 @@ class GeneratedAnimatedPositionedTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedPositionedTagWidget(config, children));
@@ -1317,20 +1233,17 @@ class GeneratedAnimatedPositionedTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_positioned').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endanimated_positioned').trim() & tagEnd();
+    final endTag = tagStart() & string('endanimated_positioned').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_positioned',
         nonFilterContent,
@@ -1401,10 +1314,7 @@ class _GeneratedAnimatedPositionedTagConfig {
   double? width;
 }
 
-AnimatedPositioned _buildGeneratedAnimatedPositionedTagWidget(
-  _GeneratedAnimatedPositionedTagConfig config,
-  List<Widget> children,
-) {
+AnimatedPositioned _buildGeneratedAnimatedPositionedTagWidget(_GeneratedAnimatedPositionedTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -1423,8 +1333,8 @@ AnimatedPositioned _buildGeneratedAnimatedPositionedTagWidget(
   );
 }
 
-class GeneratedAnimatedRotationTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedRotationTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedRotationTag(super.content, super.filters);
 
   @override
@@ -1435,10 +1345,7 @@ class GeneratedAnimatedRotationTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedRotationTagWidget(config, children));
@@ -1446,20 +1353,17 @@ class GeneratedAnimatedRotationTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_rotation').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endanimated_rotation').trim() & tagEnd();
+    final endTag = tagStart() & string('endanimated_rotation').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_rotation',
         nonFilterContent,
@@ -1521,11 +1425,10 @@ class _GeneratedAnimatedRotationTagConfig {
   double? turns;
 }
 
-AnimatedRotation _buildGeneratedAnimatedRotationTagWidget(
-  _GeneratedAnimatedRotationTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedRotation _buildGeneratedAnimatedRotationTagWidget(_GeneratedAnimatedRotationTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedRotation(
     alignment: config.alignment ?? Alignment.center,
     curve: config.curve ?? Curves.linear,
@@ -1538,8 +1441,8 @@ AnimatedRotation _buildGeneratedAnimatedRotationTagWidget(
   );
 }
 
-class GeneratedAnimatedScaleTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedScaleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedScaleTag(super.content, super.filters);
 
   @override
@@ -1550,10 +1453,7 @@ class GeneratedAnimatedScaleTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedScaleTagWidget(config, children));
@@ -1561,8 +1461,7 @@ class GeneratedAnimatedScaleTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_scale').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -1571,9 +1470,8 @@ class GeneratedAnimatedScaleTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_scale',
         nonFilterContent,
@@ -1635,11 +1533,10 @@ class _GeneratedAnimatedScaleTagConfig {
   double? scale;
 }
 
-AnimatedScale _buildGeneratedAnimatedScaleTagWidget(
-  _GeneratedAnimatedScaleTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedScale _buildGeneratedAnimatedScaleTagWidget(_GeneratedAnimatedScaleTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedScale(
     alignment: config.alignment ?? Alignment.center,
     curve: config.curve ?? Curves.linear,
@@ -1652,8 +1549,8 @@ AnimatedScale _buildGeneratedAnimatedScaleTagWidget(
   );
 }
 
-class GeneratedAnimatedSlideTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAnimatedSlideTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAnimatedSlideTag(super.content, super.filters);
 
   @override
@@ -1664,10 +1561,7 @@ class GeneratedAnimatedSlideTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAnimatedSlideTagWidget(config, children));
@@ -1675,8 +1569,7 @@ class GeneratedAnimatedSlideTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('animated_slide').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -1685,9 +1578,8 @@ class GeneratedAnimatedSlideTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'animated_slide',
         nonFilterContent,
@@ -1741,11 +1633,10 @@ class _GeneratedAnimatedSlideTagConfig {
   VoidCallback? onEnd;
 }
 
-AnimatedSlide _buildGeneratedAnimatedSlideTagWidget(
-  _GeneratedAnimatedSlideTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AnimatedSlide _buildGeneratedAnimatedSlideTagWidget(_GeneratedAnimatedSlideTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AnimatedSlide(
     curve: config.curve ?? Curves.linear,
     duration: config.duration!,
@@ -1755,6 +1646,7 @@ AnimatedSlide _buildGeneratedAnimatedSlideTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedAppBarTag extends WidgetTagBase with AsyncTag {
   GeneratedAppBarTag(super.content, super.filters);
@@ -1767,10 +1659,7 @@ class GeneratedAppBarTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedAppBarTagWidget(config, children));
@@ -1804,8 +1693,7 @@ class GeneratedAppBarTag extends WidgetTagBase with AsyncTag {
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'bottom':
-          config.bottom =
-              (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
+          config.bottom = (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
           break;
         case 'bottomOpacity':
           config.bottomOpacity = toDouble(value);
@@ -1844,10 +1732,7 @@ class GeneratedAppBarTag extends WidgetTagBase with AsyncTag {
           config.leadingWidth = toDouble(value);
           break;
         case 'notificationPredicate':
-          config.notificationPredicate = resolveBoolPredicateCallback(
-            evaluator,
-            value,
-          );
+          config.notificationPredicate = resolveBoolPredicateCallback(evaluator, value);
           break;
         case 'primary':
           config.primary = toBool(value);
@@ -1934,10 +1819,7 @@ class _GeneratedAppBarTagConfig {
   bool? useDefaultSemanticsOrder;
 }
 
-AppBar _buildGeneratedAppBarTagWidget(
-  _GeneratedAppBarTagConfig config,
-  List<Widget> children,
-) {
+AppBar _buildGeneratedAppBarTagWidget(_GeneratedAppBarTagConfig config, List<Widget> children) {
   return AppBar(
     actions: config.actions,
     actionsIconTheme: config.actionsIconTheme,
@@ -1959,8 +1841,7 @@ AppBar _buildGeneratedAppBarTagWidget(
     key: config.key,
     leading: config.leading,
     leadingWidth: config.leadingWidth,
-    notificationPredicate:
-        config.notificationPredicate ?? defaultScrollNotificationPredicate,
+    notificationPredicate: config.notificationPredicate ?? defaultScrollNotificationPredicate,
     primary: config.primary ?? true,
     scrolledUnderElevation: config.scrolledUnderElevation,
     shadowColor: config.shadowColor,
@@ -1977,8 +1858,8 @@ AppBar _buildGeneratedAppBarTagWidget(
   );
 }
 
-class GeneratedAspectRatioTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedAspectRatioTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedAspectRatioTag(super.content, super.filters);
 
   @override
@@ -1989,10 +1870,7 @@ class GeneratedAspectRatioTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedAspectRatioTagWidget(config, children));
@@ -2000,8 +1878,7 @@ class GeneratedAspectRatioTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('aspect_ratio').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -2010,9 +1887,8 @@ class GeneratedAspectRatioTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'aspect_ratio',
         nonFilterContent,
@@ -2051,17 +1927,17 @@ class _GeneratedAspectRatioTagConfig {
   Key? key;
 }
 
-AspectRatio _buildGeneratedAspectRatioTagWidget(
-  _GeneratedAspectRatioTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+AspectRatio _buildGeneratedAspectRatioTagWidget(_GeneratedAspectRatioTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return AspectRatio(
     aspectRatio: config.aspectRatio!,
     key: config.key,
     child: child,
   );
 }
+
 
 class GeneratedAutocompleteTag extends WidgetTagBase with AsyncTag {
   GeneratedAutocompleteTag(super.content, super.filters);
@@ -2074,10 +1950,7 @@ class GeneratedAutocompleteTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedAutocompleteTagWidget(config, children));
@@ -2090,9 +1963,7 @@ class GeneratedAutocompleteTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'displayStringForOption':
-          config.displayStringForOption =
-              (resolveGenericCallback1(evaluator, value)
-                  as AutocompleteOptionToString<Object>?);
+          config.displayStringForOption = (resolveGenericCallback1(evaluator, value) as AutocompleteOptionToString<Object>?);
           break;
         case 'focusNode':
           config.focusNode = parseGeneratedFocusNode(evaluator, value);
@@ -2104,31 +1975,22 @@ class GeneratedAutocompleteTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as AutocompleteOnSelected<Object>?);
+          config.onSelected = (resolveGenericValueChanged(evaluator, value) as AutocompleteOnSelected<Object>?);
           break;
         case 'optionsBuilder':
-          config.optionsBuilder =
-              (resolveGenericCallback1(evaluator, value)
-                  as AutocompleteOptionsBuilder<Object>?);
+          config.optionsBuilder = (resolveGenericCallback1(evaluator, value) as AutocompleteOptionsBuilder<Object>?);
           break;
         case 'optionsMaxHeight':
           config.optionsMaxHeight = toDouble(value);
           break;
         case 'optionsViewBuilder':
-          config.optionsViewBuilder =
-              (resolveCallbackValue(evaluator, value)
-                  as AutocompleteOptionsViewBuilder<Object>?);
+          config.optionsViewBuilder = (resolveCallbackValue(evaluator, value) as AutocompleteOptionsViewBuilder<Object>?);
           break;
         case 'optionsViewOpenDirection':
-          config.optionsViewOpenDirection =
-              parseGeneratedOptionsViewOpenDirection(value);
+          config.optionsViewOpenDirection = parseGeneratedOptionsViewOpenDirection(value);
           break;
         case 'textEditingController':
-          config.textEditingController = parseGeneratedTextEditingController(
-            value,
-          );
+          config.textEditingController = parseGeneratedTextEditingController(value);
           break;
         default:
           handleUnknownArg('autocomplete', name);
@@ -2155,13 +2017,9 @@ class _GeneratedAutocompleteTagConfig {
   TextEditingController? textEditingController;
 }
 
-Autocomplete _buildGeneratedAutocompleteTagWidget(
-  _GeneratedAutocompleteTagConfig config,
-  List<Widget> children,
-) {
+Autocomplete _buildGeneratedAutocompleteTagWidget(_GeneratedAutocompleteTagConfig config, List<Widget> children) {
   return Autocomplete(
-    displayStringForOption:
-        config.displayStringForOption ?? RawAutocomplete.defaultStringForOption,
+    displayStringForOption: config.displayStringForOption ?? RawAutocomplete.defaultStringForOption,
     focusNode: config.focusNode,
     initialValue: config.initialValue,
     key: config.key,
@@ -2169,11 +2027,11 @@ Autocomplete _buildGeneratedAutocompleteTagWidget(
     optionsBuilder: config.optionsBuilder!,
     optionsMaxHeight: config.optionsMaxHeight ?? 200.0,
     optionsViewBuilder: config.optionsViewBuilder,
-    optionsViewOpenDirection:
-        config.optionsViewOpenDirection ?? OptionsViewOpenDirection.down,
+    optionsViewOpenDirection: config.optionsViewOpenDirection ?? OptionsViewOpenDirection.down,
     textEditingController: config.textEditingController,
   );
 }
+
 
 class GeneratedBadgeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedBadgeTag(super.content, super.filters);
@@ -2186,10 +2044,7 @@ class GeneratedBadgeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedBadgeTagWidget(config, children));
@@ -2197,8 +2052,7 @@ class GeneratedBadgeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('badge').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -2207,9 +2061,8 @@ class GeneratedBadgeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'badge',
         nonFilterContent,
@@ -2281,11 +2134,10 @@ class _GeneratedBadgeTagConfig {
   TextStyle? textStyle;
 }
 
-Badge _buildGeneratedBadgeTagWidget(
-  _GeneratedBadgeTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Badge _buildGeneratedBadgeTagWidget(_GeneratedBadgeTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Badge(
     alignment: config.alignment,
     backgroundColor: config.backgroundColor,
@@ -2302,8 +2154,8 @@ Badge _buildGeneratedBadgeTagWidget(
   );
 }
 
-class GeneratedBaselineTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedBaselineTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedBaselineTag(super.content, super.filters);
 
   @override
@@ -2314,10 +2166,7 @@ class GeneratedBaselineTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedBaselineTagWidget(config, children));
@@ -2325,8 +2174,7 @@ class GeneratedBaselineTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('baseline').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -2335,9 +2183,8 @@ class GeneratedBaselineTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'baseline',
         nonFilterContent,
@@ -2383,11 +2230,10 @@ class _GeneratedBaselineTagConfig {
   Key? key;
 }
 
-Baseline _buildGeneratedBaselineTagWidget(
-  _GeneratedBaselineTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Baseline _buildGeneratedBaselineTagWidget(_GeneratedBaselineTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Baseline(
     baseline: config.baseline!,
     baselineType: config.baselineType!,
@@ -2396,8 +2242,8 @@ Baseline _buildGeneratedBaselineTagWidget(
   );
 }
 
-class GeneratedBottomAppBarTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedBottomAppBarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedBottomAppBarTag(super.content, super.filters);
 
   @override
@@ -2408,10 +2254,7 @@ class GeneratedBottomAppBarTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedBottomAppBarTagWidget(config, children));
@@ -2419,8 +2262,7 @@ class GeneratedBottomAppBarTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('bottom_app_bar').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -2429,9 +2271,8 @@ class GeneratedBottomAppBarTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'bottom_app_bar',
         nonFilterContent,
@@ -2499,11 +2340,10 @@ class _GeneratedBottomAppBarTagConfig {
   Color? surfaceTintColor;
 }
 
-BottomAppBar _buildGeneratedBottomAppBarTagWidget(
-  _GeneratedBottomAppBarTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+BottomAppBar _buildGeneratedBottomAppBarTagWidget(_GeneratedBottomAppBarTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return BottomAppBar(
     clipBehavior: config.clipBehavior ?? Clip.none,
     color: config.color,
@@ -2519,6 +2359,7 @@ BottomAppBar _buildGeneratedBottomAppBarTagWidget(
   );
 }
 
+
 class GeneratedBottomNavigationBarTag extends WidgetTagBase with AsyncTag {
   GeneratedBottomNavigationBarTag(super.content, super.filters);
 
@@ -2530,10 +2371,7 @@ class GeneratedBottomNavigationBarTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedBottomNavigationBarTagWidget(config, children));
@@ -2570,16 +2408,13 @@ class GeneratedBottomNavigationBarTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'landscapeLayout':
-          config.landscapeLayout =
-              parseGeneratedBottomNavigationBarLandscapeLayout(value);
+          config.landscapeLayout = parseGeneratedBottomNavigationBarLandscapeLayout(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onTap':
-          config.onTap =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onTap = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'selectedFontSize':
           config.selectedFontSize = toDouble(value);
@@ -2655,10 +2490,7 @@ class _GeneratedBottomNavigationBarTagConfig {
   bool? useLegacyColorScheme;
 }
 
-BottomNavigationBar _buildGeneratedBottomNavigationBarTagWidget(
-  _GeneratedBottomNavigationBarTagConfig config,
-  List<Widget> children,
-) {
+BottomNavigationBar _buildGeneratedBottomNavigationBarTagWidget(_GeneratedBottomNavigationBarTagConfig config, List<Widget> children) {
   return BottomNavigationBar(
     backgroundColor: config.backgroundColor,
     currentIndex: config.currentIndex ?? 0,
@@ -2686,6 +2518,7 @@ BottomNavigationBar _buildGeneratedBottomNavigationBarTagWidget(
   );
 }
 
+
 class GeneratedBottomSheetTag extends WidgetTagBase with AsyncTag {
   GeneratedBottomSheetTag(super.content, super.filters);
 
@@ -2697,10 +2530,7 @@ class GeneratedBottomSheetTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedBottomSheetTagWidget(config, children));
@@ -2746,9 +2576,7 @@ class GeneratedBottomSheetTag extends WidgetTagBase with AsyncTag {
           config.onClosing = resolveActionCallback(evaluator, value);
           break;
         case 'onDragEnd':
-          config.onDragEnd =
-              (resolveCallbackValue(evaluator, value)
-                  as BottomSheetDragEndHandler?);
+          config.onDragEnd = (resolveCallbackValue(evaluator, value) as BottomSheetDragEndHandler?);
           break;
         case 'onDragStart':
           config.onDragStart = resolveGenericValueChanged(evaluator, value);
@@ -2796,10 +2624,7 @@ class _GeneratedBottomSheetTagConfig {
   bool? showDragHandle;
 }
 
-BottomSheet _buildGeneratedBottomSheetTagWidget(
-  _GeneratedBottomSheetTagConfig config,
-  List<Widget> children,
-) {
+BottomSheet _buildGeneratedBottomSheetTagWidget(_GeneratedBottomSheetTagConfig config, List<Widget> children) {
   return BottomSheet(
     animationController: config.animationController,
     backgroundColor: config.backgroundColor,
@@ -2820,6 +2645,7 @@ BottomSheet _buildGeneratedBottomSheetTagWidget(
   );
 }
 
+
 class GeneratedCalendarDatePickerTag extends WidgetTagBase with AsyncTag {
   GeneratedCalendarDatePickerTag(super.content, super.filters);
 
@@ -2831,10 +2657,7 @@ class GeneratedCalendarDatePickerTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedCalendarDatePickerTagWidget(config, children));
@@ -2847,9 +2670,7 @@ class GeneratedCalendarDatePickerTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'calendarDelegate':
-          config.calendarDelegate =
-              (parseGeneratedCalendarDelegate(value)
-                  as CalendarDelegate<DateTime>?);
+          config.calendarDelegate = (parseGeneratedCalendarDelegate(value) as CalendarDelegate<DateTime>?);
           break;
         case 'currentDate':
           config.currentDate = parseGeneratedDateTime(value);
@@ -2870,20 +2691,13 @@ class GeneratedCalendarDatePickerTag extends WidgetTagBase with AsyncTag {
           config.lastDate = parseGeneratedDateTime(value);
           break;
         case 'onDateChanged':
-          config.onDateChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<DateTime>?);
+          config.onDateChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<DateTime>?);
           break;
         case 'onDisplayedMonthChanged':
-          config.onDisplayedMonthChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<DateTime>?);
+          config.onDisplayedMonthChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<DateTime>?);
           break;
         case 'selectableDayPredicate':
-          config.selectableDayPredicate = resolveBoolPredicateCallback(
-            evaluator,
-            value,
-          );
+          config.selectableDayPredicate = resolveBoolPredicateCallback(evaluator, value);
           break;
         default:
           handleUnknownArg('calendar_date_picker', name);
@@ -2919,13 +2733,9 @@ class _GeneratedCalendarDatePickerTagConfig {
   SelectableDayPredicate? selectableDayPredicate;
 }
 
-CalendarDatePicker _buildGeneratedCalendarDatePickerTagWidget(
-  _GeneratedCalendarDatePickerTagConfig config,
-  List<Widget> children,
-) {
+CalendarDatePicker _buildGeneratedCalendarDatePickerTagWidget(_GeneratedCalendarDatePickerTagConfig config, List<Widget> children) {
   return CalendarDatePicker(
-    calendarDelegate:
-        config.calendarDelegate ?? const GregorianCalendarDelegate(),
+    calendarDelegate: config.calendarDelegate ?? const GregorianCalendarDelegate(),
     currentDate: config.currentDate,
     firstDate: config.firstDate!,
     initialCalendarMode: config.initialCalendarMode ?? DatePickerMode.day,
@@ -2938,6 +2748,7 @@ CalendarDatePicker _buildGeneratedCalendarDatePickerTagWidget(
   );
 }
 
+
 class GeneratedCardTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedCardTag(super.content, super.filters);
 
@@ -2949,10 +2760,7 @@ class GeneratedCardTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedCardTagWidget(config, children));
@@ -2960,8 +2768,7 @@ class GeneratedCardTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('card').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -2970,9 +2777,8 @@ class GeneratedCardTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'card',
         nonFilterContent,
@@ -3040,11 +2846,10 @@ class _GeneratedCardTagConfig {
   Color? surfaceTintColor;
 }
 
-Card _buildGeneratedCardTagWidget(
-  _GeneratedCardTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Card _buildGeneratedCardTagWidget(_GeneratedCardTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Card(
     borderOnForeground: config.borderOnForeground ?? true,
     clipBehavior: config.clipBehavior,
@@ -3060,6 +2865,7 @@ Card _buildGeneratedCardTagWidget(
   );
 }
 
+
 class GeneratedCenterTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedCenterTag(super.content, super.filters);
 
@@ -3071,10 +2877,7 @@ class GeneratedCenterTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedCenterTagWidget(config, children));
@@ -3082,8 +2885,7 @@ class GeneratedCenterTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('center').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -3092,9 +2894,8 @@ class GeneratedCenterTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'center',
         nonFilterContent,
@@ -3134,11 +2935,10 @@ class _GeneratedCenterTagConfig {
   double? widthFactor;
 }
 
-Center _buildGeneratedCenterTagWidget(
-  _GeneratedCenterTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Center _buildGeneratedCenterTagWidget(_GeneratedCenterTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Center(
     heightFactor: config.heightFactor,
     key: config.key,
@@ -3146,6 +2946,7 @@ Center _buildGeneratedCenterTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedCheckboxTag extends WidgetTagBase with AsyncTag {
   GeneratedCheckboxTag(super.content, super.filters);
@@ -3158,10 +2959,7 @@ class GeneratedCheckboxTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedCheckboxTagWidget(config, children));
@@ -3183,9 +2981,7 @@ class GeneratedCheckboxTag extends WidgetTagBase with AsyncTag {
           config.checkColor = parseGeneratedColor(value);
           break;
         case 'fillColor':
-          config.fillColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.fillColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'focusColor':
           config.focusColor = parseGeneratedColor(value);
@@ -3203,22 +2999,16 @@ class GeneratedCheckboxTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool?>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool?>?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'semanticLabel':
           config.semanticLabel = toStringValue(value);
@@ -3279,10 +3069,7 @@ class _GeneratedCheckboxTagConfig {
   VisualDensity? visualDensity;
 }
 
-Checkbox _buildGeneratedCheckboxTagWidget(
-  _GeneratedCheckboxTagConfig config,
-  List<Widget> children,
-) {
+Checkbox _buildGeneratedCheckboxTagWidget(_GeneratedCheckboxTagConfig config, List<Widget> children) {
   return Checkbox(
     activeColor: config.activeColor,
     autofocus: config.autofocus ?? false,
@@ -3307,6 +3094,7 @@ Checkbox _buildGeneratedCheckboxTagWidget(
   );
 }
 
+
 class GeneratedCheckboxListTileTag extends WidgetTagBase with AsyncTag {
   GeneratedCheckboxListTileTag(super.content, super.filters);
 
@@ -3318,10 +3106,7 @@ class GeneratedCheckboxListTileTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedCheckboxListTileTagWidget(config, children));
@@ -3367,9 +3152,7 @@ class GeneratedCheckboxListTileTag extends WidgetTagBase with AsyncTag {
           config.enabled = toBool(value);
           break;
         case 'fillColor':
-          config.fillColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.fillColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'focusNode':
           config.focusNode = parseGeneratedFocusNode(evaluator, value);
@@ -3390,27 +3173,19 @@ class GeneratedCheckboxListTileTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool?>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool?>?);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'secondary':
           config.secondary = resolveWidget(value);
@@ -3505,10 +3280,7 @@ class _GeneratedCheckboxListTileTagConfig {
   VisualDensity? visualDensity;
 }
 
-CheckboxListTile _buildGeneratedCheckboxListTileTagWidget(
-  _GeneratedCheckboxListTileTagConfig config,
-  List<Widget> children,
-) {
+CheckboxListTile _buildGeneratedCheckboxListTileTagWidget(_GeneratedCheckboxListTileTagConfig config, List<Widget> children) {
   return CheckboxListTile(
     activeColor: config.activeColor,
     autofocus: config.autofocus ?? false,
@@ -3549,6 +3321,7 @@ CheckboxListTile _buildGeneratedCheckboxListTileTagWidget(
   );
 }
 
+
 class GeneratedChipTag extends WidgetTagBase with AsyncTag {
   GeneratedChipTag(super.content, super.filters);
 
@@ -3560,10 +3333,7 @@ class GeneratedChipTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedChipTagWidget(config, children));
@@ -3594,9 +3364,7 @@ class GeneratedChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'deleteButtonTooltipMessage':
           config.deleteButtonTooltipMessage = toStringValue(value);
@@ -3632,9 +3400,7 @@ class GeneratedChipTag extends WidgetTagBase with AsyncTag {
           config.labelStyle = parseGeneratedTextStyle(value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -3702,10 +3468,7 @@ class _GeneratedChipTagConfig {
   VisualDensity? visualDensity;
 }
 
-Chip _buildGeneratedChipTagWidget(
-  _GeneratedChipTagConfig config,
-  List<Widget> children,
-) {
+Chip _buildGeneratedChipTagWidget(_GeneratedChipTagConfig config, List<Widget> children) {
   return Chip(
     autofocus: config.autofocus ?? false,
     avatar: config.avatar,
@@ -3737,6 +3500,7 @@ Chip _buildGeneratedChipTagWidget(
   );
 }
 
+
 class GeneratedChoiceChipTag extends WidgetTagBase with AsyncTag {
   GeneratedChoiceChipTag(super.content, super.filters);
 
@@ -3748,10 +3512,7 @@ class GeneratedChoiceChipTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedChoiceChipTagWidget(config, children));
@@ -3788,9 +3549,7 @@ class GeneratedChoiceChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'disabledColor':
           config.disabledColor = parseGeneratedColor(value);
@@ -3817,17 +3576,13 @@ class GeneratedChoiceChipTag extends WidgetTagBase with AsyncTag {
           config.labelStyle = parseGeneratedTextStyle(value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onSelected':
-          config.onSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -3915,10 +3670,7 @@ class _GeneratedChoiceChipTagConfig {
   VisualDensity? visualDensity;
 }
 
-ChoiceChip _buildGeneratedChoiceChipTagWidget(
-  _GeneratedChoiceChipTagConfig config,
-  List<Widget> children,
-) {
+ChoiceChip _buildGeneratedChoiceChipTagWidget(_GeneratedChoiceChipTagConfig config, List<Widget> children) {
   return ChoiceChip(
     autofocus: config.autofocus ?? false,
     avatar: config.avatar,
@@ -3955,8 +3707,8 @@ ChoiceChip _buildGeneratedChoiceChipTagWidget(
   );
 }
 
-class GeneratedCircleAvatarTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedCircleAvatarTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedCircleAvatarTag(super.content, super.filters);
 
   @override
@@ -3967,10 +3719,7 @@ class GeneratedCircleAvatarTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedCircleAvatarTagWidget(config, children));
@@ -3978,8 +3727,7 @@ class GeneratedCircleAvatarTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('circle_avatar').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -3988,9 +3736,8 @@ class GeneratedCircleAvatarTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'circle_avatar',
         nonFilterContent,
@@ -4010,15 +3757,13 @@ class GeneratedCircleAvatarTag extends WidgetTagBase
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'backgroundImage':
-          config.backgroundImage =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.backgroundImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'foregroundColor':
           config.foregroundColor = parseGeneratedColor(value);
           break;
         case 'foregroundImage':
-          config.foregroundImage =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.foregroundImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4030,14 +3775,10 @@ class GeneratedCircleAvatarTag extends WidgetTagBase
           config.minRadius = toDouble(value);
           break;
         case 'onBackgroundImageError':
-          config.onBackgroundImageError =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as ImageErrorListener?);
+          config.onBackgroundImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'onForegroundImageError':
-          config.onForegroundImageError =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as ImageErrorListener?);
+          config.onForegroundImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'radius':
           config.radius = toDouble(value);
@@ -4064,11 +3805,10 @@ class _GeneratedCircleAvatarTagConfig {
   double? radius;
 }
 
-CircleAvatar _buildGeneratedCircleAvatarTagWidget(
-  _GeneratedCircleAvatarTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+CircleAvatar _buildGeneratedCircleAvatarTagWidget(_GeneratedCircleAvatarTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return CircleAvatar(
     backgroundColor: config.backgroundColor,
     backgroundImage: config.backgroundImage,
@@ -4084,34 +3824,25 @@ CircleAvatar _buildGeneratedCircleAvatarTagWidget(
   );
 }
 
-class GeneratedCircularProgressIndicatorTag extends WidgetTagBase
-    with AsyncTag {
+
+class GeneratedCircularProgressIndicatorTag extends WidgetTagBase with AsyncTag {
   GeneratedCircularProgressIndicatorTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedCircularProgressIndicatorTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedCircularProgressIndicatorTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedCircularProgressIndicatorTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedCircularProgressIndicatorTagWidget(config, children));
   }
 
-  _GeneratedCircularProgressIndicatorTagConfig _parseConfig(
-    Evaluator evaluator,
-  ) {
+  _GeneratedCircularProgressIndicatorTagConfig _parseConfig(Evaluator evaluator) {
     final config = _GeneratedCircularProgressIndicatorTagConfig();
     for (final arg in namedArgs) {
       final name = arg.identifier.name;
@@ -4189,10 +3920,7 @@ class _GeneratedCircularProgressIndicatorTagConfig {
   bool? year2023;
 }
 
-CircularProgressIndicator _buildGeneratedCircularProgressIndicatorTagWidget(
-  _GeneratedCircularProgressIndicatorTagConfig config,
-  List<Widget> children,
-) {
+CircularProgressIndicator _buildGeneratedCircularProgressIndicatorTagWidget(_GeneratedCircularProgressIndicatorTagConfig config, List<Widget> children) {
   return CircularProgressIndicator(
     backgroundColor: config.backgroundColor,
     color: config.color,
@@ -4212,8 +3940,8 @@ CircularProgressIndicator _buildGeneratedCircularProgressIndicatorTagWidget(
   );
 }
 
-class GeneratedClipOvalTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedClipOvalTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedClipOvalTag(super.content, super.filters);
 
   @override
@@ -4224,10 +3952,7 @@ class GeneratedClipOvalTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedClipOvalTagWidget(config, children));
@@ -4235,8 +3960,7 @@ class GeneratedClipOvalTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_oval').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4245,9 +3969,8 @@ class GeneratedClipOvalTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_oval',
         nonFilterContent,
@@ -4267,8 +3990,7 @@ class GeneratedClipOvalTag extends WidgetTagBase
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper =
-              (parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
+          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4288,11 +4010,10 @@ class _GeneratedClipOvalTagConfig {
   Key? key;
 }
 
-ClipOval _buildGeneratedClipOvalTagWidget(
-  _GeneratedClipOvalTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ClipOval _buildGeneratedClipOvalTagWidget(_GeneratedClipOvalTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ClipOval(
     clipBehavior: config.clipBehavior ?? Clip.antiAlias,
     clipper: config.clipper,
@@ -4301,8 +4022,8 @@ ClipOval _buildGeneratedClipOvalTagWidget(
   );
 }
 
-class GeneratedClipPathTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedClipPathTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedClipPathTag(super.content, super.filters);
 
   @override
@@ -4313,10 +4034,7 @@ class GeneratedClipPathTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedClipPathTagWidget(config, children));
@@ -4324,8 +4042,7 @@ class GeneratedClipPathTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_path').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4334,9 +4051,8 @@ class GeneratedClipPathTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_path',
         nonFilterContent,
@@ -4356,8 +4072,7 @@ class GeneratedClipPathTag extends WidgetTagBase
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper =
-              (parseGeneratedCustomClipper(value) as CustomClipper<Path>?);
+          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<Path>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4377,11 +4092,10 @@ class _GeneratedClipPathTagConfig {
   Key? key;
 }
 
-ClipPath _buildGeneratedClipPathTagWidget(
-  _GeneratedClipPathTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ClipPath _buildGeneratedClipPathTagWidget(_GeneratedClipPathTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ClipPath(
     clipBehavior: config.clipBehavior ?? Clip.antiAlias,
     clipper: config.clipper,
@@ -4390,8 +4104,8 @@ ClipPath _buildGeneratedClipPathTagWidget(
   );
 }
 
-class GeneratedClipRRectTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedClipRRectTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedClipRRectTag(super.content, super.filters);
 
   @override
@@ -4402,10 +4116,7 @@ class GeneratedClipRRectTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedClipRRectTagWidget(config, children));
@@ -4413,8 +4124,7 @@ class GeneratedClipRRectTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_r_rect').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4423,9 +4133,8 @@ class GeneratedClipRRectTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_r_rect',
         nonFilterContent,
@@ -4448,8 +4157,7 @@ class GeneratedClipRRectTag extends WidgetTagBase
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper =
-              (parseGeneratedCustomClipper(value) as CustomClipper<RRect>?);
+          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<RRect>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4470,11 +4178,10 @@ class _GeneratedClipRRectTagConfig {
   Key? key;
 }
 
-ClipRRect _buildGeneratedClipRRectTagWidget(
-  _GeneratedClipRRectTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ClipRRect _buildGeneratedClipRRectTagWidget(_GeneratedClipRRectTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ClipRRect(
     borderRadius: config.borderRadius ?? BorderRadius.zero,
     clipBehavior: config.clipBehavior ?? Clip.antiAlias,
@@ -4484,8 +4191,8 @@ ClipRRect _buildGeneratedClipRRectTagWidget(
   );
 }
 
-class GeneratedClipRectTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedClipRectTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedClipRectTag(super.content, super.filters);
 
   @override
@@ -4496,10 +4203,7 @@ class GeneratedClipRectTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedClipRectTagWidget(config, children));
@@ -4507,8 +4211,7 @@ class GeneratedClipRectTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('clip_rect').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4517,9 +4220,8 @@ class GeneratedClipRectTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'clip_rect',
         nonFilterContent,
@@ -4539,8 +4241,7 @@ class GeneratedClipRectTag extends WidgetTagBase
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'clipper':
-          config.clipper =
-              (parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
+          config.clipper = (parseGeneratedCustomClipper(value) as CustomClipper<Rect>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -4560,11 +4261,10 @@ class _GeneratedClipRectTagConfig {
   Key? key;
 }
 
-ClipRect _buildGeneratedClipRectTagWidget(
-  _GeneratedClipRectTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ClipRect _buildGeneratedClipRectTagWidget(_GeneratedClipRectTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ClipRect(
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     clipper: config.clipper,
@@ -4573,8 +4273,8 @@ ClipRect _buildGeneratedClipRectTagWidget(
   );
 }
 
-class GeneratedColoredBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedColoredBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedColoredBoxTag(super.content, super.filters);
 
   @override
@@ -4585,10 +4285,7 @@ class GeneratedColoredBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedColoredBoxTagWidget(config, children));
@@ -4596,8 +4293,7 @@ class GeneratedColoredBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('colored_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4606,9 +4302,8 @@ class GeneratedColoredBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'colored_box',
         nonFilterContent,
@@ -4647,13 +4342,17 @@ class _GeneratedColoredBoxTagConfig {
   Key? key;
 }
 
-ColoredBox _buildGeneratedColoredBoxTagWidget(
-  _GeneratedColoredBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return ColoredBox(color: config.color!, key: config.key, child: child);
+ColoredBox _buildGeneratedColoredBoxTagWidget(_GeneratedColoredBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return ColoredBox(
+    color: config.color!,
+    key: config.key,
+    child: child,
+  );
 }
+
 
 class GeneratedColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedColumnTag(super.content, super.filters);
@@ -4666,10 +4365,7 @@ class GeneratedColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedColumnTagWidget(config, children));
@@ -4677,8 +4373,7 @@ class GeneratedColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('column').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4687,9 +4382,8 @@ class GeneratedColumnTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'column',
         nonFilterContent,
@@ -4749,10 +4443,7 @@ class _GeneratedColumnTagConfig {
   VerticalDirection? verticalDirection;
 }
 
-Column _buildGeneratedColumnTagWidget(
-  _GeneratedColumnTagConfig config,
-  List<Widget> children,
-) {
+Column _buildGeneratedColumnTagWidget(_GeneratedColumnTagConfig config, List<Widget> children) {
   return Column(
     crossAxisAlignment: config.crossAxisAlignment ?? CrossAxisAlignment.center,
     key: config.key,
@@ -4766,8 +4457,8 @@ Column _buildGeneratedColumnTagWidget(
   );
 }
 
-class GeneratedConstrainedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedConstrainedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedConstrainedBoxTag(super.content, super.filters);
 
   @override
@@ -4778,10 +4469,7 @@ class GeneratedConstrainedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedConstrainedBoxTagWidget(config, children));
@@ -4789,8 +4477,7 @@ class GeneratedConstrainedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('constrained_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4799,9 +4486,8 @@ class GeneratedConstrainedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'constrained_box',
         nonFilterContent,
@@ -4840,11 +4526,10 @@ class _GeneratedConstrainedBoxTagConfig {
   Key? key;
 }
 
-ConstrainedBox _buildGeneratedConstrainedBoxTagWidget(
-  _GeneratedConstrainedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ConstrainedBox _buildGeneratedConstrainedBoxTagWidget(_GeneratedConstrainedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ConstrainedBox(
     constraints: config.constraints!,
     key: config.key,
@@ -4852,8 +4537,8 @@ ConstrainedBox _buildGeneratedConstrainedBoxTagWidget(
   );
 }
 
-class GeneratedContainerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedContainerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedContainerTag(super.content, super.filters);
 
   @override
@@ -4864,10 +4549,7 @@ class GeneratedContainerTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedContainerTagWidget(config, children));
@@ -4875,8 +4557,7 @@ class GeneratedContainerTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('container').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -4885,9 +4566,8 @@ class GeneratedContainerTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'container',
         nonFilterContent,
@@ -4919,10 +4599,7 @@ class GeneratedContainerTag extends WidgetTagBase
           config.decoration = parseGeneratedDecoration(evaluator, value);
           break;
         case 'foregroundDecoration':
-          config.foregroundDecoration = parseGeneratedDecoration(
-            evaluator,
-            value,
-          );
+          config.foregroundDecoration = parseGeneratedDecoration(evaluator, value);
           break;
         case 'height':
           config.height = toDouble(value);
@@ -4970,11 +4647,10 @@ class _GeneratedContainerTagConfig {
   double? width;
 }
 
-Container _buildGeneratedContainerTagWidget(
-  _GeneratedContainerTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Container _buildGeneratedContainerTagWidget(_GeneratedContainerTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Container(
     alignment: config.alignment,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -4993,6 +4669,7 @@ Container _buildGeneratedContainerTagWidget(
   );
 }
 
+
 class GeneratedCustomScrollViewTag extends WidgetTagBase with AsyncTag {
   GeneratedCustomScrollViewTag(super.content, super.filters);
 
@@ -5004,10 +4681,7 @@ class GeneratedCustomScrollViewTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedCustomScrollViewTagWidget(config, children));
@@ -5044,8 +4718,7 @@ class GeneratedCustomScrollViewTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'keyboardDismissBehavior':
-          config.keyboardDismissBehavior =
-              parseGeneratedScrollViewKeyboardDismissBehavior(value);
+          config.keyboardDismissBehavior = parseGeneratedScrollViewKeyboardDismissBehavior(value);
           break;
         case 'paintOrder':
           config.paintOrder = parseGeneratedSliverPaintOrder(value);
@@ -5108,10 +4781,7 @@ class _GeneratedCustomScrollViewTagConfig {
   List<Widget>? slivers;
 }
 
-CustomScrollView _buildGeneratedCustomScrollViewTagWidget(
-  _GeneratedCustomScrollViewTagConfig config,
-  List<Widget> children,
-) {
+CustomScrollView _buildGeneratedCustomScrollViewTagWidget(_GeneratedCustomScrollViewTagConfig config, List<Widget> children) {
   return CustomScrollView(
     anchor: config.anchor ?? 0.0,
     cacheExtent: config.cacheExtent,
@@ -5135,6 +4805,7 @@ CustomScrollView _buildGeneratedCustomScrollViewTagWidget(
   );
 }
 
+
 class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
   GeneratedDataTableTag(super.content, super.filters);
 
@@ -5146,10 +4817,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedDataTableTagWidget(config, children));
@@ -5177,9 +4845,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
           config.columns = parseGeneratedListOfDataColumn(value);
           break;
         case 'dataRowColor':
-          config.dataRowColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.dataRowColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'dataRowHeight':
           config.dataRowHeight = toDouble(value);
@@ -5200,9 +4866,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
           config.dividerThickness = toDouble(value);
           break;
         case 'headingRowColor':
-          config.headingRowColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.headingRowColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'headingRowHeight':
           config.headingRowHeight = toDouble(value);
@@ -5217,9 +4881,7 @@ class GeneratedDataTableTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onSelectAll':
-          config.onSelectAll =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueSetter<bool?>?);
+          config.onSelectAll = (resolveGenericValueChanged(evaluator, value) as ValueSetter<bool?>?);
           break;
         case 'rows':
           config.rows = parseGeneratedListOfDataRow(evaluator, value);
@@ -5277,10 +4939,7 @@ class _GeneratedDataTableTagConfig {
   int? sortColumnIndex;
 }
 
-DataTable _buildGeneratedDataTableTagWidget(
-  _GeneratedDataTableTagConfig config,
-  List<Widget> children,
-) {
+DataTable _buildGeneratedDataTableTagWidget(_GeneratedDataTableTagConfig config, List<Widget> children) {
   return DataTable(
     border: config.border,
     checkboxHorizontalMargin: config.checkboxHorizontalMargin,
@@ -5308,6 +4967,7 @@ DataTable _buildGeneratedDataTableTagWidget(
   );
 }
 
+
 class GeneratedDatePickerDialogTag extends WidgetTagBase with AsyncTag {
   GeneratedDatePickerDialogTag(super.content, super.filters);
 
@@ -5319,10 +4979,7 @@ class GeneratedDatePickerDialogTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedDatePickerDialogTagWidget(config, children));
@@ -5335,9 +4992,7 @@ class GeneratedDatePickerDialogTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'calendarDelegate':
-          config.calendarDelegate =
-              (parseGeneratedCalendarDelegate(value)
-                  as CalendarDelegate<DateTime>?);
+          config.calendarDelegate = (parseGeneratedCalendarDelegate(value) as CalendarDelegate<DateTime>?);
           break;
         case 'cancelText':
           config.cancelText = toStringValue(value);
@@ -5388,30 +5043,19 @@ class GeneratedDatePickerDialogTag extends WidgetTagBase with AsyncTag {
           config.lastDate = parseGeneratedDateTime(value);
           break;
         case 'onDatePickerModeChange':
-          config.onDatePickerModeChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<DatePickerEntryMode>?);
+          config.onDatePickerModeChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<DatePickerEntryMode>?);
           break;
         case 'restorationId':
           config.restorationId = toStringValue(value);
           break;
         case 'selectableDayPredicate':
-          config.selectableDayPredicate = resolveBoolPredicateCallback(
-            evaluator,
-            value,
-          );
+          config.selectableDayPredicate = resolveBoolPredicateCallback(evaluator, value);
           break;
         case 'switchToCalendarEntryModeIcon':
-          config.switchToCalendarEntryModeIcon = parseGeneratedIcon(
-            evaluator,
-            value,
-          );
+          config.switchToCalendarEntryModeIcon = parseGeneratedIcon(evaluator, value);
           break;
         case 'switchToInputEntryModeIcon':
-          config.switchToInputEntryModeIcon = parseGeneratedIcon(
-            evaluator,
-            value,
-          );
+          config.switchToInputEntryModeIcon = parseGeneratedIcon(evaluator, value);
           break;
         default:
           handleUnknownArg('date_picker_dialog', name);
@@ -5453,13 +5097,9 @@ class _GeneratedDatePickerDialogTagConfig {
   Icon? switchToInputEntryModeIcon;
 }
 
-DatePickerDialog _buildGeneratedDatePickerDialogTagWidget(
-  _GeneratedDatePickerDialogTagConfig config,
-  List<Widget> children,
-) {
+DatePickerDialog _buildGeneratedDatePickerDialogTagWidget(_GeneratedDatePickerDialogTagConfig config, List<Widget> children) {
   return DatePickerDialog(
-    calendarDelegate:
-        config.calendarDelegate ?? const GregorianCalendarDelegate(),
+    calendarDelegate: config.calendarDelegate ?? const GregorianCalendarDelegate(),
     cancelText: config.cancelText,
     confirmText: config.confirmText,
     currentDate: config.currentDate,
@@ -5472,9 +5112,7 @@ DatePickerDialog _buildGeneratedDatePickerDialogTagWidget(
     initialCalendarMode: config.initialCalendarMode ?? DatePickerMode.day,
     initialDate: config.initialDate,
     initialEntryMode: config.initialEntryMode ?? DatePickerEntryMode.calendar,
-    insetPadding:
-        config.insetPadding ??
-        const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+    insetPadding: config.insetPadding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
     key: config.key,
     keyboardType: config.keyboardType,
     lastDate: config.lastDate!,
@@ -5486,8 +5124,8 @@ DatePickerDialog _buildGeneratedDatePickerDialogTagWidget(
   );
 }
 
-class GeneratedDecoratedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedDecoratedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedDecoratedBoxTag(super.content, super.filters);
 
   @override
@@ -5498,10 +5136,7 @@ class GeneratedDecoratedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedDecoratedBoxTagWidget(config, children));
@@ -5509,8 +5144,7 @@ class GeneratedDecoratedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('decorated_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -5519,9 +5153,8 @@ class GeneratedDecoratedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'decorated_box',
         nonFilterContent,
@@ -5564,11 +5197,10 @@ class _GeneratedDecoratedBoxTagConfig {
   DecorationPosition? position;
 }
 
-DecoratedBox _buildGeneratedDecoratedBoxTagWidget(
-  _GeneratedDecoratedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+DecoratedBox _buildGeneratedDecoratedBoxTagWidget(_GeneratedDecoratedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return DecoratedBox(
     decoration: config.decoration!,
     key: config.key,
@@ -5577,47 +5209,37 @@ DecoratedBox _buildGeneratedDecoratedBoxTagWidget(
   );
 }
 
-class GeneratedDefaultTabControllerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedDefaultTabControllerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedDefaultTabControllerTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGeneratedDefaultTabControllerTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedDefaultTabControllerTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGeneratedDefaultTabControllerTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedDefaultTabControllerTagWidget(config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('default_tab_controller').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('enddefault_tab_controller').trim() & tagEnd();
+    final endTag = tagStart() & string('enddefault_tab_controller').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'default_tab_controller',
         nonFilterContent,
@@ -5664,10 +5286,7 @@ class _GeneratedDefaultTabControllerTagConfig {
   int? length;
 }
 
-DefaultTabController _buildGeneratedDefaultTabControllerTagWidget(
-  _GeneratedDefaultTabControllerTagConfig config,
-  List<Widget> children,
-) {
+DefaultTabController _buildGeneratedDefaultTabControllerTagWidget(_GeneratedDefaultTabControllerTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -5680,8 +5299,8 @@ DefaultTabController _buildGeneratedDefaultTabControllerTagWidget(
   );
 }
 
-class GeneratedDefaultTextStyleTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedDefaultTextStyleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedDefaultTextStyleTag(super.content, super.filters);
 
   @override
@@ -5692,10 +5311,7 @@ class GeneratedDefaultTextStyleTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedDefaultTextStyleTagWidget(config, children));
@@ -5703,20 +5319,17 @@ class GeneratedDefaultTextStyleTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('default_text_style').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('enddefault_text_style').trim() & tagEnd();
+    final endTag = tagStart() & string('enddefault_text_style').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'default_text_style',
         nonFilterContent,
@@ -5779,10 +5392,7 @@ class _GeneratedDefaultTextStyleTagConfig {
   TextWidthBasis? textWidthBasis;
 }
 
-DefaultTextStyle _buildGeneratedDefaultTextStyleTagWidget(
-  _GeneratedDefaultTextStyleTagConfig config,
-  List<Widget> children,
-) {
+DefaultTextStyle _buildGeneratedDefaultTextStyleTagWidget(_GeneratedDefaultTextStyleTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -5799,8 +5409,8 @@ DefaultTextStyle _buildGeneratedDefaultTextStyleTagWidget(
   );
 }
 
-class GeneratedDismissibleTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedDismissibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedDismissibleTag(super.content, super.filters);
 
   @override
@@ -5811,10 +5421,7 @@ class GeneratedDismissibleTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedDismissibleTagWidget(config, children));
@@ -5822,8 +5429,7 @@ class GeneratedDismissibleTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('dismissible').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -5832,9 +5438,8 @@ class GeneratedDismissibleTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'dismissible',
         nonFilterContent,
@@ -5857,9 +5462,7 @@ class GeneratedDismissibleTag extends WidgetTagBase
           config.behavior = parseGeneratedHitTestBehavior(value);
           break;
         case 'confirmDismiss':
-          config.confirmDismiss =
-              (resolveFutureBoolCallback1(evaluator, value)
-                  as ConfirmDismissCallback?);
+          config.confirmDismiss = (resolveFutureBoolCallback1(evaluator, value) as ConfirmDismissCallback?);
           break;
         case 'crossAxisEndOffset':
           config.crossAxisEndOffset = toDouble(value);
@@ -5923,10 +5526,7 @@ class _GeneratedDismissibleTagConfig {
   Widget? secondaryBackground;
 }
 
-Dismissible _buildGeneratedDismissibleTagWidget(
-  _GeneratedDismissibleTagConfig config,
-  List<Widget> children,
-) {
+Dismissible _buildGeneratedDismissibleTagWidget(_GeneratedDismissibleTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -5936,12 +5536,10 @@ Dismissible _buildGeneratedDismissibleTagWidget(
     confirmDismiss: config.confirmDismiss,
     crossAxisEndOffset: config.crossAxisEndOffset ?? 0.0,
     direction: config.direction ?? DismissDirection.horizontal,
-    dismissThresholds:
-        config.dismissThresholds ?? const <DismissDirection, double>{},
+    dismissThresholds: config.dismissThresholds ?? const <DismissDirection, double>{},
     dragStartBehavior: config.dragStartBehavior ?? DragStartBehavior.start,
     key: config.key!,
-    movementDuration:
-        config.movementDuration ?? const Duration(milliseconds: 200),
+    movementDuration: config.movementDuration ?? const Duration(milliseconds: 200),
     onDismissed: config.onDismissed,
     onResize: config.onResize,
     onUpdate: config.onUpdate,
@@ -5950,6 +5548,7 @@ Dismissible _buildGeneratedDismissibleTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedDividerTag extends WidgetTagBase with AsyncTag {
   GeneratedDividerTag(super.content, super.filters);
@@ -5962,10 +5561,7 @@ class GeneratedDividerTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedDividerTagWidget(config, children));
@@ -6017,10 +5613,7 @@ class _GeneratedDividerTagConfig {
   double? thickness;
 }
 
-Divider _buildGeneratedDividerTagWidget(
-  _GeneratedDividerTagConfig config,
-  List<Widget> children,
-) {
+Divider _buildGeneratedDividerTagWidget(_GeneratedDividerTagConfig config, List<Widget> children) {
   return Divider(
     color: config.color,
     endIndent: config.endIndent,
@@ -6031,6 +5624,7 @@ Divider _buildGeneratedDividerTagWidget(
     thickness: config.thickness,
   );
 }
+
 
 class GeneratedDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedDrawerTag(super.content, super.filters);
@@ -6043,10 +5637,7 @@ class GeneratedDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedDrawerTagWidget(config, children));
@@ -6054,8 +5645,7 @@ class GeneratedDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('drawer').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -6064,9 +5654,8 @@ class GeneratedDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'drawer',
         nonFilterContent,
@@ -6130,11 +5719,10 @@ class _GeneratedDrawerTagConfig {
   double? width;
 }
 
-Drawer _buildGeneratedDrawerTagWidget(
-  _GeneratedDrawerTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Drawer _buildGeneratedDrawerTagWidget(_GeneratedDrawerTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Drawer(
     backgroundColor: config.backgroundColor,
     clipBehavior: config.clipBehavior,
@@ -6149,8 +5737,8 @@ Drawer _buildGeneratedDrawerTagWidget(
   );
 }
 
-class GeneratedDrawerHeaderTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedDrawerHeaderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedDrawerHeaderTag(super.content, super.filters);
 
   @override
@@ -6161,10 +5749,7 @@ class GeneratedDrawerHeaderTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedDrawerHeaderTagWidget(config, children));
@@ -6172,8 +5757,7 @@ class GeneratedDrawerHeaderTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('drawer_header').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -6182,9 +5766,8 @@ class GeneratedDrawerHeaderTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'drawer_header',
         nonFilterContent,
@@ -6236,11 +5819,10 @@ class _GeneratedDrawerHeaderTagConfig {
   EdgeInsetsGeometry? padding;
 }
 
-DrawerHeader _buildGeneratedDrawerHeaderTagWidget(
-  _GeneratedDrawerHeaderTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+DrawerHeader _buildGeneratedDrawerHeaderTagWidget(_GeneratedDrawerHeaderTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return DrawerHeader(
     curve: config.curve ?? Curves.fastOutSlowIn,
     decoration: config.decoration,
@@ -6251,6 +5833,7 @@ DrawerHeader _buildGeneratedDrawerHeaderTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedDropdownButtonTag extends WidgetTagBase with AsyncTag {
   GeneratedDropdownButtonTag(super.content, super.filters);
@@ -6263,10 +5846,7 @@ class GeneratedDropdownButtonTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedDropdownButtonTagWidget(config, children));
@@ -6345,9 +5925,7 @@ class GeneratedDropdownButtonTag extends WidgetTagBase with AsyncTag {
           config.menuWidth = toDouble(value);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<Object?>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<Object?>?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -6356,10 +5934,7 @@ class GeneratedDropdownButtonTag extends WidgetTagBase with AsyncTag {
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
           break;
         case 'selectedItemBuilder':
-          config.selectedItemBuilder = resolveWidgetListBuilderCallback(
-            evaluator,
-            value,
-          );
+          config.selectedItemBuilder = resolveWidgetListBuilderCallback(evaluator, value);
           break;
         case 'style':
           config.style = parseGeneratedTextStyle(value);
@@ -6417,10 +5992,7 @@ class _GeneratedDropdownButtonTagConfig {
   Object? value;
 }
 
-DropdownButton _buildGeneratedDropdownButtonTagWidget(
-  _GeneratedDropdownButtonTagConfig config,
-  List<Widget> children,
-) {
+DropdownButton _buildGeneratedDropdownButtonTagWidget(_GeneratedDropdownButtonTagConfig config, List<Widget> children) {
   return DropdownButton(
     alignment: config.alignment ?? AlignmentDirectional.centerStart,
     autofocus: config.autofocus ?? false,
@@ -6454,8 +6026,8 @@ DropdownButton _buildGeneratedDropdownButtonTagWidget(
   );
 }
 
-class GeneratedElevatedButtonTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedElevatedButtonTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedElevatedButtonTag(super.content, super.filters);
 
   @override
@@ -6466,10 +6038,7 @@ class GeneratedElevatedButtonTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedElevatedButtonTagWidget(config, children));
@@ -6477,8 +6046,7 @@ class GeneratedElevatedButtonTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('elevated_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -6487,9 +6055,8 @@ class GeneratedElevatedButtonTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'elevated_button',
         nonFilterContent,
@@ -6518,14 +6085,10 @@ class GeneratedElevatedButtonTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -6564,11 +6127,10 @@ class _GeneratedElevatedButtonTagConfig {
   ButtonStyle? style;
 }
 
-ElevatedButton _buildGeneratedElevatedButtonTagWidget(
-  _GeneratedElevatedButtonTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ElevatedButton _buildGeneratedElevatedButtonTagWidget(_GeneratedElevatedButtonTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ElevatedButton(
     autofocus: config.autofocus ?? false,
     clipBehavior: config.clipBehavior,
@@ -6584,8 +6146,8 @@ ElevatedButton _buildGeneratedElevatedButtonTagWidget(
   );
 }
 
-class GeneratedExpandedTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedExpandedTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedExpandedTag(super.content, super.filters);
 
   @override
@@ -6596,10 +6158,7 @@ class GeneratedExpandedTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedExpandedTagWidget(config, children));
@@ -6607,8 +6166,7 @@ class GeneratedExpandedTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('expanded').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -6617,9 +6175,8 @@ class GeneratedExpandedTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'expanded',
         nonFilterContent,
@@ -6655,18 +6212,19 @@ class _GeneratedExpandedTagConfig {
   Key? key;
 }
 
-Expanded _buildGeneratedExpandedTagWidget(
-  _GeneratedExpandedTagConfig config,
-  List<Widget> children,
-) {
+Expanded _buildGeneratedExpandedTagWidget(_GeneratedExpandedTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
-  return Expanded(flex: config.flex ?? 1, key: config.key, child: child);
+  return Expanded(
+    flex: config.flex ?? 1,
+    key: config.key,
+    child: child,
+  );
 }
 
-class GeneratedExpansionTileTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedExpansionTileTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedExpansionTileTag(super.content, super.filters);
 
   @override
@@ -6677,10 +6235,7 @@ class GeneratedExpansionTileTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedExpansionTileTagWidget(config, children));
@@ -6688,8 +6243,7 @@ class GeneratedExpansionTileTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('expansion_tile').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -6698,9 +6252,8 @@ class GeneratedExpansionTileTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'expansion_tile',
         nonFilterContent,
@@ -6756,9 +6309,7 @@ class GeneratedExpansionTileTag extends WidgetTagBase
           config.expandedAlignment = parseGeneratedAlignment(value);
           break;
         case 'expandedCrossAxisAlignment':
-          config.expandedCrossAxisAlignment = parseGeneratedCrossAxisAlignment(
-            value,
-          );
+          config.expandedCrossAxisAlignment = parseGeneratedCrossAxisAlignment(value);
           break;
         case 'expansionAnimationStyle':
           config.expansionAnimationStyle = parseGeneratedAnimationStyle(value);
@@ -6785,9 +6336,7 @@ class GeneratedExpansionTileTag extends WidgetTagBase
           config.minTileHeight = toDouble(value);
           break;
         case 'onExpansionChanged':
-          config.onExpansionChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onExpansionChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'shape':
           config.shape = parseGeneratedShapeBorder(value);
@@ -6863,10 +6412,7 @@ class _GeneratedExpansionTileTagConfig {
   VisualDensity? visualDensity;
 }
 
-ExpansionTile _buildGeneratedExpansionTileTagWidget(
-  _GeneratedExpansionTileTagConfig config,
-  List<Widget> children,
-) {
+ExpansionTile _buildGeneratedExpansionTileTagWidget(_GeneratedExpansionTileTagConfig config, List<Widget> children) {
   return ExpansionTile(
     backgroundColor: config.backgroundColor,
     childrenPadding: config.childrenPadding,
@@ -6904,8 +6450,8 @@ ExpansionTile _buildGeneratedExpansionTileTagWidget(
   );
 }
 
-class GeneratedFadeTransitionTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFadeTransitionTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFadeTransitionTag(super.content, super.filters);
 
   @override
@@ -6916,10 +6462,7 @@ class GeneratedFadeTransitionTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedFadeTransitionTagWidget(config, children));
@@ -6927,8 +6470,7 @@ class GeneratedFadeTransitionTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('fade_transition').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -6937,9 +6479,8 @@ class GeneratedFadeTransitionTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'fade_transition',
         nonFilterContent,
@@ -6982,11 +6523,10 @@ class _GeneratedFadeTransitionTagConfig {
   Animation<double>? opacity;
 }
 
-FadeTransition _buildGeneratedFadeTransitionTagWidget(
-  _GeneratedFadeTransitionTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+FadeTransition _buildGeneratedFadeTransitionTagWidget(_GeneratedFadeTransitionTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return FadeTransition(
     alwaysIncludeSemantics: config.alwaysIncludeSemantics ?? false,
     key: config.key,
@@ -6995,8 +6535,8 @@ FadeTransition _buildGeneratedFadeTransitionTagWidget(
   );
 }
 
-class GeneratedFilledButtonTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFilledButtonTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFilledButtonTag(super.content, super.filters);
 
   @override
@@ -7007,10 +6547,7 @@ class GeneratedFilledButtonTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedFilledButtonTagWidget(config, children));
@@ -7018,8 +6555,7 @@ class GeneratedFilledButtonTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('filled_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -7028,9 +6564,8 @@ class GeneratedFilledButtonTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'filled_button',
         nonFilterContent,
@@ -7059,14 +6594,10 @@ class GeneratedFilledButtonTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -7105,11 +6636,10 @@ class _GeneratedFilledButtonTagConfig {
   ButtonStyle? style;
 }
 
-FilledButton _buildGeneratedFilledButtonTagWidget(
-  _GeneratedFilledButtonTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+FilledButton _buildGeneratedFilledButtonTagWidget(_GeneratedFilledButtonTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return FilledButton(
     autofocus: config.autofocus ?? false,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -7125,6 +6655,7 @@ FilledButton _buildGeneratedFilledButtonTagWidget(
   );
 }
 
+
 class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
   GeneratedFilterChipTag(super.content, super.filters);
 
@@ -7136,10 +6667,7 @@ class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedFilterChipTagWidget(config, children));
@@ -7176,9 +6704,7 @@ class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'deleteButtonTooltipMessage':
           config.deleteButtonTooltipMessage = toStringValue(value);
@@ -7217,9 +6743,7 @@ class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
           config.labelStyle = parseGeneratedTextStyle(value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -7228,9 +6752,7 @@ class GeneratedFilterChipTag extends WidgetTagBase with AsyncTag {
           config.onDeleted = resolveActionCallback(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -7323,10 +6845,7 @@ class _GeneratedFilterChipTagConfig {
   VisualDensity? visualDensity;
 }
 
-FilterChip _buildGeneratedFilterChipTagWidget(
-  _GeneratedFilterChipTagConfig config,
-  List<Widget> children,
-) {
+FilterChip _buildGeneratedFilterChipTagWidget(_GeneratedFilterChipTagConfig config, List<Widget> children) {
   return FilterChip(
     autofocus: config.autofocus ?? false,
     avatar: config.avatar,
@@ -7368,8 +6887,8 @@ FilterChip _buildGeneratedFilterChipTagWidget(
   );
 }
 
-class GeneratedFittedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFittedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFittedBoxTag(super.content, super.filters);
 
   @override
@@ -7380,10 +6899,7 @@ class GeneratedFittedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedFittedBoxTagWidget(config, children));
@@ -7391,8 +6907,7 @@ class GeneratedFittedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('fitted_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -7401,9 +6916,8 @@ class GeneratedFittedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'fitted_box',
         nonFilterContent,
@@ -7447,11 +6961,10 @@ class _GeneratedFittedBoxTagConfig {
   Key? key;
 }
 
-FittedBox _buildGeneratedFittedBoxTagWidget(
-  _GeneratedFittedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+FittedBox _buildGeneratedFittedBoxTagWidget(_GeneratedFittedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return FittedBox(
     alignment: config.alignment ?? Alignment.center,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -7460,6 +6973,7 @@ FittedBox _buildGeneratedFittedBoxTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedFlexTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFlexTag(super.content, super.filters);
@@ -7472,10 +6986,7 @@ class GeneratedFlexTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedFlexTagWidget(config, children));
@@ -7483,8 +6994,7 @@ class GeneratedFlexTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('flex').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -7493,9 +7003,8 @@ class GeneratedFlexTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'flex',
         nonFilterContent,
@@ -7566,10 +7075,7 @@ class _GeneratedFlexTagConfig {
   VerticalDirection? verticalDirection;
 }
 
-Flex _buildGeneratedFlexTagWidget(
-  _GeneratedFlexTagConfig config,
-  List<Widget> children,
-) {
+Flex _buildGeneratedFlexTagWidget(_GeneratedFlexTagConfig config, List<Widget> children) {
   return Flex(
     clipBehavior: config.clipBehavior ?? Clip.none,
     crossAxisAlignment: config.crossAxisAlignment ?? CrossAxisAlignment.center,
@@ -7585,8 +7091,8 @@ Flex _buildGeneratedFlexTagWidget(
   );
 }
 
-class GeneratedFlexibleTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFlexibleTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFlexibleTag(super.content, super.filters);
 
   @override
@@ -7597,10 +7103,7 @@ class GeneratedFlexibleTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedFlexibleTagWidget(config, children));
@@ -7608,8 +7111,7 @@ class GeneratedFlexibleTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('flexible').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -7618,9 +7120,8 @@ class GeneratedFlexibleTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'flexible',
         nonFilterContent,
@@ -7660,10 +7161,7 @@ class _GeneratedFlexibleTagConfig {
   Key? key;
 }
 
-Flexible _buildGeneratedFlexibleTagWidget(
-  _GeneratedFlexibleTagConfig config,
-  List<Widget> children,
-) {
+Flexible _buildGeneratedFlexibleTagWidget(_GeneratedFlexibleTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -7675,47 +7173,37 @@ Flexible _buildGeneratedFlexibleTagWidget(
   );
 }
 
-class GeneratedFloatingActionButtonTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFloatingActionButtonTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFloatingActionButtonTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGeneratedFloatingActionButtonTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedFloatingActionButtonTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGeneratedFloatingActionButtonTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedFloatingActionButtonTagWidget(config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('floating_action_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endfloating_action_button').trim() & tagEnd();
+    final endTag = tagStart() & string('endfloating_action_button').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'floating_action_button',
         nonFilterContent,
@@ -7780,9 +7268,7 @@ class GeneratedFloatingActionButtonTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mini':
           config.mini = toBool(value);
@@ -7840,11 +7326,10 @@ class _GeneratedFloatingActionButtonTagConfig {
   String? tooltip;
 }
 
-FloatingActionButton _buildGeneratedFloatingActionButtonTagWidget(
-  _GeneratedFloatingActionButtonTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+FloatingActionButton _buildGeneratedFloatingActionButtonTagWidget(_GeneratedFloatingActionButtonTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return FloatingActionButton(
     autofocus: config.autofocus ?? false,
     backgroundColor: config.backgroundColor,
@@ -7873,6 +7358,7 @@ FloatingActionButton _buildGeneratedFloatingActionButtonTagWidget(
   );
 }
 
+
 class GeneratedFormTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFormTag(super.content, super.filters);
 
@@ -7884,10 +7370,7 @@ class GeneratedFormTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedFormTagWidget(config, children));
@@ -7895,8 +7378,7 @@ class GeneratedFormTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('form').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -7905,9 +7387,8 @@ class GeneratedFormTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'form',
         nonFilterContent,
@@ -7939,14 +7420,10 @@ class GeneratedFormTag extends WidgetTagBase with CustomTagParser, AsyncTag {
           config.onPopInvoked = resolveBoolActionCallback(evaluator, value);
           break;
         case 'onPopInvokedWithResult':
-          config.onPopInvokedWithResult =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as PopInvokedWithResultCallback<Object?>?);
+          config.onPopInvokedWithResult = (resolveGenericActionCallback2(evaluator, value) as PopInvokedWithResultCallback<Object?>?);
           break;
         case 'onWillPop':
-          config.onWillPop =
-              (resolveFutureBoolCallback0(evaluator, value)
-                  as WillPopCallback?);
+          config.onWillPop = (resolveFutureBoolCallback0(evaluator, value) as WillPopCallback?);
           break;
         default:
           handleUnknownArg('form', name);
@@ -7967,10 +7444,7 @@ class _GeneratedFormTagConfig {
   WillPopCallback? onWillPop;
 }
 
-Form _buildGeneratedFormTagWidget(
-  _GeneratedFormTagConfig config,
-  List<Widget> children,
-) {
+Form _buildGeneratedFormTagWidget(_GeneratedFormTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -7986,6 +7460,7 @@ Form _buildGeneratedFormTagWidget(
   );
 }
 
+
 class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
   GeneratedFormFieldTag(super.content, super.filters);
 
@@ -7997,10 +7472,7 @@ class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedFormFieldTagWidget(config, children));
@@ -8016,17 +7488,13 @@ class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
           config.autovalidateMode = parseGeneratedAutovalidateMode(value);
           break;
         case 'builder':
-          config.builder =
-              (resolveGenericCallback1(evaluator, value)
-                  as FormFieldBuilder<Object?>?);
+          config.builder = (resolveGenericCallback1(evaluator, value) as FormFieldBuilder<Object?>?);
           break;
         case 'enabled':
           config.enabled = toBool(value);
           break;
         case 'errorBuilder':
-          config.errorBuilder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as FormFieldErrorBuilder?);
+          config.errorBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as FormFieldErrorBuilder?);
           break;
         case 'forceErrorText':
           config.forceErrorText = toStringValue(value);
@@ -8041,17 +7509,13 @@ class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
           config.onReset = resolveActionCallback(evaluator, value);
           break;
         case 'onSaved':
-          config.onSaved =
-              (resolveGenericValueChanged(evaluator, value)
-                  as FormFieldSetter<Object?>?);
+          config.onSaved = (resolveGenericValueChanged(evaluator, value) as FormFieldSetter<Object?>?);
           break;
         case 'restorationId':
           config.restorationId = toStringValue(value);
           break;
         case 'validator':
-          config.validator =
-              (resolveGenericCallback1(evaluator, value)
-                  as FormFieldValidator<Object?>?);
+          config.validator = (resolveGenericCallback1(evaluator, value) as FormFieldValidator<Object?>?);
           break;
         default:
           handleUnknownArg('form_field', name);
@@ -8079,10 +7543,7 @@ class _GeneratedFormFieldTagConfig {
   FormFieldValidator<Object?>? validator;
 }
 
-FormField _buildGeneratedFormFieldTagWidget(
-  _GeneratedFormFieldTagConfig config,
-  List<Widget> children,
-) {
+FormField _buildGeneratedFormFieldTagWidget(_GeneratedFormFieldTagConfig config, List<Widget> children) {
   return FormField(
     autovalidateMode: config.autovalidateMode,
     builder: config.builder!,
@@ -8098,47 +7559,37 @@ FormField _buildGeneratedFormFieldTagWidget(
   );
 }
 
-class GeneratedFractionalTranslationTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFractionalTranslationTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFractionalTranslationTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGeneratedFractionalTranslationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedFractionalTranslationTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGeneratedFractionalTranslationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedFractionalTranslationTagWidget(config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('fractional_translation').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endfractional_translation').trim() & tagEnd();
+    final endTag = tagStart() & string('endfractional_translation').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'fractional_translation',
         nonFilterContent,
@@ -8181,11 +7632,10 @@ class _GeneratedFractionalTranslationTagConfig {
   Offset? translation;
 }
 
-FractionalTranslation _buildGeneratedFractionalTranslationTagWidget(
-  _GeneratedFractionalTranslationTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+FractionalTranslation _buildGeneratedFractionalTranslationTagWidget(_GeneratedFractionalTranslationTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return FractionalTranslation(
     key: config.key,
     transformHitTests: config.transformHitTests ?? true,
@@ -8194,47 +7644,37 @@ FractionalTranslation _buildGeneratedFractionalTranslationTagWidget(
   );
 }
 
-class GeneratedFractionallySizedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedFractionallySizedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedFractionallySizedBoxTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGeneratedFractionallySizedBoxTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedFractionallySizedBoxTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGeneratedFractionallySizedBoxTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedFractionallySizedBoxTagWidget(config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('fractionally_sized_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endfractionally_sized_box').trim() & tagEnd();
+    final endTag = tagStart() & string('endfractionally_sized_box').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'fractionally_sized_box',
         nonFilterContent,
@@ -8278,11 +7718,10 @@ class _GeneratedFractionallySizedBoxTagConfig {
   double? widthFactor;
 }
 
-FractionallySizedBox _buildGeneratedFractionallySizedBoxTagWidget(
-  _GeneratedFractionallySizedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+FractionallySizedBox _buildGeneratedFractionallySizedBoxTagWidget(_GeneratedFractionallySizedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return FractionallySizedBox(
     alignment: config.alignment ?? Alignment.center,
     heightFactor: config.heightFactor,
@@ -8292,8 +7731,8 @@ FractionallySizedBox _buildGeneratedFractionallySizedBoxTagWidget(
   );
 }
 
-class GeneratedGestureDetectorTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedGestureDetectorTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedGestureDetectorTag(super.content, super.filters);
 
   @override
@@ -8304,10 +7743,7 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedGestureDetectorTagWidget(config, children));
@@ -8315,8 +7751,7 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('gesture_detector').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -8325,9 +7760,8 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'gesture_detector',
         nonFilterContent,
@@ -8368,52 +7802,28 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
           config.onForcePressEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onForcePressPeak':
-          config.onForcePressPeak = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onForcePressPeak = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onForcePressStart':
-          config.onForcePressStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onForcePressStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onForcePressUpdate':
-          config.onForcePressUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onForcePressUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onHorizontalDragCancel':
-          config.onHorizontalDragCancel = resolveActionCallback(
-            evaluator,
-            value,
-          );
+          config.onHorizontalDragCancel = resolveActionCallback(evaluator, value);
           break;
         case 'onHorizontalDragDown':
-          config.onHorizontalDragDown = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onHorizontalDragDown = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onHorizontalDragEnd':
-          config.onHorizontalDragEnd = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onHorizontalDragEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onHorizontalDragStart':
-          config.onHorizontalDragStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onHorizontalDragStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onHorizontalDragUpdate':
-          config.onHorizontalDragUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onHorizontalDragUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -8428,16 +7838,10 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
           config.onLongPressEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onLongPressMoveUpdate':
-          config.onLongPressMoveUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onLongPressMoveUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onLongPressStart':
-          config.onLongPressStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onLongPressStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onLongPressUp':
           config.onLongPressUp = resolveActionCallback(evaluator, value);
@@ -8470,40 +7874,22 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
           config.onSecondaryLongPress = resolveActionCallback(evaluator, value);
           break;
         case 'onSecondaryLongPressCancel':
-          config.onSecondaryLongPressCancel = resolveActionCallback(
-            evaluator,
-            value,
-          );
+          config.onSecondaryLongPressCancel = resolveActionCallback(evaluator, value);
           break;
         case 'onSecondaryLongPressDown':
-          config.onSecondaryLongPressDown = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onSecondaryLongPressDown = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onSecondaryLongPressEnd':
-          config.onSecondaryLongPressEnd = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onSecondaryLongPressEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onSecondaryLongPressMoveUpdate':
-          config.onSecondaryLongPressMoveUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onSecondaryLongPressMoveUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onSecondaryLongPressStart':
-          config.onSecondaryLongPressStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onSecondaryLongPressStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onSecondaryLongPressUp':
-          config.onSecondaryLongPressUp = resolveActionCallback(
-            evaluator,
-            value,
-          );
+          config.onSecondaryLongPressUp = resolveActionCallback(evaluator, value);
           break;
         case 'onSecondaryTap':
           config.onSecondaryTap = resolveActionCallback(evaluator, value);
@@ -8512,16 +7898,10 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
           config.onSecondaryTapCancel = resolveActionCallback(evaluator, value);
           break;
         case 'onSecondaryTapDown':
-          config.onSecondaryTapDown = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onSecondaryTapDown = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onSecondaryTapUp':
-          config.onSecondaryTapUp = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onSecondaryTapUp = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -8542,49 +7922,28 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
           config.onTertiaryLongPress = resolveActionCallback(evaluator, value);
           break;
         case 'onTertiaryLongPressCancel':
-          config.onTertiaryLongPressCancel = resolveActionCallback(
-            evaluator,
-            value,
-          );
+          config.onTertiaryLongPressCancel = resolveActionCallback(evaluator, value);
           break;
         case 'onTertiaryLongPressDown':
-          config.onTertiaryLongPressDown = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onTertiaryLongPressDown = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onTertiaryLongPressEnd':
-          config.onTertiaryLongPressEnd = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onTertiaryLongPressEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onTertiaryLongPressMoveUpdate':
-          config.onTertiaryLongPressMoveUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onTertiaryLongPressMoveUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onTertiaryLongPressStart':
-          config.onTertiaryLongPressStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onTertiaryLongPressStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onTertiaryLongPressUp':
-          config.onTertiaryLongPressUp = resolveActionCallback(
-            evaluator,
-            value,
-          );
+          config.onTertiaryLongPressUp = resolveActionCallback(evaluator, value);
           break;
         case 'onTertiaryTapCancel':
           config.onTertiaryTapCancel = resolveActionCallback(evaluator, value);
           break;
         case 'onTertiaryTapDown':
-          config.onTertiaryTapDown = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onTertiaryTapDown = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onTertiaryTapUp':
           config.onTertiaryTapUp = resolveGenericValueChanged(evaluator, value);
@@ -8593,28 +7952,16 @@ class GeneratedGestureDetectorTag extends WidgetTagBase
           config.onVerticalDragCancel = resolveActionCallback(evaluator, value);
           break;
         case 'onVerticalDragDown':
-          config.onVerticalDragDown = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onVerticalDragDown = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onVerticalDragEnd':
-          config.onVerticalDragEnd = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onVerticalDragEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onVerticalDragStart':
-          config.onVerticalDragStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onVerticalDragStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onVerticalDragUpdate':
-          config.onVerticalDragUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onVerticalDragUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'supportedDevices':
           config.supportedDevices = parseGeneratedSetOfPointerDeviceKind(value);
@@ -8702,11 +8049,10 @@ class _GeneratedGestureDetectorTagConfig {
   Offset? trackpadScrollToScaleFactor;
 }
 
-GestureDetector _buildGeneratedGestureDetectorTagWidget(
-  _GeneratedGestureDetectorTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+GestureDetector _buildGeneratedGestureDetectorTagWidget(_GeneratedGestureDetectorTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return GestureDetector(
     behavior: config.behavior,
     dragStartBehavior: config.dragStartBehavior ?? DragStartBehavior.start,
@@ -8772,15 +8118,13 @@ GestureDetector _buildGeneratedGestureDetectorTagWidget(
     onVerticalDragUpdate: config.onVerticalDragUpdate,
     supportedDevices: config.supportedDevices,
     trackpadScrollCausesScale: config.trackpadScrollCausesScale ?? false,
-    trackpadScrollToScaleFactor:
-        config.trackpadScrollToScaleFactor ??
-        kDefaultTrackpadScrollToScaleFactor,
+    trackpadScrollToScaleFactor: config.trackpadScrollToScaleFactor ?? kDefaultTrackpadScrollToScaleFactor,
     child: child,
   );
 }
 
-class GeneratedGridViewTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedGridViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedGridViewTag(super.content, super.filters);
 
   @override
@@ -8791,10 +8135,7 @@ class GeneratedGridViewTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedGridViewTagWidget(config, children));
@@ -8802,8 +8143,7 @@ class GeneratedGridViewTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('grid_view').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -8812,9 +8152,8 @@ class GeneratedGridViewTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'grid_view',
         nonFilterContent,
@@ -8861,8 +8200,7 @@ class GeneratedGridViewTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'keyboardDismissBehavior':
-          config.keyboardDismissBehavior =
-              parseGeneratedScrollViewKeyboardDismissBehavior(value);
+          config.keyboardDismissBehavior = parseGeneratedScrollViewKeyboardDismissBehavior(value);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -8922,10 +8260,7 @@ class _GeneratedGridViewTagConfig {
   bool? shrinkWrap;
 }
 
-GridView _buildGeneratedGridViewTagWidget(
-  _GeneratedGridViewTagConfig config,
-  List<Widget> children,
-) {
+GridView _buildGeneratedGridViewTagWidget(_GeneratedGridViewTagConfig config, List<Widget> children) {
   return GridView(
     addAutomaticKeepAlives: config.addAutomaticKeepAlives ?? true,
     addRepaintBoundaries: config.addRepaintBoundaries ?? true,
@@ -8950,6 +8285,7 @@ GridView _buildGeneratedGridViewTagWidget(
   );
 }
 
+
 class GeneratedHeroTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedHeroTag(super.content, super.filters);
 
@@ -8961,10 +8297,7 @@ class GeneratedHeroTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedHeroTagWidget(config, children));
@@ -8972,8 +8305,7 @@ class GeneratedHeroTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('hero').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -8982,9 +8314,8 @@ class GeneratedHeroTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'hero',
         nonFilterContent,
@@ -9001,21 +8332,16 @@ class GeneratedHeroTag extends WidgetTagBase with CustomTagParser, AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'createRectTween':
-          config.createRectTween =
-              (resolveGenericCallback2(evaluator, value) as CreateRectTween?);
+          config.createRectTween = (resolveGenericCallback2(evaluator, value) as CreateRectTween?);
           break;
         case 'flightShuttleBuilder':
-          config.flightShuttleBuilder =
-              (resolveCallbackValue(evaluator, value)
-                  as HeroFlightShuttleBuilder?);
+          config.flightShuttleBuilder = (resolveCallbackValue(evaluator, value) as HeroFlightShuttleBuilder?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'placeholderBuilder':
-          config.placeholderBuilder =
-              (resolveCallbackValue(evaluator, value)
-                  as HeroPlaceholderBuilder?);
+          config.placeholderBuilder = (resolveCallbackValue(evaluator, value) as HeroPlaceholderBuilder?);
           break;
         case 'tag':
           config.tag = parseGeneratedObject(evaluator, value);
@@ -9044,10 +8370,7 @@ class _GeneratedHeroTagConfig {
   bool? transitionOnUserGestures;
 }
 
-Hero _buildGeneratedHeroTagWidget(
-  _GeneratedHeroTagConfig config,
-  List<Widget> children,
-) {
+Hero _buildGeneratedHeroTagWidget(_GeneratedHeroTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -9062,6 +8385,7 @@ Hero _buildGeneratedHeroTagWidget(
   );
 }
 
+
 class GeneratedIconTag extends WidgetTagBase with AsyncTag {
   GeneratedIconTag(super.content, super.filters);
 
@@ -9073,10 +8397,7 @@ class GeneratedIconTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedIconTagWidget(config, children));
@@ -9159,10 +8480,7 @@ class _GeneratedIconTagConfig {
   double? weight;
 }
 
-Icon _buildGeneratedIconTagWidget(
-  _GeneratedIconTagConfig config,
-  List<Widget> children,
-) {
+Icon _buildGeneratedIconTagWidget(_GeneratedIconTagConfig config, List<Widget> children) {
   return Icon(
     config.icon,
     applyTextScaling: config.applyTextScaling,
@@ -9181,6 +8499,7 @@ Icon _buildGeneratedIconTagWidget(
   );
 }
 
+
 class GeneratedIconButtonTag extends WidgetTagBase with AsyncTag {
   GeneratedIconButtonTag(super.content, super.filters);
 
@@ -9192,10 +8511,7 @@ class GeneratedIconButtonTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedIconButtonTagWidget(config, children));
@@ -9253,9 +8569,7 @@ class GeneratedIconButtonTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onHover':
-          config.onHover =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -9331,10 +8645,7 @@ class _GeneratedIconButtonTagConfig {
   VisualDensity? visualDensity;
 }
 
-IconButton _buildGeneratedIconButtonTagWidget(
-  _GeneratedIconButtonTagConfig config,
-  List<Widget> children,
-) {
+IconButton _buildGeneratedIconButtonTagWidget(_GeneratedIconButtonTagConfig config, List<Widget> children) {
   return IconButton(
     alignment: config.alignment,
     autofocus: config.autofocus ?? false,
@@ -9365,8 +8676,8 @@ IconButton _buildGeneratedIconButtonTagWidget(
   );
 }
 
-class GeneratedIconThemeTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedIconThemeTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedIconThemeTag(super.content, super.filters);
 
   @override
@@ -9377,10 +8688,7 @@ class GeneratedIconThemeTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedIconThemeTagWidget(config, children));
@@ -9388,8 +8696,7 @@ class GeneratedIconThemeTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('icon_theme').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -9398,9 +8705,8 @@ class GeneratedIconThemeTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'icon_theme',
         nonFilterContent,
@@ -9439,18 +8745,19 @@ class _GeneratedIconThemeTagConfig {
   Key? key;
 }
 
-IconTheme _buildGeneratedIconThemeTagWidget(
-  _GeneratedIconThemeTagConfig config,
-  List<Widget> children,
-) {
+IconTheme _buildGeneratedIconThemeTagWidget(_GeneratedIconThemeTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
-  return IconTheme(data: config.data!, key: config.key, child: child);
+  return IconTheme(
+    data: config.data!,
+    key: config.key,
+    child: child,
+  );
 }
 
-class GeneratedIgnorePointerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedIgnorePointerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedIgnorePointerTag(super.content, super.filters);
 
   @override
@@ -9461,10 +8768,7 @@ class GeneratedIgnorePointerTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedIgnorePointerTagWidget(config, children));
@@ -9472,8 +8776,7 @@ class GeneratedIgnorePointerTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('ignore_pointer').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -9482,9 +8785,8 @@ class GeneratedIgnorePointerTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'ignore_pointer',
         nonFilterContent,
@@ -9524,11 +8826,10 @@ class _GeneratedIgnorePointerTagConfig {
   Key? key;
 }
 
-IgnorePointer _buildGeneratedIgnorePointerTagWidget(
-  _GeneratedIgnorePointerTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+IgnorePointer _buildGeneratedIgnorePointerTagWidget(_GeneratedIgnorePointerTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return IgnorePointer(
     ignoring: config.ignoring ?? true,
     ignoringSemantics: config.ignoringSemantics,
@@ -9536,6 +8837,7 @@ IgnorePointer _buildGeneratedIgnorePointerTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedImageTag extends WidgetTagBase with AsyncTag {
   GeneratedImageTag(super.content, super.filters);
@@ -9548,10 +8850,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedImageTagWidget(config, children));
@@ -9576,9 +8875,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.colorBlendMode = parseGeneratedBlendMode(value);
           break;
         case 'errorBuilder':
-          config.errorBuilder =
-              (resolveCallbackValue(evaluator, value)
-                  as ImageErrorWidgetBuilder?);
+          config.errorBuilder = (resolveCallbackValue(evaluator, value) as ImageErrorWidgetBuilder?);
           break;
         case 'excludeFromSemantics':
           config.excludeFromSemantics = toBool(value);
@@ -9590,8 +8887,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.fit = parseGeneratedBoxFit(value);
           break;
         case 'frameBuilder':
-          config.frameBuilder =
-              (resolveCallbackValue(evaluator, value) as ImageFrameBuilder?);
+          config.frameBuilder = (resolveCallbackValue(evaluator, value) as ImageFrameBuilder?);
           break;
         case 'gaplessPlayback':
           config.gaplessPlayback = toBool(value);
@@ -9600,8 +8896,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.height = toDouble(value);
           break;
         case 'image':
-          config.image =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.image = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'isAntiAlias':
           config.isAntiAlias = toBool(value);
@@ -9610,8 +8905,7 @@ class GeneratedImageTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'loadingBuilder':
-          config.loadingBuilder =
-              (resolveCallbackValue(evaluator, value) as ImageLoadingBuilder?);
+          config.loadingBuilder = (resolveCallbackValue(evaluator, value) as ImageLoadingBuilder?);
           break;
         case 'matchTextDirection':
           config.matchTextDirection = toBool(value);
@@ -9663,10 +8957,7 @@ class _GeneratedImageTagConfig {
   double? width;
 }
 
-Image _buildGeneratedImageTagWidget(
-  _GeneratedImageTagConfig config,
-  List<Widget> children,
-) {
+Image _buildGeneratedImageTagWidget(_GeneratedImageTagConfig config, List<Widget> children) {
   return Image(
     alignment: config.alignment ?? Alignment.center,
     centerSlice: config.centerSlice,
@@ -9691,8 +8982,8 @@ Image _buildGeneratedImageTagWidget(
   );
 }
 
-class GeneratedIndexedStackTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedIndexedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedIndexedStackTag(super.content, super.filters);
 
   @override
@@ -9703,10 +8994,7 @@ class GeneratedIndexedStackTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedIndexedStackTagWidget(config, children));
@@ -9714,8 +9002,7 @@ class GeneratedIndexedStackTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('indexed_stack').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -9724,9 +9011,8 @@ class GeneratedIndexedStackTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'indexed_stack',
         nonFilterContent,
@@ -9778,10 +9064,7 @@ class _GeneratedIndexedStackTagConfig {
   TextDirection? textDirection;
 }
 
-IndexedStack _buildGeneratedIndexedStackTagWidget(
-  _GeneratedIndexedStackTagConfig config,
-  List<Widget> children,
-) {
+IndexedStack _buildGeneratedIndexedStackTagWidget(_GeneratedIndexedStackTagConfig config, List<Widget> children) {
   return IndexedStack(
     alignment: config.alignment ?? AlignmentDirectional.topStart,
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
@@ -9792,6 +9075,7 @@ IndexedStack _buildGeneratedIndexedStackTagWidget(
     children: children,
   );
 }
+
 
 class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
   GeneratedInputChipTag(super.content, super.filters);
@@ -9804,10 +9088,7 @@ class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedInputChipTagWidget(config, children));
@@ -9844,9 +9125,7 @@ class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'color':
-          config.color =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.color = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'deleteButtonTooltipMessage':
           config.deleteButtonTooltipMessage = toStringValue(value);
@@ -9888,9 +9167,7 @@ class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
           config.labelStyle = parseGeneratedTextStyle(value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -9902,9 +9179,7 @@ class GeneratedInputChipTag extends WidgetTagBase with AsyncTag {
           config.onPressed = resolveActionCallback(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -9996,10 +9271,7 @@ class _GeneratedInputChipTagConfig {
   VisualDensity? visualDensity;
 }
 
-InputChip _buildGeneratedInputChipTagWidget(
-  _GeneratedInputChipTagConfig config,
-  List<Widget> children,
-) {
+InputChip _buildGeneratedInputChipTagWidget(_GeneratedInputChipTagConfig config, List<Widget> children) {
   return InputChip(
     autofocus: config.autofocus ?? false,
     avatar: config.avatar,
@@ -10043,8 +9315,8 @@ InputChip _buildGeneratedInputChipTagWidget(
   );
 }
 
-class GeneratedIntrinsicHeightTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedIntrinsicHeightTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedIntrinsicHeightTag(super.content, super.filters);
 
   @override
@@ -10055,10 +9327,7 @@ class GeneratedIntrinsicHeightTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedIntrinsicHeightTagWidget(config, children));
@@ -10066,8 +9335,7 @@ class GeneratedIntrinsicHeightTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('intrinsic_height').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -10076,9 +9344,8 @@ class GeneratedIntrinsicHeightTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'intrinsic_height',
         nonFilterContent,
@@ -10110,16 +9377,18 @@ class _GeneratedIntrinsicHeightTagConfig {
   Key? key;
 }
 
-IntrinsicHeight _buildGeneratedIntrinsicHeightTagWidget(
-  _GeneratedIntrinsicHeightTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return IntrinsicHeight(key: config.key, child: child);
+IntrinsicHeight _buildGeneratedIntrinsicHeightTagWidget(_GeneratedIntrinsicHeightTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return IntrinsicHeight(
+    key: config.key,
+    child: child,
+  );
 }
 
-class GeneratedIntrinsicWidthTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedIntrinsicWidthTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedIntrinsicWidthTag(super.content, super.filters);
 
   @override
@@ -10130,10 +9399,7 @@ class GeneratedIntrinsicWidthTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedIntrinsicWidthTagWidget(config, children));
@@ -10141,8 +9407,7 @@ class GeneratedIntrinsicWidthTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('intrinsic_width').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -10151,9 +9416,8 @@ class GeneratedIntrinsicWidthTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'intrinsic_width',
         nonFilterContent,
@@ -10193,11 +9457,10 @@ class _GeneratedIntrinsicWidthTagConfig {
   double? stepWidth;
 }
 
-IntrinsicWidth _buildGeneratedIntrinsicWidthTagWidget(
-  _GeneratedIntrinsicWidthTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+IntrinsicWidth _buildGeneratedIntrinsicWidthTagWidget(_GeneratedIntrinsicWidthTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return IntrinsicWidth(
     key: config.key,
     stepHeight: config.stepHeight,
@@ -10205,6 +9468,7 @@ IntrinsicWidth _buildGeneratedIntrinsicWidthTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedLayoutBuilderTag extends WidgetTagBase with AsyncTag {
   GeneratedLayoutBuilderTag(super.content, super.filters);
@@ -10217,10 +9481,7 @@ class GeneratedLayoutBuilderTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedLayoutBuilderTagWidget(config, children));
@@ -10233,9 +9494,7 @@ class GeneratedLayoutBuilderTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'builder':
-          config.builder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as Widget Function(BuildContext, BoxConstraints)?);
+          config.builder = (resolveWidgetBuilder2Callback(evaluator, value) as Widget Function(BuildContext, BoxConstraints)?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -10257,15 +9516,15 @@ class _GeneratedLayoutBuilderTagConfig {
   Key? key;
 }
 
-LayoutBuilder _buildGeneratedLayoutBuilderTagWidget(
-  _GeneratedLayoutBuilderTagConfig config,
-  List<Widget> children,
-) {
-  return LayoutBuilder(builder: config.builder!, key: config.key);
+LayoutBuilder _buildGeneratedLayoutBuilderTagWidget(_GeneratedLayoutBuilderTagConfig config, List<Widget> children) {
+  return LayoutBuilder(
+    builder: config.builder!,
+    key: config.key,
+  );
 }
 
-class GeneratedLimitedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedLimitedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedLimitedBoxTag(super.content, super.filters);
 
   @override
@@ -10276,10 +9535,7 @@ class GeneratedLimitedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedLimitedBoxTagWidget(config, children));
@@ -10287,8 +9543,7 @@ class GeneratedLimitedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('limited_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -10297,9 +9552,8 @@ class GeneratedLimitedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'limited_box',
         nonFilterContent,
@@ -10339,11 +9593,10 @@ class _GeneratedLimitedBoxTagConfig {
   double? maxWidth;
 }
 
-LimitedBox _buildGeneratedLimitedBoxTagWidget(
-  _GeneratedLimitedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+LimitedBox _buildGeneratedLimitedBoxTagWidget(_GeneratedLimitedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return LimitedBox(
     key: config.key,
     maxHeight: config.maxHeight ?? double.infinity,
@@ -10352,6 +9605,7 @@ LimitedBox _buildGeneratedLimitedBoxTagWidget(
   );
 }
 
+
 class GeneratedLinearProgressIndicatorTag extends WidgetTagBase with AsyncTag {
   GeneratedLinearProgressIndicatorTag(super.content, super.filters);
 
@@ -10359,21 +9613,14 @@ class GeneratedLinearProgressIndicatorTag extends WidgetTagBase with AsyncTag {
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedLinearProgressIndicatorTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedLinearProgressIndicatorTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedLinearProgressIndicatorTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedLinearProgressIndicatorTagWidget(config, children));
   }
 
   _GeneratedLinearProgressIndicatorTagConfig _parseConfig(Evaluator evaluator) {
@@ -10450,10 +9697,7 @@ class _GeneratedLinearProgressIndicatorTagConfig {
   bool? year2023;
 }
 
-LinearProgressIndicator _buildGeneratedLinearProgressIndicatorTagWidget(
-  _GeneratedLinearProgressIndicatorTagConfig config,
-  List<Widget> children,
-) {
+LinearProgressIndicator _buildGeneratedLinearProgressIndicatorTagWidget(_GeneratedLinearProgressIndicatorTagConfig config, List<Widget> children) {
   return LinearProgressIndicator(
     backgroundColor: config.backgroundColor,
     borderRadius: config.borderRadius,
@@ -10472,6 +9716,7 @@ LinearProgressIndicator _buildGeneratedLinearProgressIndicatorTagWidget(
   );
 }
 
+
 class GeneratedListTileTag extends WidgetTagBase with AsyncTag {
   GeneratedListTileTag(super.content, super.filters);
 
@@ -10483,10 +9728,7 @@ class GeneratedListTileTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedListTileTagWidget(config, children));
@@ -10556,9 +9798,7 @@ class GeneratedListTileTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -10664,10 +9904,7 @@ class _GeneratedListTileTagConfig {
   VisualDensity? visualDensity;
 }
 
-ListTile _buildGeneratedListTileTagWidget(
-  _GeneratedListTileTagConfig config,
-  List<Widget> children,
-) {
+ListTile _buildGeneratedListTileTagWidget(_GeneratedListTileTagConfig config, List<Widget> children) {
   return ListTile(
     autofocus: config.autofocus ?? false,
     contentPadding: config.contentPadding,
@@ -10710,8 +9947,8 @@ ListTile _buildGeneratedListTileTagWidget(
   );
 }
 
-class GeneratedListViewTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedListViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedListViewTag(super.content, super.filters);
 
   @override
@@ -10722,10 +9959,7 @@ class GeneratedListViewTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedListViewTagWidget(config, children));
@@ -10733,8 +9967,7 @@ class GeneratedListViewTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('list_view').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -10743,9 +9976,8 @@ class GeneratedListViewTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'list_view',
         nonFilterContent,
@@ -10789,15 +10021,13 @@ class GeneratedListViewTag extends WidgetTagBase
           config.itemExtent = toDouble(value);
           break;
         case 'itemExtentBuilder':
-          config.itemExtentBuilder =
-              (resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
+          config.itemExtentBuilder = (resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'keyboardDismissBehavior':
-          config.keyboardDismissBehavior =
-              parseGeneratedScrollViewKeyboardDismissBehavior(value);
+          config.keyboardDismissBehavior = parseGeneratedScrollViewKeyboardDismissBehavior(value);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -10859,10 +10089,7 @@ class _GeneratedListViewTagConfig {
   bool? shrinkWrap;
 }
 
-ListView _buildGeneratedListViewTagWidget(
-  _GeneratedListViewTagConfig config,
-  List<Widget> children,
-) {
+ListView _buildGeneratedListViewTagWidget(_GeneratedListViewTagConfig config, List<Widget> children) {
   return ListView(
     addAutomaticKeepAlives: config.addAutomaticKeepAlives ?? true,
     addRepaintBoundaries: config.addRepaintBoundaries ?? true,
@@ -10889,8 +10116,8 @@ ListView _buildGeneratedListViewTagWidget(
   );
 }
 
-class GeneratedListenerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedListenerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedListenerTag(super.content, super.filters);
 
   @override
@@ -10901,10 +10128,7 @@ class GeneratedListenerTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedListenerTagWidget(config, children));
@@ -10912,8 +10136,7 @@ class GeneratedListenerTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('listener').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -10922,9 +10145,8 @@ class GeneratedListenerTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'listener',
         nonFilterContent,
@@ -10959,22 +10181,13 @@ class GeneratedListenerTag extends WidgetTagBase
           config.onPointerMove = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onPointerPanZoomEnd':
-          config.onPointerPanZoomEnd = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onPointerPanZoomEnd = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onPointerPanZoomStart':
-          config.onPointerPanZoomStart = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onPointerPanZoomStart = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onPointerPanZoomUpdate':
-          config.onPointerPanZoomUpdate = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onPointerPanZoomUpdate = resolveGenericValueChanged(evaluator, value);
           break;
         case 'onPointerSignal':
           config.onPointerSignal = resolveGenericValueChanged(evaluator, value);
@@ -11005,11 +10218,10 @@ class _GeneratedListenerTagConfig {
   PointerUpEventListener? onPointerUp;
 }
 
-Listener _buildGeneratedListenerTagWidget(
-  _GeneratedListenerTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Listener _buildGeneratedListenerTagWidget(_GeneratedListenerTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Listener(
     behavior: config.behavior ?? HitTestBehavior.deferToChild,
     key: config.key,
@@ -11026,6 +10238,7 @@ Listener _buildGeneratedListenerTagWidget(
   );
 }
 
+
 class GeneratedMaterialBannerTag extends WidgetTagBase with AsyncTag {
   GeneratedMaterialBannerTag(super.content, super.filters);
 
@@ -11037,10 +10250,7 @@ class GeneratedMaterialBannerTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedMaterialBannerTagWidget(config, children));
@@ -11142,10 +10352,7 @@ class _GeneratedMaterialBannerTagConfig {
   Color? surfaceTintColor;
 }
 
-MaterialBanner _buildGeneratedMaterialBannerTagWidget(
-  _GeneratedMaterialBannerTagConfig config,
-  List<Widget> children,
-) {
+MaterialBanner _buildGeneratedMaterialBannerTagWidget(_GeneratedMaterialBannerTagConfig config, List<Widget> children) {
   return MaterialBanner(
     actions: config.actions!,
     animation: config.animation,
@@ -11168,8 +10375,8 @@ MaterialBanner _buildGeneratedMaterialBannerTagWidget(
   );
 }
 
-class GeneratedMergeSemanticsTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedMergeSemanticsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedMergeSemanticsTag(super.content, super.filters);
 
   @override
@@ -11180,10 +10387,7 @@ class GeneratedMergeSemanticsTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedMergeSemanticsTagWidget(config, children));
@@ -11191,8 +10395,7 @@ class GeneratedMergeSemanticsTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('merge_semantics').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -11201,9 +10404,8 @@ class GeneratedMergeSemanticsTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'merge_semantics',
         nonFilterContent,
@@ -11235,16 +10437,18 @@ class _GeneratedMergeSemanticsTagConfig {
   Key? key;
 }
 
-MergeSemantics _buildGeneratedMergeSemanticsTagWidget(
-  _GeneratedMergeSemanticsTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return MergeSemantics(key: config.key, child: child);
+MergeSemantics _buildGeneratedMergeSemanticsTagWidget(_GeneratedMergeSemanticsTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return MergeSemantics(
+    key: config.key,
+    child: child,
+  );
 }
 
-class GeneratedMouseRegionTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedMouseRegionTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedMouseRegionTag(super.content, super.filters);
 
   @override
@@ -11255,10 +10459,7 @@ class GeneratedMouseRegionTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedMouseRegionTagWidget(config, children));
@@ -11266,8 +10467,7 @@ class GeneratedMouseRegionTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('mouse_region').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -11276,9 +10476,8 @@ class GeneratedMouseRegionTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'mouse_region',
         nonFilterContent,
@@ -11334,11 +10533,10 @@ class _GeneratedMouseRegionTagConfig {
   bool? opaque;
 }
 
-MouseRegion _buildGeneratedMouseRegionTagWidget(
-  _GeneratedMouseRegionTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+MouseRegion _buildGeneratedMouseRegionTagWidget(_GeneratedMouseRegionTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return MouseRegion(
     cursor: config.cursor ?? MouseCursor.defer,
     hitTestBehavior: config.hitTestBehavior,
@@ -11351,6 +10549,7 @@ MouseRegion _buildGeneratedMouseRegionTagWidget(
   );
 }
 
+
 class GeneratedNavigationBarTag extends WidgetTagBase with AsyncTag {
   GeneratedNavigationBarTag(super.content, super.filters);
 
@@ -11362,10 +10561,7 @@ class GeneratedNavigationBarTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedNavigationBarTagWidget(config, children));
@@ -11402,29 +10598,22 @@ class GeneratedNavigationBarTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'labelBehavior':
-          config.labelBehavior =
-              parseGeneratedNavigationDestinationLabelBehavior(value);
+          config.labelBehavior = parseGeneratedNavigationDestinationLabelBehavior(value);
           break;
         case 'labelPadding':
           config.labelPadding = parseGeneratedEdgeInsetsGeometry(value);
           break;
         case 'labelTextStyle':
-          config.labelTextStyle =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<TextStyle?>?);
+          config.labelTextStyle = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<TextStyle?>?);
           break;
         case 'maintainBottomViewPadding':
           config.maintainBottomViewPadding = toBool(value);
           break;
         case 'onDestinationSelected':
-          config.onDestinationSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onDestinationSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'selectedIndex':
           config.selectedIndex = toInt(value);
@@ -11467,10 +10656,7 @@ class _GeneratedNavigationBarTagConfig {
   Color? surfaceTintColor;
 }
 
-NavigationBar _buildGeneratedNavigationBarTagWidget(
-  _GeneratedNavigationBarTagConfig config,
-  List<Widget> children,
-) {
+NavigationBar _buildGeneratedNavigationBarTagWidget(_GeneratedNavigationBarTagConfig config, List<Widget> children) {
   return NavigationBar(
     animationDuration: config.animationDuration,
     backgroundColor: config.backgroundColor,
@@ -11492,6 +10678,7 @@ NavigationBar _buildGeneratedNavigationBarTagWidget(
   );
 }
 
+
 class GeneratedNavigationDestinationTag extends WidgetTagBase with AsyncTag {
   GeneratedNavigationDestinationTag(super.content, super.filters);
 
@@ -11499,21 +10686,14 @@ class GeneratedNavigationDestinationTag extends WidgetTagBase with AsyncTag {
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedNavigationDestinationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedNavigationDestinationTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedNavigationDestinationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedNavigationDestinationTagWidget(config, children));
   }
 
   _GeneratedNavigationDestinationTagConfig _parseConfig(Evaluator evaluator) {
@@ -11564,10 +10744,7 @@ class _GeneratedNavigationDestinationTagConfig {
   String? tooltip;
 }
 
-NavigationDestination _buildGeneratedNavigationDestinationTagWidget(
-  _GeneratedNavigationDestinationTagConfig config,
-  List<Widget> children,
-) {
+NavigationDestination _buildGeneratedNavigationDestinationTagWidget(_GeneratedNavigationDestinationTagConfig config, List<Widget> children) {
   return NavigationDestination(
     enabled: config.enabled ?? true,
     icon: config.icon!,
@@ -11578,8 +10755,8 @@ NavigationDestination _buildGeneratedNavigationDestinationTagWidget(
   );
 }
 
-class GeneratedNavigationDrawerTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedNavigationDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedNavigationDrawerTag(super.content, super.filters);
 
   @override
@@ -11590,10 +10767,7 @@ class GeneratedNavigationDrawerTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedNavigationDrawerTagWidget(config, children));
@@ -11601,20 +10775,17 @@ class GeneratedNavigationDrawerTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('navigation_drawer').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endnavigation_drawer').trim() & tagEnd();
+    final endTag = tagStart() & string('endnavigation_drawer').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'navigation_drawer',
         nonFilterContent,
@@ -11652,9 +10823,7 @@ class GeneratedNavigationDrawerTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onDestinationSelected':
-          config.onDestinationSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onDestinationSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'selectedIndex':
           config.selectedIndex = toInt(value);
@@ -11692,10 +10861,7 @@ class _GeneratedNavigationDrawerTagConfig {
   EdgeInsetsGeometry? tilePadding;
 }
 
-NavigationDrawer _buildGeneratedNavigationDrawerTagWidget(
-  _GeneratedNavigationDrawerTagConfig config,
-  List<Widget> children,
-) {
+NavigationDrawer _buildGeneratedNavigationDrawerTagWidget(_GeneratedNavigationDrawerTagConfig config, List<Widget> children) {
   return NavigationDrawer(
     backgroundColor: config.backgroundColor,
     elevation: config.elevation,
@@ -11708,40 +10874,30 @@ NavigationDrawer _buildGeneratedNavigationDrawerTagWidget(
     selectedIndex: config.selectedIndex ?? 0,
     shadowColor: config.shadowColor,
     surfaceTintColor: config.surfaceTintColor,
-    tilePadding:
-        config.tilePadding ?? const EdgeInsets.symmetric(horizontal: 12.0),
+    tilePadding: config.tilePadding ?? const EdgeInsets.symmetric(horizontal: 12.0),
     children: children,
   );
 }
 
-class GeneratedNavigationDrawerDestinationTag extends WidgetTagBase
-    with AsyncTag {
+
+class GeneratedNavigationDrawerDestinationTag extends WidgetTagBase with AsyncTag {
   GeneratedNavigationDrawerDestinationTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedNavigationDrawerDestinationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedNavigationDrawerDestinationTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedNavigationDrawerDestinationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedNavigationDrawerDestinationTagWidget(config, children));
   }
 
-  _GeneratedNavigationDrawerDestinationTagConfig _parseConfig(
-    Evaluator evaluator,
-  ) {
+  _GeneratedNavigationDrawerDestinationTagConfig _parseConfig(Evaluator evaluator) {
     final config = _GeneratedNavigationDrawerDestinationTagConfig();
     for (final arg in namedArgs) {
       final name = arg.identifier.name;
@@ -11789,10 +10945,7 @@ class _GeneratedNavigationDrawerDestinationTagConfig {
   Widget? selectedIcon;
 }
 
-NavigationDrawerDestination _buildGeneratedNavigationDrawerDestinationTagWidget(
-  _GeneratedNavigationDrawerDestinationTagConfig config,
-  List<Widget> children,
-) {
+NavigationDrawerDestination _buildGeneratedNavigationDrawerDestinationTagWidget(_GeneratedNavigationDrawerDestinationTagConfig config, List<Widget> children) {
   return NavigationDrawerDestination(
     backgroundColor: config.backgroundColor,
     enabled: config.enabled ?? true,
@@ -11802,6 +10955,7 @@ NavigationDrawerDestination _buildGeneratedNavigationDrawerDestinationTagWidget(
     selectedIcon: config.selectedIcon,
   );
 }
+
 
 class GeneratedNavigationRailTag extends WidgetTagBase with AsyncTag {
   GeneratedNavigationRailTag(super.content, super.filters);
@@ -11814,10 +10968,7 @@ class GeneratedNavigationRailTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedNavigationRailTagWidget(config, children));
@@ -11833,9 +10984,7 @@ class GeneratedNavigationRailTag extends WidgetTagBase with AsyncTag {
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'destinations':
-          config.destinations = parseGeneratedListOfNavigationRailDestination(
-            value,
-          );
+          config.destinations = parseGeneratedListOfNavigationRailDestination(value);
           break;
         case 'elevation':
           config.elevation = toDouble(value);
@@ -11871,9 +11020,7 @@ class GeneratedNavigationRailTag extends WidgetTagBase with AsyncTag {
           config.minWidth = toDouble(value);
           break;
         case 'onDestinationSelected':
-          config.onDestinationSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onDestinationSelected = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'scrollable':
           config.scrollable = toBool(value);
@@ -11943,10 +11090,7 @@ class _GeneratedNavigationRailTagConfig {
   bool? useIndicator;
 }
 
-NavigationRail _buildGeneratedNavigationRailTagWidget(
-  _GeneratedNavigationRailTagConfig config,
-  List<Widget> children,
-) {
+NavigationRail _buildGeneratedNavigationRailTagWidget(_GeneratedNavigationRailTagConfig config, List<Widget> children) {
   return NavigationRail(
     backgroundColor: config.backgroundColor,
     destinations: config.destinations!,
@@ -11974,34 +11118,25 @@ NavigationRail _buildGeneratedNavigationRailTagWidget(
   );
 }
 
-class GeneratedNavigationRailDestinationTag extends WidgetTagBase
-    with AsyncTag {
+
+class GeneratedNavigationRailDestinationTag extends WidgetTagBase with AsyncTag {
   GeneratedNavigationRailDestinationTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedNavigationRailDestinationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedNavigationRailDestinationTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedNavigationRailDestinationTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedNavigationRailDestinationTagWidget(config, children));
   }
 
-  _GeneratedNavigationRailDestinationTagConfig _parseConfig(
-    Evaluator evaluator,
-  ) {
+  _GeneratedNavigationRailDestinationTagConfig _parseConfig(Evaluator evaluator) {
     final config = _GeneratedNavigationRailDestinationTagConfig();
     for (final arg in namedArgs) {
       final name = arg.identifier.name;
@@ -12053,10 +11188,7 @@ class _GeneratedNavigationRailDestinationTagConfig {
   Widget? selectedIcon;
 }
 
-NavigationRailDestination _buildGeneratedNavigationRailDestinationTagWidget(
-  _GeneratedNavigationRailDestinationTagConfig config,
-  List<Widget> children,
-) {
+NavigationRailDestination _buildGeneratedNavigationRailDestinationTagWidget(_GeneratedNavigationRailDestinationTagConfig config, List<Widget> children) {
   return NavigationRailDestination(
     disabled: config.disabled ?? false,
     icon: config.icon!,
@@ -12068,8 +11200,8 @@ NavigationRailDestination _buildGeneratedNavigationRailDestinationTagWidget(
   );
 }
 
-class GeneratedOffstageTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedOffstageTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedOffstageTag(super.content, super.filters);
 
   @override
@@ -12080,10 +11212,7 @@ class GeneratedOffstageTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedOffstageTagWidget(config, children));
@@ -12091,8 +11220,7 @@ class GeneratedOffstageTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('offstage').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12101,9 +11229,8 @@ class GeneratedOffstageTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'offstage',
         nonFilterContent,
@@ -12139,17 +11266,17 @@ class _GeneratedOffstageTagConfig {
   bool? offstage;
 }
 
-Offstage _buildGeneratedOffstageTagWidget(
-  _GeneratedOffstageTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Offstage _buildGeneratedOffstageTagWidget(_GeneratedOffstageTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Offstage(
     key: config.key,
     offstage: config.offstage ?? true,
     child: child,
   );
 }
+
 
 class GeneratedOpacityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedOpacityTag(super.content, super.filters);
@@ -12162,10 +11289,7 @@ class GeneratedOpacityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedOpacityTagWidget(config, children));
@@ -12173,8 +11297,7 @@ class GeneratedOpacityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('opacity').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12183,9 +11306,8 @@ class GeneratedOpacityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'opacity',
         nonFilterContent,
@@ -12228,11 +11350,10 @@ class _GeneratedOpacityTagConfig {
   double? opacity;
 }
 
-Opacity _buildGeneratedOpacityTagWidget(
-  _GeneratedOpacityTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Opacity _buildGeneratedOpacityTagWidget(_GeneratedOpacityTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Opacity(
     alwaysIncludeSemantics: config.alwaysIncludeSemantics ?? false,
     key: config.key,
@@ -12241,8 +11362,8 @@ Opacity _buildGeneratedOpacityTagWidget(
   );
 }
 
-class GeneratedOutlinedButtonTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedOutlinedButtonTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedOutlinedButtonTag(super.content, super.filters);
 
   @override
@@ -12253,10 +11374,7 @@ class GeneratedOutlinedButtonTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedOutlinedButtonTagWidget(config, children));
@@ -12264,8 +11382,7 @@ class GeneratedOutlinedButtonTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('outlined_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12274,9 +11391,8 @@ class GeneratedOutlinedButtonTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'outlined_button',
         nonFilterContent,
@@ -12305,14 +11421,10 @@ class GeneratedOutlinedButtonTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -12351,11 +11463,10 @@ class _GeneratedOutlinedButtonTagConfig {
   ButtonStyle? style;
 }
 
-OutlinedButton _buildGeneratedOutlinedButtonTagWidget(
-  _GeneratedOutlinedButtonTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+OutlinedButton _buildGeneratedOutlinedButtonTagWidget(_GeneratedOutlinedButtonTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return OutlinedButton(
     autofocus: config.autofocus ?? false,
     clipBehavior: config.clipBehavior,
@@ -12371,8 +11482,8 @@ OutlinedButton _buildGeneratedOutlinedButtonTagWidget(
   );
 }
 
-class GeneratedOverflowBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedOverflowBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedOverflowBoxTag(super.content, super.filters);
 
   @override
@@ -12383,10 +11494,7 @@ class GeneratedOverflowBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedOverflowBoxTagWidget(config, children));
@@ -12394,8 +11502,7 @@ class GeneratedOverflowBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('overflow_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12404,9 +11511,8 @@ class GeneratedOverflowBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'overflow_box',
         nonFilterContent,
@@ -12462,11 +11568,10 @@ class _GeneratedOverflowBoxTagConfig {
   double? minWidth;
 }
 
-OverflowBox _buildGeneratedOverflowBoxTagWidget(
-  _GeneratedOverflowBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+OverflowBox _buildGeneratedOverflowBoxTagWidget(_GeneratedOverflowBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return OverflowBox(
     alignment: config.alignment ?? Alignment.center,
     fit: config.fit ?? OverflowBoxFit.max,
@@ -12479,6 +11584,7 @@ OverflowBox _buildGeneratedOverflowBoxTagWidget(
   );
 }
 
+
 class GeneratedPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPaddingTag(super.content, super.filters);
 
@@ -12490,10 +11596,7 @@ class GeneratedPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPaddingTagWidget(config, children));
@@ -12501,8 +11604,7 @@ class GeneratedPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('padding').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12511,9 +11613,8 @@ class GeneratedPaddingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'padding',
         nonFilterContent,
@@ -12552,16 +11653,19 @@ class _GeneratedPaddingTagConfig {
   EdgeInsetsGeometry? padding;
 }
 
-Padding _buildGeneratedPaddingTagWidget(
-  _GeneratedPaddingTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return Padding(key: config.key, padding: config.padding!, child: child);
+Padding _buildGeneratedPaddingTagWidget(_GeneratedPaddingTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return Padding(
+    key: config.key,
+    padding: config.padding!,
+    child: child,
+  );
 }
 
-class GeneratedPageViewTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedPageViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPageViewTag(super.content, super.filters);
 
   @override
@@ -12572,10 +11676,7 @@ class GeneratedPageViewTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPageViewTagWidget(config, children));
@@ -12583,8 +11684,7 @@ class GeneratedPageViewTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('page_view').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12593,9 +11693,8 @@ class GeneratedPageViewTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'page_view',
         nonFilterContent,
@@ -12630,9 +11729,7 @@ class GeneratedPageViewTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onPageChanged':
-          config.onPageChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onPageChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'padEnds':
           config.padEnds = toBool(value);
@@ -12681,10 +11778,7 @@ class _GeneratedPageViewTagConfig {
   Axis? scrollDirection;
 }
 
-PageView _buildGeneratedPageViewTagWidget(
-  _GeneratedPageViewTagConfig config,
-  List<Widget> children,
-) {
+PageView _buildGeneratedPageViewTagWidget(_GeneratedPageViewTagConfig config, List<Widget> children) {
   return PageView(
     allowImplicitScrolling: config.allowImplicitScrolling ?? false,
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
@@ -12704,6 +11798,7 @@ PageView _buildGeneratedPageViewTagWidget(
   );
 }
 
+
 class GeneratedPaginatedDataTableTag extends WidgetTagBase with AsyncTag {
   GeneratedPaginatedDataTableTag(super.content, super.filters);
 
@@ -12715,10 +11810,7 @@ class GeneratedPaginatedDataTableTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedPaginatedDataTableTagWidget(config, children));
@@ -12770,9 +11862,7 @@ class GeneratedPaginatedDataTableTag extends WidgetTagBase with AsyncTag {
           config.header = resolveWidget(value);
           break;
         case 'headingRowColor':
-          config.headingRowColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.headingRowColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'headingRowHeight':
           config.headingRowHeight = toDouble(value);
@@ -12787,19 +11877,13 @@ class GeneratedPaginatedDataTableTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onPageChanged':
-          config.onPageChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onPageChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'onRowsPerPageChanged':
-          config.onRowsPerPageChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int?>?);
+          config.onRowsPerPageChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int?>?);
           break;
         case 'onSelectAll':
-          config.onSelectAll =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueSetter<bool?>?);
+          config.onSelectAll = (resolveGenericValueChanged(evaluator, value) as ValueSetter<bool?>?);
           break;
         case 'primary':
           config.primary = toBool(value);
@@ -12872,21 +11956,11 @@ class _GeneratedPaginatedDataTableTagConfig {
   DataTableSource? source;
 }
 
-PaginatedDataTable _buildGeneratedPaginatedDataTableTagWidget(
-  _GeneratedPaginatedDataTableTagConfig config,
-  List<Widget> children,
-) {
+PaginatedDataTable _buildGeneratedPaginatedDataTableTagWidget(_GeneratedPaginatedDataTableTagConfig config, List<Widget> children) {
   return PaginatedDataTable(
     actions: config.actions,
     arrowHeadColor: config.arrowHeadColor,
-    availableRowsPerPage:
-        config.availableRowsPerPage ??
-        const <int>[
-          PaginatedDataTable.defaultRowsPerPage,
-          PaginatedDataTable.defaultRowsPerPage * 2,
-          PaginatedDataTable.defaultRowsPerPage * 5,
-          PaginatedDataTable.defaultRowsPerPage * 10,
-        ],
+    availableRowsPerPage: config.availableRowsPerPage ?? const <int>[PaginatedDataTable.defaultRowsPerPage, PaginatedDataTable.defaultRowsPerPage * 2, PaginatedDataTable.defaultRowsPerPage * 5, PaginatedDataTable.defaultRowsPerPage * 10],
     checkboxHorizontalMargin: config.checkboxHorizontalMargin,
     columnSpacing: config.columnSpacing ?? 56.0,
     columns: config.columns!,
@@ -12916,8 +11990,8 @@ PaginatedDataTable _buildGeneratedPaginatedDataTableTagWidget(
   );
 }
 
-class GeneratedPhysicalModelTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedPhysicalModelTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPhysicalModelTag(super.content, super.filters);
 
   @override
@@ -12928,10 +12002,7 @@ class GeneratedPhysicalModelTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPhysicalModelTagWidget(config, children));
@@ -12939,8 +12010,7 @@ class GeneratedPhysicalModelTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('physical_model').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -12949,9 +12019,8 @@ class GeneratedPhysicalModelTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'physical_model',
         nonFilterContent,
@@ -13010,11 +12079,10 @@ class _GeneratedPhysicalModelTagConfig {
   BoxShape? shape;
 }
 
-PhysicalModel _buildGeneratedPhysicalModelTagWidget(
-  _GeneratedPhysicalModelTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+PhysicalModel _buildGeneratedPhysicalModelTagWidget(_GeneratedPhysicalModelTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return PhysicalModel(
     borderRadius: config.borderRadius,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -13027,8 +12095,8 @@ PhysicalModel _buildGeneratedPhysicalModelTagWidget(
   );
 }
 
-class GeneratedPlaceholderTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedPlaceholderTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPlaceholderTag(super.content, super.filters);
 
   @override
@@ -13039,10 +12107,7 @@ class GeneratedPlaceholderTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPlaceholderTagWidget(config, children));
@@ -13050,8 +12115,7 @@ class GeneratedPlaceholderTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('placeholder').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -13060,9 +12124,8 @@ class GeneratedPlaceholderTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'placeholder',
         nonFilterContent,
@@ -13110,11 +12173,10 @@ class _GeneratedPlaceholderTagConfig {
   double? strokeWidth;
 }
 
-Placeholder _buildGeneratedPlaceholderTagWidget(
-  _GeneratedPlaceholderTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Placeholder _buildGeneratedPlaceholderTagWidget(_GeneratedPlaceholderTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Placeholder(
     color: config.color ?? const Color(0xFF455A64),
     fallbackHeight: config.fallbackHeight ?? 400.0,
@@ -13125,8 +12187,8 @@ Placeholder _buildGeneratedPlaceholderTagWidget(
   );
 }
 
-class GeneratedPopupMenuButtonTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedPopupMenuButtonTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPopupMenuButtonTag(super.content, super.filters);
 
   @override
@@ -13137,10 +12199,7 @@ class GeneratedPopupMenuButtonTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPopupMenuButtonTagWidget(config, children));
@@ -13148,20 +12207,17 @@ class GeneratedPopupMenuButtonTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('popup_menu_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endpopup_menu_button').trim() & tagEnd();
+    final endTag = tagStart() & string('endpopup_menu_button').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'popup_menu_button',
         nonFilterContent,
@@ -13211,9 +12267,7 @@ class GeneratedPopupMenuButtonTag extends WidgetTagBase
           config.initialValue = parseGeneratedObject(evaluator, value);
           break;
         case 'itemBuilder':
-          config.itemBuilder =
-              (resolveBuildContextCallback(evaluator, value)
-                  as PopupMenuItemBuilder<Object?>?);
+          config.itemBuilder = (resolveBuildContextCallback(evaluator, value) as PopupMenuItemBuilder<Object?>?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -13231,9 +12285,7 @@ class GeneratedPopupMenuButtonTag extends WidgetTagBase
           config.onOpened = resolveActionCallback(evaluator, value);
           break;
         case 'onSelected':
-          config.onSelected =
-              (resolveGenericValueChanged(evaluator, value)
-                  as PopupMenuItemSelected<Object?>?);
+          config.onSelected = (resolveGenericValueChanged(evaluator, value) as PopupMenuItemSelected<Object?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -13316,11 +12368,10 @@ class _GeneratedPopupMenuButtonTagConfig {
   bool? useRootNavigator;
 }
 
-PopupMenuButton _buildGeneratedPopupMenuButtonTagWidget(
-  _GeneratedPopupMenuButtonTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+PopupMenuButton _buildGeneratedPopupMenuButtonTagWidget(_GeneratedPopupMenuButtonTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return PopupMenuButton(
     borderRadius: config.borderRadius,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -13356,6 +12407,7 @@ PopupMenuButton _buildGeneratedPopupMenuButtonTagWidget(
   );
 }
 
+
 class GeneratedPopupMenuDividerTag extends WidgetTagBase with AsyncTag {
   GeneratedPopupMenuDividerTag(super.content, super.filters);
 
@@ -13367,10 +12419,7 @@ class GeneratedPopupMenuDividerTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedPopupMenuDividerTagWidget(config, children));
@@ -13422,10 +12471,7 @@ class _GeneratedPopupMenuDividerTagConfig {
   double? thickness;
 }
 
-PopupMenuDivider _buildGeneratedPopupMenuDividerTagWidget(
-  _GeneratedPopupMenuDividerTagConfig config,
-  List<Widget> children,
-) {
+PopupMenuDivider _buildGeneratedPopupMenuDividerTagWidget(_GeneratedPopupMenuDividerTagConfig config, List<Widget> children) {
   return PopupMenuDivider(
     color: config.color,
     endIndent: config.endIndent,
@@ -13437,8 +12483,8 @@ PopupMenuDivider _buildGeneratedPopupMenuDividerTagWidget(
   );
 }
 
-class GeneratedPopupMenuItemTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedPopupMenuItemTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPopupMenuItemTag(super.content, super.filters);
 
   @override
@@ -13449,10 +12495,7 @@ class GeneratedPopupMenuItemTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPopupMenuItemTagWidget(config, children));
@@ -13460,8 +12503,7 @@ class GeneratedPopupMenuItemTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('popup_menu_item').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -13470,9 +12512,8 @@ class GeneratedPopupMenuItemTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'popup_menu_item',
         nonFilterContent,
@@ -13498,9 +12539,7 @@ class GeneratedPopupMenuItemTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'labelTextStyle':
-          config.labelTextStyle =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<TextStyle?>?);
+          config.labelTextStyle = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<TextStyle?>?);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -13538,11 +12577,10 @@ class _GeneratedPopupMenuItemTagConfig {
   Object? value;
 }
 
-PopupMenuItem _buildGeneratedPopupMenuItemTagWidget(
-  _GeneratedPopupMenuItemTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+PopupMenuItem _buildGeneratedPopupMenuItemTagWidget(_GeneratedPopupMenuItemTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return PopupMenuItem(
     enabled: config.enabled ?? true,
     height: config.height ?? kMinInteractiveDimension,
@@ -13557,8 +12595,8 @@ PopupMenuItem _buildGeneratedPopupMenuItemTagWidget(
   );
 }
 
-class GeneratedPositionedTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedPositionedTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedPositionedTag(super.content, super.filters);
 
   @override
@@ -13569,10 +12607,7 @@ class GeneratedPositionedTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedPositionedTagWidget(config, children));
@@ -13580,8 +12615,7 @@ class GeneratedPositionedTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('positioned').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -13590,9 +12624,8 @@ class GeneratedPositionedTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'positioned',
         nonFilterContent,
@@ -13648,10 +12681,7 @@ class _GeneratedPositionedTagConfig {
   double? width;
 }
 
-Positioned _buildGeneratedPositionedTagWidget(
-  _GeneratedPositionedTagConfig config,
-  List<Widget> children,
-) {
+Positioned _buildGeneratedPositionedTagWidget(_GeneratedPositionedTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -13667,8 +12697,8 @@ Positioned _buildGeneratedPositionedTagWidget(
   );
 }
 
-class GeneratedReorderableListViewTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedReorderableListViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedReorderableListViewTag(super.content, super.filters);
 
   @override
@@ -13679,10 +12709,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedReorderableListViewTagWidget(config, children));
@@ -13690,20 +12717,17 @@ class GeneratedReorderableListViewTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('reorderable_list_view').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endreorderable_list_view').trim() & tagEnd();
+    final endTag = tagStart() & string('endreorderable_list_view').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'reorderable_list_view',
         nonFilterContent,
@@ -13735,9 +12759,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'dragBoundaryProvider':
-          config.dragBoundaryProvider =
-              (resolveBuildContextCallback(evaluator, value)
-                  as ReorderDragBoundaryProvider?);
+          config.dragBoundaryProvider = (resolveBuildContextCallback(evaluator, value) as ReorderDragBoundaryProvider?);
           break;
         case 'dragStartBehavior':
           config.dragStartBehavior = parseGeneratedDragStartBehavior(value);
@@ -13752,15 +12774,13 @@ class GeneratedReorderableListViewTag extends WidgetTagBase
           config.itemExtent = toDouble(value);
           break;
         case 'itemExtentBuilder':
-          config.itemExtentBuilder =
-              (resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
+          config.itemExtentBuilder = (resolveGenericCallback2(evaluator, value) as ItemExtentBuilder?);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'keyboardDismissBehavior':
-          config.keyboardDismissBehavior =
-              parseGeneratedScrollViewKeyboardDismissBehavior(value);
+          config.keyboardDismissBehavior = parseGeneratedScrollViewKeyboardDismissBehavior(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
@@ -13787,9 +12807,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase
           config.prototypeItem = resolveWidget(value);
           break;
         case 'proxyDecorator':
-          config.proxyDecorator =
-              (resolveCallbackValue(evaluator, value)
-                  as ReorderItemProxyDecorator?);
+          config.proxyDecorator = (resolveCallbackValue(evaluator, value) as ReorderItemProxyDecorator?);
           break;
         case 'restorationId':
           config.restorationId = toStringValue(value);
@@ -13798,10 +12816,7 @@ class GeneratedReorderableListViewTag extends WidgetTagBase
           config.reverse = toBool(value);
           break;
         case 'scrollController':
-          config.scrollController = parseGeneratedScrollController(
-            evaluator,
-            value,
-          );
+          config.scrollController = parseGeneratedScrollController(evaluator, value);
           break;
         case 'scrollDirection':
           config.scrollDirection = parseGeneratedAxis(value);
@@ -13851,10 +12866,7 @@ class _GeneratedReorderableListViewTagConfig {
   bool? shrinkWrap;
 }
 
-ReorderableListView _buildGeneratedReorderableListViewTagWidget(
-  _GeneratedReorderableListViewTagConfig config,
-  List<Widget> children,
-) {
+ReorderableListView _buildGeneratedReorderableListViewTagWidget(_GeneratedReorderableListViewTagConfig config, List<Widget> children) {
   return ReorderableListView(
     anchor: config.anchor ?? 0.0,
     autoScrollerVelocityScalar: config.autoScrollerVelocityScalar,
@@ -13887,8 +12899,8 @@ ReorderableListView _buildGeneratedReorderableListViewTagWidget(
   );
 }
 
-class GeneratedRepaintBoundaryTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedRepaintBoundaryTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedRepaintBoundaryTag(super.content, super.filters);
 
   @override
@@ -13899,10 +12911,7 @@ class GeneratedRepaintBoundaryTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedRepaintBoundaryTagWidget(config, children));
@@ -13910,8 +12919,7 @@ class GeneratedRepaintBoundaryTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('repaint_boundary').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -13920,9 +12928,8 @@ class GeneratedRepaintBoundaryTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'repaint_boundary',
         nonFilterContent,
@@ -13954,16 +12961,18 @@ class _GeneratedRepaintBoundaryTagConfig {
   Key? key;
 }
 
-RepaintBoundary _buildGeneratedRepaintBoundaryTagWidget(
-  _GeneratedRepaintBoundaryTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return RepaintBoundary(key: config.key, child: child);
+RepaintBoundary _buildGeneratedRepaintBoundaryTagWidget(_GeneratedRepaintBoundaryTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return RepaintBoundary(
+    key: config.key,
+    child: child,
+  );
 }
 
-class GeneratedRotatedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedRotatedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedRotatedBoxTag(super.content, super.filters);
 
   @override
@@ -13974,10 +12983,7 @@ class GeneratedRotatedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedRotatedBoxTagWidget(config, children));
@@ -13985,8 +12991,7 @@ class GeneratedRotatedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('rotated_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -13995,9 +13000,8 @@ class GeneratedRotatedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'rotated_box',
         nonFilterContent,
@@ -14036,17 +13040,17 @@ class _GeneratedRotatedBoxTagConfig {
   int? quarterTurns;
 }
 
-RotatedBox _buildGeneratedRotatedBoxTagWidget(
-  _GeneratedRotatedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+RotatedBox _buildGeneratedRotatedBoxTagWidget(_GeneratedRotatedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return RotatedBox(
     key: config.key,
     quarterTurns: config.quarterTurns!,
     child: child,
   );
 }
+
 
 class GeneratedRowTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedRowTag(super.content, super.filters);
@@ -14059,10 +13063,7 @@ class GeneratedRowTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedRowTagWidget(config, children));
@@ -14070,8 +13071,7 @@ class GeneratedRowTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('row').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -14080,9 +13080,8 @@ class GeneratedRowTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'row',
         nonFilterContent,
@@ -14142,10 +13141,7 @@ class _GeneratedRowTagConfig {
   VerticalDirection? verticalDirection;
 }
 
-Row _buildGeneratedRowTagWidget(
-  _GeneratedRowTagConfig config,
-  List<Widget> children,
-) {
+Row _buildGeneratedRowTagWidget(_GeneratedRowTagConfig config, List<Widget> children) {
   return Row(
     crossAxisAlignment: config.crossAxisAlignment ?? CrossAxisAlignment.center,
     key: config.key,
@@ -14159,8 +13155,8 @@ Row _buildGeneratedRowTagWidget(
   );
 }
 
-class GeneratedSafeAreaTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSafeAreaTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSafeAreaTag(super.content, super.filters);
 
   @override
@@ -14171,10 +13167,7 @@ class GeneratedSafeAreaTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedSafeAreaTagWidget(config, children));
@@ -14182,8 +13175,7 @@ class GeneratedSafeAreaTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('safe_area').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -14192,9 +13184,8 @@ class GeneratedSafeAreaTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'safe_area',
         nonFilterContent,
@@ -14250,10 +13241,7 @@ class _GeneratedSafeAreaTagConfig {
   bool? top;
 }
 
-SafeArea _buildGeneratedSafeAreaTagWidget(
-  _GeneratedSafeAreaTagConfig config,
-  List<Widget> children,
-) {
+SafeArea _buildGeneratedSafeAreaTagWidget(_GeneratedSafeAreaTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -14269,6 +13257,7 @@ SafeArea _buildGeneratedSafeAreaTagWidget(
   );
 }
 
+
 class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
   GeneratedScaffoldTag(super.content, super.filters);
 
@@ -14280,10 +13269,7 @@ class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedScaffoldTagWidget(config, children));
@@ -14296,8 +13282,7 @@ class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
       final value = evaluator.evaluate(arg.value);
       switch (name) {
         case 'appBar':
-          config.appBar =
-              (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
+          config.appBar = (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
           break;
         case 'backgroundColor':
           config.backgroundColor = parseGeneratedColor(value);
@@ -14318,9 +13303,7 @@ class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
           config.drawerBarrierDismissible = toBool(value);
           break;
         case 'drawerDragStartBehavior':
-          config.drawerDragStartBehavior = parseGeneratedDragStartBehavior(
-            value,
-          );
+          config.drawerDragStartBehavior = parseGeneratedDragStartBehavior(value);
           break;
         case 'drawerEdgeDragWidth':
           config.drawerEdgeDragWidth = toDouble(value);
@@ -14347,12 +13330,10 @@ class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
           config.floatingActionButton = resolveWidget(value);
           break;
         case 'floatingActionButtonAnimator':
-          config.floatingActionButtonAnimator =
-              parseGeneratedFloatingActionButtonAnimator(value);
+          config.floatingActionButtonAnimator = parseGeneratedFloatingActionButtonAnimator(value);
           break;
         case 'floatingActionButtonLocation':
-          config.floatingActionButtonLocation =
-              parseGeneratedFloatingActionButtonLocation(value);
+          config.floatingActionButtonLocation = parseGeneratedFloatingActionButtonLocation(value);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -14361,24 +13342,16 @@ class GeneratedScaffoldTag extends WidgetTagBase with AsyncTag {
           config.onDrawerChanged = resolveBoolActionCallback(evaluator, value);
           break;
         case 'onEndDrawerChanged':
-          config.onEndDrawerChanged = resolveBoolActionCallback(
-            evaluator,
-            value,
-          );
+          config.onEndDrawerChanged = resolveBoolActionCallback(evaluator, value);
           break;
         case 'persistentFooterAlignment':
-          config.persistentFooterAlignment = parseGeneratedAlignmentDirectional(
-            value,
-          );
+          config.persistentFooterAlignment = parseGeneratedAlignmentDirectional(value);
           break;
         case 'persistentFooterButtons':
           config.persistentFooterButtons = value;
           break;
         case 'persistentFooterDecoration':
-          config.persistentFooterDecoration = parseGeneratedBoxDecoration(
-            evaluator,
-            value,
-          );
+          config.persistentFooterDecoration = parseGeneratedBoxDecoration(evaluator, value);
           break;
         case 'primary':
           config.primary = toBool(value);
@@ -14428,10 +13401,7 @@ class _GeneratedScaffoldTagConfig {
   String? restorationId;
 }
 
-Scaffold _buildGeneratedScaffoldTagWidget(
-  _GeneratedScaffoldTagConfig config,
-  List<Widget> children,
-) {
+Scaffold _buildGeneratedScaffoldTagWidget(_GeneratedScaffoldTagConfig config, List<Widget> children) {
   return Scaffold(
     appBar: config.appBar,
     backgroundColor: config.backgroundColor,
@@ -14440,14 +13410,12 @@ Scaffold _buildGeneratedScaffoldTagWidget(
     bottomSheet: config.bottomSheet,
     drawer: config.drawer,
     drawerBarrierDismissible: config.drawerBarrierDismissible ?? true,
-    drawerDragStartBehavior:
-        config.drawerDragStartBehavior ?? DragStartBehavior.start,
+    drawerDragStartBehavior: config.drawerDragStartBehavior ?? DragStartBehavior.start,
     drawerEdgeDragWidth: config.drawerEdgeDragWidth,
     drawerEnableOpenDragGesture: config.drawerEnableOpenDragGesture ?? true,
     drawerScrimColor: config.drawerScrimColor,
     endDrawer: config.endDrawer,
-    endDrawerEnableOpenDragGesture:
-        config.endDrawerEnableOpenDragGesture ?? true,
+    endDrawerEnableOpenDragGesture: config.endDrawerEnableOpenDragGesture ?? true,
     extendBody: config.extendBody ?? false,
     extendBodyBehindAppBar: config.extendBodyBehindAppBar ?? false,
     floatingActionButton: config.floatingActionButton,
@@ -14456,8 +13424,7 @@ Scaffold _buildGeneratedScaffoldTagWidget(
     key: config.key,
     onDrawerChanged: config.onDrawerChanged,
     onEndDrawerChanged: config.onEndDrawerChanged,
-    persistentFooterAlignment:
-        config.persistentFooterAlignment ?? AlignmentDirectional.centerEnd,
+    persistentFooterAlignment: config.persistentFooterAlignment ?? AlignmentDirectional.centerEnd,
     persistentFooterButtons: config.persistentFooterButtons,
     persistentFooterDecoration: config.persistentFooterDecoration,
     primary: config.primary ?? true,
@@ -14465,6 +13432,7 @@ Scaffold _buildGeneratedScaffoldTagWidget(
     restorationId: config.restorationId,
   );
 }
+
 
 class GeneratedSegmentedButtonTag extends WidgetTagBase with AsyncTag {
   GeneratedSegmentedButtonTag(super.content, super.filters);
@@ -14477,10 +13445,7 @@ class GeneratedSegmentedButtonTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSegmentedButtonTagWidget(config, children));
@@ -14508,15 +13473,10 @@ class GeneratedSegmentedButtonTag extends WidgetTagBase with AsyncTag {
           config.multiSelectionEnabled = toBool(value);
           break;
         case 'onSelectionChanged':
-          config.onSelectionChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as void Function(Set<Object?>)?);
+          config.onSelectionChanged = (resolveGenericValueChanged(evaluator, value) as void Function(Set< Object?>)?);
           break;
         case 'segments':
-          config.segments = parseGeneratedListOfButtonSegmentObject(
-            evaluator,
-            value,
-          );
+          config.segments = parseGeneratedListOfButtonSegmentObject(evaluator, value);
           break;
         case 'selected':
           config.selected = parseGeneratedSetOfObject(evaluator, value);
@@ -14551,7 +13511,7 @@ class _GeneratedSegmentedButtonTagConfig {
   EdgeInsets? expandedInsets;
   Key? key;
   bool? multiSelectionEnabled;
-  void Function(Set<Object?>)? onSelectionChanged;
+  void Function(Set< Object?>)? onSelectionChanged;
   List<ButtonSegment<Object?>>? segments;
   Set<Object?>? selected;
   Widget? selectedIcon;
@@ -14559,10 +13519,7 @@ class _GeneratedSegmentedButtonTagConfig {
   ButtonStyle? style;
 }
 
-SegmentedButton _buildGeneratedSegmentedButtonTagWidget(
-  _GeneratedSegmentedButtonTagConfig config,
-  List<Widget> children,
-) {
+SegmentedButton _buildGeneratedSegmentedButtonTagWidget(_GeneratedSegmentedButtonTagConfig config, List<Widget> children) {
   return SegmentedButton(
     direction: config.direction ?? Axis.horizontal,
     emptySelectionAllowed: config.emptySelectionAllowed ?? false,
@@ -14578,6 +13535,7 @@ SegmentedButton _buildGeneratedSegmentedButtonTagWidget(
   );
 }
 
+
 class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
   GeneratedSelectableTextTag(super.content, super.filters);
 
@@ -14589,10 +13547,7 @@ class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSelectableTextTagWidget(config, children));
@@ -14608,9 +13563,7 @@ class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
           config.autofocus = toBool(value);
           break;
         case 'contextMenuBuilder':
-          config.contextMenuBuilder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as EditableTextContextMenuBuilder?);
+          config.contextMenuBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
           break;
         case 'cursorColor':
           config.cursorColor = parseGeneratedColor(value);
@@ -14640,8 +13593,7 @@ class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'magnifierConfiguration':
-          config.magnifierConfiguration =
-              parseGeneratedTextMagnifierConfiguration(evaluator, value);
+          config.magnifierConfiguration = parseGeneratedTextMagnifierConfiguration(evaluator, value);
           break;
         case 'maxLines':
           config.maxLines = toInt(value);
@@ -14650,9 +13602,7 @@ class GeneratedSelectableTextTag extends WidgetTagBase with AsyncTag {
           config.minLines = toInt(value);
           break;
         case 'onSelectionChanged':
-          config.onSelectionChanged =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as SelectionChangedCallback?);
+          config.onSelectionChanged = (resolveGenericActionCallback2(evaluator, value) as SelectionChangedCallback?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -14756,10 +13706,7 @@ class _GeneratedSelectableTextTagConfig {
   ToolbarOptions? toolbarOptions;
 }
 
-SelectableText _buildGeneratedSelectableTextTagWidget(
-  _GeneratedSelectableTextTagConfig config,
-  List<Widget> children,
-) {
+SelectableText _buildGeneratedSelectableTextTagWidget(_GeneratedSelectableTextTagConfig config, List<Widget> children) {
   return SelectableText(
     config.data!,
     autofocus: config.autofocus ?? false,
@@ -14797,8 +13744,8 @@ SelectableText _buildGeneratedSelectableTextTagWidget(
   );
 }
 
-class GeneratedShaderMaskTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedShaderMaskTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedShaderMaskTag(super.content, super.filters);
 
   @override
@@ -14809,10 +13756,7 @@ class GeneratedShaderMaskTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedShaderMaskTagWidget(config, children));
@@ -14820,8 +13764,7 @@ class GeneratedShaderMaskTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('shader_mask').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -14830,9 +13773,8 @@ class GeneratedShaderMaskTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'shader_mask',
         nonFilterContent,
@@ -14855,8 +13797,7 @@ class GeneratedShaderMaskTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'shaderCallback':
-          config.shaderCallback =
-              (resolveGenericCallback1(evaluator, value) as ShaderCallback?);
+          config.shaderCallback = (resolveGenericCallback1(evaluator, value) as ShaderCallback?);
           break;
         default:
           handleUnknownArg('shader_mask', name);
@@ -14876,11 +13817,10 @@ class _GeneratedShaderMaskTagConfig {
   ShaderCallback? shaderCallback;
 }
 
-ShaderMask _buildGeneratedShaderMaskTagWidget(
-  _GeneratedShaderMaskTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+ShaderMask _buildGeneratedShaderMaskTagWidget(_GeneratedShaderMaskTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return ShaderMask(
     blendMode: config.blendMode ?? BlendMode.modulate,
     key: config.key,
@@ -14889,8 +13829,8 @@ ShaderMask _buildGeneratedShaderMaskTagWidget(
   );
 }
 
-class GeneratedSimpleDialogTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSimpleDialogTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSimpleDialogTag(super.content, super.filters);
 
   @override
@@ -14901,10 +13841,7 @@ class GeneratedSimpleDialogTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedSimpleDialogTagWidget(config, children));
@@ -14912,8 +13849,7 @@ class GeneratedSimpleDialogTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('simple_dialog').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -14922,9 +13858,8 @@ class GeneratedSimpleDialogTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'simple_dialog',
         nonFilterContent,
@@ -15012,18 +13947,13 @@ class _GeneratedSimpleDialogTagConfig {
   TextStyle? titleTextStyle;
 }
 
-SimpleDialog _buildGeneratedSimpleDialogTagWidget(
-  _GeneratedSimpleDialogTagConfig config,
-  List<Widget> children,
-) {
+SimpleDialog _buildGeneratedSimpleDialogTagWidget(_GeneratedSimpleDialogTagConfig config, List<Widget> children) {
   return SimpleDialog(
     alignment: config.alignment,
     backgroundColor: config.backgroundColor,
     clipBehavior: config.clipBehavior,
     constraints: config.constraints,
-    contentPadding:
-        config.contentPadding ??
-        const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 16.0),
+    contentPadding: config.contentPadding ?? const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 16.0),
     elevation: config.elevation,
     insetPadding: config.insetPadding,
     key: config.key,
@@ -15032,54 +13962,43 @@ SimpleDialog _buildGeneratedSimpleDialogTagWidget(
     shape: config.shape,
     surfaceTintColor: config.surfaceTintColor,
     title: config.title,
-    titlePadding:
-        config.titlePadding ?? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+    titlePadding: config.titlePadding ?? const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
     titleTextStyle: config.titleTextStyle,
     children: children,
   );
 }
 
-class GeneratedSingleChildScrollViewTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSingleChildScrollViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSingleChildScrollViewTag(super.content, super.filters);
 
   @override
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     final children = captureChildrenSync(evaluator);
-    buffer.write(
-      _buildGeneratedSingleChildScrollViewTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedSingleChildScrollViewTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
-    buffer.write(
-      _buildGeneratedSingleChildScrollViewTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedSingleChildScrollViewTagWidget(config, children));
   }
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('single_child_scroll_view').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endsingle_child_scroll_view').trim() & tagEnd();
+    final endTag = tagStart() & string('endsingle_child_scroll_view').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'single_child_scroll_view',
         nonFilterContent,
@@ -15111,8 +14030,7 @@ class GeneratedSingleChildScrollViewTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'keyboardDismissBehavior':
-          config.keyboardDismissBehavior =
-              parseGeneratedScrollViewKeyboardDismissBehavior(value);
+          config.keyboardDismissBehavior = parseGeneratedScrollViewKeyboardDismissBehavior(value);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -15156,11 +14074,10 @@ class _GeneratedSingleChildScrollViewTagConfig {
   Axis? scrollDirection;
 }
 
-SingleChildScrollView _buildGeneratedSingleChildScrollViewTagWidget(
-  _GeneratedSingleChildScrollViewTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+SingleChildScrollView _buildGeneratedSingleChildScrollViewTagWidget(_GeneratedSingleChildScrollViewTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return SingleChildScrollView(
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     controller: config.controller,
@@ -15178,8 +14095,8 @@ SingleChildScrollView _buildGeneratedSingleChildScrollViewTagWidget(
   );
 }
 
-class GeneratedSizedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSizedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSizedBoxTag(super.content, super.filters);
 
   @override
@@ -15190,10 +14107,7 @@ class GeneratedSizedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedSizedBoxTagWidget(config, children));
@@ -15201,8 +14115,7 @@ class GeneratedSizedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sized_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -15211,9 +14124,8 @@ class GeneratedSizedBoxTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sized_box',
         nonFilterContent,
@@ -15253,11 +14165,10 @@ class _GeneratedSizedBoxTagConfig {
   double? width;
 }
 
-SizedBox _buildGeneratedSizedBoxTagWidget(
-  _GeneratedSizedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+SizedBox _buildGeneratedSizedBoxTagWidget(_GeneratedSizedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return SizedBox(
     height: config.height,
     key: config.key,
@@ -15266,8 +14177,8 @@ SizedBox _buildGeneratedSizedBoxTagWidget(
   );
 }
 
-class GeneratedSizedOverflowBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSizedOverflowBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSizedOverflowBoxTag(super.content, super.filters);
 
   @override
@@ -15278,10 +14189,7 @@ class GeneratedSizedOverflowBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedSizedOverflowBoxTagWidget(config, children));
@@ -15289,20 +14197,17 @@ class GeneratedSizedOverflowBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sized_overflow_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endsized_overflow_box').trim() & tagEnd();
+    final endTag = tagStart() & string('endsized_overflow_box').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sized_overflow_box',
         nonFilterContent,
@@ -15345,11 +14250,10 @@ class _GeneratedSizedOverflowBoxTagConfig {
   Size? size;
 }
 
-SizedOverflowBox _buildGeneratedSizedOverflowBoxTagWidget(
-  _GeneratedSizedOverflowBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+SizedOverflowBox _buildGeneratedSizedOverflowBoxTagWidget(_GeneratedSizedOverflowBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return SizedOverflowBox(
     alignment: config.alignment ?? Alignment.center,
     key: config.key,
@@ -15357,6 +14261,7 @@ SizedOverflowBox _buildGeneratedSizedOverflowBoxTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedSliderTag extends WidgetTagBase with AsyncTag {
   GeneratedSliderTag(super.content, super.filters);
@@ -15369,10 +14274,7 @@ class GeneratedSliderTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSliderTagWidget(config, children));
@@ -15418,24 +14320,16 @@ class GeneratedSliderTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onChangeEnd':
-          config.onChangeEnd =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<double>?);
+          config.onChangeEnd = (resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
           break;
         case 'onChangeStart':
-          config.onChangeStart =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<double>?);
+          config.onChangeStart = (resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<double>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<double>?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -15447,9 +14341,7 @@ class GeneratedSliderTag extends WidgetTagBase with AsyncTag {
           config.secondaryTrackValue = toDouble(value);
           break;
         case 'semanticFormatterCallback':
-          config.semanticFormatterCallback =
-              (resolveGenericCallback1(evaluator, value)
-                  as SemanticFormatterCallback?);
+          config.semanticFormatterCallback = (resolveGenericCallback1(evaluator, value) as SemanticFormatterCallback?);
           break;
         case 'thumbColor':
           config.thumbColor = parseGeneratedColor(value);
@@ -15500,10 +14392,7 @@ class _GeneratedSliderTagConfig {
   bool? year2023;
 }
 
-Slider _buildGeneratedSliderTagWidget(
-  _GeneratedSliderTagConfig config,
-  List<Widget> children,
-) {
+Slider _buildGeneratedSliderTagWidget(_GeneratedSliderTagConfig config, List<Widget> children) {
   return Slider(
     activeColor: config.activeColor,
     allowedInteraction: config.allowedInteraction,
@@ -15530,6 +14419,7 @@ Slider _buildGeneratedSliderTagWidget(
   );
 }
 
+
 class GeneratedSliverAppBarTag extends WidgetTagBase with AsyncTag {
   GeneratedSliverAppBarTag(super.content, super.filters);
 
@@ -15541,10 +14431,7 @@ class GeneratedSliverAppBarTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSliverAppBarTagWidget(config, children));
@@ -15575,8 +14462,7 @@ class GeneratedSliverAppBarTag extends WidgetTagBase with AsyncTag {
           config.backgroundColor = parseGeneratedColor(value);
           break;
         case 'bottom':
-          config.bottom =
-              (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
+          config.bottom = (parsePreferredSizeWidget(value) as PreferredSizeWidget?);
           break;
         case 'centerTitle':
           config.centerTitle = toBool(value);
@@ -15725,10 +14611,7 @@ class _GeneratedSliverAppBarTagConfig {
   bool? useDefaultSemanticsOrder;
 }
 
-SliverAppBar _buildGeneratedSliverAppBarTagWidget(
-  _GeneratedSliverAppBarTagConfig config,
-  List<Widget> children,
-) {
+SliverAppBar _buildGeneratedSliverAppBarTagWidget(_GeneratedSliverAppBarTagConfig config, List<Widget> children) {
   return SliverAppBar(
     actions: config.actions,
     actionsIconTheme: config.actionsIconTheme,
@@ -15772,8 +14655,8 @@ SliverAppBar _buildGeneratedSliverAppBarTagWidget(
   );
 }
 
-class GeneratedSliverFillRemainingTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSliverFillRemainingTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSliverFillRemainingTag(super.content, super.filters);
 
   @override
@@ -15784,10 +14667,7 @@ class GeneratedSliverFillRemainingTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedSliverFillRemainingTagWidget(config, children));
@@ -15795,20 +14675,17 @@ class GeneratedSliverFillRemainingTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_fill_remaining').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endsliver_fill_remaining').trim() & tagEnd();
+    final endTag = tagStart() & string('endsliver_fill_remaining').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_fill_remaining',
         nonFilterContent,
@@ -15848,11 +14725,10 @@ class _GeneratedSliverFillRemainingTagConfig {
   Key? key;
 }
 
-SliverFillRemaining _buildGeneratedSliverFillRemainingTagWidget(
-  _GeneratedSliverFillRemainingTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+SliverFillRemaining _buildGeneratedSliverFillRemainingTagWidget(_GeneratedSliverFillRemainingTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return SliverFillRemaining(
     fillOverscroll: config.fillOverscroll ?? false,
     hasScrollBody: config.hasScrollBody ?? true,
@@ -15860,6 +14736,7 @@ SliverFillRemaining _buildGeneratedSliverFillRemainingTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedSliverGridTag extends WidgetTagBase with AsyncTag {
   GeneratedSliverGridTag(super.content, super.filters);
@@ -15872,10 +14749,7 @@ class GeneratedSliverGridTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSliverGridTagWidget(config, children));
@@ -15917,16 +14791,14 @@ class _GeneratedSliverGridTagConfig {
   Key? key;
 }
 
-SliverGrid _buildGeneratedSliverGridTagWidget(
-  _GeneratedSliverGridTagConfig config,
-  List<Widget> children,
-) {
+SliverGrid _buildGeneratedSliverGridTagWidget(_GeneratedSliverGridTagConfig config, List<Widget> children) {
   return SliverGrid(
     delegate: config.delegate!,
     gridDelegate: config.gridDelegate!,
     key: config.key,
   );
 }
+
 
 class GeneratedSliverListTag extends WidgetTagBase with AsyncTag {
   GeneratedSliverListTag(super.content, super.filters);
@@ -15939,10 +14811,7 @@ class GeneratedSliverListTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSliverListTagWidget(config, children));
@@ -15977,12 +14846,13 @@ class _GeneratedSliverListTagConfig {
   Key? key;
 }
 
-SliverList _buildGeneratedSliverListTagWidget(
-  _GeneratedSliverListTagConfig config,
-  List<Widget> children,
-) {
-  return SliverList(delegate: config.delegate!, key: config.key);
+SliverList _buildGeneratedSliverListTagWidget(_GeneratedSliverListTagConfig config, List<Widget> children) {
+  return SliverList(
+    delegate: config.delegate!,
+    key: config.key,
+  );
 }
+
 
 class GeneratedSliverPaddingTag extends WidgetTagBase with AsyncTag {
   GeneratedSliverPaddingTag(super.content, super.filters);
@@ -15995,10 +14865,7 @@ class GeneratedSliverPaddingTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSliverPaddingTagWidget(config, children));
@@ -16037,16 +14904,14 @@ class _GeneratedSliverPaddingTagConfig {
   Widget? sliver;
 }
 
-SliverPadding _buildGeneratedSliverPaddingTagWidget(
-  _GeneratedSliverPaddingTagConfig config,
-  List<Widget> children,
-) {
+SliverPadding _buildGeneratedSliverPaddingTagWidget(_GeneratedSliverPaddingTagConfig config, List<Widget> children) {
   return SliverPadding(
     key: config.key,
     padding: config.padding!,
     sliver: config.sliver,
   );
 }
+
 
 class GeneratedSliverPersistentHeaderTag extends WidgetTagBase with AsyncTag {
   GeneratedSliverPersistentHeaderTag(super.content, super.filters);
@@ -16055,21 +14920,14 @@ class GeneratedSliverPersistentHeaderTag extends WidgetTagBase with AsyncTag {
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedSliverPersistentHeaderTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedSliverPersistentHeaderTagWidget(config, children));
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
-    buffer.write(
-      _buildGeneratedSliverPersistentHeaderTagWidget(config, children),
-    );
+    buffer.write(_buildGeneratedSliverPersistentHeaderTagWidget(config, children));
   }
 
   _GeneratedSliverPersistentHeaderTagConfig _parseConfig(Evaluator evaluator) {
@@ -16109,10 +14967,7 @@ class _GeneratedSliverPersistentHeaderTagConfig {
   bool? pinned;
 }
 
-SliverPersistentHeader _buildGeneratedSliverPersistentHeaderTagWidget(
-  _GeneratedSliverPersistentHeaderTagConfig config,
-  List<Widget> children,
-) {
+SliverPersistentHeader _buildGeneratedSliverPersistentHeaderTagWidget(_GeneratedSliverPersistentHeaderTagConfig config, List<Widget> children) {
   return SliverPersistentHeader(
     delegate: config.delegate!,
     floating: config.floating ?? false,
@@ -16121,8 +14976,8 @@ SliverPersistentHeader _buildGeneratedSliverPersistentHeaderTagWidget(
   );
 }
 
-class GeneratedSliverToBoxAdapterTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedSliverToBoxAdapterTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedSliverToBoxAdapterTag(super.content, super.filters);
 
   @override
@@ -16133,10 +14988,7 @@ class GeneratedSliverToBoxAdapterTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedSliverToBoxAdapterTagWidget(config, children));
@@ -16144,20 +14996,17 @@ class GeneratedSliverToBoxAdapterTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('sliver_to_box_adapter').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endsliver_to_box_adapter').trim() & tagEnd();
+    final endTag = tagStart() & string('endsliver_to_box_adapter').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'sliver_to_box_adapter',
         nonFilterContent,
@@ -16189,13 +15038,16 @@ class _GeneratedSliverToBoxAdapterTagConfig {
   Key? key;
 }
 
-SliverToBoxAdapter _buildGeneratedSliverToBoxAdapterTagWidget(
-  _GeneratedSliverToBoxAdapterTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
-  return SliverToBoxAdapter(key: config.key, child: child);
+SliverToBoxAdapter _buildGeneratedSliverToBoxAdapterTagWidget(_GeneratedSliverToBoxAdapterTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
+  return SliverToBoxAdapter(
+    key: config.key,
+    child: child,
+  );
 }
+
 
 class GeneratedSnackBarTag extends WidgetTagBase with AsyncTag {
   GeneratedSnackBarTag(super.content, super.filters);
@@ -16208,10 +15060,7 @@ class GeneratedSnackBarTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSnackBarTagWidget(config, children));
@@ -16318,10 +15167,7 @@ class _GeneratedSnackBarTagConfig {
   double? width;
 }
 
-SnackBar _buildGeneratedSnackBarTagWidget(
-  _GeneratedSnackBarTagConfig config,
-  List<Widget> children,
-) {
+SnackBar _buildGeneratedSnackBarTagWidget(_GeneratedSnackBarTagConfig config, List<Widget> children) {
   return SnackBar(
     action: config.action,
     actionOverflowThreshold: config.actionOverflowThreshold,
@@ -16346,6 +15192,7 @@ SnackBar _buildGeneratedSnackBarTagWidget(
   );
 }
 
+
 class GeneratedSnackBarActionTag extends WidgetTagBase with AsyncTag {
   GeneratedSnackBarActionTag(super.content, super.filters);
 
@@ -16357,10 +15204,7 @@ class GeneratedSnackBarActionTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSnackBarActionTagWidget(config, children));
@@ -16418,10 +15262,7 @@ class _GeneratedSnackBarActionTagConfig {
   Color? textColor;
 }
 
-SnackBarAction _buildGeneratedSnackBarActionTagWidget(
-  _GeneratedSnackBarActionTagConfig config,
-  List<Widget> children,
-) {
+SnackBarAction _buildGeneratedSnackBarActionTagWidget(_GeneratedSnackBarActionTagConfig config, List<Widget> children) {
   return SnackBarAction(
     backgroundColor: config.backgroundColor,
     disabledBackgroundColor: config.disabledBackgroundColor,
@@ -16432,6 +15273,7 @@ SnackBarAction _buildGeneratedSnackBarActionTagWidget(
     textColor: config.textColor,
   );
 }
+
 
 class GeneratedSpacerTag extends WidgetTagBase with AsyncTag {
   GeneratedSpacerTag(super.content, super.filters);
@@ -16444,10 +15286,7 @@ class GeneratedSpacerTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSpacerTagWidget(config, children));
@@ -16479,12 +15318,13 @@ class _GeneratedSpacerTagConfig {
   Key? key;
 }
 
-Spacer _buildGeneratedSpacerTagWidget(
-  _GeneratedSpacerTagConfig config,
-  List<Widget> children,
-) {
-  return Spacer(flex: config.flex ?? 1, key: config.key);
+Spacer _buildGeneratedSpacerTagWidget(_GeneratedSpacerTagConfig config, List<Widget> children) {
+  return Spacer(
+    flex: config.flex ?? 1,
+    key: config.key,
+  );
 }
+
 
 class GeneratedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedStackTag(super.content, super.filters);
@@ -16497,10 +15337,7 @@ class GeneratedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedStackTagWidget(config, children));
@@ -16508,8 +15345,7 @@ class GeneratedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('stack').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -16518,9 +15354,8 @@ class GeneratedStackTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'stack',
         nonFilterContent,
@@ -16568,10 +15403,7 @@ class _GeneratedStackTagConfig {
   TextDirection? textDirection;
 }
 
-Stack _buildGeneratedStackTagWidget(
-  _GeneratedStackTagConfig config,
-  List<Widget> children,
-) {
+Stack _buildGeneratedStackTagWidget(_GeneratedStackTagConfig config, List<Widget> children) {
   return Stack(
     alignment: config.alignment ?? AlignmentDirectional.topStart,
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
@@ -16581,6 +15413,7 @@ Stack _buildGeneratedStackTagWidget(
     children: children,
   );
 }
+
 
 class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
   GeneratedStepperTag(super.content, super.filters);
@@ -16593,10 +15426,7 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedStepperTagWidget(config, children));
@@ -16612,9 +15442,7 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'connectorColor':
-          config.connectorColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color>?);
+          config.connectorColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color>?);
           break;
         case 'connectorThickness':
           config.connectorThickness = toDouble(value);
@@ -16623,9 +15451,7 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
           config.controller = parseGeneratedScrollController(evaluator, value);
           break;
         case 'controlsBuilder':
-          config.controlsBuilder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as ControlsWidgetBuilder?);
+          config.controlsBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as ControlsWidgetBuilder?);
           break;
         case 'currentStep':
           config.currentStep = toInt(value);
@@ -16646,16 +15472,13 @@ class GeneratedStepperTag extends WidgetTagBase with AsyncTag {
           config.onStepContinue = resolveActionCallback(evaluator, value);
           break;
         case 'onStepTapped':
-          config.onStepTapped =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onStepTapped = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'physics':
           config.physics = parseGeneratedScrollPhysics(value);
           break;
         case 'stepIconBuilder':
-          config.stepIconBuilder =
-              (resolveGenericCallback2(evaluator, value) as StepIconBuilder?);
+          config.stepIconBuilder = (resolveGenericCallback2(evaluator, value) as StepIconBuilder?);
           break;
         case 'stepIconHeight':
           config.stepIconHeight = toDouble(value);
@@ -16706,10 +15529,7 @@ class _GeneratedStepperTagConfig {
   StepperType? type;
 }
 
-Stepper _buildGeneratedStepperTagWidget(
-  _GeneratedStepperTagConfig config,
-  List<Widget> children,
-) {
+Stepper _buildGeneratedStepperTagWidget(_GeneratedStepperTagConfig config, List<Widget> children) {
   return Stepper(
     clipBehavior: config.clipBehavior ?? Clip.none,
     connectorColor: config.connectorColor,
@@ -16733,6 +15553,7 @@ Stepper _buildGeneratedStepperTagWidget(
   );
 }
 
+
 class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
   GeneratedSwitchTag(super.content, super.filters);
 
@@ -16744,10 +15565,7 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSwitchTagWidget(config, children));
@@ -16766,8 +15584,7 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.activeThumbColor = parseGeneratedColor(value);
           break;
         case 'activeThumbImage':
-          config.activeThumbImage =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.activeThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'activeTrackColor':
           config.activeTrackColor = parseGeneratedColor(value);
@@ -16791,8 +15608,7 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.inactiveThumbColor = parseGeneratedColor(value);
           break;
         case 'inactiveThumbImage':
-          config.inactiveThumbImage =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.inactiveThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'inactiveTrackColor':
           config.inactiveTrackColor = parseGeneratedColor(value);
@@ -16801,37 +15617,25 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onActiveThumbImageError':
-          config.onActiveThumbImageError =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as ImageErrorListener?);
+          config.onActiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onInactiveThumbImageError':
-          config.onInactiveThumbImageError =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as ImageErrorListener?);
+          config.onInactiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -16840,29 +15644,19 @@ class GeneratedSwitchTag extends WidgetTagBase with AsyncTag {
           config.splashRadius = toDouble(value);
           break;
         case 'thumbColor':
-          config.thumbColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.thumbColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'thumbIcon':
-          config.thumbIcon =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Icon?>?);
+          config.thumbIcon = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Icon?>?);
           break;
         case 'trackColor':
-          config.trackColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.trackColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'trackOutlineColor':
-          config.trackOutlineColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.trackOutlineColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'trackOutlineWidth':
-          config.trackOutlineWidth =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<double?>?);
+          config.trackOutlineWidth = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<double?>?);
           break;
         case 'value':
           config.value = toBool(value);
@@ -16913,10 +15707,7 @@ class _GeneratedSwitchTagConfig {
   bool? value;
 }
 
-Switch _buildGeneratedSwitchTagWidget(
-  _GeneratedSwitchTagConfig config,
-  List<Widget> children,
-) {
+Switch _buildGeneratedSwitchTagWidget(_GeneratedSwitchTagConfig config, List<Widget> children) {
   return Switch(
     activeColor: config.activeColor,
     activeThumbColor: config.activeThumbColor,
@@ -16949,6 +15740,7 @@ Switch _buildGeneratedSwitchTagWidget(
   );
 }
 
+
 class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
   GeneratedSwitchListTileTag(super.content, super.filters);
 
@@ -16960,10 +15752,7 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedSwitchListTileTagWidget(config, children));
@@ -16982,8 +15771,7 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.activeThumbColor = parseGeneratedColor(value);
           break;
         case 'activeThumbImage':
-          config.activeThumbImage =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.activeThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'activeTrackColor':
           config.activeTrackColor = parseGeneratedColor(value);
@@ -17016,8 +15804,7 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.inactiveThumbColor = parseGeneratedColor(value);
           break;
         case 'inactiveThumbImage':
-          config.inactiveThumbImage =
-              (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
+          config.inactiveThumbImage = (parseGeneratedImageProvider(value) as ImageProvider<Object>?);
           break;
         case 'inactiveTrackColor':
           config.inactiveTrackColor = parseGeneratedColor(value);
@@ -17032,37 +15819,25 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'materialTapTargetSize':
-          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(
-            value,
-          );
+          config.materialTapTargetSize = parseGeneratedMaterialTapTargetSize(value);
           break;
         case 'mouseCursor':
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onActiveThumbImageError':
-          config.onActiveThumbImageError =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as ImageErrorListener?);
+          config.onActiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onInactiveThumbImageError':
-          config.onInactiveThumbImageError =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as ImageErrorListener?);
+          config.onInactiveThumbImageError = (resolveGenericActionCallback2(evaluator, value) as ImageErrorListener?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'secondary':
           config.secondary = resolveWidget(value);
@@ -17083,14 +15858,10 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.subtitle = resolveWidget(value);
           break;
         case 'thumbColor':
-          config.thumbColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.thumbColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'thumbIcon':
-          config.thumbIcon =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Icon?>?);
+          config.thumbIcon = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Icon?>?);
           break;
         case 'tileColor':
           config.tileColor = parseGeneratedColor(value);
@@ -17099,14 +15870,10 @@ class GeneratedSwitchListTileTag extends WidgetTagBase with AsyncTag {
           config.title = resolveWidget(value);
           break;
         case 'trackColor':
-          config.trackColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.trackColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'trackOutlineColor':
-          config.trackOutlineColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.trackOutlineColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'value':
           config.value = toBool(value);
@@ -17171,10 +15938,7 @@ class _GeneratedSwitchListTileTagConfig {
   VisualDensity? visualDensity;
 }
 
-SwitchListTile _buildGeneratedSwitchListTileTagWidget(
-  _GeneratedSwitchListTileTagConfig config,
-  List<Widget> children,
-) {
+SwitchListTile _buildGeneratedSwitchListTileTagWidget(_GeneratedSwitchListTileTagConfig config, List<Widget> children) {
   return SwitchListTile(
     activeColor: config.activeColor,
     activeThumbColor: config.activeThumbColor,
@@ -17218,6 +15982,7 @@ SwitchListTile _buildGeneratedSwitchListTileTagWidget(
   );
 }
 
+
 class GeneratedTabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedTabTag(super.content, super.filters);
 
@@ -17229,10 +15994,7 @@ class GeneratedTabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedTabTagWidget(config, children));
@@ -17240,8 +16002,7 @@ class GeneratedTabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tab').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -17250,9 +16011,8 @@ class GeneratedTabTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tab',
         nonFilterContent,
@@ -17300,11 +16060,10 @@ class _GeneratedTabTagConfig {
   String? text;
 }
 
-Tab _buildGeneratedTabTagWidget(
-  _GeneratedTabTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Tab _buildGeneratedTabTagWidget(_GeneratedTabTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Tab(
     height: config.height,
     icon: config.icon,
@@ -17314,6 +16073,7 @@ Tab _buildGeneratedTabTagWidget(
     child: child,
   );
 }
+
 
 class GeneratedTabBarTag extends WidgetTagBase with AsyncTag {
   GeneratedTabBarTag(super.content, super.filters);
@@ -17326,10 +16086,7 @@ class GeneratedTabBarTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedTabBarTagWidget(config, children));
@@ -17363,9 +16120,7 @@ class GeneratedTabBarTag extends WidgetTagBase with AsyncTag {
           config.indicator = parseGeneratedDecoration(evaluator, value);
           break;
         case 'indicatorAnimation':
-          config.indicatorAnimation = parseGeneratedTabIndicatorAnimation(
-            value,
-          );
+          config.indicatorAnimation = parseGeneratedTabIndicatorAnimation(value);
           break;
         case 'indicatorColor':
           config.indicatorColor = parseGeneratedColor(value);
@@ -17398,24 +16153,16 @@ class GeneratedTabBarTag extends WidgetTagBase with AsyncTag {
           config.mouseCursor = parseGeneratedMouseCursor(value);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as TabValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericActionCallback2(evaluator, value) as TabValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as TabValueChanged<bool>?);
+          config.onHover = (resolveGenericActionCallback2(evaluator, value) as TabValueChanged<bool>?);
           break;
         case 'onTap':
-          config.onTap =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<int>?);
+          config.onTap = (resolveGenericValueChanged(evaluator, value) as ValueChanged<int>?);
           break;
         case 'overlayColor':
-          config.overlayColor =
-              (parseGeneratedWidgetStateProperty(value)
-                  as WidgetStateProperty<Color?>?);
+          config.overlayColor = (parseGeneratedWidgetStateProperty(value) as WidgetStateProperty<Color?>?);
           break;
         case 'padding':
           config.padding = parseGeneratedEdgeInsetsGeometry(value);
@@ -17427,9 +16174,7 @@ class GeneratedTabBarTag extends WidgetTagBase with AsyncTag {
           config.splashBorderRadius = parseGeneratedBorderRadius(value);
           break;
         case 'splashFactory':
-          config.splashFactory = parseGeneratedInteractiveInkFeatureFactory(
-            value,
-          );
+          config.splashFactory = parseGeneratedInteractiveInkFeatureFactory(value);
           break;
         case 'tabAlignment':
           config.tabAlignment = parseGeneratedTabAlignment(value);
@@ -17492,13 +16237,9 @@ class _GeneratedTabBarTagConfig {
   TextStyle? unselectedLabelStyle;
 }
 
-TabBar _buildGeneratedTabBarTagWidget(
-  _GeneratedTabBarTagConfig config,
-  List<Widget> children,
-) {
+TabBar _buildGeneratedTabBarTagWidget(_GeneratedTabBarTagConfig config, List<Widget> children) {
   return TabBar(
-    automaticIndicatorColorAdjustment:
-        config.automaticIndicatorColorAdjustment ?? true,
+    automaticIndicatorColorAdjustment: config.automaticIndicatorColorAdjustment ?? true,
     controller: config.controller,
     dividerColor: config.dividerColor,
     dividerHeight: config.dividerHeight,
@@ -17532,8 +16273,8 @@ TabBar _buildGeneratedTabBarTagWidget(
   );
 }
 
-class GeneratedTabBarViewTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedTabBarViewTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedTabBarViewTag(super.content, super.filters);
 
   @override
@@ -17544,10 +16285,7 @@ class GeneratedTabBarViewTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedTabBarViewTagWidget(config, children));
@@ -17555,8 +16293,7 @@ class GeneratedTabBarViewTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tab_bar_view').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -17565,9 +16302,8 @@ class GeneratedTabBarViewTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tab_bar_view',
         nonFilterContent,
@@ -17619,10 +16355,7 @@ class _GeneratedTabBarViewTagConfig {
   double? viewportFraction;
 }
 
-TabBarView _buildGeneratedTabBarViewTagWidget(
-  _GeneratedTabBarViewTagConfig config,
-  List<Widget> children,
-) {
+TabBarView _buildGeneratedTabBarViewTagWidget(_GeneratedTabBarViewTagConfig config, List<Widget> children) {
   return TabBarView(
     clipBehavior: config.clipBehavior ?? Clip.hardEdge,
     controller: config.controller,
@@ -17633,6 +16366,7 @@ TabBarView _buildGeneratedTabBarViewTagWidget(
     children: children,
   );
 }
+
 
 class GeneratedTableTag extends WidgetTagBase with AsyncTag {
   GeneratedTableTag(super.content, super.filters);
@@ -17645,10 +16379,7 @@ class GeneratedTableTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedTableTagWidget(config, children));
@@ -17673,8 +16404,7 @@ class GeneratedTableTag extends WidgetTagBase with AsyncTag {
           config.defaultColumnWidth = parseGeneratedTableColumnWidth(value);
           break;
         case 'defaultVerticalAlignment':
-          config.defaultVerticalAlignment =
-              parseGeneratedTableCellVerticalAlignment(value);
+          config.defaultVerticalAlignment = parseGeneratedTableCellVerticalAlignment(value);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -17705,22 +16435,19 @@ class _GeneratedTableTagConfig {
   TextDirection? textDirection;
 }
 
-Table _buildGeneratedTableTagWidget(
-  _GeneratedTableTagConfig config,
-  List<Widget> children,
-) {
+Table _buildGeneratedTableTagWidget(_GeneratedTableTagConfig config, List<Widget> children) {
   return Table(
     border: config.border,
     children: config.children ?? const <TableRow>[],
     columnWidths: config.columnWidths,
     defaultColumnWidth: config.defaultColumnWidth ?? const FlexColumnWidth(),
-    defaultVerticalAlignment:
-        config.defaultVerticalAlignment ?? TableCellVerticalAlignment.top,
+    defaultVerticalAlignment: config.defaultVerticalAlignment ?? TableCellVerticalAlignment.top,
     key: config.key,
     textBaseline: config.textBaseline,
     textDirection: config.textDirection,
   );
 }
+
 
 class GeneratedTextTag extends WidgetTagBase with AsyncTag {
   GeneratedTextTag(super.content, super.filters);
@@ -17733,10 +16460,7 @@ class GeneratedTextTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedTextTagWidget(config, children));
@@ -17831,10 +16555,7 @@ class _GeneratedTextTagConfig {
   TextWidthBasis? textWidthBasis;
 }
 
-Text _buildGeneratedTextTagWidget(
-  _GeneratedTextTagConfig config,
-  List<Widget> children,
-) {
+Text _buildGeneratedTextTagWidget(_GeneratedTextTagConfig config, List<Widget> children) {
   return Text(
     config.data!,
     key: config.key,
@@ -17856,8 +16577,8 @@ Text _buildGeneratedTextTagWidget(
   );
 }
 
-class GeneratedTextButtonTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedTextButtonTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedTextButtonTag(super.content, super.filters);
 
   @override
@@ -17868,10 +16589,7 @@ class GeneratedTextButtonTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedTextButtonTagWidget(config, children));
@@ -17879,8 +16597,7 @@ class GeneratedTextButtonTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('text_button').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -17889,9 +16606,8 @@ class GeneratedTextButtonTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'text_button',
         nonFilterContent,
@@ -17923,14 +16639,10 @@ class GeneratedTextButtonTag extends WidgetTagBase
           config.key = parseGeneratedKey(evaluator, value);
           break;
         case 'onFocusChange':
-          config.onFocusChange =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onFocusChange = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onHover':
-          config.onHover =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<bool>?);
+          config.onHover = (resolveGenericValueChanged(evaluator, value) as ValueChanged<bool>?);
           break;
         case 'onLongPress':
           config.onLongPress = resolveActionCallback(evaluator, value);
@@ -17970,10 +16682,7 @@ class _GeneratedTextButtonTagConfig {
   ButtonStyle? style;
 }
 
-TextButton _buildGeneratedTextButtonTagWidget(
-  _GeneratedTextButtonTagConfig config,
-  List<Widget> children,
-) {
+TextButton _buildGeneratedTextButtonTagWidget(_GeneratedTextButtonTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -17993,6 +16702,7 @@ TextButton _buildGeneratedTextButtonTagWidget(
   );
 }
 
+
 class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
   GeneratedTextFieldTag(super.content, super.filters);
 
@@ -18004,10 +16714,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedTextFieldTagWidget(config, children));
@@ -18029,9 +16736,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.autofocus = toBool(value);
           break;
         case 'buildCounter':
-          config.buildCounter =
-              (resolveCallbackValue(evaluator, value)
-                  as InputCounterWidgetBuilder?);
+          config.buildCounter = (resolveCallbackValue(evaluator, value) as InputCounterWidgetBuilder?);
           break;
         case 'canRequestFocus':
           config.canRequestFocus = toBool(value);
@@ -18040,13 +16745,10 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'contentInsertionConfiguration':
-          config.contentInsertionConfiguration =
-              parseGeneratedContentInsertionConfiguration(evaluator, value);
+          config.contentInsertionConfiguration = parseGeneratedContentInsertionConfiguration(evaluator, value);
           break;
         case 'contextMenuBuilder':
-          config.contextMenuBuilder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as EditableTextContextMenuBuilder?);
+          config.contextMenuBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
           break;
         case 'controller':
           config.controller = parseGeneratedTextEditingController(value);
@@ -18103,10 +16805,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.ignorePointers = toBool(value);
           break;
         case 'inputFormatters':
-          config.inputFormatters = parseGeneratedListOfTextInputFormatter(
-            evaluator,
-            value,
-          );
+          config.inputFormatters = parseGeneratedListOfTextInputFormatter(evaluator, value);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -18118,16 +16817,13 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.keyboardType = parseGeneratedTextInputType(value);
           break;
         case 'magnifierConfiguration':
-          config.magnifierConfiguration =
-              parseGeneratedTextMagnifierConfiguration(evaluator, value);
+          config.magnifierConfiguration = parseGeneratedTextMagnifierConfiguration(evaluator, value);
           break;
         case 'maxLength':
           config.maxLength = toInt(value);
           break;
         case 'maxLengthEnforcement':
-          config.maxLengthEnforcement = parseGeneratedMaxLengthEnforcement(
-            value,
-          );
+          config.maxLengthEnforcement = parseGeneratedMaxLengthEnforcement(value);
           break;
         case 'maxLines':
           config.maxLines = toInt(value);
@@ -18145,22 +16841,16 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.obscuringCharacter = toStringValue(value);
           break;
         case 'onAppPrivateCommand':
-          config.onAppPrivateCommand =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as AppPrivateCommandCallback?);
+          config.onAppPrivateCommand = (resolveGenericActionCallback2(evaluator, value) as AppPrivateCommandCallback?);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<String>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onEditingComplete':
           config.onEditingComplete = resolveActionCallback(evaluator, value);
           break;
         case 'onSubmitted':
-          config.onSubmitted =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<String>?);
+          config.onSubmitted = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -18184,10 +16874,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.scribbleEnabled = toBool(value);
           break;
         case 'scrollController':
-          config.scrollController = parseGeneratedScrollController(
-            evaluator,
-            value,
-          );
+          config.scrollController = parseGeneratedScrollController(evaluator, value);
           break;
         case 'scrollPadding':
           config.scrollPadding = parseGeneratedEdgeInsets(value);
@@ -18217,8 +16904,7 @@ class GeneratedTextFieldTag extends WidgetTagBase with AsyncTag {
           config.smartQuotesType = parseGeneratedSmartQuotesType(value);
           break;
         case 'spellCheckConfiguration':
-          config.spellCheckConfiguration =
-              parseGeneratedSpellCheckConfiguration(evaluator, value);
+          config.spellCheckConfiguration = parseGeneratedSpellCheckConfiguration(evaluator, value);
           break;
         case 'statesController':
           config.statesController = parseMaterialStatesController(value);
@@ -18336,10 +17022,7 @@ class _GeneratedTextFieldTagConfig {
   UndoHistoryController? undoController;
 }
 
-TextField _buildGeneratedTextFieldTagWidget(
-  _GeneratedTextFieldTagConfig config,
-  List<Widget> children,
-) {
+TextField _buildGeneratedTextFieldTagWidget(_GeneratedTextFieldTagConfig config, List<Widget> children) {
   return TextField(
     autocorrect: config.autocorrect,
     autofillHints: config.autofillHints ?? const <String>[],
@@ -18404,9 +17087,7 @@ TextField _buildGeneratedTextFieldTagWidget(
     statesController: config.statesController,
     strutStyle: config.strutStyle,
     style: config.style,
-    stylusHandwritingEnabled:
-        config.stylusHandwritingEnabled ??
-        EditableText.defaultStylusHandwritingEnabled,
+    stylusHandwritingEnabled: config.stylusHandwritingEnabled ?? EditableText.defaultStylusHandwritingEnabled,
     textAlign: config.textAlign ?? TextAlign.start,
     textAlignVertical: config.textAlignVertical,
     textCapitalization: config.textCapitalization ?? TextCapitalization.none,
@@ -18416,6 +17097,7 @@ TextField _buildGeneratedTextFieldTagWidget(
     undoController: config.undoController,
   );
 }
+
 
 class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
   GeneratedTextFormFieldTag(super.content, super.filters);
@@ -18428,10 +17110,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedTextFormFieldTagWidget(config, children));
@@ -18456,9 +17135,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.autovalidateMode = parseGeneratedAutovalidateMode(value);
           break;
         case 'buildCounter':
-          config.buildCounter =
-              (resolveCallbackValue(evaluator, value)
-                  as InputCounterWidgetBuilder?);
+          config.buildCounter = (resolveCallbackValue(evaluator, value) as InputCounterWidgetBuilder?);
           break;
         case 'canRequestFocus':
           config.canRequestFocus = toBool(value);
@@ -18467,13 +17144,10 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.clipBehavior = parseGeneratedClip(value);
           break;
         case 'contentInsertionConfiguration':
-          config.contentInsertionConfiguration =
-              parseGeneratedContentInsertionConfiguration(evaluator, value);
+          config.contentInsertionConfiguration = parseGeneratedContentInsertionConfiguration(evaluator, value);
           break;
         case 'contextMenuBuilder':
-          config.contextMenuBuilder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as EditableTextContextMenuBuilder?);
+          config.contextMenuBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as EditableTextContextMenuBuilder?);
           break;
         case 'controller':
           config.controller = parseGeneratedTextEditingController(value);
@@ -18515,9 +17189,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.enabled = toBool(value);
           break;
         case 'errorBuilder':
-          config.errorBuilder =
-              (resolveWidgetBuilder2Callback(evaluator, value)
-                  as FormFieldErrorBuilder?);
+          config.errorBuilder = (resolveWidgetBuilder2Callback(evaluator, value) as FormFieldErrorBuilder?);
           break;
         case 'expands':
           config.expands = toBool(value);
@@ -18541,10 +17213,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.initialValue = toStringValue(value);
           break;
         case 'inputFormatters':
-          config.inputFormatters = parseGeneratedListOfTextInputFormatter(
-            evaluator,
-            value,
-          );
+          config.inputFormatters = parseGeneratedListOfTextInputFormatter(evaluator, value);
           break;
         case 'key':
           config.key = parseGeneratedKey(evaluator, value);
@@ -18556,16 +17225,13 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.keyboardType = parseGeneratedTextInputType(value);
           break;
         case 'magnifierConfiguration':
-          config.magnifierConfiguration =
-              parseGeneratedTextMagnifierConfiguration(evaluator, value);
+          config.magnifierConfiguration = parseGeneratedTextMagnifierConfiguration(evaluator, value);
           break;
         case 'maxLength':
           config.maxLength = toInt(value);
           break;
         case 'maxLengthEnforcement':
-          config.maxLengthEnforcement = parseGeneratedMaxLengthEnforcement(
-            value,
-          );
+          config.maxLengthEnforcement = parseGeneratedMaxLengthEnforcement(value);
           break;
         case 'maxLines':
           config.maxLines = toInt(value);
@@ -18583,27 +17249,19 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.obscuringCharacter = toStringValue(value);
           break;
         case 'onAppPrivateCommand':
-          config.onAppPrivateCommand =
-              (resolveGenericActionCallback2(evaluator, value)
-                  as AppPrivateCommandCallback?);
+          config.onAppPrivateCommand = (resolveGenericActionCallback2(evaluator, value) as AppPrivateCommandCallback?);
           break;
         case 'onChanged':
-          config.onChanged =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<String>?);
+          config.onChanged = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onEditingComplete':
           config.onEditingComplete = resolveActionCallback(evaluator, value);
           break;
         case 'onFieldSubmitted':
-          config.onFieldSubmitted =
-              (resolveGenericValueChanged(evaluator, value)
-                  as ValueChanged<String>?);
+          config.onFieldSubmitted = (resolveGenericValueChanged(evaluator, value) as ValueChanged<String>?);
           break;
         case 'onSaved':
-          config.onSaved =
-              (resolveGenericValueChanged(evaluator, value)
-                  as FormFieldSetter<String>?);
+          config.onSaved = (resolveGenericValueChanged(evaluator, value) as FormFieldSetter<String>?);
           break;
         case 'onTap':
           config.onTap = resolveActionCallback(evaluator, value);
@@ -18627,10 +17285,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.scribbleEnabled = toBool(value);
           break;
         case 'scrollController':
-          config.scrollController = parseGeneratedScrollController(
-            evaluator,
-            value,
-          );
+          config.scrollController = parseGeneratedScrollController(evaluator, value);
           break;
         case 'scrollPadding':
           config.scrollPadding = parseGeneratedEdgeInsets(value);
@@ -18660,8 +17315,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.smartQuotesType = parseGeneratedSmartQuotesType(value);
           break;
         case 'spellCheckConfiguration':
-          config.spellCheckConfiguration =
-              parseGeneratedSpellCheckConfiguration(evaluator, value);
+          config.spellCheckConfiguration = parseGeneratedSpellCheckConfiguration(evaluator, value);
           break;
         case 'statesController':
           config.statesController = parseMaterialStatesController(value);
@@ -18697,9 +17351,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.undoController = parseGeneratedUndoHistoryController(value);
           break;
         case 'validator':
-          config.validator =
-              (resolveGenericCallback1(evaluator, value)
-                  as FormFieldValidator<String>?);
+          config.validator = (resolveGenericCallback1(evaluator, value) as FormFieldValidator<String>?);
           break;
         default:
           handleUnknownArg('text_form_field', name);
@@ -18790,10 +17442,7 @@ class _GeneratedTextFormFieldTagConfig {
   FormFieldValidator<String>? validator;
 }
 
-TextFormField _buildGeneratedTextFormFieldTagWidget(
-  _GeneratedTextFormFieldTagConfig config,
-  List<Widget> children,
-) {
+TextFormField _buildGeneratedTextFormFieldTagWidget(_GeneratedTextFormFieldTagConfig config, List<Widget> children) {
   return TextFormField(
     autocorrect: config.autocorrect ?? true,
     autofillHints: config.autofillHints,
@@ -18863,9 +17512,7 @@ TextFormField _buildGeneratedTextFormFieldTagWidget(
     statesController: config.statesController,
     strutStyle: config.strutStyle,
     style: config.style,
-    stylusHandwritingEnabled:
-        config.stylusHandwritingEnabled ??
-        EditableText.defaultStylusHandwritingEnabled,
+    stylusHandwritingEnabled: config.stylusHandwritingEnabled ?? EditableText.defaultStylusHandwritingEnabled,
     textAlign: config.textAlign ?? TextAlign.start,
     textAlignVertical: config.textAlignVertical,
     textCapitalization: config.textCapitalization ?? TextCapitalization.none,
@@ -18876,6 +17523,7 @@ TextFormField _buildGeneratedTextFormFieldTagWidget(
     validator: config.validator,
   );
 }
+
 
 class GeneratedTimePickerDialogTag extends WidgetTagBase with AsyncTag {
   GeneratedTimePickerDialogTag(super.content, super.filters);
@@ -18888,10 +17536,7 @@ class GeneratedTimePickerDialogTag extends WidgetTagBase with AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     const children = <Widget>[];
     buffer.write(_buildGeneratedTimePickerDialogTagWidget(config, children));
@@ -18934,10 +17579,7 @@ class GeneratedTimePickerDialogTag extends WidgetTagBase with AsyncTag {
           config.minuteLabelText = toStringValue(value);
           break;
         case 'onEntryModeChanged':
-          config.onEntryModeChanged = resolveGenericValueChanged(
-            evaluator,
-            value,
-          );
+          config.onEntryModeChanged = resolveGenericValueChanged(evaluator, value);
           break;
         case 'orientation':
           config.orientation = parseGeneratedOrientation(value);
@@ -18946,16 +17588,10 @@ class GeneratedTimePickerDialogTag extends WidgetTagBase with AsyncTag {
           config.restorationId = toStringValue(value);
           break;
         case 'switchToInputEntryModeIcon':
-          config.switchToInputEntryModeIcon = parseGeneratedIcon(
-            evaluator,
-            value,
-          );
+          config.switchToInputEntryModeIcon = parseGeneratedIcon(evaluator, value);
           break;
         case 'switchToTimerEntryModeIcon':
-          config.switchToTimerEntryModeIcon = parseGeneratedIcon(
-            evaluator,
-            value,
-          );
+          config.switchToTimerEntryModeIcon = parseGeneratedIcon(evaluator, value);
           break;
         default:
           handleUnknownArg('time_picker_dialog', name);
@@ -18987,10 +17623,7 @@ class _GeneratedTimePickerDialogTagConfig {
   Icon? switchToTimerEntryModeIcon;
 }
 
-TimePickerDialog _buildGeneratedTimePickerDialogTagWidget(
-  _GeneratedTimePickerDialogTagConfig config,
-  List<Widget> children,
-) {
+TimePickerDialog _buildGeneratedTimePickerDialogTagWidget(_GeneratedTimePickerDialogTagConfig config, List<Widget> children) {
   return TimePickerDialog(
     cancelText: config.cancelText,
     confirmText: config.confirmText,
@@ -19010,8 +17643,8 @@ TimePickerDialog _buildGeneratedTimePickerDialogTagWidget(
   );
 }
 
-class GeneratedToggleButtonsTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedToggleButtonsTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedToggleButtonsTag(super.content, super.filters);
 
   @override
@@ -19022,10 +17655,7 @@ class GeneratedToggleButtonsTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedToggleButtonsTagWidget(config, children));
@@ -19033,8 +17663,7 @@ class GeneratedToggleButtonsTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('toggle_buttons').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -19043,9 +17672,8 @@ class GeneratedToggleButtonsTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'toggle_buttons',
         nonFilterContent,
@@ -19172,10 +17800,7 @@ class _GeneratedToggleButtonsTagConfig {
   VerticalDirection? verticalDirection;
 }
 
-ToggleButtons _buildGeneratedToggleButtonsTagWidget(
-  _GeneratedToggleButtonsTagConfig config,
-  List<Widget> children,
-) {
+ToggleButtons _buildGeneratedToggleButtonsTagWidget(_GeneratedToggleButtonsTagConfig config, List<Widget> children) {
   return ToggleButtons(
     borderColor: config.borderColor,
     borderRadius: config.borderRadius,
@@ -19205,6 +17830,7 @@ ToggleButtons _buildGeneratedToggleButtonsTagWidget(
   );
 }
 
+
 class GeneratedTooltipTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedTooltipTag(super.content, super.filters);
 
@@ -19216,10 +17842,7 @@ class GeneratedTooltipTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedTooltipTagWidget(config, children));
@@ -19227,8 +17850,7 @@ class GeneratedTooltipTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('tooltip').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -19237,9 +17859,8 @@ class GeneratedTooltipTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'tooltip',
         nonFilterContent,
@@ -19355,11 +17976,10 @@ class _GeneratedTooltipTagConfig {
   Duration? waitDuration;
 }
 
-Tooltip _buildGeneratedTooltipTagWidget(
-  _GeneratedTooltipTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Tooltip _buildGeneratedTooltipTagWidget(_GeneratedTooltipTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Tooltip(
     constraints: config.constraints,
     decoration: config.decoration,
@@ -19387,8 +18007,8 @@ Tooltip _buildGeneratedTooltipTagWidget(
   );
 }
 
-class GeneratedTransformTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedTransformTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedTransformTag(super.content, super.filters);
 
   @override
@@ -19399,10 +18019,7 @@ class GeneratedTransformTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedTransformTagWidget(config, children));
@@ -19410,8 +18027,7 @@ class GeneratedTransformTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('transform').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -19420,9 +18036,8 @@ class GeneratedTransformTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'transform',
         nonFilterContent,
@@ -19477,11 +18092,10 @@ class _GeneratedTransformTagConfig {
   bool? transformHitTests;
 }
 
-Transform _buildGeneratedTransformTagWidget(
-  _GeneratedTransformTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+Transform _buildGeneratedTransformTagWidget(_GeneratedTransformTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return Transform(
     alignment: config.alignment,
     filterQuality: config.filterQuality,
@@ -19493,8 +18107,8 @@ Transform _buildGeneratedTransformTagWidget(
   );
 }
 
-class GeneratedUnconstrainedBoxTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedUnconstrainedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedUnconstrainedBoxTag(super.content, super.filters);
 
   @override
@@ -19505,10 +18119,7 @@ class GeneratedUnconstrainedBoxTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedUnconstrainedBoxTagWidget(config, children));
@@ -19516,20 +18127,17 @@ class GeneratedUnconstrainedBoxTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('unconstrained_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag =
-        tagStart() & string('endunconstrained_box').trim() & tagEnd();
+    final endTag = tagStart() & string('endunconstrained_box').trim() & tagEnd();
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'unconstrained_box',
         nonFilterContent,
@@ -19577,11 +18185,10 @@ class _GeneratedUnconstrainedBoxTagConfig {
   TextDirection? textDirection;
 }
 
-UnconstrainedBox _buildGeneratedUnconstrainedBoxTagWidget(
-  _GeneratedUnconstrainedBoxTagConfig config,
-  List<Widget> children,
-) {
-  final child = children.isNotEmpty ? wrapChildren(children) : null;
+UnconstrainedBox _buildGeneratedUnconstrainedBoxTagWidget(_GeneratedUnconstrainedBoxTagConfig config, List<Widget> children) {
+  final child = children.isNotEmpty
+      ? wrapChildren(children)
+      : null;
   return UnconstrainedBox(
     alignment: config.alignment ?? Alignment.center,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -19592,8 +18199,8 @@ UnconstrainedBox _buildGeneratedUnconstrainedBoxTagWidget(
   );
 }
 
-class GeneratedVisibilityTag extends WidgetTagBase
-    with CustomTagParser, AsyncTag {
+
+class GeneratedVisibilityTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedVisibilityTag(super.content, super.filters);
 
   @override
@@ -19604,10 +18211,7 @@ class GeneratedVisibilityTag extends WidgetTagBase
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedVisibilityTagWidget(config, children));
@@ -19615,8 +18219,7 @@ class GeneratedVisibilityTag extends WidgetTagBase
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('visibility').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -19625,9 +18228,8 @@ class GeneratedVisibilityTag extends WidgetTagBase
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'visibility',
         nonFilterContent,
@@ -19691,10 +18293,7 @@ class _GeneratedVisibilityTagConfig {
   bool? visible;
 }
 
-Visibility _buildGeneratedVisibilityTagWidget(
-  _GeneratedVisibilityTagConfig config,
-  List<Widget> children,
-) {
+Visibility _buildGeneratedVisibilityTagWidget(_GeneratedVisibilityTagConfig config, List<Widget> children) {
   final child = children.isNotEmpty
       ? wrapChildren(children)
       : const SizedBox.shrink();
@@ -19712,6 +18311,7 @@ Visibility _buildGeneratedVisibilityTagWidget(
   );
 }
 
+
 class GeneratedWrapTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   GeneratedWrapTag(super.content, super.filters);
 
@@ -19723,10 +18323,7 @@ class GeneratedWrapTag extends WidgetTagBase with CustomTagParser, AsyncTag {
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
-    Evaluator evaluator,
-    Buffer buffer,
-  ) async {
+  Future<dynamic> evaluateWithContextAsync(Evaluator evaluator, Buffer buffer) async {
     final config = _parseConfig(evaluator);
     final children = await captureChildrenAsync(evaluator);
     buffer.write(_buildGeneratedWrapTagWidget(config, children));
@@ -19734,8 +18331,7 @@ class GeneratedWrapTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('wrap').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -19744,9 +18340,8 @@ class GeneratedWrapTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'wrap',
         nonFilterContent,
@@ -19814,10 +18409,7 @@ class _GeneratedWrapTagConfig {
   VerticalDirection? verticalDirection;
 }
 
-Wrap _buildGeneratedWrapTagWidget(
-  _GeneratedWrapTagConfig config,
-  List<Widget> children,
-) {
+Wrap _buildGeneratedWrapTagWidget(_GeneratedWrapTagConfig config, List<Widget> children) {
   return Wrap(
     alignment: config.alignment ?? WrapAlignment.start,
     clipBehavior: config.clipBehavior ?? Clip.none,
@@ -19832,3 +18424,5 @@ Wrap _buildGeneratedWrapTagWidget(
     children: children,
   );
 }
+
+

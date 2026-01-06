@@ -17,7 +17,9 @@ void main() {
     await pumpTemplate(
       tester,
       '{% avatar child: child %}',
-      data: {'child': icon},
+      data: {
+        'child': icon,
+      },
     );
 
     final avatar = tester.widget<CircleAvatar>(find.byType(CircleAvatar));

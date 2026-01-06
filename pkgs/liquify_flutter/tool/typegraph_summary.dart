@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 void main() {
-  final reportFile = File('tool/tag_specs/generated/widgets.report.json');
+  final reportFile =
+      File('tool/tag_specs/generated/widgets.report.json');
   if (!reportFile.existsSync()) {
     stderr.writeln('Missing report file: ${reportFile.path}');
     exit(1);
   }
-  final data =
-      jsonDecode(reportFile.readAsStringSync()) as Map<String, dynamic>;
+  final data = jsonDecode(reportFile.readAsStringSync())
+      as Map<String, dynamic>;
   final widgets = (data['widgets'] as List<dynamic>? ?? [])
       .cast<Map<String, dynamic>>();
   final totalProps = widgets

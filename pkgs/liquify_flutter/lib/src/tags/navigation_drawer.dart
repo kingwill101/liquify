@@ -5,7 +5,8 @@ import 'property_resolver.dart';
 import 'tag_helpers.dart';
 import 'widget_tag_base.dart';
 
-class NavigationDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
+class NavigationDrawerTag extends WidgetTagBase
+    with CustomTagParser, AsyncTag {
   NavigationDrawerTag(super.content, super.filters);
 
   @override
@@ -27,8 +28,7 @@ class NavigationDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('navigation_drawer').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
@@ -39,9 +39,8 @@ class NavigationDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'navigation_drawer',
         nonFilterContent,
@@ -110,8 +109,8 @@ class NavigationDrawerTag extends WidgetTagBase with CustomTagParser, AsyncTag {
     );
     final resolvedKeyValue =
         (widgetKeyValue != null && widgetKeyValue.trim().isNotEmpty)
-        ? widgetKeyValue.trim()
-        : resolvedId;
+            ? widgetKeyValue.trim()
+            : resolvedId;
     config.widgetKey = resolveWidgetKey(resolvedId, widgetKeyValue);
     final actionName = actionValue is String ? actionValue : null;
     final baseEvent = buildWidgetEvent(
@@ -282,10 +281,14 @@ class _DrawerHeaderConfig {
   EdgeInsetsGeometry? margin;
 }
 
-Widget _buildHeader(_DrawerHeaderConfig config, List<Widget> children) {
+Widget _buildHeader(
+  _DrawerHeaderConfig config,
+  List<Widget> children,
+) {
   return DrawerHeader(
     decoration: config.decoration,
-    padding: config.padding ?? const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+    padding: config.padding ??
+        const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
     margin: config.margin ?? const EdgeInsets.only(bottom: 8.0),
     child: wrapChildren(children),
   );

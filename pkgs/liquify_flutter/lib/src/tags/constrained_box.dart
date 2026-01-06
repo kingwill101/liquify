@@ -5,7 +5,8 @@ import 'property_resolver.dart';
 import 'tag_helpers.dart';
 import 'widget_tag_base.dart';
 
-class ConstrainedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
+class ConstrainedBoxTag extends WidgetTagBase
+    with CustomTagParser, AsyncTag {
   ConstrainedBoxTag(super.content, super.filters);
 
   @override
@@ -43,20 +44,19 @@ class ConstrainedBoxTag extends WidgetTagBase with CustomTagParser, AsyncTag {
 
   @override
   Parser parser() {
-    final start =
-        tagStart() &
+    final start = tagStart() &
         string('constrained_box').trim() &
         ref0(tagContent).optional().trim() &
         ref0(filter).star().trim() &
         tagEnd();
-    final endTag = tagStart() & string('endconstrained_box').trim() & tagEnd();
+    final endTag =
+        tagStart() & string('endconstrained_box').trim() & tagEnd();
 
     return (start & ref0(element).starLazy(endTag) & endTag).map((values) {
       final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
       final filters = (values[3] as List).cast<Filter>();
-      final nonFilterContent = content
-          .where((node) => node is! Filter)
-          .toList();
+      final nonFilterContent =
+          content.where((node) => node is! Filter).toList();
       return Tag(
         'constrained_box',
         nonFilterContent,
@@ -130,5 +130,9 @@ Widget _buildConstrainedBox(
     child = wrapChildren(children);
   }
 
-  return ConstrainedBox(constraints: config.constraints!, child: child);
+  return ConstrainedBox(
+    constraints: config.constraints!,
+    child: child,
+  );
 }
+

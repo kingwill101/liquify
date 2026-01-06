@@ -21,10 +21,8 @@ Future<LiquifyExampleApp> buildTestApp(WidgetTester tester) async {
 }
 
 Future<void> pumpForRender(WidgetTester tester) async {
-  const verbose = bool.fromEnvironment(
-    'LIQUIFY_TEST_VERBOSE',
-    defaultValue: false,
-  );
+  const verbose =
+      bool.fromEnvironment('LIQUIFY_TEST_VERBOSE', defaultValue: false);
   if (verbose) {
     print('pumpForRender: start');
   }
