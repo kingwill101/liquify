@@ -50,7 +50,8 @@ All button behavior is defined in Liquid templates, no Dart code needed.
 {% assign message_style = "" | text_style: fontSize: 14, color: "#94a3b8" %}
 
 {% container padding: padding_value color: "#101216" %}
-  {% column crossAxisAlignment: "center" mainAxisAlignment: "center" spacing: 24 %}
+  {% single_child_scroll_view %}
+    {% column crossAxisAlignment: "center" mainAxisAlignment: "center" spacing: 24 %}
     
     {% comment %} Title {% endcomment %}
     {% text data: "Lua Callback Demo" style: title_style %}
@@ -83,7 +84,9 @@ All button behavior is defined in Liquid templates, no Dart code needed.
     
     {% assign slider_value = slider_value | default: 0.5 %}
     {% sized_box width: 300 %}
-      {% slider value: slider_value onChanged: slider_callback %}{% endslider %}
+      {% card %}
+        {% slider value: slider_value onChanged: slider_callback %}{% endslider %}
+      {% endcard %}
     {% endsized_box %}
     
     {% comment %} Navigation {% endcomment %}
@@ -94,4 +97,5 @@ All button behavior is defined in Liquid templates, no Dart code needed.
     {% endfilled_button %}
     
   {% endcolumn %}
+  {% endsingle_child_scroll_view %}
 {% endcontainer %}
