@@ -105,6 +105,7 @@ class _AppShellState extends State<AppShell> {
   static const _calculatorAppId = 'calculator';
   static const _imageViewerAppId = 'image_viewer';
   static const _layoutGalleryAppId = 'layout_gallery';
+  static const _luaDemoAppId = 'lua_demo';
   static const _controlsHubAppId = 'controls';
   static const _controlsInputsAppId = 'controls_inputs';
   static const _controlsSelectionAppId = 'controls_selection';
@@ -116,6 +117,7 @@ class _AppShellState extends State<AppShell> {
   static const Set<String> _asyncAppIds = {
     _homeAppId,
     _controlsMotionAppId,
+    _luaDemoAppId, // Lua callbacks require async rendering
   };
   static const List<String> _controlsAppIds = [
     _controlsHubAppId,
@@ -317,6 +319,14 @@ class _AppShellState extends State<AppShell> {
       'subtitle': 'Rows, columns, stacks, and grids.',
       'icon': 'view_quilt',
       'accent': '#a78bfa',
+    },
+    {
+      'id': _luaDemoAppId,
+      'title': 'Lua Callbacks',
+      'action': 'nav:lua_demo',
+      'subtitle': 'Over-the-wire UI interactions.',
+      'icon': 'code',
+      'accent': '#fb923c',
     },
     {
       'id': _controlsHubAppId,
