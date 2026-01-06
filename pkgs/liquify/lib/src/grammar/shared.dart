@@ -624,8 +624,7 @@ List<ASTNode> parseInput(String input,
     return [];
   }
 
-  registerBuiltIns();
-  final parser = LiquidGrammar().build();
+  final parser = _getCachedParser();
 
   if (shouldLint) {
     print(linter(parser).join('\n\n'));
@@ -646,3 +645,21 @@ List<ASTNode> parseInput(String input,
   throw ParsingException(
       result.message, input, lineCol[0], lineCol[0], result.position);
 }
+
+Parser _getCachedParser() {
+  registerBuiltIns();
+  final signature = _parserSignature();
+  if (_cachedParser == null || _cachedParserSignature != signature) {
+    _cachedParser = LiquidGrammar().build();
+    _cachedParserSignature = signature;
+  }
+  return _cachedParser!;
+}
+
+int _parserSignature() {
+  final parsers = TagRegistry.customParsers;
+  return Object.hashAll(parsers.map((parser) => parser.runtimeType));
+}
+
+Parser? _cachedParser;
+int? _cachedParserSignature;
