@@ -83,6 +83,7 @@ flutter:
     - assets/apps/controls_feedback/
     - assets/apps/controls_motion/
     - assets/apps/controls_data/
+    - assets/apps/lua_demo/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
