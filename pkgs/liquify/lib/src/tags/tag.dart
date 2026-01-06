@@ -80,7 +80,8 @@ abstract class AbstractTag {
   FutureOr<dynamic> evaluateAsync(Evaluator evaluator, Buffer buffer) async {
     evaluator.context.pushScope();
 
-    final innerEvaluator = evaluator.createInnerEvaluator()
+    final innerContext = evaluator.context.clone();
+    final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
       ..context.setRoot(evaluator.context.getRoot());
 
     var result = await evaluateWithContextAsync(innerEvaluator, buffer);
@@ -98,7 +99,8 @@ abstract class AbstractTag {
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     evaluator.context.pushScope();
 
-    final innerEvaluator = evaluator.createInnerEvaluator()
+    final innerContext = evaluator.context.clone();
+    final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
       ..context.setRoot(evaluator.context.getRoot());
 
     var result = evaluateWithContext(innerEvaluator, buffer);
