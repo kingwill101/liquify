@@ -456,7 +456,8 @@ class Evaluator implements ASTVisitor<dynamic> {
 
     for (final filter in node.filters) {
       final filterFunction = await filter.acceptAsync(this);
-      value = filterFunction(value);
+      final result = filterFunction(value);
+      value = result is Future ? await result : result;
     }
     return value;
   }
