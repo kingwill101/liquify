@@ -14,22 +14,27 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        sdk: [stable, beta]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        sdk: [ stable, beta ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.0
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.sdk }}
 
       - name: Install dependencies
         run: dart pub get
-      
+        working-directory: pkgs/liquify
+
       - run: dart format --output=none --set-exit-if-changed .
-      
+        working-directory: pkgs/liquify
+
       - run: dart analyze
+        working-directory: pkgs/liquify
 
       - name: Run tests
+        working-directory: pkgs/liquify
         run: dart test
