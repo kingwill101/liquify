@@ -177,7 +177,18 @@ tz.TZDateTime? parseDate(dynamic value) {
       );
     }
   } else if (value is DateTime) {
-    return tz.TZDateTime.from(value, location);
+    // Use the DateTime's components directly to preserve the intended date/time
+    // regardless of the DateTime's timezone interpretation
+    return tz.TZDateTime(
+      location,
+      value.year,
+      value.month,
+      value.day,
+      value.hour,
+      value.minute,
+      value.second,
+      value.millisecond,
+    );
   } else if (value is tz.TZDateTime) {
     return value;
   }
