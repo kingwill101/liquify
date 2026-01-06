@@ -1181,6 +1181,13 @@ class _LiquidScreenState extends State<LiquidScreen> {
         environment.setRegister('_liquify_flutter_strict_props', true);
         environment.setRegister('_liquify_flutter_strict_tags', true);
         environment.setRegister('_liquify_flutter_generated_only', true);
+        environment.setRegister('_liquify_flutter_rebuild', () {
+          if (mounted) {
+            setState(() {
+              _renderFuture = null; // Force re-render
+            });
+          }
+        });
         if (widget.allowSyncLua) {
           environment.setRegister('_liquify_flutter_allow_sync_lua', true);
         }

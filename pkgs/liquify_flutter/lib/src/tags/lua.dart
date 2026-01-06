@@ -121,6 +121,14 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
       return null;
     });
 
+    lua.expose('rebuild', (List<Object?> args) {
+      final callback = evaluator.context.getRegister('_liquify_flutter_rebuild');
+      if (callback is VoidCallback) {
+        callback();
+      }
+      return null;
+    });
+
     lua.expose('log', (List<Object?> args) {
       final message = args.isEmpty
           ? ''
