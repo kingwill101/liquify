@@ -7,7 +7,7 @@ void main() {
     expect(
       () => pumpTemplate(
         tester,
-        '{% text value: "Hello" unknownArg: 1 %}',
+        '{% text data: "Hello" unknownArg: 1 %}',
         strictTags: true,
       ),
       throwsException,

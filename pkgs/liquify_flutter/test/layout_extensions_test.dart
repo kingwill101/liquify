@@ -9,7 +9,7 @@ void main() {
       tester,
       '{% wrap alignment: "center" crossAxisAlignment: "center" '
       'runAlignment: "spaceBetween" spacing: 4 runSpacing: 6 direction: "vertical" %}'
-      '{% text value: "A" %}{% text value: "B" %}{% endwrap %}',
+      '{% text data: "A" %}{% text data: "B" %}{% endwrap %}',
     );
 
     final wrap = tester.widget<Wrap>(find.byType(Wrap));
@@ -25,8 +25,8 @@ void main() {
     await pumpTemplate(
       tester,
       '{% align alignment: "topLeft" widthFactor: 0.5 heightFactor: 0.25 %}'
-      '{% text value: "X" %}{% endalign %}'
-      '{% center %}{% text value: "Y" %}{% endcenter %}',
+      '{% text data: "X" %}{% endalign %}'
+      '{% center %}{% text data: "Y" %}{% endcenter %}',
     );
 
     final alignFinder = find.ancestor(of: find.text('X'), matching: find.byType(Align));
@@ -43,8 +43,8 @@ void main() {
     await pumpTemplate(
       tester,
       '{% row %}'
-      '{% expanded flex: 2 %}{% text value: "A" %}{% endexpanded %}'
-      '{% flexible fit: "tight" flex: 3 %}{% text value: "B" %}{% endflexible %}'
+      '{% expanded flex: 2 %}{% text data: "A" %}{% endexpanded %}'
+      '{% flexible fit: "tight" flex: 3 %}{% text data: "B" %}{% endflexible %}'
       '{% endrow %}',
     );
 
@@ -63,7 +63,7 @@ void main() {
       tester,
       '{% stack %}'
       '{% positioned left: 5 top: 7 width: 20 height: 30 %}'
-      '{% text value: "P" %}{% endpositioned %}'
+      '{% text data: "P" %}{% endpositioned %}'
       '{% endstack %}',
     );
 
@@ -79,7 +79,7 @@ void main() {
       '{% container width: 100 height: 50 %}'
       '{% aspect_ratio aspectRatio: 2 %}'
       '{% fitted_box fit: "cover" alignment: "bottomRight" clipBehavior: "hardEdge" %}'
-      '{% text value: "AR" %}'
+      '{% text data: "AR" %}'
       '{% endfitted_box %}'
       '{% endaspect_ratio %}'
       '{% endcontainer %}';
@@ -102,7 +102,7 @@ void main() {
   testWidgets('opacity tag sets opacity', (tester) async {
     await pumpTemplate(
       tester,
-      '{% opacity opacity: 0.7 %}{% text value: "O" %}{% endopacity %}',
+      '{% opacity opacity: 0.7 %}{% text data: "O" %}{% endopacity %}',
     );
 
     final opacity = tester.widget<Opacity>(find.byType(Opacity));
@@ -112,9 +112,9 @@ void main() {
   testWidgets('clip tags apply clip behavior and radius', (tester) async {
     await pumpTemplate(
       tester,
-      '{% clip_r_rect borderRadius: 8 %}{% text value: "R" %}{% endclip_r_rect %}'
-      '{% clip_oval clipBehavior: "hardEdge" %}{% text value: "O" %}{% endclip_oval %}'
-      '{% clip_rect %}{% text value: "C" %}{% endclip_rect %}',
+      '{% clip_r_rect borderRadius: 8 %}{% text data: "R" %}{% endclip_r_rect %}'
+      '{% clip_oval clipBehavior: "hardEdge" %}{% text data: "O" %}{% endclip_oval %}'
+      '{% clip_rect %}{% text data: "C" %}{% endclip_rect %}',
     );
 
     final rrectFinder = find.ancestor(

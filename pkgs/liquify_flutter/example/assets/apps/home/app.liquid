@@ -86,7 +86,7 @@ Home hub listing demo apps. Expects: apps (list), actions (Drop).
         {% endstack %}
       {% endcard %}
       {% for app in apps %}
-        {% card color: "#1b1f28" %}
+        {% card color: "#1b1f28" key: app.id %}
           {% column spacing: 12 crossAxisAlignment: "start" %}
             {% row spacing: 10 crossAxisAlignment: "center" %}
               {% icon icon: app.icon size: 20 color: app.accent %}

@@ -34,9 +34,9 @@ void main() {
     await pumpBreakpointTemplate(
       tester,
       size: const Size(500, 800),
-      '{% breakpoint xs %}{% text value: "xs" %}{% endbreakpoint %}'
-      '{% breakpoint sm %}{% text value: "sm" %}{% endbreakpoint %}'
-      '{% breakpoint md %}{% text value: "md" %}{% endbreakpoint %}',
+      '{% breakpoint xs %}{% text data: "xs" %}{% endbreakpoint %}'
+      '{% breakpoint sm %}{% text data: "sm" %}{% endbreakpoint %}'
+      '{% breakpoint md %}{% text data: "md" %}{% endbreakpoint %}',
     );
 
     expect(find.text('xs'), findsOneWidget);
@@ -49,10 +49,10 @@ void main() {
       tester,
       size: const Size(800, 600),
       '{% breakpoint min: "sm" max: "lg" %}'
-      '{% text value: "between" %}'
+      '{% text data: "between" %}'
       '{% endbreakpoint %}'
       '{% breakpoint except: "md" %}'
-      '{% text value: "not-md" %}'
+      '{% text data: "not-md" %}'
       '{% endbreakpoint %}',
     );
 
@@ -65,7 +65,7 @@ void main() {
       tester,
       size: const Size(600, 800),
       '{% assign size = "" | responsive: xs: 8, sm: 12, md: 16, default: 20 %}'
-      '{% text value: size %}',
+      '{% text data: size %}',
     );
 
     expect(find.text('12'), findsOneWidget);
