@@ -1620,6 +1620,12 @@ ValueChanged<dynamic>? resolveGenericValueChanged(
   String? actionValue,
 }
 ) {
+  // Check for LuaValueCallbackDrop first - it needs the payload
+  if (value is LuaValueCallbackDrop) {
+    return (payload) => _withEvent(evaluator, event, () {
+          value.execute(payload);
+        });
+  }
   if (value is Drop) {
     return (payload) => _withEvent(evaluator, event, () {
           _invokeDropAction(

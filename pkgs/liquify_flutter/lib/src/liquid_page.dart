@@ -105,6 +105,7 @@ class LiquidPageState extends State<LiquidPage> {
       }
       final key = _coerceKey(args.first);
       final value = _state[key];
+      debugPrint('[LiquidPage] get("$key") = $value (state keys: ${_state.keys})');
       return lualike.toLuaValue(_toLuaInput(value));
     });
 
@@ -116,6 +117,7 @@ class LiquidPageState extends State<LiquidPage> {
       final key = _coerceKey(args[0]);
       final value = _sanitizeData(lualike.fromLuaValue(args[1]));
       _state[key] = value;
+      debugPrint('[LiquidPage] set("$key", $value) -> state: $_state');
       return null;
     });
 

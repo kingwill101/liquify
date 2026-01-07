@@ -1055,7 +1055,7 @@ class _AppShellState extends State<AppShell> {
           child: LiquidPage(
             template: '$appId/app.liquid',
             root: snapshot.data!,
-            onAction: (action) => _handleAction(appId, action, null),
+            onAction: (action) => _handleAction(appId, action, {}),
           ),
         );
       },

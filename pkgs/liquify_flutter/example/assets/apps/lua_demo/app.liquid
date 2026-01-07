@@ -47,6 +47,12 @@ All button behavior is defined in Liquid templates, no Dart code needed.
   end)
 {% endlua %}
 
+{% lua assign: nav_home_callback %}
+  return callback(function()
+    action("nav:home")
+  end)
+{% endlua %}
+
 {% comment %} Build the UI {% endcomment %}
 {% assign padding_value = 24 %}
 {% assign title_style = "" | text_style: fontSize: 24, fontWeight: "bold", color: "#f1f5f9" %}
@@ -96,7 +102,7 @@ All button behavior is defined in Liquid templates, no Dart code needed.
     {% comment %} Navigation {% endcomment %}
     {% sized_box height: 32 %}{% endsized_box %}
     
-    {% filled_button onPressed: "nav:home" %}
+    {% filled_button onPressed: nav_home_callback %}
       {% text data: "Back to Home" %}
     {% endfilled_button %}
     

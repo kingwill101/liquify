@@ -3664,10 +3664,13 @@ String _renderTypeFilters(
   buffer.writeln("import '../tags/tag_helpers.dart';");
   buffer.writeln("import 'type_parsers.dart';");
   buffer.writeln();
-  buffer.writeln('void registerGeneratedTypeFilters(Environment environment) {');
+  buffer.writeln('/// Registers all generated type filters globally.');
+  buffer.writeln('/// These filters will be available in all environments, including');
+  buffer.writeln('/// isolated environments created by {% render %} tags.');
+  buffer.writeln('void registerGeneratedTypeFilters([Environment? environment]) {');
   for (final filter in filters) {
     buffer.writeln(
-        "  environment.registerLocalFilter('${filter.name}', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, ${filter.parser}));");
+        "  FilterRegistry.register('${filter.name}', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, ${filter.parser}));");
   }
   buffer.writeln('}');
   buffer.writeln();
