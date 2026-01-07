@@ -1,12 +1,11 @@
 {% comment %}
-Calculator keypad grid (wide). Expects: actions (Drop) for button action handlers.
+Calculator keypad grid (wide). Expects: keypad_delegate for grid layout, actions (Drop) for button action handlers.
 Optional layout vars: keypad_width, grid_gap, cell_height, button_size,
 button_padding, button_radius, digit_size, operator_size, action_size.
 {% endcomment %}
 {% container alignment: "center" %}
   {% sized_box width: keypad_width height: grid_height %}{% endsized_box %}
   
-  {% assign keypad_delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: 5, mainAxisSpacing: grid_gap, crossAxisSpacing: grid_gap, mainAxisExtent: cell_height %}
   {% grid_view gridDelegate: keypad_delegate shrinkWrap: true %}
     {% filled_button onPressed: "(" %}{% text data: "(" %}{% endfilled_button %}
     {% filled_button onPressed: ")" %}{% text data: ")" %}{% endfilled_button %}

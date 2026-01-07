@@ -54,10 +54,15 @@ partials. Expects: expression, display, actions (Drop passed to keypad).
       {% endcontainer %}
     {% endcenter %}
     {% center %}
-      {% render "calculator/partials/display.liquid", expression: expression, display: display, display_width: display_width, display_height: display_height, display_padding: display_padding, display_gap: display_gap, expression_size: expression_size, display_size: display_size %}
+      {% assign expression_style = "" | text_style: fontSize: expression_size %}
+      {% assign display_style = "" | text_style: fontSize: display_size %}
+      {% render "calculator/partials/display.liquid", expression: expression, display: display, display_width: display_width, display_height: display_height, display_padding: display_padding, display_gap: display_gap, expression_style: expression_style, display_style: display_style %}
     {% endcenter %}
-    {% center %}
-      {% render "calculator/partials/keypad.liquid", actions: actions, keypad_width: keypad_width, grid_height: grid_height, grid_gap: grid_gap, cell_height: cell_height, button_size: button_size, button_padding: button_padding, button_radius: button_radius, digit_size: digit_size, operator_size: operator_size, action_size: action_size %}
-    {% endcenter %}
+    {% expanded %}
+      {% center %}
+        {% assign keypad_delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: 4, mainAxisSpacing: grid_gap, crossAxisSpacing: grid_gap, childAspectRatio: 1.0 %}
+        {% render "calculator/partials/keypad.liquid", actions: actions, keypad_width: keypad_width, grid_height: grid_height, grid_gap: grid_gap, cell_height: cell_height, button_size: button_size, button_padding: button_padding, button_radius: button_radius, digit_size: digit_size, operator_size: operator_size, action_size: action_size, keypad_delegate: keypad_delegate %}
+      {% endcenter %}
+    {% endexpanded %}
   {% endcolumn %}
 {% endblock %}

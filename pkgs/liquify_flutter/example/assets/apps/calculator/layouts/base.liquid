@@ -3,7 +3,7 @@ Calculator base layout. Provides dark background and a content block.
 {% endcomment %}
 {% assign base_pad = "" | responsive: xs: 12, sm: 16, md: 20, lg: 24, default: 20 %}
 {% assign base_pad_inset = "" | edge_insets: all: base_pad %}
-{% container color: "#0f1014" %}
+{% container color: "#0f1014" width: screen.width height: screen.height %}
   {% padding padding: base_pad_inset %}
     {% block content %}
     {% endblock %}
