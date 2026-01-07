@@ -1017,15 +1017,17 @@ class _AppShellState extends State<AppShell> {
                     );
                   },
                 )
-              : _buildLiquidScreen(
-                  appId: route.appId,
-                  template: '${route.appId}/app.liquid',
-                  data: route.appId == _imageViewerAppId
-                      ? {
-                          'demo_image_bytes': _demoImageBytes,
-                        }
-                      : const {},
-                );
+              : route.appId == _luaDemoAppId
+                ? _buildLuaPage(route.appId)
+                : _buildLiquidScreen(
+                    appId: route.appId,
+                    template: '${route.appId}/app.liquid',
+                    data: route.appId == _imageViewerAppId
+                        ? {
+                            'demo_image_bytes': _demoImageBytes,
+                          }
+                        : const {},
+                  );
           return _transition(page);
         }
         return _transition(
@@ -1035,6 +1037,25 @@ class _AppShellState extends State<AppShell> {
             data: {
               'apps': _apps,
             },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLuaPage(String appId) {
+    return FutureBuilder<AssetBundleRoot>(
+      future: _rootFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ColoredBox(
+          color: _backgroundColor,
+          child: LiquidPage(
+            template: '$appId/app.liquid',
+            root: snapshot.data!,
+            onAction: (action) => _handleAction(appId, action, null),
           ),
         );
       },
