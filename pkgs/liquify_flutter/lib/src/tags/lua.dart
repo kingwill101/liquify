@@ -47,8 +47,19 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
       return null;
     }
 
-    final lua = lualike.LuaLike();
-    _configureLua(lua, evaluator);
+    // Use the page's Lua instance if available, otherwise create a new one
+    var lua = evaluator.context.getRegister('_liquify_flutter_lua') as lualike.LuaLike?;
+    final isPageLua = lua != null;
+    lua ??= lualike.LuaLike();
+    
+    // Only configure if it's a new Lua instance (page Lua is already configured)
+    if (!isPageLua) {
+      _configureLua(lua, evaluator);
+    } else {
+      // For page Lua, still need to expose get/set that use the evaluator context
+      // for template variables, but the page state is the source of truth
+      _configurePageLua(lua, evaluator);
+    }
 
     final Object? result;
     try {
@@ -66,6 +77,12 @@ class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
       evaluator.context.setVariable(assignName, converted);
     }
     return null;
+  }
+
+  void _configurePageLua(lualike.LuaLike lua, Evaluator evaluator) {
+    // The page Lua already has get/set/rebuild configured to use page state.
+    // We just need to ensure callback functions can be created.
+    // The page's _configureLua already sets these up.
   }
 
   String _extractScript() {
