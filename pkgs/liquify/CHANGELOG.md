@@ -1,3 +1,6 @@
+## 1.4.2
+ - Bump dependencies
+
 ## 1.4.1
 Fix: Add better handling of filtered assignments
 
