@@ -3,13 +3,12 @@ Display card for calculator. Expects: expression, display, expression_style, dis
 Optional layout vars: display_width, display_height, display_padding, display_gap.
 {% endcomment %}
 {% container %}
-  {% sized_box width: display_width height: display_height %}{% endsized_box %}
-  
+  {% sized_box width: display_width height: display_height %}
     {% card %}
       {% column spacing: display_gap mainAxisAlignment: "spaceBetween" crossAxisAlignment: "end" %}
         {% text data: expression textAlign: "right" maxLines: 1 overflow: "ellipsis" style: expression_style %}
         {% text data: display textAlign: "right" maxLines: 1 overflow: "ellipsis" style: display_style %}
       {% endcolumn %}
     {% endcard %}
-  
+  {% endsized_box %}
 {% endcontainer %}

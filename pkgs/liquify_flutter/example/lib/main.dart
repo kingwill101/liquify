@@ -119,6 +119,10 @@ class _AppShellState extends State<AppShell> {
     _controlsMotionAppId,
     _luaDemoAppId, // Lua callbacks require async rendering
   };
+  static const Set<String> _luaAppIds = {
+    _luaDemoAppId,
+    _calculatorAppId,
+  };
   static const List<String> _controlsAppIds = [
     _controlsHubAppId,
     _controlsInputsAppId,
@@ -132,6 +136,7 @@ class _AppShellState extends State<AppShell> {
 
   late final Future<AssetBundleRoot> _rootFuture;
   final NavigationPath _path = NavigationPath.create();
+  final Map<String, Map<String, dynamic>> _luaSharedState = {};
   final ValueNotifier<String> _expression = ValueNotifier('128 × 12');
   final ValueNotifier<String> _display = ValueNotifier('1,536');
   final ValueNotifier<double> _sliderValue = ValueNotifier(0.35);
@@ -294,6 +299,10 @@ class _AppShellState extends State<AppShell> {
     {'label': 'Status'},
   ];
   static const List<int> _dataRowsPerPageOptions = [3, 5, 10];
+  static const String _startAppId =
+      String.fromEnvironment('LIQUIFY_START_APP', defaultValue: '');
+  static const String _startPageId =
+      String.fromEnvironment('LIQUIFY_START_PAGE', defaultValue: '');
 
   final List<Map<String, String>> _apps = const [
     {
@@ -347,7 +356,15 @@ class _AppShellState extends State<AppShell> {
           throwOnMissing: true,
         );
     _searchController.addListener(_handleSearchChanged);
-    _path.push(HomeRoute());
+    if (_startAppId.isNotEmpty) {
+      if (_startPageId.isNotEmpty) {
+        _path.push(LiquidPageRoute(_startAppId, _startPageId));
+      } else {
+        _path.push(LiquidAppRoute(_startAppId));
+      }
+    } else {
+      _path.push(HomeRoute());
+    }
   }
 
   @override
@@ -898,6 +915,15 @@ class _AppShellState extends State<AppShell> {
           );
         }
         if (route is LiquidPageRoute) {
+          if (_luaAppIds.contains(route.appId)) {
+            return _transition(
+              _buildLuaPage(
+                route.appId,
+                template: '${route.appId}/pages/${route.pageId}.liquid',
+                data: const {},
+              ),
+            );
+          }
           return _transition(
             _buildLiquidScreen(
               appId: route.appId,
@@ -907,19 +933,12 @@ class _AppShellState extends State<AppShell> {
           );
         }
         if (route is LiquidAppRoute) {
-          final page = route.appId == _calculatorAppId
-              ? AnimatedBuilder(
-                  animation: Listenable.merge([_expression, _display]),
-                  builder: (context, child) {
-                    return _buildLiquidScreen(
-                      appId: route.appId,
-                      template: '${route.appId}/app.liquid',
-                      data: {
-                        'expression': _expression.value,
-                        'display': _display.value,
-                      },
-                    );
-                  },
+          final page = _luaAppIds.contains(route.appId)
+              ? _buildLuaPage(
+                  route.appId,
+                  data: route.appId == _calculatorAppId
+                      ? const {'expression': '', 'display': '0'}
+                      : const {},
                 )
               : _controlsAppIds.contains(route.appId)
                   ? AnimatedBuilder(
@@ -1017,17 +1036,15 @@ class _AppShellState extends State<AppShell> {
                     );
                   },
                 )
-              : route.appId == _luaDemoAppId
-                ? _buildLuaPage(route.appId)
-                : _buildLiquidScreen(
-                    appId: route.appId,
-                    template: '${route.appId}/app.liquid',
-                    data: route.appId == _imageViewerAppId
-                        ? {
-                            'demo_image_bytes': _demoImageBytes,
-                          }
-                        : const {},
-                  );
+              : _buildLiquidScreen(
+                  appId: route.appId,
+                  template: '${route.appId}/app.liquid',
+                  data: route.appId == _imageViewerAppId
+                      ? {
+                          'demo_image_bytes': _demoImageBytes,
+                        }
+                      : const {},
+                );
           return _transition(page);
         }
         return _transition(
@@ -1043,7 +1060,13 @@ class _AppShellState extends State<AppShell> {
     );
   }
 
-  Widget _buildLuaPage(String appId) {
+  Widget _buildLuaPage(
+    String appId, {
+    String? template,
+    Map<String, dynamic> data = const {},
+  }) {
+    final sharedState =
+        _luaSharedState.putIfAbsent(appId, () => <String, dynamic>{});
     return FutureBuilder<AssetBundleRoot>(
       future: _rootFuture,
       builder: (context, snapshot) {
@@ -1053,8 +1076,10 @@ class _AppShellState extends State<AppShell> {
         return ColoredBox(
           color: _backgroundColor,
           child: LiquidPage(
-            template: '$appId/app.liquid',
+            template: template ?? '$appId/app.liquid',
             root: snapshot.data!,
+            data: data,
+            sharedState: sharedState,
             onAction: (action) => _handleAction(appId, action, {}),
           ),
         );
@@ -1187,6 +1212,7 @@ class _LiquidScreenState extends State<LiquidScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         final mediaQuery = MediaQuery.of(context);
+        final padding = mediaQuery.padding;
         final size = mediaQuery.size;
         final mergedData = <String, dynamic>{
           ...widget.data,
@@ -1195,6 +1221,12 @@ class _LiquidScreenState extends State<LiquidScreen> {
             'height': size.height,
             'orientation': mediaQuery.orientation.name,
             'devicePixelRatio': mediaQuery.devicePixelRatio,
+            'safeTop': padding.top,
+            'safeBottom': padding.bottom,
+            'safeLeft': padding.left,
+            'safeRight': padding.right,
+            'safeWidth': size.width - padding.left - padding.right,
+            'safeHeight': size.height - padding.top - padding.bottom,
           },
         };
         final environment = Environment();
@@ -1261,6 +1293,15 @@ class _LiquidScreenState extends State<LiquidScreen> {
           future: _renderFuture,
           builder: (context, renderSnapshot) {
             if (renderSnapshot.hasError) {
+              final details = FlutterErrorDetails(
+                exception: renderSnapshot.error!,
+                stack: renderSnapshot.stackTrace,
+                context: ErrorDescription('LiquidScreen render'),
+              );
+              FlutterError.reportError(details);
+              debugPrint(
+                'LiquidScreen render error: ${renderSnapshot.error}\n${renderSnapshot.stackTrace}',
+              );
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16),

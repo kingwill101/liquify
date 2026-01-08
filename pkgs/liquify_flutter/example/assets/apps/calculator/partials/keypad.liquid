@@ -1,34 +1,42 @@
 {% comment %}
-Calculator keypad grid. Expects: keypad_delegate for grid layout, actions (Drop) for button action handlers.
-Optional layout vars: keypad_width, grid_gap, cell_height, button_size,
+Calculator keypad grid. Expects: keypad_delegate for grid layout, callbacks map for button handlers.
+Optional layout vars: keypad_width, grid_height, grid_gap, cell_height, button_size,
 button_padding, button_radius, digit_size, operator_size, action_size.
 {% endcomment %}
+{% assign action_bg = "#505050" %}
+{% assign digit_bg = "#333333" %}
+{% assign operator_bg = "#FF9500" %}
+{% assign equals_bg = "#4CD964" %}
+{% assign white_fg = "#FFFFFF" %}
+{% assign no_scroll = "never" | scroll_physics %}
+
 {% container alignment: "center" %}
-    {% grid_view gridDelegate: keypad_delegate shrinkWrap: true %}
-      {% filled_button onPressed: "FC" %}{% text data: "FC" %}{% endfilled_button %}
-      {% filled_button onPressed: "+/-" %}{% text data: "+/-" %}{% endfilled_button %}
-      {% filled_button onPressed: "%" %}{% text data: "%" %}{% endfilled_button %}
-      {% filled_button onPressed: "÷" %}{% text data: "÷" %}{% endfilled_button %}
+  {% sized_box width: keypad_width height: grid_height %}
+    {% grid_view gridDelegate: keypad_delegate shrinkWrap: false physics: no_scroll primary: false %}
+      {% render "calculator/partials/keypad_button.liquid", label: "FC", action: callbacks.fc, color: action_bg, text_color: white_fg, font_size: action_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "+/-", action: callbacks.sign, color: action_bg, text_color: white_fg, font_size: action_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "%", action: callbacks.percent, color: action_bg, text_color: white_fg, font_size: action_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "÷", action: callbacks.divide, color: operator_bg, text_color: white_fg, font_size: operator_size %}
 
-      {% filled_button onPressed: "7" %}{% text data: "7" %}{% endfilled_button %}
-      {% filled_button onPressed: "8" %}{% text data: "8" %}{% endfilled_button %}
-      {% filled_button onPressed: "9" %}{% text data: "9" %}{% endfilled_button %}
-      {% filled_button onPressed: "×" %}{% text data: "×" %}{% endfilled_button %}
+      {% render "calculator/partials/keypad_button.liquid", label: "7", action: callbacks.seven, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "8", action: callbacks.eight, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "9", action: callbacks.nine, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "×", action: callbacks.multiply, color: operator_bg, text_color: white_fg, font_size: operator_size %}
 
-      {% filled_button onPressed: "4" %}{% text data: "4" %}{% endfilled_button %}
-      {% filled_button onPressed: "5" %}{% text data: "5" %}{% endfilled_button %}
-      {% filled_button onPressed: "6" %}{% text data: "6" %}{% endfilled_button %}
-      {% filled_button onPressed: "−" %}{% text data: "−" %}{% endfilled_button %}
+      {% render "calculator/partials/keypad_button.liquid", label: "4", action: callbacks.four, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "5", action: callbacks.five, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "6", action: callbacks.six, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "−", action: callbacks.minus, color: operator_bg, text_color: white_fg, font_size: operator_size %}
 
-      {% filled_button onPressed: "1" %}{% text data: "1" %}{% endfilled_button %}
-      {% filled_button onPressed: "2" %}{% text data: "2" %}{% endfilled_button %}
-      {% filled_button onPressed: "3" %}{% text data: "3" %}{% endfilled_button %}
-      {% filled_button onPressed: "+" %}{% text data: "+" %}{% endfilled_button %}
+      {% render "calculator/partials/keypad_button.liquid", label: "1", action: callbacks.one, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "2", action: callbacks.two, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "3", action: callbacks.three, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "+", action: callbacks.plus, color: operator_bg, text_color: white_fg, font_size: operator_size %}
 
-      {% filled_button onPressed: "0" %}{% text data: "0" %}{% endfilled_button %}
-      {% filled_button onPressed: "." %}{% text data: "." %}{% endfilled_button %}
-      {% filled_button onPressed: "=" %}{% text data: "=" %}{% endfilled_button %}
-      {% filled_button onPressed: "⌫" %}{% text data: "⌫" %}{% endfilled_button %}
+      {% render "calculator/partials/keypad_button.liquid", label: "0", action: callbacks.zero, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: ".", action: callbacks.dot, color: digit_bg, text_color: white_fg, font_size: digit_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "=", action: callbacks.equals, color: equals_bg, text_color: white_fg, font_size: operator_size %}
+      {% render "calculator/partials/keypad_button.liquid", label: "⌫", action: callbacks.backspace, color: action_bg, text_color: white_fg, font_size: action_size %}
     {% endgrid_view %}
-  
+  {% endsized_box %}
 {% endcontainer %}

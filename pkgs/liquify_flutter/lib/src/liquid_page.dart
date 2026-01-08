@@ -26,6 +26,7 @@ class LiquidPage extends StatefulWidget {
     required this.template,
     required this.root,
     this.data = const {},
+    this.sharedState,
     this.onAction,
     this.useAsync = true,
   });
@@ -38,6 +39,10 @@ class LiquidPage extends StatefulWidget {
   
   /// Initial data to pass to the template.
   final Map<String, dynamic> data;
+
+  /// Optional shared state map to persist data across pages.
+  /// When provided, Lua get/set will read/write to this map.
+  final Map<String, dynamic>? sharedState;
   
   /// Callback for handling navigation and other actions from the template.
   final void Function(String action)? onAction;
@@ -52,7 +57,7 @@ class LiquidPage extends StatefulWidget {
 class LiquidPageState extends State<LiquidPage> {
   /// The persistent state managed by this page.
   /// Lua's get/set functions read and write to this map.
-  final Map<String, dynamic> _state = {};
+  late final Map<String, dynamic> _state;
   
   /// The LuaLike instance for this page.
   lualike.LuaLike? _lua;
@@ -66,6 +71,7 @@ class LiquidPageState extends State<LiquidPage> {
   @override
   void initState() {
     super.initState();
+    _state = widget.sharedState ?? <String, dynamic>{};
     // Initialize state from widget data
     _state.addAll(widget.data);
     _initLua();
@@ -105,7 +111,6 @@ class LiquidPageState extends State<LiquidPage> {
       }
       final key = _coerceKey(args.first);
       final value = _state[key];
-      debugPrint('[LiquidPage] get("$key") = $value (state keys: ${_state.keys})');
       return lualike.toLuaValue(_toLuaInput(value));
     });
 
@@ -117,7 +122,6 @@ class LiquidPageState extends State<LiquidPage> {
       final key = _coerceKey(args[0]);
       final value = _sanitizeData(lualike.fromLuaValue(args[1]));
       _state[key] = value;
-      debugPrint('[LiquidPage] set("$key", $value) -> state: $_state');
       return null;
     });
 
@@ -201,9 +205,18 @@ class LiquidPageState extends State<LiquidPage> {
   }
 
   Object? _sanitizeData(Object? value) {
+    if (value is lualike.Value) {
+      return _sanitizeData(lualike.fromLuaValue(value));
+    }
     if (value == null) return null;
     if (value is String || value is num || value is bool) return value;
-    if (value is List) return value.map(_sanitizeData).toList();
+    if (value is List) {
+      final table = <int, Object?>{};
+      for (var i = 0; i < value.length; i++) {
+        table[i + 1] = _sanitizeData(value[i]);
+      }
+      return table;
+    }
     if (value is Map) {
       return value.map((k, v) => MapEntry(k.toString(), _sanitizeData(v)));
     }
@@ -211,9 +224,18 @@ class LiquidPageState extends State<LiquidPage> {
   }
 
   Object? _toLuaInput(Object? value) {
+    if (value is lualike.Value) {
+      return _toLuaInput(lualike.fromLuaValue(value));
+    }
     if (value == null) return null;
     if (value is String || value is num || value is bool) return value;
-    if (value is List) return value.map(_toLuaInput).toList();
+    if (value is List) {
+      final table = <int, Object?>{};
+      for (var i = 0; i < value.length; i++) {
+        table[i + 1] = _toLuaInput(value[i]);
+      }
+      return table;
+    }
     if (value is Map) {
       return value.map((k, v) => MapEntry(k.toString(), _toLuaInput(v)));
     }
@@ -223,6 +245,9 @@ class LiquidPageState extends State<LiquidPage> {
   @override
   Widget build(BuildContext context) {
     _needsRebuild = false;
+    final mediaQuery = MediaQuery.of(context);
+    final size = mediaQuery.size;
+    final padding = mediaQuery.padding;
     
     final environment = Environment();
     
@@ -239,7 +264,22 @@ class LiquidPageState extends State<LiquidPage> {
     registerFlutterTags(environment: environment);
     
     // Merge widget data with current state (state takes precedence)
-    final mergedData = {...widget.data, ..._state};
+    final mergedData = {
+      ...widget.data,
+      ..._state,
+      'screen': {
+        'width': size.width,
+        'height': size.height,
+        'orientation': mediaQuery.orientation.name,
+        'devicePixelRatio': mediaQuery.devicePixelRatio,
+        'safeTop': padding.top,
+        'safeBottom': padding.bottom,
+        'safeLeft': padding.left,
+        'safeRight': padding.right,
+        'safeWidth': size.width - padding.left - padding.right,
+        'safeHeight': size.height - padding.top - padding.bottom,
+      },
+    };
     
     final templateInstance = FlutterTemplate.fromFile(
       widget.template,
@@ -258,6 +298,15 @@ class LiquidPageState extends State<LiquidPage> {
       future: _renderFuture,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          final details = FlutterErrorDetails(
+            exception: snapshot.error!,
+            stack: snapshot.stackTrace,
+            context: ErrorDescription('LiquidPage render'),
+          );
+          FlutterError.reportError(details);
+          debugPrint(
+            '[LiquidPage] render error: ${snapshot.error}\n${snapshot.stackTrace}',
+          );
           return Center(
             child: Text('Error: ${snapshot.error}'),
           );

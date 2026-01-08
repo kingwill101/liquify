@@ -1,6 +1,6 @@
 {% comment %}
 Calculator screen composition. Uses base layout and renders the display and keypad
-partials. Expects: expression, display, actions (Drop passed to keypad).
+partials. Uses Lua callbacks for keypad actions.
 {% endcomment %}
 {% assign content_pad = "" | responsive: xs: 12, sm: 16, md: 20, lg: 24, default: 20 %}
 {% assign section_gap = "" | responsive: xs: 10, sm: 12, md: 14, lg: 16, default: 14 %}
@@ -11,8 +11,16 @@ partials. Expects: expression, display, actions (Drop passed to keypad).
 {% assign header_text_size = "" | responsive: xs: 14, sm: 15, md: 16, lg: 18, default: 16 %}
 {% assign header_block = "" | responsive: xs: 76, sm: 68, md: 54, lg: 54, default: 54 %}
 
-{% assign usable_width = screen.width | minus: content_pad | minus: content_pad %}
-{% assign display_height = screen.height | times: 0.2 | at_most: 180 | at_least: 88 %}
+{% assign safe_height = screen.height %}
+{% assign safe_width = screen.width %}
+{% if screen.safeHeight %}
+  {% assign safe_height = screen.safeHeight %}
+{% endif %}
+{% if screen.safeWidth %}
+  {% assign safe_width = screen.safeWidth %}
+{% endif %}
+{% assign usable_width = safe_width | minus: content_pad | minus: content_pad %}
+{% assign display_height = safe_height | times: 0.2 | at_most: 180 | at_least: 88 %}
 {% assign display_padding = "" | responsive: xs: 8, sm: 9, md: 10, lg: 12, default: 10 %}
 {% assign display_gap = "" | responsive: xs: 2, sm: 3, md: 3, lg: 4, default: 3 %}
 {% assign expression_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 16, xl: 18, default: 16 %}
@@ -25,15 +33,402 @@ partials. Expects: expression, display, actions (Drop passed to keypad).
 {% assign digit_size = "" | responsive: xs: 15, sm: 16, md: 18, lg: 20, default: 18 %}
 {% assign operator_size = "" | responsive: xs: 15, sm: 16, md: 18, lg: 20, default: 18 %}
 {% assign action_size = "" | responsive: xs: 13, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign keypad_height_scale = "" | responsive: xs: 0.68, sm: 0.8, md: 0.9, lg: 1.0, default: 1.0 %}
+{% assign keypad_columns = 4 %}
+{% if screen.width >= 960 %}
+  {% assign keypad_columns = 5 %}
+{% endif %}
 
-{% assign available_height = screen.height | minus: content_pad | minus: content_pad | minus: header_block | minus: display_height | minus: section_gap | minus: section_gap %}
-{% assign gap_total = grid_gap | times: 4 %}
-{% assign gap_total_x = grid_gap | times: 3 %}
-{% assign max_cell_height = available_height | minus: gap_total | divided_by: 5 %}
-{% assign cell_height = max_cell_height %}
-{% assign grid_height = cell_height | times: 5 | plus: gap_total %}
 {% assign keypad_width = usable_width %}
 {% assign display_width = keypad_width %}
+{% assign available_height = safe_height | minus: content_pad | minus: content_pad | minus: header_block | minus: display_height | minus: section_gap | minus: section_gap %}
+{% assign grid_rows = 5 %}
+{% assign grid_row_gaps = grid_gap | times: 4 %}
+{% if available_height <= grid_row_gaps %}
+  {% assign available_height = grid_row_gaps | plus: 1 %}
+{% endif %}
+{% assign grid_col_gaps = keypad_columns | minus: 1 | times: grid_gap %}
+{% if keypad_width <= grid_col_gaps %}
+  {% assign keypad_width = grid_col_gaps | plus: 1 %}
+{% endif %}
+{% assign keypad_width_f = keypad_width | times: 1.0 %}
+{% assign available_height_f = available_height | times: 1.0 %}
+{% assign cell_width = keypad_width_f | minus: grid_col_gaps | divided_by: keypad_columns %}
+{% assign cell_height = available_height_f | minus: grid_row_gaps | divided_by: grid_rows %}
+{% if cell_height <= 0 %}
+  {% assign cell_height = 1 %}
+{% endif %}
+{% if keypad_height_scale < 1 %}
+  {% assign cell_height = cell_height | times: keypad_height_scale %}
+{% endif %}
+{% assign child_aspect_ratio = cell_width | times: 1.0 | divided_by: cell_height %}
+{% if child_aspect_ratio <= 0 %}
+  {% assign child_aspect_ratio = 1 %}
+{% endif %}
+{% assign grid_height = cell_height | times: grid_rows | plus: grid_row_gaps %}
+{% lua assign: calc %}
+local function ensure_state()
+  if get("expression") == nil then set("expression", "") end
+  if get("display") == nil then set("display", "0") end
+  if get("justEvaluated") == nil then set("justEvaluated", false) end
+  if get("history") == nil then set("history", {}) end
+  if get("memory") == nil then set("memory", 0) end
+end
+
+local function push(list, value)
+  list[#list + 1] = value
+end
+
+local function ensure_table(value, name)
+  if type(value) ~= "table" then
+    log(name .. " type: " .. type(value))
+    return {}
+  end
+  local ok = pcall(function()
+    local _ = value[1]
+  end)
+  if not ok then
+    log(name .. " not indexable")
+    return {}
+  end
+  return value
+end
+
+local function pop(list)
+  local idx = #list
+  if idx == 0 then return nil end
+  local value = list[idx]
+  list[idx] = nil
+  return value
+end
+
+local function tokenize(expr)
+  local tokens = {}
+  local text = tostring(expr or "")
+  for token in string.gmatch(text, "%S+") do
+    push(tokens, token)
+  end
+  return tokens
+end
+
+local function tokens_to_string(tokens)
+  if type(tokens) ~= "table" then
+    return ""
+  end
+  return table.concat(tokens, " ")
+end
+
+local function is_operator(token)
+  return token == "+" or token == "-" or token == "−" or token == "×" or token == "÷" or token == "^"
+end
+
+local function normalize_token(token)
+  if token == "×" then return "*" end
+  if token == "÷" then return "/" end
+  if token == "−" then return "-" end
+  if token == "π" then return "pi" end
+  return token
+end
+
+local function apply_percent(expr)
+  local tokens = ensure_table(tokenize(expr), "tokens")
+  if #tokens == 0 then return expr end
+  local last = tokens[#tokens]
+  local num = tonumber(last)
+  if not num then return expr end
+  tokens[#tokens] = tostring(num / 100)
+  return tokens_to_string(tokens)
+end
+
+local function toggle_last_number(expr)
+  local tokens = ensure_table(tokenize(expr), "tokens")
+  if #tokens == 0 then return expr end
+  local last = tokens[#tokens]
+  local num = tonumber(last)
+  if not num then return expr end
+  tokens[#tokens] = tostring(-num)
+  return tokens_to_string(tokens)
+end
+
+local function append_value(expr, value, justEvaluated)
+  local tokens = ensure_table(tokenize(expr), "tokens")
+  if justEvaluated then
+    tokens = {}
+    justEvaluated = false
+  end
+  if value == "(" or value == ")" or value == "pi" then
+    push(tokens, value)
+    return tokens_to_string(tokens), justEvaluated
+  end
+  if #tokens == 0 then
+    push(tokens, value)
+  else
+    local last = tokens[#tokens]
+    if is_operator(last) or last == "(" then
+      push(tokens, value)
+    else
+      if value == "." and string.find(last, "%.") then
+        return tokens_to_string(tokens), justEvaluated
+      end
+      if value == "." and last == "" then
+        last = "0"
+      end
+      tokens[#tokens] = last .. value
+    end
+  end
+  return tokens_to_string(tokens), justEvaluated
+end
+
+local function append_operator(expr, op, justEvaluated, display)
+  local tokens = ensure_table(tokenize(expr), "tokens")
+  if justEvaluated then
+    tokens = tokenize(display or "")
+    justEvaluated = false
+  end
+  if #tokens == 0 then
+    if op == "-" or op == "−" then
+      return op, justEvaluated
+    end
+    return expr, justEvaluated
+  end
+  local last = tokens[#tokens]
+  if is_operator(last) then
+    tokens[#tokens] = op
+  else
+    push(tokens, op)
+  end
+  return tokens_to_string(tokens), justEvaluated
+end
+
+local function backspace(expr)
+  local tokens = ensure_table(tokenize(expr), "tokens")
+  if #tokens == 0 then return "" end
+  local last = tokens[#tokens]
+  if is_operator(last) or last == "(" or last == ")" then
+    pop(tokens)
+    return tokens_to_string(tokens)
+  end
+  if #last > 1 then
+    tokens[#tokens] = string.sub(last, 1, -2)
+  else
+    pop(tokens)
+  end
+  return tokens_to_string(tokens)
+end
+
+local function preprocess_tokens(tokens)
+  local prec = { ["+"] = 1, ["-"] = 1, ["*"] = 2, ["/"] = 2, ["^"] = 3 }
+  local processed = {}
+  tokens = ensure_table(tokens, "tokens")
+  for _, tok in ipairs(tokens) do
+    local norm = normalize_token(tok)
+    if norm == "pi" then
+      push(processed, tostring(math.pi))
+    else
+      if norm == "-" then
+        local prev = processed[#processed]
+        if prev == nil or prev == "(" or prec[prev] then
+          push(processed, "0")
+        end
+      end
+      push(processed, norm)
+    end
+  end
+  return processed
+end
+
+local function add_history(expression, result)
+  if expression == nil or expression == "" then return end
+  local history = ensure_table(get("history"), "history")
+  local new_history = { { expression = expression, result = result } }
+  for i = 1, #history do
+    if #new_history >= 12 then break end
+    push(new_history, history[i])
+  end
+  set("history", new_history)
+end
+
+local function eval_expression(expr)
+  local tokens = ensure_table(tokenize(expr), "tokens")
+  if #tokens == 0 then return nil end
+  local values = {}
+  local ops = {}
+  local prec = { ["+"] = 1, ["-"] = 1, ["*"] = 2, ["/"] = 2, ["^"] = 3 }
+  local right_assoc = { ["^"] = true }
+
+  local function apply_op()
+    local op = pop(ops)
+    local b = pop(values)
+    local a = pop(values)
+    if not op or a == nil or b == nil then return nil end
+    if op == "+" then return a + b end
+    if op == "-" then return a - b end
+    if op == "*" then return a * b end
+    if op == "/" then if b == 0 then return nil end return a / b end
+    if op == "^" then return a ^ b end
+    return nil
+  end
+
+  for _, token in ipairs(preprocess_tokens(tokens)) do
+    if token == "(" then
+      push(ops, token)
+    elseif token == ")" then
+      while #ops > 0 and ops[#ops] ~= "(" do
+        local result = apply_op()
+        if result == nil then return nil end
+        push(values, result)
+      end
+      if #ops == 0 or ops[#ops] ~= "(" then return nil end
+      pop(ops)
+    elseif prec[token] then
+      while #ops > 0 do
+        local top = ops[#ops]
+        if top == "(" then break end
+        local top_prec = prec[top] or 0
+        local cur_prec = prec[token] or 0
+        if top_prec > cur_prec or (top_prec == cur_prec and not right_assoc[token]) then
+          local result = apply_op()
+          if result == nil then return nil end
+          push(values, result)
+        else
+          break
+        end
+      end
+      push(ops, token)
+    else
+      if token == "pi" then
+        push(values, math.pi)
+      else
+        local num = tonumber(token)
+        if num == nil then return nil end
+        push(values, num)
+      end
+    end
+  end
+
+  while #ops > 0 do
+    if ops[#ops] == "(" then return nil end
+    local result = apply_op()
+    if result == nil then return nil end
+    push(values, result)
+  end
+
+  return values[#values]
+end
+
+local function format_number(value)
+  if value == nil then return "Err" end
+  if math.floor(value) == value then
+    return tostring(value)
+  end
+  local text = string.format("%.8f", value)
+  text = string.gsub(text, "0+$", "")
+  text = string.gsub(text, "%.$", "")
+  return text
+end
+
+local function press(value, token)
+  local expr = tostring(get("expression") or "")
+  local display = tostring(get("display") or "0")
+  local just = get("justEvaluated") or false
+  local input = token or value
+
+  if value == "clear" then
+    expr = ""
+    display = "0"
+    just = false
+  elseif value == "memory_clear" then
+    set("memory", 0)
+    set("history", {})
+    expr = ""
+    display = "0"
+    just = false
+  elseif value == "sign" then
+    expr = toggle_last_number(expr)
+    display = expr ~= "" and expr or "0"
+    just = false
+  elseif value == "percent" then
+    expr = apply_percent(expr)
+    display = expr ~= "" and expr or "0"
+    just = false
+  elseif value == "backspace" then
+    expr = backspace(expr)
+    display = expr ~= "" and expr or "0"
+    just = false
+  elseif value == "equals" then
+    if expr == "" then
+      display = "0"
+      just = false
+    else
+      local raw_expr = expr
+      local result = eval_expression(expr)
+      if result == nil then
+        display = "Err"
+        expr = ""
+        just = false
+      else
+        display = format_number(result)
+        expr = display
+        just = true
+        add_history(raw_expr, display)
+      end
+    end
+  elseif value == "operator" then
+    expr, just = append_operator(expr, input, just, display)
+    display = expr ~= "" and expr or "0"
+  else
+    expr, just = append_value(expr, input, just)
+    display = expr ~= "" and expr or "0"
+  end
+
+  set("expression", expr)
+  set("display", display)
+  set("justEvaluated", just)
+  rebuild()
+end
+
+ensure_state()
+
+local function make_button(label, value, token)
+  return callback(function()
+    press(value or label, token or label)
+  end)
+end
+
+return {
+  expression = get("expression") or "",
+  display = get("display") or "0",
+  nav_home = callback(function() action("nav:home") end),
+  nav_history = callback(function() action("page:history") end),
+  buttons = {
+    fc = make_button("FC", "clear"),
+    sign = make_button("+/-", "sign"),
+    percent = make_button("%", "percent"),
+    divide = make_button("÷", "operator", "÷"),
+    seven = make_button("7", "value", "7"),
+    eight = make_button("8", "value", "8"),
+    nine = make_button("9", "value", "9"),
+    multiply = make_button("×", "operator", "×"),
+    four = make_button("4", "value", "4"),
+    five = make_button("5", "value", "5"),
+    six = make_button("6", "value", "6"),
+    minus = make_button("−", "operator", "−"),
+    one = make_button("1", "value", "1"),
+    two = make_button("2", "value", "2"),
+    three = make_button("3", "value", "3"),
+    plus = make_button("+", "operator", "+"),
+    zero = make_button("0", "value", "0"),
+    dot = make_button(".", "value", "."),
+    equals = make_button("=", "equals"),
+    backspace = make_button("⌫", "backspace"),
+    lparen = make_button("(", "value", "("),
+    rparen = make_button(")", "value", ")"),
+    pow = make_button("^", "operator", "^"),
+    pi = make_button("pi", "value", "pi"),
+    mc = make_button("MC", "memory_clear"),
+  },
+}
+{% endlua %}
 {% layout "calculator/layouts/base.liquid" %}
 {% block content %}
   {% column spacing: section_gap crossAxisAlignment: "stretch" %}
@@ -41,10 +436,10 @@ partials. Expects: expression, display, actions (Drop passed to keypad).
       {% container alignment: "center" width: keypad_width height: header_block %}
         
           {% wrap alignment: "center" runAlignment: "center" spacing: header_gap runSpacing: header_run_gap %}
-            {% filled_button onPressed: "nav:home" %}
+            {% filled_button onPressed: calc.nav_home %}
               {% text data: "Apps" %}
             {% endfilled_button %}
-            {% filled_button onPressed: "page:history" %}
+            {% filled_button onPressed: calc.nav_history %}
               {% text data: "History" %}
             {% endfilled_button %}
             {% assign text_style_1 = "" | text_style: fontSize: header_text_size, fontWeight: "bold", color: "#f6f7fb" %}
@@ -56,12 +451,16 @@ partials. Expects: expression, display, actions (Drop passed to keypad).
     {% center %}
       {% assign expression_style = "" | text_style: fontSize: expression_size %}
       {% assign display_style = "" | text_style: fontSize: display_size %}
-      {% render "calculator/partials/display.liquid", expression: expression, display: display, display_width: display_width, display_height: display_height, display_padding: display_padding, display_gap: display_gap, expression_style: expression_style, display_style: display_style %}
+      {% render "calculator/partials/display.liquid", expression: calc.expression, display: calc.display, display_width: display_width, display_height: display_height, display_padding: display_padding, display_gap: display_gap, expression_style: expression_style, display_style: display_style %}
     {% endcenter %}
     {% expanded %}
       {% center %}
-        {% assign keypad_delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: 4, mainAxisSpacing: grid_gap, crossAxisSpacing: grid_gap, childAspectRatio: 1.0 %}
-        {% render "calculator/partials/keypad.liquid", actions: actions, keypad_width: keypad_width, grid_height: grid_height, grid_gap: grid_gap, cell_height: cell_height, button_size: button_size, button_padding: button_padding, button_radius: button_radius, digit_size: digit_size, operator_size: operator_size, action_size: action_size, keypad_delegate: keypad_delegate %}
+        {% assign keypad_delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: keypad_columns, mainAxisSpacing: grid_gap, crossAxisSpacing: grid_gap, childAspectRatio: child_aspect_ratio, mainAxisExtent: cell_height %}
+        {% if keypad_columns > 4 %}
+          {% render "calculator/partials/keypad_wide.liquid", callbacks: calc.buttons, keypad_width: keypad_width, grid_height: grid_height, grid_gap: grid_gap, cell_height: cell_height, button_size: button_size, button_padding: button_padding, button_radius: button_radius, digit_size: digit_size, operator_size: operator_size, action_size: action_size, keypad_delegate: keypad_delegate %}
+        {% else %}
+          {% render "calculator/partials/keypad.liquid", callbacks: calc.buttons, keypad_width: keypad_width, grid_height: grid_height, grid_gap: grid_gap, cell_height: cell_height, button_size: button_size, button_padding: button_padding, button_radius: button_radius, digit_size: digit_size, operator_size: operator_size, action_size: action_size, keypad_delegate: keypad_delegate %}
+        {% endif %}
       {% endcenter %}
     {% endexpanded %}
   {% endcolumn %}
