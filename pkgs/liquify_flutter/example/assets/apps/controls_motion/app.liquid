@@ -1,0 +1,121 @@
+{% comment %}
+Controls motion demo. Expects motion_enabled.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% assign motion_opacity = 0.35 %}
+{% assign motion_width = 96 %}
+{% assign motion_color = "#1f2937" %}
+{% assign motion_text_color = "#cbd1dc" %}
+{% if motion_enabled %}
+  {% assign motion_opacity = 1 %}
+  {% assign motion_width = 140 %}
+  {% assign motion_color = "#7dd3fc" %}
+  {% assign motion_text_color = "#0b1320" %}
+{% endif %}
+{% lua assign: motion_summary %}
+  local enabled = get("motion_enabled")
+  if enabled then
+    return { status = "Motion enabled", detail = "Animations are active." }
+  end
+  return { status = "Motion paused", detail = "Toggle to preview animations." }
+{% endlua %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Motion" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+            {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Animation + Motion" style: text_style_2 %}
+            {% switch value: motion_enabled onChanged: "controls:motion_toggle" %}
+          {% endrow %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Animated opacity, container, fade, and hero wrappers." style: text_style_3 %}
+          {% assign text_style_4 = "" | text_style: fontSize: caption_size, color: "#7dd3fc" %}
+{% text data: motion_summary.status style: text_style_4 %}
+          {% assign text_style_5 = "" | text_style: fontSize: caption_size, color: "#8b93a6" %}
+{% text data: motion_summary.detail style: text_style_5 %}
+          {% wrap spacing: 12 runSpacing: 12 %}
+            {% animated_opacity opacity: motion_opacity duration: 350 curve: "easeInOut" %}
+              {% card color: "#1f2937" %}
+                {% assign text_style_6 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Opacity" style: text_style_6 %}
+              {% endcard %}
+            {% endanimated_opacity %}
+            {% animated_container
+              width: motion_width
+              height: 64
+              duration: 350
+              curve: "easeInOut"
+              color: motion_color
+              alignment: "center" %}
+              {% assign text_style_7 = "" | text_style: fontSize: caption_size, color: motion_text_color %}
+{% text data: "Container" style: text_style_7 %}
+            {% endanimated_container %}
+          {% endwrap %}
+          {% fade_transition opacity: motion_opacity alwaysIncludeSemantics: true %}
+            {% assign text_style_8 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Fade transition preview" style: text_style_8 %}
+          {% endfade_transition %}
+          {% row spacing: 8 crossAxisAlignment: "center" %}
+            {% assign text_style_9 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Hero tag:" style: text_style_9 %}
+            {% hero tag: "controls-avatar" %}
+              {% circle_avatar backgroundColor: "#1f2937" foregroundColor: "#f6f7fb" radius: 16 %}
+                {% text data: "KD" %}
+              {% endcircle_avatar %}
+            {% endhero %}
+          {% endrow %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_10 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Gestures + Pointer" style: text_style_10 %}
+          {% assign text_style_11 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "GestureDetector, Listener, MouseRegion, and Dismissible." style: text_style_11 %}
+          {% gesture_detector onTap: "controls:gesture_tap" %}
+            {% card color: "#1f2937" %}
+              {% assign text_style_12 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Tap gesture" style: text_style_12 %}
+            {% endcard %}
+          {% endgesture_detector %}
+          {% listener onPointerDown: "controls:pointer_down" %}
+            {% card color: "#0f172a" %}
+              {% assign text_style_13 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Pointer listener" style: text_style_13 %}
+            {% endcard %}
+          {% endlistener %}
+          {% mouse_region onEnter: "controls:mouse_enter" cursor: "click" %}
+            {% card color: "#111827" %}
+              {% assign text_style_14 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Mouse region" style: text_style_14 %}
+            {% endcard %}
+          {% endmouse_region %}
+          {% dismissible key: "dismiss-demo" direction: "endToStart" onDismissed: "controls:dismissed" %}
+            {% colored_box color: "#b91c1c" %}
+              {% sized_box height: 72 %}{% endsized_box %}
+            {% endcolored_box %}
+            {% card color: "#1f2937" %}
+              {% assign text_style_15 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Swipe to dismiss" style: text_style_15 %}
+            {% endcard %}
+          {% enddismissible %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

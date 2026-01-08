@@ -1,0 +1,9 @@
+tag: colored_box
+widget: ColoredBox
+properties:
+  - name: color
+    type: Color
+    required: true
+children:
+  kind: single
+  fallback: shrink

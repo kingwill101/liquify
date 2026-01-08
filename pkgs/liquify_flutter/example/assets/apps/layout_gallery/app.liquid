@@ -1,0 +1,100 @@
+{% comment %}
+Layout gallery demo using generated tags only.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% layout "layout_gallery/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:home" %}
+          {% text data: "Apps" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Layout Gallery" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Row + Column" style: text_style_2 %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Basic flex layouts with spacing." style: text_style_3 %}
+          {% row spacing: 8 %}
+            {% colored_box color: "#f5b74a" %}
+              {% sized_box width: 60 height: 24 %}{% endsized_box %}
+            {% endcolored_box %}
+            {% colored_box color: "#7dd3fc" %}
+              {% sized_box width: 60 height: 24 %}{% endsized_box %}
+            {% endcolored_box %}
+            {% colored_box color: "#a78bfa" %}
+              {% sized_box width: 60 height: 24 %}{% endsized_box %}
+            {% endcolored_box %}
+          {% endrow %}
+          {% column spacing: 6 crossAxisAlignment: "start" %}
+            {% colored_box color: "#1f2937" %}
+              {% sized_box width: 120 height: 18 %}{% endsized_box %}
+            {% endcolored_box %}
+            {% colored_box color: "#334155" %}
+              {% sized_box width: 90 height: 18 %}{% endsized_box %}
+            {% endcolored_box %}
+          {% endcolumn %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_4 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Stack + Positioned" style: text_style_4 %}
+          {% assign text_style_5 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Layered content with positioned elements." style: text_style_5 %}
+          {% sized_box height: 180 %}
+            {% stack %}
+              {% colored_box color: "#0f172a" %}
+                {% sized_box width: 400 height: 180 %}{% endsized_box %}
+              {% endcolored_box %}
+              {% positioned top: 12 left: 12 %}
+                {% card color: "#1f2937" %}
+                  {% assign text_style_6 = "" | text_style: fontSize: 12, color: "#e2e8f0" %}
+{% text data: "Top left" style: text_style_6 %}
+                {% endcard %}
+              {% endpositioned %}
+              {% positioned bottom: 12 right: 12 %}
+                {% card color: "#1f2431" %}
+                  {% assign text_style_7 = "" | text_style: fontSize: 12, color: "#e2e8f0" %}
+{% text data: "Bottom right" style: text_style_7 %}
+                {% endcard %}
+              {% endpositioned %}
+            {% endstack %}
+          {% endsized_box %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_8 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Wrap + Grid" style: text_style_8 %}
+          {% assign text_style_9 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Wrapping chips and a simple grid view." style: text_style_9 %}
+          {% wrap spacing: 8 runSpacing: 8 %}
+            {% card color: "#232733" %}{% text data: "wrap" %}{% endcard %}
+            {% card color: "#232733" %}{% text data: "spacing" %}{% endcard %}
+            {% card color: "#232733" %}{% text data: "row" %}{% endcard %}
+            {% card color: "#232733" %}{% text data: "column" %}{% endcard %}
+          {% endwrap %}
+          {% assign grid_delegate = "" | sliver_grid_delegate_with_fixed_cross_axis_count: crossAxisCount: 3, mainAxisSpacing: 8, crossAxisSpacing: 8, mainAxisExtent: 32 %}
+          {% grid_view gridDelegate: grid_delegate shrinkWrap: true physics: "never" %}
+            {% colored_box color: "#3b82f6" %}{% sized_box height: 32 %}{% endsized_box %}{% endcolored_box %}
+            {% colored_box color: "#22c55e" %}{% sized_box height: 32 %}{% endsized_box %}{% endcolored_box %}
+            {% colored_box color: "#f97316" %}{% sized_box height: 32 %}{% endsized_box %}{% endcolored_box %}
+            {% colored_box color: "#a855f7" %}{% sized_box height: 32 %}{% endsized_box %}{% endcolored_box %}
+            {% colored_box color: "#f5b74a" %}{% sized_box height: 32 %}{% endsized_box %}{% endcolored_box %}
+            {% colored_box color: "#7dd3fc" %}{% sized_box height: 32 %}{% endsized_box %}{% endcolored_box %}
+          {% endgrid_view %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

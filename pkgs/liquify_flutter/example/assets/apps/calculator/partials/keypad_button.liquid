@@ -1,0 +1,11 @@
+{% comment %}
+Calculator button tile. Expects: label, action, color, text_color, font_size.
+{% endcomment %}
+{% gesture_detector onTap: action %}
+  {% card color: color elevation: 0 %}
+    {% center %}
+      {% assign button_text_style = "" | text_style: fontSize: font_size, fontWeight: "bold", color: text_color %}
+{% text data: label style: button_text_style %}
+    {% endcenter %}
+  {% endcard %}
+{% endgesture_detector %}

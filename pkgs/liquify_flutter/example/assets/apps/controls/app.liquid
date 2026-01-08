@@ -1,0 +1,135 @@
+{% comment %}
+Controls hub demo. Links to control-focused pages.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:home" %}
+          {% text data: "Apps" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 10 crossAxisAlignment: "start" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls Hub" style: text_style_2 %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Choose a focused demo to explore specific control groups." style: text_style_3 %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "tune" size: 20 color: "#34d399" %}
+            {% assign text_style_4 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Inputs" style: text_style_4 %}
+          {% endrow %}
+          {% assign text_style_5 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Sliders, switches, text fields, and buttons." style: text_style_5 %}
+          {% filled_button onPressed: "nav:controls_inputs" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "check_circle" size: 20 color: "#a78bfa" %}
+            {% assign text_style_6 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Selection" style: text_style_6 %}
+          {% endrow %}
+          {% assign text_style_7 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Chips, segmented controls, and choice widgets." style: text_style_7 %}
+          {% filled_button onPressed: "nav:controls_selection" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "map" size: 20 color: "#f5b74a" %}
+            {% assign text_style_8 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Navigation" style: text_style_8 %}
+          {% endrow %}
+          {% assign text_style_9 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Rails, bottom bars, drawers, and tiles." style: text_style_9 %}
+          {% filled_button onPressed: "nav:controls_navigation" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "event" size: 20 color: "#7dd3fc" %}
+            {% assign text_style_10 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Pickers" style: text_style_10 %}
+          {% endrow %}
+          {% assign text_style_11 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Dropdowns, steppers, and date/time pickers." style: text_style_11 %}
+          {% filled_button onPressed: "nav:controls_pickers" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "notifications" size: 20 color: "#f97316" %}
+            {% assign text_style_12 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Feedback" style: text_style_12 %}
+          {% endrow %}
+          {% assign text_style_13 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Progress, dialogs, snackbars, and menus." style: text_style_13 %}
+          {% filled_button onPressed: "nav:controls_feedback" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "auto_awesome" size: 20 color: "#c084fc" %}
+            {% assign text_style_14 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Motion" style: text_style_14 %}
+          {% endrow %}
+          {% assign text_style_15 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Animated opacity, containers, and hero previews." style: text_style_15 %}
+          {% filled_button onPressed: "nav:controls_motion" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#1b1f28" %}
+        {% column spacing: 12 crossAxisAlignment: "start" %}
+          {% row spacing: 10 crossAxisAlignment: "center" %}
+            {% icon icon: "table_chart" size: 20 color: "#60a5fa" %}
+            {% assign text_style_16 = "" | text_style: fontSize: 16, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Data" style: text_style_16 %}
+          {% endrow %}
+          {% assign text_style_17 = "" | text_style: color: "#9aa0ab" %}
+{% text data: "Lists, reorderable rows, and tables." style: text_style_17 %}
+          {% filled_button onPressed: "nav:controls_data" %}
+            {% text data: "Open" %}
+          {% endfilled_button %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}
