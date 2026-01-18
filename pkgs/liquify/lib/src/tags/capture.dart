@@ -48,11 +48,11 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() {
+  Parser parser([LiquidConfig? config]) {
     return seq3(
-      tagStart() & string('capture').trim(),
+      createTagStart(config) & string('capture').trim(),
       ref0(identifier).trim(),
-      tagEnd(),
+      createTagEnd(config),
     ).map((values) {
       return Tag('capture', [values.$2 as ASTNode]);
     });

@@ -13,13 +13,16 @@ class SuperTag extends AbstractTag with CustomTagParser {
   }
 
   @override
-  Parser parser() {
-    // This matches syntax: {{ super() }}
-    return (varStart() &
+  TagDelimiterType get delimiterType => TagDelimiterType.variable;
+
+  @override
+  Parser parser([LiquidConfig? config]) {
+    // This matches syntax: {{ super() }} or custom delimiters like [[ super() ]]
+    return (createVarStart(config) &
             string('super').trim() &
             char('(').trim() &
             char(')').trim() &
-            varEnd())
+            createVarEnd(config))
         .map((_) {
           return Tag('super', []);
         });

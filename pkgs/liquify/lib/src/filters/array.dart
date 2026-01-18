@@ -4,6 +4,15 @@ import 'package:liquify/src/filter_registry.dart';
 import 'package:liquify/parser.dart' show parseInput;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
+import 'package:liquify/src/ast.dart' show ASTNode;
+
+/// Cached RegExp for natural sort comparison.
+/// This is created once and reused across all sortNatural invocations.
+final _naturalSortRegex = RegExp(r'^(.*?)(\d+)(.*)$');
+
+/// Cache for parsed Liquid expressions used by *_exp filters.
+/// Key: expression string, Value: parsed AST nodes
+final Map<String, List<ASTNode>> _expressionCache = {};
 
 /// Converts the input value to uppercase.
 ///
@@ -471,9 +480,9 @@ dynamic sortNatural(
     String aStr = a.toString();
     String bStr = b.toString();
 
-    // Extract numeric parts for natural comparison
-    final aMatch = RegExp(r'^(.*?)(\d+)(.*)$').firstMatch(aStr);
-    final bMatch = RegExp(r'^(.*?)(\d+)(.*)$').firstMatch(bStr);
+    // Extract numeric parts for natural comparison (using cached RegExp)
+    final aMatch = _naturalSortRegex.firstMatch(aStr);
+    final bMatch = _naturalSortRegex.firstMatch(bStr);
 
     if (aMatch != null && bMatch != null) {
       String aPrefix = aMatch.group(1) ?? '';
@@ -732,6 +741,7 @@ dynamic rejectExp(
 
 /// Helper function to evaluate Liquid expressions using the proper parser and evaluator.
 /// This creates a proper Liquid expression and evaluates it with the item as context.
+/// Uses caching for parsed expressions to avoid re-parsing the same expression for each array item.
 dynamic _evaluateLiquidExpression(
   dynamic item,
   String itemName,
@@ -742,8 +752,10 @@ dynamic _evaluateLiquidExpression(
     // Create a complete Liquid expression by wrapping it in {{ }}
     final liquidExpression = '{{ $expression }}';
 
-    // Parse the expression using the existing Liquid parser
-    final parsed = parseInput(liquidExpression);
+    // Check cache first, parse if not cached
+    List<ASTNode> parsed =
+        _expressionCache[liquidExpression] ??
+        (_expressionCache[liquidExpression] = parseInput(liquidExpression));
 
     if (parsed.isEmpty) return returnValue ? null : false;
 

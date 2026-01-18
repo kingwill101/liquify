@@ -3,24 +3,54 @@ import 'package:liquify/parser.dart';
 import 'package:liquify/src/fs.dart';
 import 'package:liquify/src/render_target.dart';
 
+/// A compiled Liquid template that can be rendered with data.
+///
+/// Templates can be created from strings or files, and support custom delimiters
+/// through [LiquidConfig].
+///
+/// ## Basic Usage
+///
+/// ```dart
+/// final template = Template.parse('Hello {{ name }}!', data: {'name': 'World'});
+/// print(template.render()); // Hello World!
+/// ```
+///
+/// ## Custom Delimiters
+///
+/// ```dart
+/// final config = LiquidConfig(
+///   tagStart: '[%', tagEnd: '%]',
+///   varStart: '[[', varEnd: ']]',
+/// );
+/// final template = Template.parse(
+///   'Hello [[ name ]]!',
+///   config: config,
+///   data: {'name': 'World'},
+/// );
+/// print(template.render()); // Hello World!
+/// ```
 class Template {
   final String _templateContent;
   final Evaluator _evaluator;
+  final LiquidConfig? _config;
 
   /// Creates a new Template instance from a file.
   ///
   /// [templateName] is the name or path of the template to be rendered.
   /// [root] is the Root object used for resolving templates.
   /// [data] is an optional map of variables to be used in the template evaluation.
+  /// [config] is an optional delimiter configuration for custom delimiters.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
   Template.fromFile(
     String templateName,
     Root root, {
     Map<String, dynamic> data = const {},
+    LiquidConfig? config,
     Environment? environment,
     void Function(Environment)? environmentSetup,
   }) : _templateContent = root.resolve(templateName).content,
+       _config = config,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
        );
@@ -29,16 +59,40 @@ class Template {
   ///
   /// [input] is the string content of the template.
   /// [data] is an optional map of variables to be used in the template evaluation.
+  /// [config] is an optional delimiter configuration for custom delimiters.
   /// [root] is an optional Root object used for resolving templates.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
+  ///
+  /// ## Example with Standard Delimiters
+  ///
+  /// ```dart
+  /// final template = Template.parse(
+  ///   'Hello {{ name }}!',
+  ///   data: {'name': 'World'},
+  /// );
+  /// print(template.render()); // Hello World!
+  /// ```
+  ///
+  /// ## Example with Custom Delimiters
+  ///
+  /// ```dart
+  /// final template = Template.parse(
+  ///   'Hello [[ name ]]!',
+  ///   config: LiquidConfig(varStart: '[[', varEnd: ']]'),
+  ///   data: {'name': 'World'},
+  /// );
+  /// print(template.render()); // Hello World!
+  /// ```
   Template.parse(
     String input, {
     Map<String, dynamic> data = const {},
+    LiquidConfig? config,
     Root? root,
     Environment? environment,
     void Function(Environment)? environmentSetup,
   }) : _templateContent = input,
+       _config = config,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
        );
@@ -53,7 +107,7 @@ class Template {
   ///
   /// If [clearBuffer] is true (default), the internal buffer will be cleared after rendering.
   String render({bool clearBuffer = true}) {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = parser.parseInput(_templateContent, config: _config);
     _evaluator.evaluateNodes(parsed);
     final result = _evaluator.buffer.toString();
     if (clearBuffer) {
@@ -69,7 +123,7 @@ class Template {
   ///
   /// If [clearBuffer] is true (default), the internal buffer will be cleared after rendering.
   Future<String> renderAsync({bool clearBuffer = true}) async {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = parser.parseInput(_templateContent, config: _config);
     if (clearBuffer) {
       _evaluator.buffer.clear();
     }
@@ -83,7 +137,7 @@ class Template {
   ///
   /// [clearBuffer] determines whether to clear the temporary buffer after rendering.
   R renderWith<R>(RenderTarget<R> target, {bool clearBuffer = true}) {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = parser.parseInput(_templateContent, config: _config);
     final sink = target.createSink();
     final buffer = Buffer(sink: sink);
     return _evaluator.withBuffer(buffer, () {
@@ -99,7 +153,7 @@ class Template {
     RenderTarget<R> target, {
     bool clearBuffer = true,
   }) async {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = parser.parseInput(_templateContent, config: _config);
     final sink = target.createSink();
     final buffer = Buffer(sink: sink);
     return _evaluator.withBufferAsync(buffer, () async {

@@ -10,3 +10,10 @@ openspec
 .idea
 .pub-cache
 .tooling
+
+# Flutter build artifacts
+**/build/
+**/ephemeral/
+**/*.xcconfig
+**/GeneratedPluginRegistrant.*
+**/local.properties

@@ -5,6 +5,11 @@ import 'package:liquify/src/util.dart';
 
 final resolverLogger = Logger('Resolver');
 
+/// Cache the last overrides map we built a lookup for.
+/// This allows reuse within a single buildCompleteMergedAst call.
+Map<String, BlockInfo>? _lastOverridesMap;
+Map<String, String>? _lastNestedLookup;
+
 /// Recursive helper to merge a single AST node.
 /// - If the node is a block tag, attempt to replace it with the resolved content.
 /// - Otherwise, process its children (body and content) recursively.
@@ -22,25 +27,12 @@ List<ASTNode> _mergeNode(ASTNode node, TemplateStructure structure) {
       return [node];
     }
 
-    // First try to find a direct override for this block
-    BlockInfo? block = structure.resolvedBlocks[blockName];
+    // Use optimized block lookup
+    final resolvedBlocks = structure.resolvedBlocks;
+    BlockInfo? block = _findBlockInResolved(blockName, resolvedBlocks);
     resolverLogger.info(
-      "[_mergeNode] Direct block lookup for '$blockName': ${block != null ? 'found' : 'not found'}",
+      "[_mergeNode] Block lookup for '$blockName': ${block != null ? 'found' : 'not found'}",
     );
-
-    // If no direct override found, look for nested block override
-    if (block == null) {
-      final nestedBlockName = structure.resolvedBlocks.keys.firstWhere(
-        (key) => key.endsWith('.$blockName'),
-        orElse: () => '',
-      );
-      if (nestedBlockName.isNotEmpty) {
-        block = structure.resolvedBlocks[nestedBlockName];
-        resolverLogger.info(
-          "[_mergeNode] Found nested block override: $nestedBlockName",
-        );
-      }
-    }
 
     // If we found a block (either direct or nested)
     if (block != null && block.content != null) {
@@ -84,6 +76,25 @@ List<ASTNode> _mergeNode(ASTNode node, TemplateStructure structure) {
   return [node];
 }
 
+/// Optimized block lookup - tries direct match first, then nested lookup.
+BlockInfo? _findBlockInResolved(
+  String blockName,
+  Map<String, BlockInfo> resolvedBlocks,
+) {
+  // Direct lookup (O(1))
+  var block = resolvedBlocks[blockName];
+  if (block != null) return block;
+
+  // Build nested lookup and try
+  var nestedLookup = _getOrBuildNestedLookup(resolvedBlocks);
+  var fullName = nestedLookup[blockName];
+  if (fullName != null) {
+    return resolvedBlocks[fullName];
+  }
+
+  return null;
+}
+
 String? _getBlockName(Tag blockTag) {
   final name = blockTag.content.firstWhere(
     (n) => n is Identifier,
@@ -105,19 +116,12 @@ List<ASTNode> _processSuperCall(
   // Get the block name without any parent prefixes
   final blockName = block.name.split('.').last;
 
-  // Try to find the parent's version of this block
-  BlockInfo? parentBlock = structure.parent!.resolvedBlocks[blockName];
-
-  // If not found directly, look for it as a nested block
-  if (parentBlock == null) {
-    final nestedBlockName = structure.parent!.resolvedBlocks.keys.firstWhere(
-      (key) => key.endsWith('.$blockName'),
-      orElse: () => '',
-    );
-    if (nestedBlockName.isNotEmpty) {
-      parentBlock = structure.parent!.resolvedBlocks[nestedBlockName];
-    }
-  }
+  // Use optimized block lookup
+  final parentResolvedBlocks = structure.parent!.resolvedBlocks;
+  BlockInfo? parentBlock = _findBlockInResolved(
+    blockName,
+    parentResolvedBlocks,
+  );
 
   if (parentBlock == null || parentBlock.content == null) {
     return [];
@@ -203,14 +207,15 @@ List<ASTNode> _processNodesWithOverrides(
             if (contentNode is Tag &&
                 contentNode.name == 'super' &&
                 override.parent != null) {
-              // For super() calls, process parent's content
+              // For super() calls, process parent's content recursively
               for (var parentNode in override.parent!.content ?? []) {
-                if (parentNode is Tag && parentNode.name == 'nav') {
-                  // For nav tags in parent content, extract only the text
-                  processedContent.addAll(_extractTextContent(parentNode.body));
-                } else {
-                  processedContent.add(parentNode);
-                }
+                processedContent.addAll(
+                  _processNodesWithOverrides(
+                    [parentNode],
+                    structure,
+                    overrides,
+                  ),
+                );
               }
             } else {
               // For other nodes, process them recursively
@@ -253,178 +258,72 @@ List<ASTNode> _processNodesWithOverrides(
   return result;
 }
 
-/// Helper function to recursively extract text content from nodes
-List<ASTNode> _extractTextContent(List<ASTNode> nodes) {
-  List<ASTNode> result = [];
-  for (var node in nodes) {
-    if (node is Tag) {
-      result.addAll(_extractTextContent(node.body));
-    } else if (node is TextNode) {
-      result.add(node);
-    }
-  }
-  return result;
-}
-
 BlockInfo? _findOverride(String blockName, Map<String, BlockInfo> overrides) {
   resolverLogger.startScope('Looking for override: $blockName');
 
-  // Try direct match first
+  // Try direct match first (O(1) HashMap lookup)
   var override = overrides[blockName];
   if (override != null) {
     resolverLogger.endScope('Found direct override');
     return override;
   }
 
-  // Try nested notation
-  for (var key in overrides.keys) {
-    if (key.endsWith('.$blockName')) {
-      resolverLogger.endScope('Found nested override as $key');
-      return overrides[key];
-    }
+  // Build/retrieve nested name lookup cache for O(1) nested lookups
+  // The cache maps simple names (e.g., "nav") to full names (e.g., "header.nav")
+  var nestedLookup = _getOrBuildNestedLookup(overrides);
+  var fullName = nestedLookup[blockName];
+  if (fullName != null) {
+    resolverLogger.endScope('Found nested override as $fullName');
+    return overrides[fullName];
   }
 
   resolverLogger.endScope('No override found');
   return null;
 }
 
+/// Builds a reverse lookup map from simple block names to their full qualified names.
+/// Caches the result for the same overrides map within a resolution pass.
+Map<String, String> _getOrBuildNestedLookup(Map<String, BlockInfo> overrides) {
+  // Return cached lookup if same overrides map
+  if (identical(overrides, _lastOverridesMap) && _lastNestedLookup != null) {
+    return _lastNestedLookup!;
+  }
+
+  final lookup = <String, String>{};
+  for (var key in overrides.keys) {
+    final lastDot = key.lastIndexOf('.');
+    if (lastDot != -1) {
+      final simpleName = key.substring(lastDot + 1);
+      // Only store first match (most specific override wins)
+      lookup.putIfAbsent(simpleName, () => key);
+    }
+  }
+
+  _lastOverridesMap = overrides;
+  _lastNestedLookup = lookup;
+  return lookup;
+}
+
 List<ASTNode> _collapseNodes(List<ASTNode> nodes) {
   List<ASTNode> result = [];
-  TextNode? currentText;
+  StringBuffer? textBuffer;
 
   for (var node in nodes) {
     if (node is TextNode) {
-      if (currentText == null) {
-        currentText = node;
-      } else {
-        currentText = TextNode(currentText.text + node.text);
-      }
+      textBuffer ??= StringBuffer();
+      textBuffer.write(node.text);
     } else {
-      if (currentText != null) {
-        result.add(currentText);
-        currentText = null;
+      if (textBuffer != null) {
+        result.add(TextNode(textBuffer.toString()));
+        textBuffer = null;
       }
       result.add(node);
     }
   }
 
-  if (currentText != null) {
-    result.add(currentText);
+  if (textBuffer != null) {
+    result.add(TextNode(textBuffer.toString()));
   }
 
-  return result;
-}
-
-List<ASTNode> _applyOverride(
-  ASTNode node,
-  TemplateStructure structure,
-  Map<String, BlockInfo> overrides,
-) {
-  if (node is Tag && node.name == 'block') {
-    // Extract block name
-    String? blockName;
-    for (var child in node.content) {
-      if (child is Identifier) {
-        blockName = child.name;
-        break;
-      }
-    }
-
-    if (blockName != null) {
-      // Check both direct and nested block names
-      BlockInfo? override = overrides[blockName];
-      if (override == null) {
-        // Look for nested block notation
-        for (var key in overrides.keys) {
-          if (key.endsWith('.$blockName')) {
-            override = overrides[key];
-            break;
-          }
-        }
-      }
-
-      if (override != null && override.isOverride) {
-        if (override.content != null) {
-          return override.content!.expand((child) {
-            if (child is Tag && child.name == 'super') {
-              // Handle super() calls by using parent content
-              return node.body.expand(
-                (parentChild) =>
-                    _applyOverride(parentChild, structure, overrides),
-              );
-            }
-            return _applyOverride(child, structure, overrides);
-          }).toList();
-        }
-      }
-    }
-
-    // If no override found or not marked as override, use original content
-    return node.body
-        .expand((child) => _applyOverride(child, structure, overrides))
-        .toList();
-  } else if (node is Tag) {
-    // For other tags, process content and body
-    final newContent = node.content
-        .expand((child) => _applyOverride(child, structure, overrides))
-        .toList();
-    final newBody = node.body
-        .expand((child) => _applyOverride(child, structure, overrides))
-        .toList();
-    return [Tag(node.name, newContent, body: newBody)];
-  } else if (node is TextNode) {
-    // Preserve TextNodes as-is
-    return [node];
-  } else {
-    // Handle other node types
-    return [node];
-  }
-}
-
-List<ASTNode> resolveSuperCalls(
-  List<ASTNode>? overrideContent,
-  List<ASTNode>? parentContent,
-  TemplateStructure structure,
-  Map<String, BlockInfo> overrides,
-) {
-  if (overrideContent == null) return [];
-  List<ASTNode> result = [];
-
-  for (var node in overrideContent) {
-    if (node is Tag && node.name == 'super') {
-      // On super() call, inject parent content
-      if (parentContent != null) {
-        result.addAll(
-          parentContent.expand(
-            (child) => _applyOverride(
-              child,
-              structure.parent!,
-              structure.parent!.resolvedBlocks,
-            ),
-          ),
-        );
-      }
-    } else if (node is TextNode) {
-      // Preserve text nodes
-      result.add(node);
-    } else if (node is Tag) {
-      // Process other tags recursively
-      final newContent = resolveSuperCalls(
-        node.content,
-        parentContent,
-        structure,
-        overrides,
-      );
-      final newBody = resolveSuperCalls(
-        node.body,
-        parentContent,
-        structure,
-        overrides,
-      );
-      result.add(Tag(node.name, newContent, body: newBody));
-    } else {
-      result.add(node);
-    }
-  }
   return result;
 }

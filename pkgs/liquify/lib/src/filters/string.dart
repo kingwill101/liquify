@@ -1,6 +1,19 @@
 import 'package:liquify/src/filter_registry.dart';
 import 'package:liquify/src/filters/module.dart';
 
+/// Cached RegExp patterns for performance.
+/// These are created once and reused across all filter invocations.
+final _whitespaceRegex = RegExp(r'\s+');
+final _newlineRegex = RegExp(r'\r?\n');
+final _cjkWordRegex = RegExp(
+  r'[\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF]',
+  unicode: true,
+);
+final _nonCjkWordRegex = RegExp(
+  r'[^\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF\s]+',
+  unicode: true,
+);
+
 /// Appends a string to the end of another string.
 ///
 /// [value]: The original string.
@@ -262,7 +275,7 @@ FilterFunction stripNewlines =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      return value.toString().replaceAll(RegExp(r'\r?\n'), '');
+      return value.toString().replaceAll(_newlineRegex, '');
     };
 
 /// Capitalizes the first character of a string and lowercases the rest.
@@ -402,7 +415,7 @@ FilterFunction truncatewords =
       String str = value.toString();
       int words = arguments.isNotEmpty ? arguments[0] as int : 15;
       String ellipsis = arguments.length > 1 ? arguments[1].toString() : '...';
-      List<String> wordList = str.split(RegExp(r'\s+'));
+      List<String> wordList = str.split(_whitespaceRegex);
       if (words <= 0) words = 1;
       if (wordList.length <= words) return str;
       return wordList.take(words).join(' ') + ellipsis;
@@ -422,7 +435,7 @@ FilterFunction normalizeWhitespace =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      return value.toString().replaceAll(RegExp(r'\s+'), ' ');
+      return value.toString().replaceAll(_whitespaceRegex, ' ');
     };
 
 /// Counts the number of words in a string.
@@ -446,26 +459,17 @@ FilterFunction numberOfWords =
       if (str.isEmpty) return 0;
       String mode = arguments.isNotEmpty ? arguments[0].toString() : '';
 
-      RegExp rCJKWord = RegExp(
-        r'[\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF]',
-        unicode: true,
-      );
-      RegExp rNonCJKWord = RegExp(
-        r'[^\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF\s]+',
-        unicode: true,
-      );
-
       switch (mode) {
         case 'cjk':
-          return rCJKWord.allMatches(str).length +
-              rNonCJKWord.allMatches(str).length;
+          return _cjkWordRegex.allMatches(str).length +
+              _nonCjkWordRegex.allMatches(str).length;
         case 'auto':
-          return rCJKWord.hasMatch(str)
-              ? rCJKWord.allMatches(str).length +
-                    rNonCJKWord.allMatches(str).length
-              : str.split(RegExp(r'\s+')).length;
+          return _cjkWordRegex.hasMatch(str)
+              ? _cjkWordRegex.allMatches(str).length +
+                    _nonCjkWordRegex.allMatches(str).length
+              : str.split(_whitespaceRegex).length;
         default:
-          return str.split(RegExp(r'\s+')).length;
+          return str.split(_whitespaceRegex).length;
       }
     };
 

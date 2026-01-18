@@ -297,10 +297,10 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() {
-    return (ref0(tableRowTag) &
-            any().plusLazy(endTableRowTag()) &
-            endTableRowTag())
+  Parser parser([LiquidConfig? config]) {
+    return (tableRowTag(config) &
+            any().plusLazy(endTableRowTag(config)) &
+            endTableRowTag(config))
         .map((values) {
           final tag = values[0] as Tag;
           tag.body = parseInput((values[1] as List).join(''));
@@ -309,9 +309,13 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 }
 
-Parser tableRowTag() => someTag("tablerow");
+Parser tableRowTag([LiquidConfig? config]) =>
+    someTag("tablerow", config: config);
 
-Parser endTableRowTag() =>
-    (tagStart() & string('endtablerow').trim() & tagEnd()).map((values) {
-      return Tag('endtablerow', []);
-    });
+Parser endTableRowTag([LiquidConfig? config]) =>
+    (createTagStart(config) &
+            string('endtablerow').trim() &
+            createTagEnd(config))
+        .map((values) {
+          return Tag('endtablerow', []);
+        });

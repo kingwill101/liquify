@@ -80,11 +80,11 @@ class CycleTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() {
+  Parser parser([LiquidConfig? config]) {
     return seq3(
-      tagStart() & string('cycle').trim(),
+      createTagStart(config) & string('cycle').trim(),
       ref0(cycleArguments).trim(),
-      tagEnd(),
+      createTagEnd(config),
     ).map((values) {
       return Tag(
         'cycle',

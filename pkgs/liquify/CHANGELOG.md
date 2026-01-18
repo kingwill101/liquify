@@ -1,3 +1,42 @@
+## 1.5.0
+
+### New Features
+- **Custom delimiters support** - Configure alternative template delimiters via `LiquidConfig`
+  - Use ERB-style (`<% %>`, `<%= %>`), bracket-style (`[% %]`, `[[ ]]`), or any custom delimiters
+  - Built-in presets: `LiquidConfig.erb` for ERB-style templates
+  - Custom tags automatically support configured delimiters via `createTagStart()`, `createTagEnd()`, etc.
+  - Parser caching ensures performance is not impacted when using multiple configurations
+
+### Performance Improvements
+- **92-95% reduction in parser activations** through comprehensive optimization:
+  - Lookahead-based element routing (skips tag parsers for plain text)
+  - Precedence-based expression parser (eliminates repeated prefix parsing)
+  - Pattern-based text(), identifier(), and memberAccess() parsers
+  - First-character routing in primaryTerm() (skips impossible alternatives)
+
+### Breaking Changes
+- **Custom tags using `{{ }}` syntax must now explicitly declare their delimiter type**
+  
+  If you have a custom tag that uses variable-style delimiters (`{{ mytag }}`), you must now override `delimiterType`:
+  
+  ```dart
+  class MyCustomTag with CustomTagParser {
+    @override
+    TagDelimiterType get delimiterType => TagDelimiterType.variable;
+    
+    @override
+    Parser parser() {
+      // ... your parser implementation
+    }
+  }
+  ```
+  
+  Custom tags using standard `{% %}` syntax (the default) require no changes.
+
+### Internal Changes
+- Add `TagDelimiterType` enum to distinguish custom tag delimiter styles
+- Optimize parser routing based on delimiter lookahead
+
 ## 1.4.2
  - Bump dependencies
 

@@ -13,6 +13,26 @@ mixin AsyncTag {
 }
 
 /// Abstract base class for all Liquid tags.
+///
+/// Subclass this to create custom tags. Override [evaluateWithContext] for
+/// synchronous evaluation or [evaluateWithContextAsync] for async evaluation.
+///
+/// ## Accessing Template Configuration
+///
+/// If your tag needs to re-parse content with the same delimiters as the parent
+/// template, access the config from the evaluator's context:
+///
+/// ```dart
+/// @override
+/// dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+///   final config = evaluator.context.config;
+///   final liquid = Liquid(config: config ?? LiquidConfig.standard);
+///   final result = liquid.renderString(content, evaluator.context.all());
+///   buffer.write(result);
+/// }
+/// ```
+///
+/// See [Environment.config] for more details.
 abstract class AbstractTag {
   /// The content nodes of the tag.
   final List<ASTNode> content;

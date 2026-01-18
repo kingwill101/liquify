@@ -32,16 +32,16 @@ class RawTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() {
-    return (tagStart() &
+  Parser parser([LiquidConfig? config]) {
+    final start = createTagStart(config);
+    final end = createTagEnd(config);
+    return (start &
             string('raw').trim() &
-            tagEnd() &
-            any()
-                .starLazy((tagStart() & string('endraw').trim() & tagEnd()))
-                .flatten() &
-            tagStart() &
+            end &
+            any().starLazy((start & string('endraw').trim() & end)).flatten() &
+            start &
             string('endraw').trim() &
-            tagEnd())
+            end)
         .map((values) {
           return Tag("raw", [TextNode(values[3])]);
         });

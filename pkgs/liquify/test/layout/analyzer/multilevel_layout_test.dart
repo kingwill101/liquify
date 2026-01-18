@@ -71,10 +71,11 @@ void main() {
       expect(resolvedBlocks['content']!.source, equals('parent.liquid'));
       expect(resolvedBlocks['content']!.isOverride, isTrue);
 
-      // The footer is defined only in the child.
+      // The footer is defined only in the child - it's NOT an override
+      // because it doesn't exist in any parent template
       expect(resolvedBlocks['footer'], isNotNull);
       expect(resolvedBlocks['footer']!.source, equals('child.liquid'));
-      expect(resolvedBlocks['footer']!.isOverride, isTrue);
+      expect(resolvedBlocks['footer']!.isOverride, isFalse);
     });
   });
 }
