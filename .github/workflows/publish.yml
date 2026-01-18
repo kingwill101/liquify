@@ -9,10 +9,11 @@ on:
     types: [ opened, synchronize, reopened, labeled, unlabeled ]
   push:
     # For mono repos the tag must be prefixed with the package name,
-    # e.g. "liquify-v1.0.0". Adjust the regular expression as needed.
+    # e.g. "liquify-v1.0.0". Uses glob patterns (not regex).
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-      - '[A-z]+-v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*.*.*'
+      - 'liquify-v*.*.*'
+      - 'liquify_flutter-v*.*.*'
   workflow_dispatch:
 
 jobs:
