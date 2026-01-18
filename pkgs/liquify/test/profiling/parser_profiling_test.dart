@@ -767,14 +767,14 @@ void main() {
 
         print('Simple variable activations: $totalActivations');
 
-        // Baseline after expression parser optimization: ~310
+        // Baseline after text() optimization: ~299
         // Allow 20% tolerance for minor variations
         expect(
           totalActivations,
-          lessThan(400),
+          lessThan(360),
           reason:
               'Simple variable parsing regressed. '
-              'Expected <400, got $totalActivations',
+              'Expected <360, got $totalActivations',
         );
       });
 
@@ -824,13 +824,13 @@ void main() {
 
         print('For loop activations: $totalActivations');
 
-        // Baseline: ~2500-3000
+        // Baseline after text() optimization: ~1686
         expect(
           totalActivations,
-          lessThan(4000),
+          lessThan(2100),
           reason:
               'For loop parsing regressed. '
-              'Expected <4000, got $totalActivations',
+              'Expected <2100, got $totalActivations',
         );
       });
 
