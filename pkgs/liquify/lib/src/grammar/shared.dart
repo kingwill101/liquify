@@ -221,19 +221,38 @@ Parser emptyLiteral() {
       .labeled('emptyLiteral');
 }
 
+/// Expression parser with optimized ordering.
+///
+/// Parsers are ordered to ensure more specific patterns are tried before
+/// general ones. For example, `arithmeticExpression` (which starts with a
+/// literal/identifier but continues with an operator) must come before
+/// standalone `literal` or `identifier`.
 Parser expression() {
-  return (ref0(logicalExpression)
-          .or(ref0(comparison))
-          .or(ref0(groupedExpression))
-          .or(ref0(arithmeticExpression))
-          .or(ref0(unaryOperation))
-          .or(ref0(arrayAccess))
-          .or(ref0(memberAccess))
-          .or(ref0(assignment))
-          .or(ref0(namedArgument))
-          .or(ref0(literal))
-          .or(ref0(identifier))
-          .or(ref0(range)))
+  return (
+      // Complex expressions that START with simpler tokens must come first
+      // Logical expressions (a and b, a or b) - contains comparisons
+      ref0(logicalExpression) |
+          // Comparisons (a == b, etc.) - starts with identifier/literal
+          ref0(comparison) |
+          // Arithmetic (1 + 2, "a" + "b") - starts with literal/identifier
+          ref0(arithmeticExpression) |
+          // Assignments (x = 5) - starts with identifier
+          ref0(assignment) |
+          // Member access (user.name) - starts with identifier
+          ref0(memberAccess) |
+          // Array access (items[0]) - starts with identifier
+          ref0(arrayAccess) |
+          // Unary operations (not x, !x)
+          ref0(unaryOperation) |
+          // Grouped expressions ((a + b))
+          ref0(groupedExpression) |
+          // Ranges ((1..5))
+          ref0(range) |
+          // Named arguments (key: value) - starts with identifier
+          ref0(namedArgument) |
+          // Simple terminals - must come last as they match parts of complex expressions
+          ref0(literal) |
+          ref0(identifier))
       .labeled('expression');
 }
 
@@ -613,19 +632,69 @@ Parser elseBlock() => seq2(ref0(elseTag), ref0(elseBranchContent))
     })
     .labeled('elseBlock');
 
-Parser element() => [
-  ref0(ifBlock),
-  ref0(forBlock),
-  ref0(caseBlock),
-  ref0(whenBlock),
-  ref0(elseBlockForCase),
-  ref0(elseBlockForFor),
-  ref0(hashBlockComment),
-  ...TagRegistry.customParsers.map((p) => p.parser()),
-  ref0(tag),
-  ref0(variable),
-  ref0(text),
-].toChoiceParser().labeled('element');
+/// Optimized element parser using lookahead to avoid unnecessary backtracking.
+///
+/// Instead of trying all parsers in order, we first check the delimiter:
+/// - `{{` -> variable-like parsers (including custom tags like super())
+/// - `{%` -> tag/block parsers
+/// - otherwise -> text
+///
+/// The lookahead includes whitespace-trimming variants ({%-, -%}, {{-, -}})
+/// to properly handle Liquid's whitespace control syntax.
+Parser element() {
+  // Separate custom parsers by their delimiter type.
+  // Custom parsers that use {{ }} syntax (like SuperTag) need to be in the
+  // variable branch, while those using {% %} syntax go in the tag branch.
+  final varCustomParsers = <Parser>[];
+  final tagCustomParsers = <Parser>[];
+
+  for (final customParser in TagRegistry.customParsers) {
+    if (customParser.delimiterType == TagDelimiterType.variable) {
+      varCustomParsers.add(customParser.parser());
+    } else {
+      tagCustomParsers.add(customParser.parser());
+    }
+  }
+
+  // Variable-like elements (start with {{ or {{-)
+  // Try custom parsers first (like {{ super() }}) then standard variable
+  final variableElements = [
+    ...varCustomParsers,
+    ref0(variable),
+  ].toChoiceParser();
+
+  // Tag/block parsers (start with {% or {%-)
+  final tagElements = [
+    ref0(ifBlock),
+    ref0(forBlock),
+    ref0(caseBlock),
+    ref0(whenBlock),
+    ref0(elseBlockForCase),
+    ref0(elseBlockForFor),
+    ref0(hashBlockComment),
+    ...tagCustomParsers,
+    ref0(tag),
+  ].toChoiceParser();
+
+  // Text parser (anything not starting with {{ or {%)
+  final textElement = ref0(text);
+
+  // Lookahead parsers that account for whitespace-trimming syntax.
+  // The trim variants ({%-, {{-) consume leading whitespace via .trim()
+  final tagLookahead = (string('{%-').trim() | string('{%')).and();
+  final varLookahead = (string('{{-').trim() | string('{{')).and();
+
+  // Use lookahead to determine which parser to use
+  // This avoids trying all block parsers when we're looking at plain text
+  return (
+      // If we see '{{' or '{{-', parse as variable-like element
+      (varLookahead & variableElements).pick(1) |
+          // If we see '{%' or '{%-', parse as tag/block
+          (tagLookahead & tagElements).pick(1) |
+          // Otherwise, parse as text
+          textElement)
+      .labeled('element');
+}
 
 Parser<Document> document() => ref0(element)
     .plus()
