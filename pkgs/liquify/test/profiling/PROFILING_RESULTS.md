@@ -8,11 +8,85 @@
 
 ## Executive Summary
 
-Profiling the Liquify Liquid template parser revealed several performance bottlenecks and structural issues. The parser shows non-linear scaling with input size, excessive parser activations, and redundant choice patterns flagged by the linter.
+After a comprehensive optimization effort, the Liquify Liquid template parser has achieved **92-95% reduction in parser activations**. The original profiling identified several bottlenecks that have now been addressed through lookahead-based routing, pattern-based fast paths, and precedence-based expression parsing.
 
 ---
 
-## 1. Scaling Analysis
+## 1. Performance Comparison: Before vs After
+
+### Parser Activations
+
+| Template Size | Characters | Before | After | Reduction |
+|---------------|------------|--------|-------|-----------|
+| Tiny          | 17         | 2,800  | 344   | **88%**   |
+| Small         | 50         | 19,975 | 1,689 | **92%**   |
+| Medium        | 134        | 21,062 | 1,451 | **93%**   |
+| Large         | 822        | 130,961| 6,827 | **95%**   |
+| XL            | 1,095      | 203,806| 9,832 | **95%**   |
+
+### Activations per Character
+
+| Template | Before | After | Improvement |
+|----------|--------|-------|-------------|
+| Tiny     | 165    | 20    | **8.2x**    |
+| XL       | 186    | 9     | **20.7x**   |
+
+---
+
+## 2. Optimizations Applied
+
+### Phase 1: Lookahead-based Element Routing (57-66% reduction)
+- Modified `element()` to check for `{%` or `{{` before trying tag/variable parsers
+- Plain text now routes directly without checking all tag alternatives
+
+### Phase 2: Precedence-based Expression Parser (20-40% reduction)
+- Replaced 12-way `.or()` chain with proper operator precedence
+- Eliminates repeated prefix parsing for complex expressions
+
+### Phase 3: Remove Redundant Trim (~1% reduction)
+- Removed `.trim()` from arithmetic operators since `primaryTerm().trim()` handles it
+
+### Phase 4: Pattern-based text() Parser (76% reduction)
+- Uses `pattern('[^{]').star()` for bulk text matching
+- Special handling for standalone `{` characters
+
+### Phase 5: Pattern-based identifier() (5-7% reduction)
+- Uses `pattern('[a-zA-Z]') & pattern('[a-zA-Z0-9_-]').star()` 
+- Avoids multiple flatMap/where operations
+
+### Phase 6: Pattern-based memberAccess() Fast Path (~50% for simple chains)
+- Checks for simple identifier pattern before full parsing
+- Avoids trying memberAccess for non-dot cases
+
+### Phase 7: Pattern-based expressionWithAssignment() (3.5% reduction)
+- Uses pattern matching instead of full identifier parsing in lookaheads
+- Avoids parsing identifier 3 times in lookahead checks
+
+### Phase 8: First-character Routing in primaryTerm() (15-22% reduction)
+- Routes by first character to skip impossible alternatives
+- Letters go directly to identifier-like parsers
+- Quotes/digits go directly to string/numeric parsers
+
+---
+
+## 3. Current Hotspots (E-commerce Template)
+
+| Count | Parser |
+|-------|--------|
+| 1,019 | SingleCharacterParser[whitespace expected] |
+| 867   | ChoiceParser<dynamic> |
+| 722   | SequenceParser<dynamic> |
+| 426   | SingleCharacterParser[[a-zA-Z0-9_-] expected] |
+| 387   | SingleCharacterParser[[^{] expected] |
+| 297   | TrimmingParser<String> |
+
+The remaining hotspots are mostly fundamental parsing operations that are difficult to optimize further without significant architectural changes.
+
+---
+
+## 4. Original Analysis (Historical Reference)
+
+### Original Scaling Analysis
 
 | Template Size | Characters | Parser Activations | Ratio vs Baseline |
 |---------------|------------|-------------------|-------------------|
@@ -22,7 +96,7 @@ Profiling the Liquify Liquid template parser revealed several performance bottle
 | Large         | 822        | 130,961           | 46.77x            |
 | XL            | 1,095      | 203,806           | 72.79x            |
 
-**Observation:** Parser activations grow faster than input size, indicating inefficient backtracking or redundant parsing attempts.
+**Observation:** Parser activations grew faster than input size, indicating inefficient backtracking or redundant parsing attempts. This has been addressed.
 
 ---
 
