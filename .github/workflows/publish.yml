@@ -1,25 +1,25 @@
-# .github/workflows/publish.yml
-name: Publish to pub.dev
+name: Publish
 
+# When a pull request is opened or updated the job will run the validation
+# steps (using firehose, this checks for correct pubspec versioning, changelog entries, etc.).
+# When you push a tag (for a package), firehose will attempt to publish that package.
 on:
+  pull_request:
+    branches: [ master ]
+    types: [ opened, synchronize, reopened, labeled, unlabeled ]
   push:
+    # For mono repos the tag must be prefixed with the package name,
+    # e.g. "liquify-v1.0.0". Adjust the regular expression as needed.
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+*' # tag pattern on pub.dev: 'v{{version}'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - '[A-z]+-v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
 
-# Publish using custom workflow
 jobs:
   publish:
+    # This job uses the common publish workflow provided by the ecosystem.
+    # See https://github.com/dart-lang/ecosystem/wiki/Publishing-automation
+    uses: dart-lang/ecosystem/.github/workflows/publish.yaml@main
     permissions:
-      id-token: write # Required for authentication using OIDC
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6.0.0
-      - uses: dart-lang/setup-dart@v1
-      - name: Install dependencies
-        working-directory: pkgs/liquify
-        run: dart pub get
-      # Here you can insert custom steps you need
-      # - run: dart tool/generate-code.dart
-      - name: Publish
-        working-directory: pkgs/liquify
-        run: dart pub publish --force
+      id-token: write
+      pull-requests: write
