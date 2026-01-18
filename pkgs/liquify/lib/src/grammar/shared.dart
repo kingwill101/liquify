@@ -35,8 +35,12 @@ List<ASTNode> collapseTextNodes(List<ASTNode> elements) {
   return result;
 }
 
+/// Tag start delimiter.
+/// The {%- variant strips preceding whitespace (via .trim()).
 Parser tagStart() => (string('{%-').trim() | string('{%')).labeled('tagStart');
 
+/// Tag end delimiter.
+/// The -%} variant strips following whitespace (via .trim()).
 Parser tagEnd() => (string('-%}').trim() | string('%}')).labeled('tagEnd');
 
 Parser filter() {
@@ -91,8 +95,12 @@ Parser argument() {
       .labeled('argument');
 }
 
+/// Variable start delimiter. The whitespace-stripping variant {{- is handled
+/// semantically at evaluation time, not by the parser consuming whitespace.
 Parser varStart() => (string('{{-').trim() | string('{{')).labeled('varStart');
 
+/// Variable end delimiter. The whitespace-stripping variant -}} is handled
+/// semantically at evaluation time, not by the parser consuming whitespace.
 Parser varEnd() => (string('-}}').trim() | string('}}')).labeled('varEnd');
 
 Parser variable() =>
@@ -230,9 +238,10 @@ Parser emptyLiteral() {
 }
 
 /// Arithmetic operator parser.
-Parser arithmeticOperator() =>
-    (char('+').trim() | char('-').trim() | char('*').trim() | char('/').trim())
-        .labeled('arithmeticOperator');
+/// Note: .trim() removed from individual operators since primaryTerm().trim()
+/// handles surrounding whitespace in arithmeticExpr().
+Parser arithmeticOperator() => (char('+') | char('-') | char('*') | char('/'))
+    .labeled('arithmeticOperator');
 
 /// Primary term parser - parses the basic building blocks of expressions.
 ///
@@ -416,19 +425,19 @@ Parser text() {
 }
 
 Parser comparisonOperator() =>
-    (string('==').trim() |
-            string('!=').trim() |
-            string('<=').trim() |
-            string('>=').trim() |
-            char('<').trim() |
-            char('>').trim() |
-            (string('contains') & word().not()).pick(0).trim() |
-            (string('in') & word().not()).pick(0).trim())
+    (string('==') |
+            string('!=') |
+            string('<=') |
+            string('>=') |
+            char('<') |
+            char('>') |
+            (string('contains') & word().not()).pick(0) |
+            (string('in') & word().not()).pick(0))
         .labeled('comparisonOperator');
 
 Parser logicalOperator() =>
-    ((string('and') & word().not()).pick(0).trim() |
-            (string('or') & word().not()).pick(0).trim())
+    ((string('and') & word().not()).pick(0) |
+            (string('or') & word().not()).pick(0))
         .labeled('logicalOperator');
 
 // ---------------------------------------------------------------------------
@@ -824,8 +833,9 @@ Parser element() {
   // Text parser (anything not starting with {{ or {%)
   final textElement = ref0(text);
 
-  // Lookahead parsers that account for whitespace-trimming syntax.
-  // The trim variants ({%-, {{-) consume leading whitespace via .trim()
+  // Lookahead parsers for delimiters.
+  // The whitespace-stripping variants ({%-, {{-) need .trim() to consume leading
+  // whitespace - this implements Liquid's whitespace control at parse time.
   final tagLookahead = (string('{%-').trim() | string('{%')).and();
   final varLookahead = (string('{{-').trim() | string('{{')).and();
 
