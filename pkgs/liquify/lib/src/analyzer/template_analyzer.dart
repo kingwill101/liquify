@@ -272,11 +272,9 @@ class TemplateAnalyzer {
               name: finalName,
               source: templatePath,
               content: node.body,
-              isOverride:
-                  isOverride ||
-                  hasOverriddenSubBlocks ||
-                  parentBlock != null ||
-                  parentStructure != null,
+              // A block is an override only if it actually exists in the parent chain
+              // Not just because there IS a parent template
+              isOverride: isOverride || hasOverriddenSubBlocks,
               parent: inheritedParent ?? parentBlock,
               nestedBlocks: {},
               hasSuperCall: foundSuper,
