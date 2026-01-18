@@ -17,3 +17,4 @@ openspec
 **/*.xcconfig
 **/GeneratedPluginRegistrant.*
 **/local.properties
+**/flutter_export_environment.sh
