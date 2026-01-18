@@ -503,22 +503,37 @@ Parser arrayAccess() =>
 /// Text parser - parses plain text content until a delimiter is encountered.
 ///
 /// Optimized to parse multiple characters at once using a pattern-based approach:
-/// - Characters that are not '{' are always safe text
+/// - Characters that are not '{' or whitespace are always safe text
 /// - A '{' is safe only if not followed by '{' or '%'
+/// - Whitespace is safe only if not followed by '{{-' or '{%-' (strip delimiters)
+///
+/// The whitespace check is critical for Liquid's whitespace control feature:
+/// `{{-` and `{%-` strip preceding whitespace, so we must stop parsing text
+/// before whitespace that precedes these delimiters.
 ///
 /// This is much more efficient than the naive approach of checking
 /// (varStart() | tagStart()).neg() for each character, which requires
-/// 11 parser activations per character vs 2 for this pattern-based approach.
+/// 11 parser activations per character vs 2-3 for this pattern-based approach.
 Parser text() {
-  // Any character except '{' is definitely safe
-  final safeChar = pattern('^{');
+  // Any character except '{' and whitespace is definitely safe
+  final safeChar = pattern('^{ \t\r\n');
 
   // A '{' is safe if not followed by '{' or '%' (which would start a delimiter)
   final safeBrace = char('{') & pattern('{%').not();
 
-  // A text character is either a safe char or a safe brace
-  // For safe brace, we just want the '{' character, not the lookahead result
-  final textChar = safeChar | safeBrace.map((values) => values[0]);
+  // Whitespace is safe if not followed by '{{-' or '{%-' (strip delimiters)
+  // We need to check the full delimiter with - to handle whitespace control
+  final safeWhitespace =
+      pattern(' \t\r\n') & (string('{{-') | string('{%-')).not();
+
+  // A text character is either:
+  // - A safe char (not { or whitespace)
+  // - A safe brace ({ not followed by { or %)
+  // - Safe whitespace (whitespace not followed by {{- or {%-)
+  final textChar =
+      safeChar |
+      safeBrace.map((values) => values[0]) |
+      safeWhitespace.map((values) => values[0]);
 
   // Parse one or more text characters and combine into a single TextNode
   return textChar

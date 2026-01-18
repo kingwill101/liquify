@@ -257,40 +257,27 @@ void main() {
         expect(evaluator.buffer.toString(), equals('Hello, spaces!'));
       });
 
-      test(
-        '{{- variant parses custom tags (whitespace control not implemented)',
-        () {
-          // Note: Liquid's whitespace stripping feature ({{- and -{}}) is not
-          // currently implemented in this parser. The {{- syntax is recognized
-          // but does not actually strip whitespace from adjacent text.
-          final source = 'before {{- now() }} after';
-          final nodes = parseInput(source);
-          final document = Document(nodes);
+      test('{{- variant strips preceding whitespace with custom tags', () {
+        // Liquid's whitespace stripping: {{- strips whitespace before the tag
+        final source = 'before {{- now() }} after';
+        final nodes = parseInput(source);
+        final document = Document(nodes);
 
-          evaluator.evaluateNodes(document.children);
-          // Currently whitespace is NOT stripped - feature not implemented
-          expect(evaluator.buffer.toString(), equals('before NOW after'));
-        },
-      );
+        evaluator.evaluateNodes(document.children);
+        // {{- strips preceding whitespace
+        expect(evaluator.buffer.toString(), equals('beforeNOW after'));
+      });
 
-      test(
-        '{%- variant parses custom tags (whitespace control not implemented)',
-        () {
-          // Note: Liquid's whitespace stripping feature ({%- and -%}) is not
-          // currently implemented in this parser. The {%- syntax is recognized
-          // but does not actually strip whitespace from adjacent text.
-          final source = 'before {%- hello "test" %} after';
-          final nodes = parseInput(source);
-          final document = Document(nodes);
+      test('{%- variant strips preceding whitespace with custom tags', () {
+        // Liquid's whitespace stripping: {%- strips whitespace before the tag
+        final source = 'before {%- hello "test" %} after';
+        final nodes = parseInput(source);
+        final document = Document(nodes);
 
-          evaluator.evaluateNodes(document.children);
-          // Currently whitespace is NOT stripped - feature not implemented
-          expect(
-            evaluator.buffer.toString(),
-            equals('before Hello, test! after'),
-          );
-        },
-      );
+        evaluator.evaluateNodes(document.children);
+        // {%- strips preceding whitespace
+        expect(evaluator.buffer.toString(), equals('beforeHello, test! after'));
+      });
     });
   });
 }
