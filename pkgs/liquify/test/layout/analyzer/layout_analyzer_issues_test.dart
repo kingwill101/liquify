@@ -8,6 +8,8 @@
 /// Test categories:
 /// - Critical Issues: Bugs that cause incorrect behavior
 /// - Performance Issues: Inefficiencies that affect speed
+library;
+
 /// - Logic Issues: Edge cases not properly handled
 /// - Memory Issues: Resource leaks or circular references
 

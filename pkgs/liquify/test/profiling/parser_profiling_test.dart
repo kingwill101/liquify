@@ -20,7 +20,6 @@ import 'package:liquify/src/grammar/shared.dart';
 import 'package:liquify/src/registry.dart';
 import 'package:petitparser/debug.dart';
 import 'package:petitparser/reflection.dart';
-import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
 // ============================================================================
@@ -345,7 +344,7 @@ void printProfilingReport(
 }) {
   print('\n${'=' * 70}');
   print('PROFILING: $name');
-  print('${'=' * 70}');
+  print('=' * 70);
   print('Input length: ${input.length} characters');
   print('Total parsers profiled: ${frames.length}');
 
@@ -367,9 +366,9 @@ void printProfilingReport(
     ..sort((a, b) => b.totalMicroseconds.compareTo(a.totalMicroseconds));
 
   print('TOP $topN BY TIME (μs):');
-  print('${'─' * 70}');
+  print('─' * 70);
   print('${' ' * 2}Count${' ' * 5}Time(μs)  Parser');
-  print('${'─' * 70}');
+  print('─' * 70);
   for (var i = 0; i < topN && i < byTime.length; i++) {
     print(byTime[i]);
   }
@@ -380,9 +379,9 @@ void printProfilingReport(
 
   print('');
   print('TOP $topN BY ACTIVATION COUNT:');
-  print('${'─' * 70}');
+  print('─' * 70);
   print('${' ' * 2}Count${' ' * 5}Time(μs)  Parser');
-  print('${'─' * 70}');
+  print('─' * 70);
   for (var i = 0; i < topN && i < byCount.length; i++) {
     print(byCount[i]);
   }
@@ -721,11 +720,11 @@ void main() {
 
         print('\n${'=' * 70}');
         print('COMPARATIVE ANALYSIS: Activation Counts by Template Size');
-        print('${'=' * 70}');
+        print('=' * 70);
         print(
           '${'Template'.padRight(25)} ${'Chars'.padLeft(8)} ${'Activations'.padLeft(12)} ${'Ratio'.padLeft(10)}',
         );
-        print('${'─' * 70}');
+        print('─' * 70);
 
         int? baselineActivations;
 
@@ -896,11 +895,11 @@ void main() {
 
         print('\n${'=' * 70}');
         print('BENCHMARK: identifier() parser');
-        print('${'=' * 70}');
+        print('=' * 70);
         print(
           '${'Input'.padRight(30)} ${'Chars'.padLeft(6)} ${'Activations'.padLeft(12)}',
         );
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final input in inputs) {
           final frames = runProfile(parser, input);
@@ -936,11 +935,11 @@ void main() {
 
         print('\n${'=' * 70}');
         print('BENCHMARK: primaryTerm() parser');
-        print('${'=' * 70}');
+        print('=' * 70);
         print(
           '${'Type'.padRight(20)} ${'Input'.padRight(15)} ${'Activations'.padLeft(12)}',
         );
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final entry in inputs.entries) {
           final frames = runProfile(parser, entry.value);
@@ -961,9 +960,9 @@ void main() {
 
         print('\n${'=' * 70}');
         print('BENCHMARK: arithmeticExpr() parser');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('${'Input'.padRight(20)} ${'Activations'.padLeft(12)}');
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final input in inputs) {
           final frames = runProfile(parser, input);
@@ -988,9 +987,9 @@ void main() {
 
         print('\n${'=' * 70}');
         print('BENCHMARK: comparisonExpr() parser');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('${'Input'.padRight(25)} ${'Activations'.padLeft(12)}');
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final input in inputs) {
           final frames = runProfile(parser, input);
@@ -1015,9 +1014,9 @@ void main() {
 
         print('\n${'=' * 70}');
         print('BENCHMARK: logicalExpr() parser');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('${'Input'.padRight(25)} ${'Activations'.padLeft(12)}');
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final input in inputs) {
           final frames = runProfile(parser, input);
@@ -1043,11 +1042,11 @@ void main() {
 
         print('\n${'=' * 70}');
         print('BENCHMARK: expression() precedence chain');
-        print('${'=' * 70}');
+        print('=' * 70);
         print(
           '${'Type'.padRight(20)} ${'Input'.padRight(30)} ${'Activations'.padLeft(12)}',
         );
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final entry in inputs.entries) {
           final frames = runProfile(parser, entry.value);
@@ -1080,11 +1079,11 @@ void main() {
 
         print('\n${'=' * 70}');
         print('TIMING BENCHMARK: Parse Time by Template Size');
-        print('${'=' * 70}');
+        print('=' * 70);
         print(
           '${'Template'.padRight(12)} ${'Chars'.padLeft(8)} ${'Parse (μs)'.padLeft(12)} ${'μs/char'.padLeft(10)}',
         );
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final entry in templates.entries) {
           final input = entry.value;
@@ -1138,7 +1137,7 @@ void main() {
 
         print('\n${'=' * 70}');
         print('TIMING VARIANCE: E-commerce Template (${input.length} chars)');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('Samples: ${times.length}');
         print('Min:     $min μs');
         print('Max:     $max μs');
@@ -1184,7 +1183,7 @@ void main() {
 
         print('\n${'=' * 70}');
         print('THROUGHPUT BENCHMARK');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('Template size: ${input.length} characters');
         print('Iterations in 1s: $iterations');
         print(
@@ -1225,9 +1224,9 @@ void main() {
 
         print('\n${'=' * 70}');
         print('HOTSPOT ANALYSIS: E-commerce Template');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('${'Parser'.padRight(50)} ${'Count'.padLeft(10)}');
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (var i = 0; i < 20 && i < sorted.length; i++) {
           final entry = sorted[i];
@@ -1249,11 +1248,11 @@ void main() {
 
         print('\n${'=' * 70}');
         print('WHITESPACE ANALYSIS');
-        print('${'=' * 70}');
+        print('=' * 70);
         print(
           '${'Template'.padRight(25)} ${'Whitespace Activations'.padLeft(25)}',
         );
-        print('${'─' * 70}');
+        print('─' * 70);
 
         for (final entry in templates.entries) {
           final frames = runProfile(documentParser, entry.value);
@@ -1278,9 +1277,9 @@ void main() {
 
         print('\n${'=' * 70}');
         print('CHOICE PARSER ANALYSIS: Complex Expression');
-        print('${'=' * 70}');
+        print('=' * 70);
         print('${'Parser'.padRight(50)} ${'Count'.padLeft(10)}');
-        print('${'─' * 70}');
+        print('─' * 70);
 
         final totalChoiceActivations = choiceParsers.fold<int>(
           0,
@@ -1296,7 +1295,7 @@ void main() {
             '${name.padRight(50)} ${frame.activationCount.toString().padLeft(10)}',
           );
         }
-        print('${'─' * 70}');
+        print('─' * 70);
         print(
           '${'Total ChoiceParser activations:'.padRight(50)} ${totalChoiceActivations.toString().padLeft(10)}',
         );

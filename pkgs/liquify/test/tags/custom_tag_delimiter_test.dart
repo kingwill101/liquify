@@ -1,8 +1,4 @@
 import 'package:liquify/parser.dart';
-import 'package:liquify/src/buffer.dart';
-import 'package:liquify/src/config.dart';
-import 'package:liquify/src/context.dart';
-import 'package:liquify/src/evaluator.dart';
 import 'package:test/test.dart';
 
 /// A custom tag using standard {% %} delimiters (default)
