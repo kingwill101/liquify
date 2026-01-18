@@ -56,6 +56,31 @@ class LogicalExpressionGrammar extends GrammarDefinition {
   Parser start() => ref0(logicalExpression).end();
 }
 
+class PrimaryTermGrammar extends GrammarDefinition {
+  @override
+  Parser start() => ref0(primaryTerm).end();
+}
+
+class IdentifierGrammar extends GrammarDefinition {
+  @override
+  Parser start() => ref0(identifier).end();
+}
+
+class ArithmeticExprGrammar extends GrammarDefinition {
+  @override
+  Parser start() => ref0(arithmeticExpr).end();
+}
+
+class ComparisonExprGrammar extends GrammarDefinition {
+  @override
+  Parser start() => ref0(comparisonExpr).end();
+}
+
+class LogicalExprGrammar extends GrammarDefinition {
+  @override
+  Parser start() => ref0(logicalExpr).end();
+}
+
 // ============================================================================
 // Benchmark Templates
 // ============================================================================
@@ -720,6 +745,420 @@ void main() {
           );
         }
 
+        print('${'=' * 70}\n');
+      });
+    });
+
+    // =========================================================================
+    // Performance Regression Tests
+    // =========================================================================
+    // These tests establish baseline activation counts for key scenarios.
+    // If optimizations regress, these tests will help identify the problem.
+    // Update the expected values when legitimate improvements are made.
+
+    group('Performance Regression Guards', () {
+      test('Simple variable should have bounded activations', () {
+        final input = '{{ user }}';
+        final frames = runProfile(documentParser, input);
+        final totalActivations = frames.fold<int>(
+          0,
+          (sum, f) => sum + f.activationCount,
+        );
+
+        print('Simple variable activations: $totalActivations');
+
+        // Baseline after expression parser optimization: ~310
+        // Allow 20% tolerance for minor variations
+        expect(
+          totalActivations,
+          lessThan(400),
+          reason:
+              'Simple variable parsing regressed. '
+              'Expected <400, got $totalActivations',
+        );
+      });
+
+      test('Member access should scale linearly with depth', () {
+        final depths = [1, 2, 3, 4, 5];
+        final activations = <int>[];
+
+        for (final depth in depths) {
+          final members = List.generate(depth, (i) => 'member$i').join('.');
+          final input = '{{ user.$members }}';
+          final frames = runProfile(documentParser, input);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          activations.add(total);
+        }
+
+        print('Member access activations by depth: $activations');
+
+        // Check that each additional level adds roughly the same cost
+        // (not exponential growth)
+        for (var i = 1; i < activations.length; i++) {
+          final growth = activations[i] - activations[i - 1];
+          final previousGrowth = i > 1
+              ? activations[i - 1] - activations[i - 2]
+              : growth;
+
+          // Growth should not more than double between levels
+          expect(
+            growth,
+            lessThan(previousGrowth * 2.5),
+            reason:
+                'Member access scaling regressed at depth ${depths[i]}. '
+                'Growth: $growth, previous: $previousGrowth',
+          );
+        }
+      });
+
+      test('For loop should have bounded per-element overhead', () {
+        final input = MediumTemplates.forLoop;
+        final frames = runProfile(documentParser, input);
+        final totalActivations = frames.fold<int>(
+          0,
+          (sum, f) => sum + f.activationCount,
+        );
+
+        print('For loop activations: $totalActivations');
+
+        // Baseline: ~2500-3000
+        expect(
+          totalActivations,
+          lessThan(4000),
+          reason:
+              'For loop parsing regressed. '
+              'Expected <4000, got $totalActivations',
+        );
+      });
+
+      test('Nested if blocks should scale sub-quadratically', () {
+        final nestingLevels = [2, 4, 6, 8];
+        final activations = <int>[];
+
+        for (final level in nestingLevels) {
+          final buffer = StringBuffer();
+          for (var i = 0; i < level; i++) {
+            buffer.write('{% if x$i %}');
+          }
+          buffer.write('content');
+          for (var i = 0; i < level; i++) {
+            buffer.write('{% endif %}');
+          }
+
+          final frames = runProfile(documentParser, buffer.toString());
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          activations.add(total);
+        }
+
+        print('Nested if activations by level: $activations');
+        print('Nesting levels: $nestingLevels');
+
+        // Compute growth ratios - should not be quadratic
+        for (var i = 1; i < activations.length; i++) {
+          final levelRatio = nestingLevels[i] / nestingLevels[i - 1];
+          final activationRatio = activations[i] / activations[i - 1];
+
+          // Activation growth should be at most 2x the level growth (allowing for some overhead)
+          expect(
+            activationRatio,
+            lessThan(levelRatio * 2.5),
+            reason:
+                'Nested if scaling is worse than linear at level ${nestingLevels[i]}. '
+                'Level ratio: ${levelRatio.toStringAsFixed(2)}, '
+                'Activation ratio: ${activationRatio.toStringAsFixed(2)}',
+          );
+        }
+      });
+    });
+
+    // =========================================================================
+    // Specific Parser Benchmarks
+    // =========================================================================
+    // These tests profile individual parsers to identify optimization targets.
+
+    group('Specific Parser Benchmarks', () {
+      test('identifier() parser efficiency', () {
+        final parser = IdentifierGrammar().build();
+        final inputs = [
+          'x',
+          'user',
+          'my_variable',
+          'camelCaseVar',
+          'very_long_identifier_name',
+        ];
+
+        print('\n${'=' * 70}');
+        print('BENCHMARK: identifier() parser');
+        print('${'=' * 70}');
+        print(
+          '${'Input'.padRight(30)} ${'Chars'.padLeft(6)} ${'Activations'.padLeft(12)}',
+        );
+        print('${'─' * 70}');
+
+        for (final input in inputs) {
+          final frames = runProfile(parser, input);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          print(
+            '${input.padRight(30)} ${input.length.toString().padLeft(6)} ${total.toString().padLeft(12)}',
+          );
+
+          // Identifier parsing should be O(n) where n is identifier length
+          // Roughly 10-20 activations per character is acceptable
+          expect(
+            total,
+            lessThan(input.length * 25 + 50),
+            reason: 'identifier() too expensive for "$input"',
+          );
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('primaryTerm() parser efficiency', () {
+        final parser = PrimaryTermGrammar().build();
+        final inputs = {
+          'identifier': 'user',
+          'number literal': '42',
+          'string literal': '"hello"',
+          'boolean literal': 'true',
+          'member access': 'user.name',
+          'array access': 'items[0]',
+        };
+
+        print('\n${'=' * 70}');
+        print('BENCHMARK: primaryTerm() parser');
+        print('${'=' * 70}');
+        print(
+          '${'Type'.padRight(20)} ${'Input'.padRight(15)} ${'Activations'.padLeft(12)}',
+        );
+        print('${'─' * 70}');
+
+        for (final entry in inputs.entries) {
+          final frames = runProfile(parser, entry.value);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          print(
+            '${entry.key.padRight(20)} ${entry.value.padRight(15)} ${total.toString().padLeft(12)}',
+          );
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('arithmeticExpr() parser efficiency', () {
+        final parser = ArithmeticExprGrammar().build();
+        final inputs = ['x', '1 + 2', 'a - b', 'x * y', 'a / b'];
+
+        print('\n${'=' * 70}');
+        print('BENCHMARK: arithmeticExpr() parser');
+        print('${'=' * 70}');
+        print('${'Input'.padRight(20)} ${'Activations'.padLeft(12)}');
+        print('${'─' * 70}');
+
+        for (final input in inputs) {
+          final frames = runProfile(parser, input);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          print('${input.padRight(20)} ${total.toString().padLeft(12)}');
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('comparisonExpr() parser efficiency', () {
+        final parser = ComparisonExprGrammar().build();
+        final inputs = [
+          'x',
+          'a == b',
+          'x < 10',
+          'y >= 5',
+          'name contains "test"',
+        ];
+
+        print('\n${'=' * 70}');
+        print('BENCHMARK: comparisonExpr() parser');
+        print('${'=' * 70}');
+        print('${'Input'.padRight(25)} ${'Activations'.padLeft(12)}');
+        print('${'─' * 70}');
+
+        for (final input in inputs) {
+          final frames = runProfile(parser, input);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          print('${input.padRight(25)} ${total.toString().padLeft(12)}');
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('logicalExpr() parser efficiency', () {
+        final parser = LogicalExprGrammar().build();
+        final inputs = [
+          'x',
+          'a and b',
+          'x or y',
+          'a == 1 and b == 2',
+          'a and b or c',
+        ];
+
+        print('\n${'=' * 70}');
+        print('BENCHMARK: logicalExpr() parser');
+        print('${'=' * 70}');
+        print('${'Input'.padRight(25)} ${'Activations'.padLeft(12)}');
+        print('${'─' * 70}');
+
+        for (final input in inputs) {
+          final frames = runProfile(parser, input);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          print('${input.padRight(25)} ${total.toString().padLeft(12)}');
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('expression() precedence chain efficiency', () {
+        final parser = ExpressionGrammar().build();
+        final inputs = {
+          'simple identifier': 'user',
+          'arithmetic': '1 + 2',
+          'comparison': 'a == b',
+          'logical': 'x and y',
+          'chained': 'a + b == c and d',
+          'complex': 'a == 1 and b > 2 or c < 3',
+        };
+
+        print('\n${'=' * 70}');
+        print('BENCHMARK: expression() precedence chain');
+        print('${'=' * 70}');
+        print(
+          '${'Type'.padRight(20)} ${'Input'.padRight(30)} ${'Activations'.padLeft(12)}',
+        );
+        print('${'─' * 70}');
+
+        for (final entry in inputs.entries) {
+          final frames = runProfile(parser, entry.value);
+          final total = frames.fold<int>(
+            0,
+            (sum, f) => sum + f.activationCount,
+          );
+          print(
+            '${entry.key.padRight(20)} ${entry.value.padRight(30)} ${total.toString().padLeft(12)}',
+          );
+        }
+        print('${'=' * 70}\n');
+      });
+    });
+
+    // =========================================================================
+    // Hotspot Analysis
+    // =========================================================================
+    // These tests help identify which parsers are activated most frequently.
+
+    group('Hotspot Analysis', () {
+      test('Top 10 most activated parsers in e-commerce template', () {
+        final input = ComplexTemplates.ecommerceTemplate;
+        final frames = runProfile(documentParser, input);
+
+        // Aggregate by parser type (some parsers may appear multiple times)
+        final byParser = <String, int>{};
+        for (final frame in frames) {
+          byParser[frame.parserName] =
+              (byParser[frame.parserName] ?? 0) + frame.activationCount;
+        }
+
+        final sorted = byParser.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+
+        print('\n${'=' * 70}');
+        print('HOTSPOT ANALYSIS: E-commerce Template');
+        print('${'=' * 70}');
+        print('${'Parser'.padRight(50)} ${'Count'.padLeft(10)}');
+        print('${'─' * 70}');
+
+        for (var i = 0; i < 20 && i < sorted.length; i++) {
+          final entry = sorted[i];
+          final name = entry.key.length > 48
+              ? '${entry.key.substring(0, 45)}...'
+              : entry.key;
+          print('${name.padRight(50)} ${entry.value.toString().padLeft(10)}');
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('Whitespace parser activation frequency', () {
+        final templates = {
+          'minimal whitespace': '{{x}}',
+          'normal whitespace': '{{ x }}',
+          'extra whitespace': '{{   x   }}',
+          'multiline': '{{ x }}\n{{ y }}\n{{ z }}',
+        };
+
+        print('\n${'=' * 70}');
+        print('WHITESPACE ANALYSIS');
+        print('${'=' * 70}');
+        print(
+          '${'Template'.padRight(25)} ${'Whitespace Activations'.padLeft(25)}',
+        );
+        print('${'─' * 70}');
+
+        for (final entry in templates.entries) {
+          final frames = runProfile(documentParser, entry.value);
+          final whitespaceActivations = frames
+              .where((f) => f.parserName.contains('whitespace'))
+              .fold<int>(0, (sum, f) => sum + f.activationCount);
+
+          print(
+            '${entry.key.padRight(25)} ${whitespaceActivations.toString().padLeft(25)}',
+          );
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('ChoiceParser activation analysis', () {
+        final input = MediumTemplates.complexExpression;
+        final frames = runProfile(documentParser, input);
+
+        final choiceParsers =
+            frames.where((f) => f.parserName.contains('ChoiceParser')).toList()
+              ..sort((a, b) => b.activationCount.compareTo(a.activationCount));
+
+        print('\n${'=' * 70}');
+        print('CHOICE PARSER ANALYSIS: Complex Expression');
+        print('${'=' * 70}');
+        print('${'Parser'.padRight(50)} ${'Count'.padLeft(10)}');
+        print('${'─' * 70}');
+
+        final totalChoiceActivations = choiceParsers.fold<int>(
+          0,
+          (sum, f) => sum + f.activationCount,
+        );
+
+        for (var i = 0; i < 10 && i < choiceParsers.length; i++) {
+          final frame = choiceParsers[i];
+          final name = frame.parserName.length > 48
+              ? '${frame.parserName.substring(0, 45)}...'
+              : frame.parserName;
+          print(
+            '${name.padRight(50)} ${frame.activationCount.toString().padLeft(10)}',
+          );
+        }
+        print('${'─' * 70}');
+        print(
+          '${'Total ChoiceParser activations:'.padRight(50)} ${totalChoiceActivations.toString().padLeft(10)}',
+        );
         print('${'=' * 70}\n');
       });
     });
