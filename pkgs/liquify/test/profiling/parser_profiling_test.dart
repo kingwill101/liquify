@@ -1064,6 +1064,146 @@ void main() {
     });
 
     // =========================================================================
+    // Timing Benchmarks
+    // =========================================================================
+    // These tests measure actual wall-clock time for parsing.
+
+    group('Timing Benchmarks', () {
+      test('Parse time for various template sizes', () {
+        final templates = {
+          'Tiny': SimpleTemplates.helloWorld,
+          'Small': MediumTemplates.ifElse,
+          'Medium': MediumTemplates.nestedIf,
+          'Large': ComplexTemplates.ecommerceTemplate,
+          'XL': ComplexTemplates.blogTemplate,
+        };
+
+        print('\n${'=' * 70}');
+        print('TIMING BENCHMARK: Parse Time by Template Size');
+        print('${'=' * 70}');
+        print(
+          '${'Template'.padRight(12)} ${'Chars'.padLeft(8)} ${'Parse (μs)'.padLeft(12)} ${'μs/char'.padLeft(10)}',
+        );
+        print('${'─' * 70}');
+
+        for (final entry in templates.entries) {
+          final input = entry.value;
+
+          // Warm up
+          for (var i = 0; i < 10; i++) {
+            documentParser.parse(input);
+          }
+
+          // Measure
+          const iterations = 100;
+          final stopwatch = Stopwatch()..start();
+          for (var i = 0; i < iterations; i++) {
+            documentParser.parse(input);
+          }
+          stopwatch.stop();
+
+          final avgMicroseconds = stopwatch.elapsedMicroseconds / iterations;
+          final perChar = avgMicroseconds / input.length;
+
+          print(
+            '${entry.key.padRight(12)} ${input.length.toString().padLeft(8)} ${avgMicroseconds.toStringAsFixed(1).padLeft(12)} ${perChar.toStringAsFixed(2).padLeft(10)}',
+          );
+        }
+        print('${'=' * 70}\n');
+      });
+
+      test('Parse time consistency (variance check)', () {
+        final input = ComplexTemplates.ecommerceTemplate;
+        final times = <int>[];
+
+        // Warm up
+        for (var i = 0; i < 20; i++) {
+          documentParser.parse(input);
+        }
+
+        // Collect samples
+        for (var i = 0; i < 50; i++) {
+          final stopwatch = Stopwatch()..start();
+          documentParser.parse(input);
+          stopwatch.stop();
+          times.add(stopwatch.elapsedMicroseconds);
+        }
+
+        times.sort();
+        final min = times.first;
+        final max = times.last;
+        final median = times[times.length ~/ 2];
+        final avg = times.reduce((a, b) => a + b) / times.length;
+        final p95 = times[(times.length * 0.95).floor()];
+
+        print('\n${'=' * 70}');
+        print('TIMING VARIANCE: E-commerce Template (${input.length} chars)');
+        print('${'=' * 70}');
+        print('Samples: ${times.length}');
+        print('Min:     $min μs');
+        print('Max:     $max μs');
+        print('Median:  $median μs');
+        print('Average: ${avg.toStringAsFixed(1)} μs');
+        print('P95:     $p95 μs');
+        print('Variance: ${((max - min) / median * 100).toStringAsFixed(1)}%');
+        print('${'=' * 70}\n');
+
+        // Variance check is informational - high variance is expected on shared systems
+        // We only fail if variance is extreme (10x median suggests measurement issues)
+        expect(
+          max,
+          lessThan(median * 10),
+          reason:
+              'Parse time variance extreme: max=$max, median=$median. '
+              'This may indicate measurement issues.',
+        );
+      });
+
+      test('Throughput benchmark (chars/second)', () {
+        final input = ComplexTemplates.blogTemplate;
+
+        // Warm up
+        for (var i = 0; i < 20; i++) {
+          documentParser.parse(input);
+        }
+
+        // Measure for 1 second
+        var iterations = 0;
+        final stopwatch = Stopwatch()..start();
+        while (stopwatch.elapsedMilliseconds < 1000) {
+          documentParser.parse(input);
+          iterations++;
+        }
+        stopwatch.stop();
+
+        final charsPerSecond =
+            (iterations * input.length) /
+            (stopwatch.elapsedMicroseconds / 1000000);
+        final templatesPerSecond =
+            iterations / (stopwatch.elapsedMicroseconds / 1000000);
+
+        print('\n${'=' * 70}');
+        print('THROUGHPUT BENCHMARK');
+        print('${'=' * 70}');
+        print('Template size: ${input.length} characters');
+        print('Iterations in 1s: $iterations');
+        print(
+          'Throughput: ${(charsPerSecond / 1000).toStringAsFixed(1)} K chars/sec',
+        );
+        print('Templates/sec: ${templatesPerSecond.toStringAsFixed(1)}');
+        print('${'=' * 70}\n');
+
+        // Should parse at least 100K chars/second
+        expect(
+          charsPerSecond,
+          greaterThan(100000),
+          reason:
+              'Throughput too low: ${charsPerSecond.toStringAsFixed(0)} chars/sec',
+        );
+      });
+    });
+
+    // =========================================================================
     // Hotspot Analysis
     // =========================================================================
     // These tests help identify which parsers are activated most frequently.
