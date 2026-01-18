@@ -16,7 +16,11 @@ mixin CustomTagParser {
 
   /// The delimiter type this tag uses.
   ///
-  /// Override this to return [TagDelimiterType.variable] if your custom tag
-  /// uses {{ }} syntax instead of {% %}.
+  /// Defaults to [TagDelimiterType.tag] for standard {% %} syntax.
+  /// Override to [TagDelimiterType.variable] if your custom tag
+  /// uses {{ }} syntax instead (e.g., {{ super() }}).
+  ///
+  /// **Breaking change in 2.0.0:** Custom tags using {{ }} syntax must now
+  /// explicitly override this getter to return [TagDelimiterType.variable].
   TagDelimiterType get delimiterType => TagDelimiterType.tag;
 }

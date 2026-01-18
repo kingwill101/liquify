@@ -768,7 +768,8 @@ void main() {
         print('Simple variable activations: $totalActivations');
 
         // Baseline after text() optimization: ~299
-        // Allow 20% tolerance for minor variations
+        // After primaryTerm() optimization: ~274
+        // Allow 30% tolerance for minor variations
         expect(
           totalActivations,
           lessThan(360),

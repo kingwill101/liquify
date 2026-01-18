@@ -901,8 +901,8 @@ Parser elseBlock() => seq2(ref0(elseTag), ref0(elseBranchContent))
 /// to properly handle Liquid's whitespace control syntax.
 Parser element() {
   // Separate custom parsers by their delimiter type.
-  // Custom parsers that use {{ }} syntax (like SuperTag) need to be in the
-  // variable branch, while those using {% %} syntax go in the tag branch.
+  // Custom parsers that use {{ }} syntax (like SuperTag) go in variable branch,
+  // those using {% %} syntax (default) go in tag branch.
   final varCustomParsers = <Parser>[];
   final tagCustomParsers = <Parser>[];
 
