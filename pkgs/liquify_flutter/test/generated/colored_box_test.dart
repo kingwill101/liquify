@@ -8,7 +8,7 @@ void main() {
     await pumpTemplate(
       tester,
       '''
-{% colored_box color: "#FF0000" %}{% text data: "Sample" %}{% endcolored_box %}
+{% colored_box color: "#FF0000" %}{% text value: "Sample" %}{% endcolored_box %}
       '''
     );
     expect(find.byType(ColoredBox), findsWidgets);

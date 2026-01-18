@@ -93,13 +93,19 @@ Controls feedback demo. Expects slider_value.
               {% endcolumn %}
             {% endcard %}
           {% endwrap %}
-          {% snack_bar
-            content: "Saved to workspace"
-            duration: 1200
-            behavior: "floating"
-            backgroundColor: "#111827" %}
-            {% snack_bar_action label: "Undo" onPressed: "controls:snack_undo" %}
-          {% endsnack_bar %}
+          {% card color: "#101521" %}
+            {% column spacing: 6 crossAxisAlignment: "start" %}
+              {% assign text_style_snack = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "SnackBar preview" style: text_style_snack %}
+              {% row spacing: 12 mainAxisAlignment: "spaceBetween" %}
+                {% assign text_style_snack_msg = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Saved to workspace" style: text_style_snack_msg %}
+                {% text_button onPressed: "controls:snack_undo" %}
+                  {% text data: "Undo" %}
+                {% endtext_button %}
+              {% endrow %}
+            {% endcolumn %}
+          {% endcard %}
           {% wrap spacing: 12 runSpacing: 12 crossAxisAlignment: "center" %}
             {% tooltip message: "Copy the share link" %}
               {% text_button onPressed: "controls:button_tap" %}

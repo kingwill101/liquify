@@ -1321,6 +1321,62 @@ SemanticFormatterCallback? parseSliderSemanticFormatter(
   };
 }
 
+/// Resolves a generic callback to a [FormFieldValidator<String>].
+///
+/// This properly wraps the callback returned by [resolveGenericCallback1]
+/// to match the expected `String? Function(String?)` signature.
+FormFieldValidator<String>? parseFormFieldValidatorString(
+  Evaluator evaluator,
+  Object? value,
+) {
+  if (value is FormFieldValidator<String>) {
+    return value;
+  }
+  // Handle string message as simple required validator
+  if (value is String) {
+    final message = value.trim();
+    if (message.isEmpty) {
+      return null;
+    }
+    return (input) {
+      final trimmed = input?.trim() ?? '';
+      if (trimmed.isEmpty) {
+        return message;
+      }
+      return null;
+    };
+  }
+  final resolved = resolveGenericCallback1(evaluator, value);
+  if (resolved == null) {
+    return null;
+  }
+  return (String? input) {
+    final result = resolved(input);
+    return result?.toString();
+  };
+}
+
+/// Resolves a generic callback to a [FormFieldValidator<Object?>].
+///
+/// This properly wraps the callback returned by [resolveGenericCallback1]
+/// to match the expected `String? Function(Object?)` signature.
+FormFieldValidator<Object?>? parseFormFieldValidatorObject(
+  Evaluator evaluator,
+  Object? value,
+) {
+  if (value is FormFieldValidator<Object?>) {
+    return value;
+  }
+  final resolved = resolveGenericCallback1(evaluator, value);
+  if (resolved == null) {
+    return null;
+  }
+  return (Object? input) {
+    final result = resolved(input);
+    return result?.toString();
+  };
+}
+
 Object? Function(Object?, Object?)? resolveGenericCallback2(
   Evaluator evaluator,
   Object? value, {
@@ -2249,4 +2305,12 @@ const Map<String, IconData> iconByName = {
   'settings': Icons.settings,
   'home': Icons.home,
   'person': Icons.person,
+  'dashboard': Icons.dashboard,
+  'lock': Icons.lock,
+  'chevron_right': Icons.chevron_right,
+  'chevron_left': Icons.chevron_left,
+  'arrow_back': Icons.arrow_back,
+  'arrow_forward': Icons.arrow_forward,
+  'edit': Icons.edit,
+  'delete': Icons.delete,
 };

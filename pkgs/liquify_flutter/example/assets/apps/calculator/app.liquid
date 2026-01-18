@@ -81,14 +81,6 @@ end
 
 local function ensure_table(value, name)
   if type(value) ~= "table" then
-    log(name .. " type: " .. type(value))
-    return {}
-  end
-  local ok = pcall(function()
-    local _ = value[1]
-  end)
-  if not ok then
-    log(name .. " not indexable")
     return {}
   end
   return value

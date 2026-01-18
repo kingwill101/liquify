@@ -2945,14 +2945,29 @@ String _parseExpression(
   Set<String> evaluatorParsers,
 ) {
   if (prop.parser != null && prop.parser!.isNotEmpty) {
+    var parserName = prop.parser!;
     final usesEvaluator = prop.usesEvaluator ||
-        (prop.parser != null && evaluatorParsers.contains(prop.parser));
+        evaluatorParsers.contains(parserName);
+    
+    // Handle FormFieldValidator types specially to avoid invalid casts
+    // from Object? Function(Object?) to String? Function(String?)
+    if (parserName == 'resolveGenericCallback1') {
+      if (prop.type == 'FormFieldValidator<String>' ||
+          prop.type == 'FormFieldValidator<String>?') {
+        parserName = 'parseFormFieldValidatorString';
+      } else if (prop.type == 'FormFieldValidator<Object?>' ||
+          prop.type == 'FormFieldValidator<Object?>?') {
+        parserName = 'parseFormFieldValidatorObject';
+      }
+    }
+    
     final parsed = usesEvaluator
-        ? '${prop.parser}(evaluator, $valueVar)'
-        : '${prop.parser}($valueVar)';
+        ? '$parserName(evaluator, $valueVar)'
+        : '$parserName($valueVar)';
     if (prop.parserOutputType != null &&
         prop.parserOutputType!.isNotEmpty &&
-        prop.parserOutputType != prop.type) {
+        prop.parserOutputType != prop.type &&
+        parserName == prop.parser) {
       // Check if value is already the target type before wrapping/casting
       // This preserves type info for callbacks passed directly from Dart
       return '($valueVar is ${prop.type} ? $valueVar : $parsed as ${prop.type}?)';
@@ -2994,25 +3009,41 @@ String _renderGeneratedRegistry(List<_GeneratedSpec> specs) {
   buffer.writeln("import 'package:liquify/parser.dart';");
   buffer.writeln("import 'widget_tags.dart';");
   buffer.writeln();
-  buffer.writeln('void registerGeneratedWidgetTags(Environment? environment) {');
-  buffer.writeln('  final existing = TagRegistry.tags.toSet();');
+  buffer.writeln('/// Tracks if generated widget tags have been registered to the global TagRegistry.');
+  buffer.writeln('bool _generatedWidgetTagsRegistered = false;');
+  buffer.writeln();
+  buffer.writeln('/// Map of tag names to their creators - built once and reused.');
+  buffer.writeln('Map<String, TagCreator>? _tagCreators;');
+  buffer.writeln();
+  buffer.writeln('Map<String, TagCreator> _getTagCreators() {');
+  buffer.writeln('  return _tagCreators ??= {');
   for (final spec in specs) {
     buffer.writeln(
-        "  if (!existing.contains('${spec.tag}')) {");
-    buffer.writeln(
-        "    _registerGeneratedTag('${spec.tag}', (content, filters) => ${spec.className}(content, filters), environment);");
-    buffer.writeln('  }');
+        "    '${spec.tag}': (content, filters) => ${spec.className}(content, filters),");
   }
+  buffer.writeln('  };');
   buffer.writeln('}');
   buffer.writeln();
-  buffer.writeln('void _registerGeneratedTag(');
-  buffer.writeln('  String name,');
-  buffer.writeln('  TagCreator creator,');
-  buffer.writeln('  Environment? environment,');
-  buffer.writeln(') {');
-  buffer.writeln('  TagRegistry.register(name, creator);');
+  buffer.writeln('void registerGeneratedWidgetTags(Environment? environment) {');
+  buffer.writeln('  final creators = _getTagCreators();');
+  buffer.writeln();
+  buffer.writeln('  // Register to global TagRegistry only once');
+  buffer.writeln('  if (!_generatedWidgetTagsRegistered) {');
+  buffer.writeln('    final existing = TagRegistry.tags.toSet();');
+  buffer.writeln('    for (final entry in creators.entries) {');
+  buffer.writeln('      if (!existing.contains(entry.key)) {');
+  buffer.writeln('        TagRegistry.register(entry.key, entry.value);');
+  buffer.writeln('      }');
+  buffer.writeln('    }');
+  buffer.writeln('    _generatedWidgetTagsRegistered = true;');
+  buffer.writeln('  }');
+  buffer.writeln();
+  buffer.writeln('  // Register to environment\'s local tags if provided');
   buffer.writeln('  if (environment != null) {');
-  buffer.writeln('    environment.registerLocalTag(name, creator);');
+  buffer.writeln('    // Batch register all tags at once for better performance');
+  buffer.writeln("    final localTags = environment.getRegister('tags') as Map<String, TagCreator>? ?? <String, TagCreator>{};");
+  buffer.writeln('    localTags.addAll(creators);');
+  buffer.writeln("    environment.setRegister('tags', localTags);");
   buffer.writeln('  }');
   buffer.writeln('}');
   return buffer.toString();
@@ -3664,10 +3695,18 @@ String _renderTypeFilters(
   buffer.writeln("import '../tags/tag_helpers.dart';");
   buffer.writeln("import 'type_parsers.dart';");
   buffer.writeln();
+  buffer.writeln('/// Tracks if type filters have been registered globally.');
+  buffer.writeln('bool _typeFiltersRegistered = false;');
+  buffer.writeln();
   buffer.writeln('/// Registers all generated type filters globally.');
   buffer.writeln('/// These filters will be available in all environments, including');
   buffer.writeln('/// isolated environments created by {% render %} tags.');
   buffer.writeln('void registerGeneratedTypeFilters([Environment? environment]) {');
+  buffer.writeln('  if (_typeFiltersRegistered) {');
+  buffer.writeln('    return;');
+  buffer.writeln('  }');
+  buffer.writeln('  _typeFiltersRegistered = true;');
+  buffer.writeln();
   for (final filter in filters) {
     buffer.writeln(
         "  FilterRegistry.register('${filter.name}', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, ${filter.parser}));");
@@ -5123,6 +5162,20 @@ _CallbackParserSpec? _suggestCallbackParserFromSignature(
         outputType: 'Object? Function(BuildContext)',
       );
     }
+    // Handle FormFieldValidator<String> (String? Function(String?))
+    if (returnType == 'String?' && paramType == 'String?') {
+      return _CallbackParserSpec(
+        parser: 'parseFormFieldValidatorString',
+        usesEvaluator: true,
+      );
+    }
+    // Handle FormFieldValidator<Object?> (String? Function(Object?))
+    if (returnType == 'String?' && paramType == 'Object?') {
+      return _CallbackParserSpec(
+        parser: 'parseFormFieldValidatorObject',
+        usesEvaluator: true,
+      );
+    }
     return _CallbackParserSpec(
       parser: 'resolveGenericCallback1',
       usesEvaluator: true,
@@ -5597,6 +5650,20 @@ _CallbackParserSpec? _suggestCallbackParser(FunctionType functionType) {
         parser: 'resolveBuildContextCallback',
         usesEvaluator: true,
         outputType: 'Object? Function(BuildContext)',
+      );
+    }
+    // Handle FormFieldValidator<String> (String? Function(String?))
+    if (returnType == 'String?' && paramType == 'String?') {
+      return _CallbackParserSpec(
+        parser: 'parseFormFieldValidatorString',
+        usesEvaluator: true,
+      );
+    }
+    // Handle FormFieldValidator<Object?> (String? Function(Object?))
+    if (returnType == 'String?' && paramType == 'Object?') {
+      return _CallbackParserSpec(
+        parser: 'parseFormFieldValidatorObject',
+        usesEvaluator: true,
       );
     }
     return _CallbackParserSpec(

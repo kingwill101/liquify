@@ -339,20 +339,41 @@ String _renderGeneratedRegistry(List<TagSpec> specs) {
   for (final spec in specs) {
     buffer.writeln("import 'tags/${spec.tag}.dart';");
   }
-  buffer.writeln('\nvoid registerGeneratedTags(Environment? environment) {');
+  buffer.writeln();
+  buffer.writeln('/// Tracks if generated tags have been registered to the global TagRegistry.');
+  buffer.writeln('bool _generatedTagsRegistered = false;');
+  buffer.writeln();
+  buffer.writeln('/// Map of tag names to their creators - built once and reused.');
+  buffer.writeln('Map<String, TagCreator>? _manualTagCreators;');
+  buffer.writeln();
+  buffer.writeln('Map<String, TagCreator> _getManualTagCreators() {');
+  buffer.writeln('  return _manualTagCreators ??= {');
   for (final spec in specs) {
     buffer.writeln(
-        "  _registerGeneratedTag('${spec.tag}', (content, filters) => ${spec.className}(content, filters), environment);");
+        "    '${spec.tag}': (content, filters) => ${spec.className}(content, filters),");
   }
+  buffer.writeln('  };');
   buffer.writeln('}');
-  buffer.writeln('\nvoid _registerGeneratedTag(');
-  buffer.writeln('  String name,');
-  buffer.writeln('  TagCreator creator,');
-  buffer.writeln('  Environment? environment,');
-  buffer.writeln(') {');
-  buffer.writeln('  TagRegistry.register(name, creator);');
+  buffer.writeln('\nvoid registerGeneratedTags(Environment? environment) {');
+  buffer.writeln('  final creators = _getManualTagCreators();');
+  buffer.writeln();
+  buffer.writeln('  // Register to global TagRegistry only once');
+  buffer.writeln('  if (!_generatedTagsRegistered) {');
+  buffer.writeln('    final existing = TagRegistry.tags.toSet();');
+  buffer.writeln('    for (final entry in creators.entries) {');
+  buffer.writeln('      if (!existing.contains(entry.key)) {');
+  buffer.writeln('        TagRegistry.register(entry.key, entry.value);');
+  buffer.writeln('      }');
+  buffer.writeln('    }');
+  buffer.writeln('    _generatedTagsRegistered = true;');
+  buffer.writeln('  }');
+  buffer.writeln();
+  buffer.writeln('  // Register to environment\'s local tags if provided');
   buffer.writeln('  if (environment != null) {');
-  buffer.writeln('    environment.registerLocalTag(name, creator);');
+  buffer.writeln('    // Batch register all tags at once for better performance');
+  buffer.writeln("    final localTags = environment.getRegister('tags') as Map<String, TagCreator>? ?? <String, TagCreator>{};");
+  buffer.writeln('    localTags.addAll(creators);');
+  buffer.writeln("    environment.setRegister('tags', localTags);");
   buffer.writeln('  }');
   buffer.writeln('}');
   return buffer.toString();

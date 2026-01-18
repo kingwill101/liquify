@@ -2,10 +2,15 @@ import 'package:liquify/parser.dart' as parser;
 import 'package:liquify/parser.dart';
 import 'package:liquify/src/fs.dart';
 import 'package:liquify/src/render_target.dart';
+import 'package:liquify/src/template_cache.dart';
 
 class Template {
   final String _templateContent;
   final Evaluator _evaluator;
+
+  /// Whether to use the global template cache for parsing.
+  /// Defaults to true for better performance.
+  final bool useCache;
 
   /// Creates a new Template instance from a file.
   ///
@@ -14,12 +19,14 @@ class Template {
   /// [data] is an optional map of variables to be used in the template evaluation.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
+  /// [useCache] enables/disables AST caching for this template (default: true).
   Template.fromFile(
     String templateName,
     Root root, {
     Map<String, dynamic> data = const {},
     Environment? environment,
     void Function(Environment)? environmentSetup,
+    this.useCache = true,
   }) : _templateContent = root.resolve(templateName).content,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
@@ -32,16 +39,26 @@ class Template {
   /// [root] is an optional Root object used for resolving templates.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
+  /// [useCache] enables/disables AST caching for this template (default: true).
   Template.parse(
     String input, {
     Map<String, dynamic> data = const {},
     Root? root,
     Environment? environment,
     void Function(Environment)? environmentSetup,
+    this.useCache = true,
   }) : _templateContent = input,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
        );
+
+  /// Parses the template content, using cache if enabled.
+  List<ASTNode> _parse() {
+    if (useCache) {
+      return templateCache.parse(_templateContent);
+    }
+    return parser.parseInput(_templateContent);
+  }
 
   /// Renders the template with the current context.
   ///
@@ -53,7 +70,7 @@ class Template {
   ///
   /// If [clearBuffer] is true (default), the internal buffer will be cleared after rendering.
   String render({bool clearBuffer = true}) {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = _parse();
     _evaluator.evaluateNodes(parsed);
     final result = _evaluator.buffer.toString();
     if (clearBuffer) {
@@ -69,7 +86,7 @@ class Template {
   ///
   /// If [clearBuffer] is true (default), the internal buffer will be cleared after rendering.
   Future<String> renderAsync({bool clearBuffer = true}) async {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = _parse();
     if (clearBuffer) {
       _evaluator.buffer.clear();
     }
@@ -83,7 +100,7 @@ class Template {
   ///
   /// [clearBuffer] determines whether to clear the temporary buffer after rendering.
   R renderWith<R>(RenderTarget<R> target, {bool clearBuffer = true}) {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = _parse();
     final sink = target.createSink();
     final buffer = Buffer(sink: sink);
     return _evaluator.withBuffer(buffer, () {
@@ -99,7 +116,7 @@ class Template {
     RenderTarget<R> target, {
     bool clearBuffer = true,
   }) async {
-    final parsed = parser.parseInput(_templateContent);
+    final parsed = _parse();
     final sink = target.createSink();
     final buffer = Buffer(sink: sink);
     return _evaluator.withBufferAsync(buffer, () async {

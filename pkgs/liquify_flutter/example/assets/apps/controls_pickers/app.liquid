@@ -33,10 +33,9 @@ Controls pickers demo. Expects dropdown_menu_items, dropdown_value, stepper_step
             dropdownColor: "#101521"
             padding: 8
             alignment: "center" %}
-          {% container %}
-            {% sized_box height: 180 %}{% endsized_box %}
+          {% sized_box height: 180 %}
             {% stepper steps: stepper_steps currentStep: step_index onStepTapped: "controls:step" type: "horizontal" %}
-          {% endcontainer %}
+          {% endsized_box %}
           {% wrap spacing: 12 runSpacing: 12 %}
             {% assign min_date = "" | date_time: year: 2023, month: 1, day: 1 %}
             {% assign max_date = "" | date_time: year: 2026, month: 12, day: 31 %}

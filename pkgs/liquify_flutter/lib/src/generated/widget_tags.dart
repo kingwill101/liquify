@@ -7515,7 +7515,7 @@ class GeneratedFormFieldTag extends WidgetTagBase with AsyncTag {
           config.restorationId = toStringValue(value);
           break;
         case 'validator':
-          config.validator = (value is FormFieldValidator<Object?> ? value : resolveGenericCallback1(evaluator, value) as FormFieldValidator<Object?>?);
+          config.validator = parseFormFieldValidatorObject(evaluator, value);
           break;
         default:
           handleUnknownArg('form_field', name);
@@ -17351,7 +17351,7 @@ class GeneratedTextFormFieldTag extends WidgetTagBase with AsyncTag {
           config.undoController = parseGeneratedUndoHistoryController(value);
           break;
         case 'validator':
-          config.validator = (value is FormFieldValidator<String> ? value : resolveGenericCallback1(evaluator, value) as FormFieldValidator<String>?);
+          config.validator = parseFormFieldValidatorString(evaluator, value);
           break;
         default:
           handleUnknownArg('text_form_field', name);

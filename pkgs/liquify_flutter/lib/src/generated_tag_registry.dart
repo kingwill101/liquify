@@ -6,19 +6,39 @@ import 'tags/colored_box.dart';
 import 'tags/ignore_pointer.dart';
 import 'tags/sized_box.dart';
 
-void registerGeneratedTags(Environment? environment) {
-  _registerGeneratedTag('colored_box', (content, filters) => ColoredBoxTag(content, filters), environment);
-  _registerGeneratedTag('ignore_pointer', (content, filters) => IgnorePointerTag(content, filters), environment);
-  _registerGeneratedTag('sized_box', (content, filters) => SizedBoxTag(content, filters), environment);
+/// Tracks if generated tags have been registered to the global TagRegistry.
+bool _generatedTagsRegistered = false;
+
+/// Map of tag names to their creators - built once and reused.
+Map<String, TagCreator>? _manualTagCreators;
+
+Map<String, TagCreator> _getManualTagCreators() {
+  return _manualTagCreators ??= {
+    'colored_box': (content, filters) => ColoredBoxTag(content, filters),
+    'ignore_pointer': (content, filters) => IgnorePointerTag(content, filters),
+    'sized_box': (content, filters) => SizedBoxTag(content, filters),
+  };
 }
 
-void _registerGeneratedTag(
-  String name,
-  TagCreator creator,
-  Environment? environment,
-) {
-  TagRegistry.register(name, creator);
+void registerGeneratedTags(Environment? environment) {
+  final creators = _getManualTagCreators();
+
+  // Register to global TagRegistry only once
+  if (!_generatedTagsRegistered) {
+    final existing = TagRegistry.tags.toSet();
+    for (final entry in creators.entries) {
+      if (!existing.contains(entry.key)) {
+        TagRegistry.register(entry.key, entry.value);
+      }
+    }
+    _generatedTagsRegistered = true;
+  }
+
+  // Register to environment's local tags if provided
   if (environment != null) {
-    environment.registerLocalTag(name, creator);
+    // Batch register all tags at once for better performance
+    final localTags = environment.getRegister('tags') as Map<String, TagCreator>? ?? <String, TagCreator>{};
+    localTags.addAll(creators);
+    environment.setRegister('tags', localTags);
   }
 }

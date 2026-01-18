@@ -5,10 +5,18 @@ import 'package:liquify/liquify.dart';
 import '../tags/tag_helpers.dart';
 import 'type_parsers.dart';
 
+/// Tracks if type filters have been registered globally.
+bool _typeFiltersRegistered = false;
+
 /// Registers all generated type filters globally.
 /// These filters will be available in all environments, including
 /// isolated environments created by {% render %} tags.
 void registerGeneratedTypeFilters([Environment? environment]) {
+  if (_typeFiltersRegistered) {
+    return;
+  }
+  _typeFiltersRegistered = true;
+
   FilterRegistry.register('alignment', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, parseGeneratedAlignment));
   FilterRegistry.register('alignment_directional', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, parseGeneratedAlignmentDirectional));
   FilterRegistry.register('alignment_geometry', (value, args, namedArgs) => _parseFilterValue(value, args, namedArgs, parseGeneratedAlignmentGeometry));

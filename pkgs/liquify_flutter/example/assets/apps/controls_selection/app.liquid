@@ -63,7 +63,6 @@ Split list-tile selection uses notifications_enabled and delivery_timing.
             title: "Email updates"
             subtitle: "Receive product news"
             value: notifications_enabled
-            adaptive: true
             fillColor: "#34d399"
             overlayColor: "#0ea5e9"
             checkboxScaleFactor: 1.1
@@ -76,8 +75,6 @@ Split list-tile selection uses notifications_enabled and delivery_timing.
           {% switch_list_tile
             title: "Auto sync"
             subtitle: "Keep settings in sync"
-            adaptive: true
-            applyCupertinoTheme: true
             activeThumbColor: "#7dd3fc"
             overlayColor: "#9333ea"
             dragStartBehavior: "down"
@@ -92,7 +89,7 @@ Split list-tile selection uses notifications_enabled and delivery_timing.
 {% text data: "Chips + Badges" style: text_style_7 %}
           {% wrap spacing: 8 runSpacing: 8 %}
             {% chip label: "Base chip" %}
-            {% action_chip label: "New report" icon: "add" onPressed: "controls:chip_action" %}
+            {% action_chip label: "New report" onPressed: "controls:chip_action" %}
             {% choice_chip label: "Daily" selected: chip_choice == "Daily" onSelected: "controls:chip_choice" %}
             {% choice_chip label: "Weekly" selected: chip_choice == "Weekly" onSelected: "controls:chip_choice" %}
             {% choice_chip label: "Monthly" selected: chip_choice == "Monthly" onSelected: "controls:chip_choice" %}

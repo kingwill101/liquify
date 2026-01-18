@@ -1139,6 +1139,12 @@ class _LiquidScreenState extends State<LiquidScreen> {
   static const bool _verbose =
       bool.fromEnvironment('LIQUIFY_TEST_VERBOSE', defaultValue: false);
 
+  /// Cached environment - reused across builds to avoid re-registration.
+  Environment? _cachedEnvironment;
+  
+  /// Tracks if Flutter tags have been registered to the cached environment.
+  bool _environmentConfigured = false;
+
   Widget _decorateEmptyRender(Widget widget) {
     if (!kDebugMode) {
       return widget;
@@ -1167,6 +1173,8 @@ class _LiquidScreenState extends State<LiquidScreen> {
       _lastDataHash = null;
       _lastSize = null;
       _lastTemplate = null;
+      _cachedEnvironment = null;
+      _environmentConfigured = false;
     }
   }
 
@@ -1229,22 +1237,36 @@ class _LiquidScreenState extends State<LiquidScreen> {
             'safeHeight': size.height - padding.top - padding.bottom,
           },
         };
-        final environment = Environment();
-        environment.setRegister('_liquify_flutter_context', context);
-        environment.setRegister('_liquify_flutter_strict_props', true);
-        environment.setRegister('_liquify_flutter_strict_tags', true);
-        environment.setRegister('_liquify_flutter_generated_only', true);
-        environment.setRegister('_liquify_flutter_rebuild', () {
-          if (mounted) {
-            setState(() {
-              _renderFuture = null; // Force re-render
+        
+        // Reuse cached environment or create new one
+        final environment = _cachedEnvironment ??= Environment();
+        
+        // Register tags/filters only once per environment instance
+        if (!_environmentConfigured) {
+          environment.setRegister('_liquify_flutter_strict_props', true);
+          environment.setRegister('_liquify_flutter_strict_tags', true);
+          environment.setRegister('_liquify_flutter_generated_only', true);
+          environment.setRegister('_liquify_flutter_rebuild', () {
+            if (!mounted) return;
+            // Schedule rebuild after current frame to avoid re-entering Lua
+            // while callbacks are still executing on the Lua call stack.
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              setState(() {
+                _renderFuture = null; // Force re-render
+              });
             });
+          });
+          if (widget.allowSyncLua) {
+            environment.setRegister('_liquify_flutter_allow_sync_lua', true);
           }
-        });
-        if (widget.allowSyncLua) {
-          environment.setRegister('_liquify_flutter_allow_sync_lua', true);
+          registerFlutterTags(environment: environment);
+          _environmentConfigured = true;
         }
-        registerFlutterTags(environment: environment);
+        
+        // Update context-specific register every build (context changes)
+        environment.setRegister('_liquify_flutter_context', context);
+        
         final templateInstance = FlutterTemplate.fromFile(
           widget.template,
           snapshot.data!,

@@ -82,13 +82,11 @@ Controls inputs demo. Expects slider_value, switch_auto_sync, switch_quiet_hours
             {% endcolumn %}
           {% endform %}
           {% assign text_style_10 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
-{% text data: "Custom field" style: text_style_10 %}
-          {% form_field autovalidateMode: "always" validator: "Custom field is required" %}
-            {% card color: "#101521" %}
-              {% assign text_style_11 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
-{% text data: "Inline field slot" style: text_style_11 %}
-            {% endcard %}
-          {% endform_field %}
+          {% text data: "Custom field (FormField requires builder callback - demo placeholder)" style: text_style_10 %}
+          {% card color: "#101521" %}
+            {% assign text_style_11 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+            {% text data: "Inline field slot" style: text_style_11 %}
+          {% endcard %}
         {% endcolumn %}
       {% endcard %}
 

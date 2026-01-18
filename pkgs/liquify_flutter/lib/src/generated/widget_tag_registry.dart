@@ -5,458 +5,183 @@
 import 'package:liquify/parser.dart';
 import 'widget_tags.dart';
 
-void registerGeneratedWidgetTags(Environment? environment) {
-  final existing = TagRegistry.tags.toSet();
-  if (!existing.contains('about_dialog')) {
-    _registerGeneratedTag('about_dialog', (content, filters) => GeneratedAboutDialogTag(content, filters), environment);
-  }
-  if (!existing.contains('absorb_pointer')) {
-    _registerGeneratedTag('absorb_pointer', (content, filters) => GeneratedAbsorbPointerTag(content, filters), environment);
-  }
-  if (!existing.contains('action_chip')) {
-    _registerGeneratedTag('action_chip', (content, filters) => GeneratedActionChipTag(content, filters), environment);
-  }
-  if (!existing.contains('alert_dialog')) {
-    _registerGeneratedTag('alert_dialog', (content, filters) => GeneratedAlertDialogTag(content, filters), environment);
-  }
-  if (!existing.contains('align')) {
-    _registerGeneratedTag('align', (content, filters) => GeneratedAlignTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_align')) {
-    _registerGeneratedTag('animated_align', (content, filters) => GeneratedAnimatedAlignTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_container')) {
-    _registerGeneratedTag('animated_container', (content, filters) => GeneratedAnimatedContainerTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_default_text_style')) {
-    _registerGeneratedTag('animated_default_text_style', (content, filters) => GeneratedAnimatedDefaultTextStyleTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_opacity')) {
-    _registerGeneratedTag('animated_opacity', (content, filters) => GeneratedAnimatedOpacityTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_padding')) {
-    _registerGeneratedTag('animated_padding', (content, filters) => GeneratedAnimatedPaddingTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_positioned')) {
-    _registerGeneratedTag('animated_positioned', (content, filters) => GeneratedAnimatedPositionedTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_rotation')) {
-    _registerGeneratedTag('animated_rotation', (content, filters) => GeneratedAnimatedRotationTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_scale')) {
-    _registerGeneratedTag('animated_scale', (content, filters) => GeneratedAnimatedScaleTag(content, filters), environment);
-  }
-  if (!existing.contains('animated_slide')) {
-    _registerGeneratedTag('animated_slide', (content, filters) => GeneratedAnimatedSlideTag(content, filters), environment);
-  }
-  if (!existing.contains('app_bar')) {
-    _registerGeneratedTag('app_bar', (content, filters) => GeneratedAppBarTag(content, filters), environment);
-  }
-  if (!existing.contains('aspect_ratio')) {
-    _registerGeneratedTag('aspect_ratio', (content, filters) => GeneratedAspectRatioTag(content, filters), environment);
-  }
-  if (!existing.contains('autocomplete')) {
-    _registerGeneratedTag('autocomplete', (content, filters) => GeneratedAutocompleteTag(content, filters), environment);
-  }
-  if (!existing.contains('badge')) {
-    _registerGeneratedTag('badge', (content, filters) => GeneratedBadgeTag(content, filters), environment);
-  }
-  if (!existing.contains('baseline')) {
-    _registerGeneratedTag('baseline', (content, filters) => GeneratedBaselineTag(content, filters), environment);
-  }
-  if (!existing.contains('bottom_app_bar')) {
-    _registerGeneratedTag('bottom_app_bar', (content, filters) => GeneratedBottomAppBarTag(content, filters), environment);
-  }
-  if (!existing.contains('bottom_navigation_bar')) {
-    _registerGeneratedTag('bottom_navigation_bar', (content, filters) => GeneratedBottomNavigationBarTag(content, filters), environment);
-  }
-  if (!existing.contains('bottom_sheet')) {
-    _registerGeneratedTag('bottom_sheet', (content, filters) => GeneratedBottomSheetTag(content, filters), environment);
-  }
-  if (!existing.contains('calendar_date_picker')) {
-    _registerGeneratedTag('calendar_date_picker', (content, filters) => GeneratedCalendarDatePickerTag(content, filters), environment);
-  }
-  if (!existing.contains('card')) {
-    _registerGeneratedTag('card', (content, filters) => GeneratedCardTag(content, filters), environment);
-  }
-  if (!existing.contains('center')) {
-    _registerGeneratedTag('center', (content, filters) => GeneratedCenterTag(content, filters), environment);
-  }
-  if (!existing.contains('checkbox')) {
-    _registerGeneratedTag('checkbox', (content, filters) => GeneratedCheckboxTag(content, filters), environment);
-  }
-  if (!existing.contains('checkbox_list_tile')) {
-    _registerGeneratedTag('checkbox_list_tile', (content, filters) => GeneratedCheckboxListTileTag(content, filters), environment);
-  }
-  if (!existing.contains('chip')) {
-    _registerGeneratedTag('chip', (content, filters) => GeneratedChipTag(content, filters), environment);
-  }
-  if (!existing.contains('choice_chip')) {
-    _registerGeneratedTag('choice_chip', (content, filters) => GeneratedChoiceChipTag(content, filters), environment);
-  }
-  if (!existing.contains('circle_avatar')) {
-    _registerGeneratedTag('circle_avatar', (content, filters) => GeneratedCircleAvatarTag(content, filters), environment);
-  }
-  if (!existing.contains('circular_progress_indicator')) {
-    _registerGeneratedTag('circular_progress_indicator', (content, filters) => GeneratedCircularProgressIndicatorTag(content, filters), environment);
-  }
-  if (!existing.contains('clip_oval')) {
-    _registerGeneratedTag('clip_oval', (content, filters) => GeneratedClipOvalTag(content, filters), environment);
-  }
-  if (!existing.contains('clip_path')) {
-    _registerGeneratedTag('clip_path', (content, filters) => GeneratedClipPathTag(content, filters), environment);
-  }
-  if (!existing.contains('clip_r_rect')) {
-    _registerGeneratedTag('clip_r_rect', (content, filters) => GeneratedClipRRectTag(content, filters), environment);
-  }
-  if (!existing.contains('clip_rect')) {
-    _registerGeneratedTag('clip_rect', (content, filters) => GeneratedClipRectTag(content, filters), environment);
-  }
-  if (!existing.contains('colored_box')) {
-    _registerGeneratedTag('colored_box', (content, filters) => GeneratedColoredBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('column')) {
-    _registerGeneratedTag('column', (content, filters) => GeneratedColumnTag(content, filters), environment);
-  }
-  if (!existing.contains('constrained_box')) {
-    _registerGeneratedTag('constrained_box', (content, filters) => GeneratedConstrainedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('container')) {
-    _registerGeneratedTag('container', (content, filters) => GeneratedContainerTag(content, filters), environment);
-  }
-  if (!existing.contains('custom_scroll_view')) {
-    _registerGeneratedTag('custom_scroll_view', (content, filters) => GeneratedCustomScrollViewTag(content, filters), environment);
-  }
-  if (!existing.contains('data_table')) {
-    _registerGeneratedTag('data_table', (content, filters) => GeneratedDataTableTag(content, filters), environment);
-  }
-  if (!existing.contains('date_picker_dialog')) {
-    _registerGeneratedTag('date_picker_dialog', (content, filters) => GeneratedDatePickerDialogTag(content, filters), environment);
-  }
-  if (!existing.contains('decorated_box')) {
-    _registerGeneratedTag('decorated_box', (content, filters) => GeneratedDecoratedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('default_tab_controller')) {
-    _registerGeneratedTag('default_tab_controller', (content, filters) => GeneratedDefaultTabControllerTag(content, filters), environment);
-  }
-  if (!existing.contains('default_text_style')) {
-    _registerGeneratedTag('default_text_style', (content, filters) => GeneratedDefaultTextStyleTag(content, filters), environment);
-  }
-  if (!existing.contains('dismissible')) {
-    _registerGeneratedTag('dismissible', (content, filters) => GeneratedDismissibleTag(content, filters), environment);
-  }
-  if (!existing.contains('divider')) {
-    _registerGeneratedTag('divider', (content, filters) => GeneratedDividerTag(content, filters), environment);
-  }
-  if (!existing.contains('drawer')) {
-    _registerGeneratedTag('drawer', (content, filters) => GeneratedDrawerTag(content, filters), environment);
-  }
-  if (!existing.contains('drawer_header')) {
-    _registerGeneratedTag('drawer_header', (content, filters) => GeneratedDrawerHeaderTag(content, filters), environment);
-  }
-  if (!existing.contains('dropdown_button')) {
-    _registerGeneratedTag('dropdown_button', (content, filters) => GeneratedDropdownButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('elevated_button')) {
-    _registerGeneratedTag('elevated_button', (content, filters) => GeneratedElevatedButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('expanded')) {
-    _registerGeneratedTag('expanded', (content, filters) => GeneratedExpandedTag(content, filters), environment);
-  }
-  if (!existing.contains('expansion_tile')) {
-    _registerGeneratedTag('expansion_tile', (content, filters) => GeneratedExpansionTileTag(content, filters), environment);
-  }
-  if (!existing.contains('fade_transition')) {
-    _registerGeneratedTag('fade_transition', (content, filters) => GeneratedFadeTransitionTag(content, filters), environment);
-  }
-  if (!existing.contains('filled_button')) {
-    _registerGeneratedTag('filled_button', (content, filters) => GeneratedFilledButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('filter_chip')) {
-    _registerGeneratedTag('filter_chip', (content, filters) => GeneratedFilterChipTag(content, filters), environment);
-  }
-  if (!existing.contains('fitted_box')) {
-    _registerGeneratedTag('fitted_box', (content, filters) => GeneratedFittedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('flex')) {
-    _registerGeneratedTag('flex', (content, filters) => GeneratedFlexTag(content, filters), environment);
-  }
-  if (!existing.contains('flexible')) {
-    _registerGeneratedTag('flexible', (content, filters) => GeneratedFlexibleTag(content, filters), environment);
-  }
-  if (!existing.contains('floating_action_button')) {
-    _registerGeneratedTag('floating_action_button', (content, filters) => GeneratedFloatingActionButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('form')) {
-    _registerGeneratedTag('form', (content, filters) => GeneratedFormTag(content, filters), environment);
-  }
-  if (!existing.contains('form_field')) {
-    _registerGeneratedTag('form_field', (content, filters) => GeneratedFormFieldTag(content, filters), environment);
-  }
-  if (!existing.contains('fractional_translation')) {
-    _registerGeneratedTag('fractional_translation', (content, filters) => GeneratedFractionalTranslationTag(content, filters), environment);
-  }
-  if (!existing.contains('fractionally_sized_box')) {
-    _registerGeneratedTag('fractionally_sized_box', (content, filters) => GeneratedFractionallySizedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('gesture_detector')) {
-    _registerGeneratedTag('gesture_detector', (content, filters) => GeneratedGestureDetectorTag(content, filters), environment);
-  }
-  if (!existing.contains('grid_view')) {
-    _registerGeneratedTag('grid_view', (content, filters) => GeneratedGridViewTag(content, filters), environment);
-  }
-  if (!existing.contains('hero')) {
-    _registerGeneratedTag('hero', (content, filters) => GeneratedHeroTag(content, filters), environment);
-  }
-  if (!existing.contains('icon')) {
-    _registerGeneratedTag('icon', (content, filters) => GeneratedIconTag(content, filters), environment);
-  }
-  if (!existing.contains('icon_button')) {
-    _registerGeneratedTag('icon_button', (content, filters) => GeneratedIconButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('icon_theme')) {
-    _registerGeneratedTag('icon_theme', (content, filters) => GeneratedIconThemeTag(content, filters), environment);
-  }
-  if (!existing.contains('ignore_pointer')) {
-    _registerGeneratedTag('ignore_pointer', (content, filters) => GeneratedIgnorePointerTag(content, filters), environment);
-  }
-  if (!existing.contains('image')) {
-    _registerGeneratedTag('image', (content, filters) => GeneratedImageTag(content, filters), environment);
-  }
-  if (!existing.contains('indexed_stack')) {
-    _registerGeneratedTag('indexed_stack', (content, filters) => GeneratedIndexedStackTag(content, filters), environment);
-  }
-  if (!existing.contains('input_chip')) {
-    _registerGeneratedTag('input_chip', (content, filters) => GeneratedInputChipTag(content, filters), environment);
-  }
-  if (!existing.contains('intrinsic_height')) {
-    _registerGeneratedTag('intrinsic_height', (content, filters) => GeneratedIntrinsicHeightTag(content, filters), environment);
-  }
-  if (!existing.contains('intrinsic_width')) {
-    _registerGeneratedTag('intrinsic_width', (content, filters) => GeneratedIntrinsicWidthTag(content, filters), environment);
-  }
-  if (!existing.contains('layout_builder')) {
-    _registerGeneratedTag('layout_builder', (content, filters) => GeneratedLayoutBuilderTag(content, filters), environment);
-  }
-  if (!existing.contains('limited_box')) {
-    _registerGeneratedTag('limited_box', (content, filters) => GeneratedLimitedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('linear_progress_indicator')) {
-    _registerGeneratedTag('linear_progress_indicator', (content, filters) => GeneratedLinearProgressIndicatorTag(content, filters), environment);
-  }
-  if (!existing.contains('list_tile')) {
-    _registerGeneratedTag('list_tile', (content, filters) => GeneratedListTileTag(content, filters), environment);
-  }
-  if (!existing.contains('list_view')) {
-    _registerGeneratedTag('list_view', (content, filters) => GeneratedListViewTag(content, filters), environment);
-  }
-  if (!existing.contains('listener')) {
-    _registerGeneratedTag('listener', (content, filters) => GeneratedListenerTag(content, filters), environment);
-  }
-  if (!existing.contains('material_banner')) {
-    _registerGeneratedTag('material_banner', (content, filters) => GeneratedMaterialBannerTag(content, filters), environment);
-  }
-  if (!existing.contains('merge_semantics')) {
-    _registerGeneratedTag('merge_semantics', (content, filters) => GeneratedMergeSemanticsTag(content, filters), environment);
-  }
-  if (!existing.contains('mouse_region')) {
-    _registerGeneratedTag('mouse_region', (content, filters) => GeneratedMouseRegionTag(content, filters), environment);
-  }
-  if (!existing.contains('navigation_bar')) {
-    _registerGeneratedTag('navigation_bar', (content, filters) => GeneratedNavigationBarTag(content, filters), environment);
-  }
-  if (!existing.contains('navigation_destination')) {
-    _registerGeneratedTag('navigation_destination', (content, filters) => GeneratedNavigationDestinationTag(content, filters), environment);
-  }
-  if (!existing.contains('navigation_drawer')) {
-    _registerGeneratedTag('navigation_drawer', (content, filters) => GeneratedNavigationDrawerTag(content, filters), environment);
-  }
-  if (!existing.contains('navigation_drawer_destination')) {
-    _registerGeneratedTag('navigation_drawer_destination', (content, filters) => GeneratedNavigationDrawerDestinationTag(content, filters), environment);
-  }
-  if (!existing.contains('navigation_rail')) {
-    _registerGeneratedTag('navigation_rail', (content, filters) => GeneratedNavigationRailTag(content, filters), environment);
-  }
-  if (!existing.contains('navigation_rail_destination')) {
-    _registerGeneratedTag('navigation_rail_destination', (content, filters) => GeneratedNavigationRailDestinationTag(content, filters), environment);
-  }
-  if (!existing.contains('offstage')) {
-    _registerGeneratedTag('offstage', (content, filters) => GeneratedOffstageTag(content, filters), environment);
-  }
-  if (!existing.contains('opacity')) {
-    _registerGeneratedTag('opacity', (content, filters) => GeneratedOpacityTag(content, filters), environment);
-  }
-  if (!existing.contains('outlined_button')) {
-    _registerGeneratedTag('outlined_button', (content, filters) => GeneratedOutlinedButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('overflow_box')) {
-    _registerGeneratedTag('overflow_box', (content, filters) => GeneratedOverflowBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('padding')) {
-    _registerGeneratedTag('padding', (content, filters) => GeneratedPaddingTag(content, filters), environment);
-  }
-  if (!existing.contains('page_view')) {
-    _registerGeneratedTag('page_view', (content, filters) => GeneratedPageViewTag(content, filters), environment);
-  }
-  if (!existing.contains('paginated_data_table')) {
-    _registerGeneratedTag('paginated_data_table', (content, filters) => GeneratedPaginatedDataTableTag(content, filters), environment);
-  }
-  if (!existing.contains('physical_model')) {
-    _registerGeneratedTag('physical_model', (content, filters) => GeneratedPhysicalModelTag(content, filters), environment);
-  }
-  if (!existing.contains('placeholder')) {
-    _registerGeneratedTag('placeholder', (content, filters) => GeneratedPlaceholderTag(content, filters), environment);
-  }
-  if (!existing.contains('popup_menu_button')) {
-    _registerGeneratedTag('popup_menu_button', (content, filters) => GeneratedPopupMenuButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('popup_menu_divider')) {
-    _registerGeneratedTag('popup_menu_divider', (content, filters) => GeneratedPopupMenuDividerTag(content, filters), environment);
-  }
-  if (!existing.contains('popup_menu_item')) {
-    _registerGeneratedTag('popup_menu_item', (content, filters) => GeneratedPopupMenuItemTag(content, filters), environment);
-  }
-  if (!existing.contains('positioned')) {
-    _registerGeneratedTag('positioned', (content, filters) => GeneratedPositionedTag(content, filters), environment);
-  }
-  if (!existing.contains('reorderable_list_view')) {
-    _registerGeneratedTag('reorderable_list_view', (content, filters) => GeneratedReorderableListViewTag(content, filters), environment);
-  }
-  if (!existing.contains('repaint_boundary')) {
-    _registerGeneratedTag('repaint_boundary', (content, filters) => GeneratedRepaintBoundaryTag(content, filters), environment);
-  }
-  if (!existing.contains('rotated_box')) {
-    _registerGeneratedTag('rotated_box', (content, filters) => GeneratedRotatedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('row')) {
-    _registerGeneratedTag('row', (content, filters) => GeneratedRowTag(content, filters), environment);
-  }
-  if (!existing.contains('safe_area')) {
-    _registerGeneratedTag('safe_area', (content, filters) => GeneratedSafeAreaTag(content, filters), environment);
-  }
-  if (!existing.contains('scaffold')) {
-    _registerGeneratedTag('scaffold', (content, filters) => GeneratedScaffoldTag(content, filters), environment);
-  }
-  if (!existing.contains('segmented_button')) {
-    _registerGeneratedTag('segmented_button', (content, filters) => GeneratedSegmentedButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('selectable_text')) {
-    _registerGeneratedTag('selectable_text', (content, filters) => GeneratedSelectableTextTag(content, filters), environment);
-  }
-  if (!existing.contains('shader_mask')) {
-    _registerGeneratedTag('shader_mask', (content, filters) => GeneratedShaderMaskTag(content, filters), environment);
-  }
-  if (!existing.contains('simple_dialog')) {
-    _registerGeneratedTag('simple_dialog', (content, filters) => GeneratedSimpleDialogTag(content, filters), environment);
-  }
-  if (!existing.contains('single_child_scroll_view')) {
-    _registerGeneratedTag('single_child_scroll_view', (content, filters) => GeneratedSingleChildScrollViewTag(content, filters), environment);
-  }
-  if (!existing.contains('sized_box')) {
-    _registerGeneratedTag('sized_box', (content, filters) => GeneratedSizedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('sized_overflow_box')) {
-    _registerGeneratedTag('sized_overflow_box', (content, filters) => GeneratedSizedOverflowBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('slider')) {
-    _registerGeneratedTag('slider', (content, filters) => GeneratedSliderTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_app_bar')) {
-    _registerGeneratedTag('sliver_app_bar', (content, filters) => GeneratedSliverAppBarTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_fill_remaining')) {
-    _registerGeneratedTag('sliver_fill_remaining', (content, filters) => GeneratedSliverFillRemainingTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_grid')) {
-    _registerGeneratedTag('sliver_grid', (content, filters) => GeneratedSliverGridTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_list')) {
-    _registerGeneratedTag('sliver_list', (content, filters) => GeneratedSliverListTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_padding')) {
-    _registerGeneratedTag('sliver_padding', (content, filters) => GeneratedSliverPaddingTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_persistent_header')) {
-    _registerGeneratedTag('sliver_persistent_header', (content, filters) => GeneratedSliverPersistentHeaderTag(content, filters), environment);
-  }
-  if (!existing.contains('sliver_to_box_adapter')) {
-    _registerGeneratedTag('sliver_to_box_adapter', (content, filters) => GeneratedSliverToBoxAdapterTag(content, filters), environment);
-  }
-  if (!existing.contains('snack_bar')) {
-    _registerGeneratedTag('snack_bar', (content, filters) => GeneratedSnackBarTag(content, filters), environment);
-  }
-  if (!existing.contains('snack_bar_action')) {
-    _registerGeneratedTag('snack_bar_action', (content, filters) => GeneratedSnackBarActionTag(content, filters), environment);
-  }
-  if (!existing.contains('spacer')) {
-    _registerGeneratedTag('spacer', (content, filters) => GeneratedSpacerTag(content, filters), environment);
-  }
-  if (!existing.contains('stack')) {
-    _registerGeneratedTag('stack', (content, filters) => GeneratedStackTag(content, filters), environment);
-  }
-  if (!existing.contains('stepper')) {
-    _registerGeneratedTag('stepper', (content, filters) => GeneratedStepperTag(content, filters), environment);
-  }
-  if (!existing.contains('switch')) {
-    _registerGeneratedTag('switch', (content, filters) => GeneratedSwitchTag(content, filters), environment);
-  }
-  if (!existing.contains('switch_list_tile')) {
-    _registerGeneratedTag('switch_list_tile', (content, filters) => GeneratedSwitchListTileTag(content, filters), environment);
-  }
-  if (!existing.contains('tab')) {
-    _registerGeneratedTag('tab', (content, filters) => GeneratedTabTag(content, filters), environment);
-  }
-  if (!existing.contains('tab_bar')) {
-    _registerGeneratedTag('tab_bar', (content, filters) => GeneratedTabBarTag(content, filters), environment);
-  }
-  if (!existing.contains('tab_bar_view')) {
-    _registerGeneratedTag('tab_bar_view', (content, filters) => GeneratedTabBarViewTag(content, filters), environment);
-  }
-  if (!existing.contains('table')) {
-    _registerGeneratedTag('table', (content, filters) => GeneratedTableTag(content, filters), environment);
-  }
-  if (!existing.contains('text')) {
-    _registerGeneratedTag('text', (content, filters) => GeneratedTextTag(content, filters), environment);
-  }
-  if (!existing.contains('text_button')) {
-    _registerGeneratedTag('text_button', (content, filters) => GeneratedTextButtonTag(content, filters), environment);
-  }
-  if (!existing.contains('text_field')) {
-    _registerGeneratedTag('text_field', (content, filters) => GeneratedTextFieldTag(content, filters), environment);
-  }
-  if (!existing.contains('text_form_field')) {
-    _registerGeneratedTag('text_form_field', (content, filters) => GeneratedTextFormFieldTag(content, filters), environment);
-  }
-  if (!existing.contains('time_picker_dialog')) {
-    _registerGeneratedTag('time_picker_dialog', (content, filters) => GeneratedTimePickerDialogTag(content, filters), environment);
-  }
-  if (!existing.contains('toggle_buttons')) {
-    _registerGeneratedTag('toggle_buttons', (content, filters) => GeneratedToggleButtonsTag(content, filters), environment);
-  }
-  if (!existing.contains('tooltip')) {
-    _registerGeneratedTag('tooltip', (content, filters) => GeneratedTooltipTag(content, filters), environment);
-  }
-  if (!existing.contains('transform')) {
-    _registerGeneratedTag('transform', (content, filters) => GeneratedTransformTag(content, filters), environment);
-  }
-  if (!existing.contains('unconstrained_box')) {
-    _registerGeneratedTag('unconstrained_box', (content, filters) => GeneratedUnconstrainedBoxTag(content, filters), environment);
-  }
-  if (!existing.contains('visibility')) {
-    _registerGeneratedTag('visibility', (content, filters) => GeneratedVisibilityTag(content, filters), environment);
-  }
-  if (!existing.contains('wrap')) {
-    _registerGeneratedTag('wrap', (content, filters) => GeneratedWrapTag(content, filters), environment);
-  }
+/// Tracks if generated widget tags have been registered to the global TagRegistry.
+bool _generatedWidgetTagsRegistered = false;
+
+/// Map of tag names to their creators - built once and reused.
+Map<String, TagCreator>? _tagCreators;
+
+Map<String, TagCreator> _getTagCreators() {
+  return _tagCreators ??= {
+    'about_dialog': (content, filters) => GeneratedAboutDialogTag(content, filters),
+    'absorb_pointer': (content, filters) => GeneratedAbsorbPointerTag(content, filters),
+    'action_chip': (content, filters) => GeneratedActionChipTag(content, filters),
+    'alert_dialog': (content, filters) => GeneratedAlertDialogTag(content, filters),
+    'align': (content, filters) => GeneratedAlignTag(content, filters),
+    'animated_align': (content, filters) => GeneratedAnimatedAlignTag(content, filters),
+    'animated_container': (content, filters) => GeneratedAnimatedContainerTag(content, filters),
+    'animated_default_text_style': (content, filters) => GeneratedAnimatedDefaultTextStyleTag(content, filters),
+    'animated_opacity': (content, filters) => GeneratedAnimatedOpacityTag(content, filters),
+    'animated_padding': (content, filters) => GeneratedAnimatedPaddingTag(content, filters),
+    'animated_positioned': (content, filters) => GeneratedAnimatedPositionedTag(content, filters),
+    'animated_rotation': (content, filters) => GeneratedAnimatedRotationTag(content, filters),
+    'animated_scale': (content, filters) => GeneratedAnimatedScaleTag(content, filters),
+    'animated_slide': (content, filters) => GeneratedAnimatedSlideTag(content, filters),
+    'app_bar': (content, filters) => GeneratedAppBarTag(content, filters),
+    'aspect_ratio': (content, filters) => GeneratedAspectRatioTag(content, filters),
+    'autocomplete': (content, filters) => GeneratedAutocompleteTag(content, filters),
+    'badge': (content, filters) => GeneratedBadgeTag(content, filters),
+    'baseline': (content, filters) => GeneratedBaselineTag(content, filters),
+    'bottom_app_bar': (content, filters) => GeneratedBottomAppBarTag(content, filters),
+    'bottom_navigation_bar': (content, filters) => GeneratedBottomNavigationBarTag(content, filters),
+    'bottom_sheet': (content, filters) => GeneratedBottomSheetTag(content, filters),
+    'calendar_date_picker': (content, filters) => GeneratedCalendarDatePickerTag(content, filters),
+    'card': (content, filters) => GeneratedCardTag(content, filters),
+    'center': (content, filters) => GeneratedCenterTag(content, filters),
+    'checkbox': (content, filters) => GeneratedCheckboxTag(content, filters),
+    'checkbox_list_tile': (content, filters) => GeneratedCheckboxListTileTag(content, filters),
+    'chip': (content, filters) => GeneratedChipTag(content, filters),
+    'choice_chip': (content, filters) => GeneratedChoiceChipTag(content, filters),
+    'circle_avatar': (content, filters) => GeneratedCircleAvatarTag(content, filters),
+    'circular_progress_indicator': (content, filters) => GeneratedCircularProgressIndicatorTag(content, filters),
+    'clip_oval': (content, filters) => GeneratedClipOvalTag(content, filters),
+    'clip_path': (content, filters) => GeneratedClipPathTag(content, filters),
+    'clip_r_rect': (content, filters) => GeneratedClipRRectTag(content, filters),
+    'clip_rect': (content, filters) => GeneratedClipRectTag(content, filters),
+    'colored_box': (content, filters) => GeneratedColoredBoxTag(content, filters),
+    'column': (content, filters) => GeneratedColumnTag(content, filters),
+    'constrained_box': (content, filters) => GeneratedConstrainedBoxTag(content, filters),
+    'container': (content, filters) => GeneratedContainerTag(content, filters),
+    'custom_scroll_view': (content, filters) => GeneratedCustomScrollViewTag(content, filters),
+    'data_table': (content, filters) => GeneratedDataTableTag(content, filters),
+    'date_picker_dialog': (content, filters) => GeneratedDatePickerDialogTag(content, filters),
+    'decorated_box': (content, filters) => GeneratedDecoratedBoxTag(content, filters),
+    'default_tab_controller': (content, filters) => GeneratedDefaultTabControllerTag(content, filters),
+    'default_text_style': (content, filters) => GeneratedDefaultTextStyleTag(content, filters),
+    'dismissible': (content, filters) => GeneratedDismissibleTag(content, filters),
+    'divider': (content, filters) => GeneratedDividerTag(content, filters),
+    'drawer': (content, filters) => GeneratedDrawerTag(content, filters),
+    'drawer_header': (content, filters) => GeneratedDrawerHeaderTag(content, filters),
+    'dropdown_button': (content, filters) => GeneratedDropdownButtonTag(content, filters),
+    'elevated_button': (content, filters) => GeneratedElevatedButtonTag(content, filters),
+    'expanded': (content, filters) => GeneratedExpandedTag(content, filters),
+    'expansion_tile': (content, filters) => GeneratedExpansionTileTag(content, filters),
+    'fade_transition': (content, filters) => GeneratedFadeTransitionTag(content, filters),
+    'filled_button': (content, filters) => GeneratedFilledButtonTag(content, filters),
+    'filter_chip': (content, filters) => GeneratedFilterChipTag(content, filters),
+    'fitted_box': (content, filters) => GeneratedFittedBoxTag(content, filters),
+    'flex': (content, filters) => GeneratedFlexTag(content, filters),
+    'flexible': (content, filters) => GeneratedFlexibleTag(content, filters),
+    'floating_action_button': (content, filters) => GeneratedFloatingActionButtonTag(content, filters),
+    'form': (content, filters) => GeneratedFormTag(content, filters),
+    'form_field': (content, filters) => GeneratedFormFieldTag(content, filters),
+    'fractional_translation': (content, filters) => GeneratedFractionalTranslationTag(content, filters),
+    'fractionally_sized_box': (content, filters) => GeneratedFractionallySizedBoxTag(content, filters),
+    'gesture_detector': (content, filters) => GeneratedGestureDetectorTag(content, filters),
+    'grid_view': (content, filters) => GeneratedGridViewTag(content, filters),
+    'hero': (content, filters) => GeneratedHeroTag(content, filters),
+    'icon': (content, filters) => GeneratedIconTag(content, filters),
+    'icon_button': (content, filters) => GeneratedIconButtonTag(content, filters),
+    'icon_theme': (content, filters) => GeneratedIconThemeTag(content, filters),
+    'ignore_pointer': (content, filters) => GeneratedIgnorePointerTag(content, filters),
+    'image': (content, filters) => GeneratedImageTag(content, filters),
+    'indexed_stack': (content, filters) => GeneratedIndexedStackTag(content, filters),
+    'input_chip': (content, filters) => GeneratedInputChipTag(content, filters),
+    'intrinsic_height': (content, filters) => GeneratedIntrinsicHeightTag(content, filters),
+    'intrinsic_width': (content, filters) => GeneratedIntrinsicWidthTag(content, filters),
+    'layout_builder': (content, filters) => GeneratedLayoutBuilderTag(content, filters),
+    'limited_box': (content, filters) => GeneratedLimitedBoxTag(content, filters),
+    'linear_progress_indicator': (content, filters) => GeneratedLinearProgressIndicatorTag(content, filters),
+    'list_tile': (content, filters) => GeneratedListTileTag(content, filters),
+    'list_view': (content, filters) => GeneratedListViewTag(content, filters),
+    'listener': (content, filters) => GeneratedListenerTag(content, filters),
+    'material_banner': (content, filters) => GeneratedMaterialBannerTag(content, filters),
+    'merge_semantics': (content, filters) => GeneratedMergeSemanticsTag(content, filters),
+    'mouse_region': (content, filters) => GeneratedMouseRegionTag(content, filters),
+    'navigation_bar': (content, filters) => GeneratedNavigationBarTag(content, filters),
+    'navigation_destination': (content, filters) => GeneratedNavigationDestinationTag(content, filters),
+    'navigation_drawer': (content, filters) => GeneratedNavigationDrawerTag(content, filters),
+    'navigation_drawer_destination': (content, filters) => GeneratedNavigationDrawerDestinationTag(content, filters),
+    'navigation_rail': (content, filters) => GeneratedNavigationRailTag(content, filters),
+    'navigation_rail_destination': (content, filters) => GeneratedNavigationRailDestinationTag(content, filters),
+    'offstage': (content, filters) => GeneratedOffstageTag(content, filters),
+    'opacity': (content, filters) => GeneratedOpacityTag(content, filters),
+    'outlined_button': (content, filters) => GeneratedOutlinedButtonTag(content, filters),
+    'overflow_box': (content, filters) => GeneratedOverflowBoxTag(content, filters),
+    'padding': (content, filters) => GeneratedPaddingTag(content, filters),
+    'page_view': (content, filters) => GeneratedPageViewTag(content, filters),
+    'paginated_data_table': (content, filters) => GeneratedPaginatedDataTableTag(content, filters),
+    'physical_model': (content, filters) => GeneratedPhysicalModelTag(content, filters),
+    'placeholder': (content, filters) => GeneratedPlaceholderTag(content, filters),
+    'popup_menu_button': (content, filters) => GeneratedPopupMenuButtonTag(content, filters),
+    'popup_menu_divider': (content, filters) => GeneratedPopupMenuDividerTag(content, filters),
+    'popup_menu_item': (content, filters) => GeneratedPopupMenuItemTag(content, filters),
+    'positioned': (content, filters) => GeneratedPositionedTag(content, filters),
+    'reorderable_list_view': (content, filters) => GeneratedReorderableListViewTag(content, filters),
+    'repaint_boundary': (content, filters) => GeneratedRepaintBoundaryTag(content, filters),
+    'rotated_box': (content, filters) => GeneratedRotatedBoxTag(content, filters),
+    'row': (content, filters) => GeneratedRowTag(content, filters),
+    'safe_area': (content, filters) => GeneratedSafeAreaTag(content, filters),
+    'scaffold': (content, filters) => GeneratedScaffoldTag(content, filters),
+    'segmented_button': (content, filters) => GeneratedSegmentedButtonTag(content, filters),
+    'selectable_text': (content, filters) => GeneratedSelectableTextTag(content, filters),
+    'shader_mask': (content, filters) => GeneratedShaderMaskTag(content, filters),
+    'simple_dialog': (content, filters) => GeneratedSimpleDialogTag(content, filters),
+    'single_child_scroll_view': (content, filters) => GeneratedSingleChildScrollViewTag(content, filters),
+    'sized_box': (content, filters) => GeneratedSizedBoxTag(content, filters),
+    'sized_overflow_box': (content, filters) => GeneratedSizedOverflowBoxTag(content, filters),
+    'slider': (content, filters) => GeneratedSliderTag(content, filters),
+    'sliver_app_bar': (content, filters) => GeneratedSliverAppBarTag(content, filters),
+    'sliver_fill_remaining': (content, filters) => GeneratedSliverFillRemainingTag(content, filters),
+    'sliver_grid': (content, filters) => GeneratedSliverGridTag(content, filters),
+    'sliver_list': (content, filters) => GeneratedSliverListTag(content, filters),
+    'sliver_padding': (content, filters) => GeneratedSliverPaddingTag(content, filters),
+    'sliver_persistent_header': (content, filters) => GeneratedSliverPersistentHeaderTag(content, filters),
+    'sliver_to_box_adapter': (content, filters) => GeneratedSliverToBoxAdapterTag(content, filters),
+    'snack_bar': (content, filters) => GeneratedSnackBarTag(content, filters),
+    'snack_bar_action': (content, filters) => GeneratedSnackBarActionTag(content, filters),
+    'spacer': (content, filters) => GeneratedSpacerTag(content, filters),
+    'stack': (content, filters) => GeneratedStackTag(content, filters),
+    'stepper': (content, filters) => GeneratedStepperTag(content, filters),
+    'switch': (content, filters) => GeneratedSwitchTag(content, filters),
+    'switch_list_tile': (content, filters) => GeneratedSwitchListTileTag(content, filters),
+    'tab': (content, filters) => GeneratedTabTag(content, filters),
+    'tab_bar': (content, filters) => GeneratedTabBarTag(content, filters),
+    'tab_bar_view': (content, filters) => GeneratedTabBarViewTag(content, filters),
+    'table': (content, filters) => GeneratedTableTag(content, filters),
+    'text': (content, filters) => GeneratedTextTag(content, filters),
+    'text_button': (content, filters) => GeneratedTextButtonTag(content, filters),
+    'text_field': (content, filters) => GeneratedTextFieldTag(content, filters),
+    'text_form_field': (content, filters) => GeneratedTextFormFieldTag(content, filters),
+    'time_picker_dialog': (content, filters) => GeneratedTimePickerDialogTag(content, filters),
+    'toggle_buttons': (content, filters) => GeneratedToggleButtonsTag(content, filters),
+    'tooltip': (content, filters) => GeneratedTooltipTag(content, filters),
+    'transform': (content, filters) => GeneratedTransformTag(content, filters),
+    'unconstrained_box': (content, filters) => GeneratedUnconstrainedBoxTag(content, filters),
+    'visibility': (content, filters) => GeneratedVisibilityTag(content, filters),
+    'wrap': (content, filters) => GeneratedWrapTag(content, filters),
+  };
 }
 
-void _registerGeneratedTag(
-  String name,
-  TagCreator creator,
-  Environment? environment,
-) {
-  TagRegistry.register(name, creator);
+void registerGeneratedWidgetTags(Environment? environment) {
+  final creators = _getTagCreators();
+
+  // Register to global TagRegistry only once
+  if (!_generatedWidgetTagsRegistered) {
+    final existing = TagRegistry.tags.toSet();
+    for (final entry in creators.entries) {
+      if (!existing.contains(entry.key)) {
+        TagRegistry.register(entry.key, entry.value);
+      }
+    }
+    _generatedWidgetTagsRegistered = true;
+  }
+
+  // Register to environment's local tags if provided
   if (environment != null) {
-    environment.registerLocalTag(name, creator);
+    // Batch register all tags at once for better performance
+    final localTags = environment.getRegister('tags') as Map<String, TagCreator>? ?? <String, TagCreator>{};
+    localTags.addAll(creators);
+    environment.setRegister('tags', localTags);
   }
 }

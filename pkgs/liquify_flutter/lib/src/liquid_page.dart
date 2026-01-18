@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:liquify/liquify.dart';
 import 'package:lualike/lualike.dart' as lualike;
 
-import 'asset_bundle_root.dart';
 import 'flutter_template.dart';
 import 'lua_callback_drop.dart';
 import 'tag_registry.dart';
@@ -64,9 +63,12 @@ class LiquidPageState extends State<LiquidPage> {
   
   /// Cached render future for async rendering.
   Future<Widget>? _renderFuture;
+
+  /// Cached environment - reused across builds to avoid re-registration.
+  Environment? _cachedEnvironment;
   
-  /// Flag to track if we need to re-render.
-  bool _needsRebuild = false;
+  /// Tracks if Flutter tags have been registered to the cached environment.
+  bool _environmentConfigured = false;
 
   @override
   void initState() {
@@ -83,6 +85,8 @@ class LiquidPageState extends State<LiquidPage> {
     if (oldWidget.template != widget.template || 
         oldWidget.root != widget.root) {
       _renderFuture = null;
+      _cachedEnvironment = null;
+      _environmentConfigured = false;
       _initLua();
     }
   }
@@ -181,9 +185,13 @@ class LiquidPageState extends State<LiquidPage> {
 
   void _triggerRebuild() {
     if (!mounted) return;
-    setState(() {
-      _needsRebuild = true;
-      _renderFuture = null;
+    // Schedule rebuild after current frame to avoid re-entering Lua
+    // while callbacks are still executing on the Lua call stack.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        _renderFuture = null;
+      });
     });
   }
 
@@ -244,24 +252,28 @@ class LiquidPageState extends State<LiquidPage> {
 
   @override
   Widget build(BuildContext context) {
-    _needsRebuild = false;
     final mediaQuery = MediaQuery.of(context);
     final size = mediaQuery.size;
     final padding = mediaQuery.padding;
     
-    final environment = Environment();
+    // Reuse cached environment or create new one
+    final environment = _cachedEnvironment ??= Environment();
     
-    // Register the Lua instance so the lua tag can use it
-    environment.setRegister('_liquify_flutter_lua', _lua);
-    environment.setRegister('_liquify_flutter_page_state', _state);
-    environment.setRegister('_liquify_flutter_rebuild', _triggerRebuild);
+    // Register tags/filters only once per environment instance
+    if (!_environmentConfigured) {
+      environment.setRegister('_liquify_flutter_lua', _lua);
+      environment.setRegister('_liquify_flutter_page_state', _state);
+      environment.setRegister('_liquify_flutter_rebuild', _triggerRebuild);
+      environment.setRegister('_liquify_flutter_strict_props', true);
+      environment.setRegister('_liquify_flutter_strict_tags', true);
+      environment.setRegister('_liquify_flutter_generated_only', true);
+      environment.setRegister('_liquify_flutter_allow_sync_lua', true);
+      registerFlutterTags(environment: environment);
+      _environmentConfigured = true;
+    }
+    
+    // Update context-specific register every build (context changes)
     environment.setRegister('_liquify_flutter_context', context);
-    environment.setRegister('_liquify_flutter_strict_props', true);
-    environment.setRegister('_liquify_flutter_strict_tags', true);
-    environment.setRegister('_liquify_flutter_generated_only', true);
-    environment.setRegister('_liquify_flutter_allow_sync_lua', true);
-    
-    registerFlutterTags(environment: environment);
     
     // Merge widget data with current state (state takes precedence)
     final mergedData = {
