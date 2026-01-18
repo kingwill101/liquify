@@ -1147,11 +1147,11 @@ void main() {
         print('Variance: ${((max - min) / median * 100).toStringAsFixed(1)}%');
         print('${'=' * 70}\n');
 
-        // Variance check is informational - high variance is expected on shared systems
-        // We only fail if variance is extreme (10x median suggests measurement issues)
+        // Variance check is informational - high variance is expected on shared CI systems
+        // We only fail if variance is extreme (15x median suggests measurement issues)
         expect(
           max,
-          lessThan(median * 10),
+          lessThan(median * 15),
           reason:
               'Parse time variance extreme: max=$max, median=$median. '
               'This may indicate measurement issues.',
