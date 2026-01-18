@@ -59,6 +59,9 @@ Parser filterArguments() => ref0(expression)
     .map((values) => values.elements)
     .labeled('filterArguments');
 
+/// @Deprecated: This parser is no longer used. Assignment is now handled
+/// by the expression() parser through _assignmentExpr().
+/// Kept for backwards compatibility.
 Parser assignment() {
   return (ref0(identifier).trim() &
           char('=').trim() &
@@ -121,6 +124,11 @@ Parser namedArgument() {
       })
       .labeled('namedArgument');
 }
+
+/// @Deprecated: These old parsers are no longer used by expression().
+/// The new expression() uses a precedence-based approach via _logicalExpr,
+/// _comparisonExpr, _arithmeticExpr, and primaryTerm.
+/// Kept for backwards compatibility and testing.
 
 Parser identifier() {
   return (letter() & (word() | char('-')).star())
@@ -221,39 +229,161 @@ Parser emptyLiteral() {
       .labeled('emptyLiteral');
 }
 
-/// Expression parser with optimized ordering.
+/// Arithmetic operator parser.
+Parser arithmeticOperator() =>
+    (char('+').trim() | char('-').trim() | char('*').trim() | char('/').trim())
+        .labeled('arithmeticOperator');
+
+/// Primary term parser - parses the basic building blocks of expressions.
 ///
-/// Parsers are ordered to ensure more specific patterns are tried before
-/// general ones. For example, `arithmeticExpression` (which starts with a
-/// literal/identifier but continues with an operator) must come before
-/// standalone `literal` or `identifier`.
-Parser expression() {
-  return (
-      // Complex expressions that START with simpler tokens must come first
-      // Logical expressions (a and b, a or b) - contains comparisons
-      ref0(logicalExpression) |
-          // Comparisons (a == b, etc.) - starts with identifier/literal
-          ref0(comparison) |
-          // Arithmetic (1 + 2, "a" + "b") - starts with literal/identifier
-          ref0(arithmeticExpression) |
-          // Assignments (x = 5) - starts with identifier
-          ref0(assignment) |
-          // Member access (user.name) - starts with identifier
-          ref0(memberAccess) |
-          // Array access (items[0]) - starts with identifier
-          ref0(arrayAccess) |
-          // Unary operations (not x, !x)
-          ref0(unaryOperation) |
-          // Grouped expressions ((a + b))
-          ref0(groupedExpression) |
-          // Ranges ((1..5))
+/// This includes:
+/// - Grouped expressions: (a + b)
+/// - Ranges: (1..5)
+/// - Unary operations: not x, !x
+/// - Member access: user.name
+/// - Array access: items[0]
+/// - Literals: 1, "hello", true
+/// - Identifiers: user
+///
+/// Note: The order matters - more specific patterns (like memberAccess which
+/// starts with identifier but has a dot) must come before simpler patterns.
+Parser primaryTerm() {
+  return (ref0(groupedExpression) |
           ref0(range) |
-          // Named arguments (key: value) - starts with identifier
-          ref0(namedArgument) |
-          // Simple terminals - must come last as they match parts of complex expressions
+          ref0(unaryOperation) |
+          ref0(memberAccess) |
+          ref0(arrayAccess) |
           ref0(literal) |
           ref0(identifier))
-      .labeled('expression');
+      .labeled('primaryTerm');
+}
+
+/// Optimized expression parser with proper precedence handling.
+///
+/// Precedence (lowest to highest):
+/// 1. Named argument / Assignment (handled specially)
+/// 2. Logical operators (and, or)
+/// 3. Comparison operators (==, !=, <, >, <=, >=, contains, in)
+/// 4. Arithmetic operators (+, -, *, /)
+/// 5. Primary terms (identifiers, literals, etc.)
+///
+/// This avoids the repeated prefix parsing problem by parsing each
+/// precedence level once and reusing results.
+Parser expression() {
+  return ref0(expressionWithAssignment).labeled('expression');
+}
+
+/// Top-level expression handling assignment and named arguments.
+/// These are special because they require an identifier on the left.
+///
+/// Uses lookahead to avoid re-parsing the identifier multiple times:
+/// - If we see identifier followed by '=', try assignment
+/// - If we see identifier followed by ':', try named argument
+/// - Otherwise, parse as logical expression
+Parser expressionWithAssignment() {
+  // Lookahead for assignment: identifier followed by '='
+  final assignmentLookahead =
+      (ref0(identifier) & whitespace().star() & char('=')).and();
+
+  // Lookahead for named argument: identifier followed by ':'
+  final namedArgLookahead = (ref0(identifier) & whitespace().star() & char(':'))
+      .and();
+
+  return (
+      // Only try assignment if lookahead matches
+      (assignmentLookahead & ref0(assignmentExpr)).pick(1) |
+          // Only try named arg if lookahead matches
+          (namedArgLookahead & ref0(namedArgExpr)).pick(1) |
+          // Otherwise, parse as logical expression
+          ref0(logicalExpr))
+      .labeled('expressionWithAssignment');
+}
+
+/// Assignment expression: identifier = expression
+Parser assignmentExpr() {
+  return (ref0(identifier) &
+          char('=').trim() &
+          ref0(logicalExpr).trim() &
+          filter().star().trim())
+      .map((values) {
+        final ident = values[0] as Identifier;
+        final rightExpr = values[2] as ASTNode;
+        final filters = values[3] as List;
+        if (filters.isNotEmpty) {
+          return Assignment(
+            ident,
+            FilteredExpression(
+              Assignment(ident, rightExpr),
+              filters.cast<Filter>(),
+            ),
+          );
+        }
+        return Assignment(ident, rightExpr);
+      })
+      .labeled('assignmentExpr');
+}
+
+/// Named argument expression: identifier: expression
+Parser namedArgExpr() {
+  return (ref0(identifier) & char(':').trim() & ref0(logicalExpr))
+      .map((values) {
+        return NamedArgument(values[0] as Identifier, values[2] as ASTNode);
+      })
+      .labeled('namedArgExpr');
+}
+
+/// Logical expression: comparison (and|or comparison)*
+/// Lowest precedence binary operator.
+Parser logicalExpr() {
+  return (ref0(comparisonExpr) &
+          (ref0(logicalOperator) & ref0(comparisonExpr)).star())
+      .map((values) {
+        var left = values[0];
+        final pairs = values[1] as List;
+        for (final pair in pairs) {
+          final op = pair[0];
+          final right = pair[1];
+          left = BinaryOperation(left, op, right);
+        }
+        return left;
+      })
+      .labeled('logicalExpr');
+}
+
+/// Comparison expression: arithmetic (comparisonOp arithmetic)?
+/// Note: Single comparison only (no chaining like a == b == c)
+Parser comparisonExpr() {
+  return (ref0(arithmeticExpr) &
+          (ref0(comparisonOperator) & ref0(arithmeticExpr)).optional())
+      .map((values) {
+        final left = values[0];
+        final opAndRight = values[1];
+        if (opAndRight == null) {
+          return left;
+        }
+        final op = opAndRight[0];
+        final right = opAndRight[1];
+        return BinaryOperation(left, op, right);
+      })
+      .labeled('comparisonExpr');
+}
+
+/// Arithmetic expression: term (arithmeticOp term)?
+/// Note: Single operation only for now (no chaining like a + b + c)
+Parser arithmeticExpr() {
+  return (ref0(primaryTerm).trim() &
+          (ref0(arithmeticOperator) & ref0(primaryTerm).trim()).optional())
+      .map((values) {
+        final left = values[0];
+        final opAndRight = values[1];
+        if (opAndRight == null) {
+          return left;
+        }
+        final op = opAndRight[0];
+        final right = opAndRight[1];
+        return BinaryOperation(left, op, right);
+      })
+      .labeled('arithmeticExpr');
 }
 
 Parser memberAccess() =>
@@ -300,6 +430,16 @@ Parser logicalOperator() =>
     ((string('and') & word().not()).pick(0).trim() |
             (string('or') & word().not()).pick(0).trim())
         .labeled('logicalOperator');
+
+// ---------------------------------------------------------------------------
+// DEPRECATED PARSERS
+// ---------------------------------------------------------------------------
+// The following parsers (comparison, logicalExpression, comparisonOrExpression,
+// arithmeticExpression) are no longer used by the main expression() parser.
+// They are kept for backwards compatibility and for the profiling test suite.
+// The new expression() uses a precedence-based approach via _logicalExpr,
+// _comparisonExpr, _arithmeticExpr, and primaryTerm which is more efficient.
+// ---------------------------------------------------------------------------
 
 Parser comparison() {
   return (ref0(memberAccess) |
@@ -349,9 +489,20 @@ Parser unaryOperator() =>
       'unaryOperator',
     );
 
-Parser unaryOperation() => (ref0(unaryOperator) & ref0(comparisonOrExpression))
+Parser unaryOperation() => (ref0(unaryOperator) & ref0(unaryOperand))
     .map((values) => UnaryOperation(values[0], values[1]))
     .labeled('unaryOperation');
+
+/// Operand for unary operations - can be a full expression (minus unary itself to avoid left-recursion).
+Parser unaryOperand() {
+  return (ref0(groupedExpression) |
+          ref0(range) |
+          ref0(memberAccess) |
+          ref0(arrayAccess) |
+          ref0(literal) |
+          ref0(identifier))
+      .labeled('unaryOperand');
+}
 
 Parser range() {
   return (char('(').trim() &
@@ -395,14 +546,7 @@ Parser arithmeticExpression() {
 Parser groupedExpression() {
   return seq3(
     char('(').trim(),
-    (ref0(arithmeticExpression) |
-            ref0(memberAccess) |
-            ref0(unaryOperation) |
-            ref0(literal) |
-            ref0(comparison) |
-            ref0(logicalExpression) |
-            ref0(expression))
-        .trim(),
+    ref0(expression).trim(),
     char(')').trim(),
   ).map((values) => GroupedExpression(values.$2)).labeled('groupedExpression');
 }
@@ -454,7 +598,8 @@ Parser hashBlockComment() =>
         .labeled('hashBlockComment');
 
 Parser tagContent() {
-  return (ref0(assignment) | ref0(argument) | ref0(expression))
+  // Expression now handles assignment internally via _assignmentExpr
+  return (ref0(argument) | ref0(expression))
       .star()
       .map((values) {
         var res = [];
