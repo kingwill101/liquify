@@ -9,6 +9,11 @@ final resolverLogger = Logger('Resolver');
 /// Maps simple block names to their full qualified names.
 final _nestedBlockNameCache = Expando<Map<String, String>>('nestedBlockNames');
 
+/// Cache the last overrides map we built a lookup for.
+/// This allows reuse within a single buildCompleteMergedAst call.
+Map<String, BlockInfo>? _lastOverridesMap;
+Map<String, String>? _lastNestedLookup;
+
 /// Recursive helper to merge a single AST node.
 /// - If the node is a block tag, attempt to replace it with the resolved content.
 /// - Otherwise, process its children (body and content) recursively.
@@ -281,11 +286,13 @@ BlockInfo? _findOverride(String blockName, Map<String, BlockInfo> overrides) {
 }
 
 /// Builds a reverse lookup map from simple block names to their full qualified names.
-/// Uses a simple cache keyed by the overrides map's identity.
+/// Caches the result for the same overrides map within a resolution pass.
 Map<String, String> _getOrBuildNestedLookup(Map<String, BlockInfo> overrides) {
-  // We can't use Expando on Map directly, so build fresh each time
-  // but this is still faster than O(n) iteration for repeated lookups
-  // within the same buildCompleteMergedAst call
+  // Return cached lookup if same overrides map
+  if (identical(overrides, _lastOverridesMap) && _lastNestedLookup != null) {
+    return _lastNestedLookup!;
+  }
+
   final lookup = <String, String>{};
   for (var key in overrides.keys) {
     final lastDot = key.lastIndexOf('.');
@@ -295,6 +302,9 @@ Map<String, String> _getOrBuildNestedLookup(Map<String, BlockInfo> overrides) {
       lookup.putIfAbsent(simpleName, () => key);
     }
   }
+
+  _lastOverridesMap = overrides;
+  _lastNestedLookup = lookup;
   return lookup;
 }
 
