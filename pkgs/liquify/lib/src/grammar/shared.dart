@@ -295,17 +295,21 @@ Parser expression() {
 /// Top-level expression handling assignment and named arguments.
 /// These are special because they require an identifier on the left.
 ///
-/// Uses lookahead to avoid re-parsing the identifier multiple times:
-/// - If we see identifier followed by '=', try assignment
-/// - If we see identifier followed by ':', try named argument
-/// - Otherwise, parse as logical expression
+/// Optimized with cheap pattern-based lookahead:
+/// - Uses pattern matching instead of full identifier parsing in lookahead
+/// - Only parses identifier once when actually needed
+/// - Pattern: [a-zA-Z][a-zA-Z0-9_-]* followed by whitespace* and = or :
 Parser expressionWithAssignment() {
-  // Lookahead for assignment: identifier followed by '='
-  final assignmentLookahead =
-      (ref0(identifier) & whitespace().star() & char('=')).and();
+  // Cheap pattern-based lookahead using character patterns instead of full identifier parsing
+  // This avoids parsing the identifier 3 times (once per lookahead + once for actual parse)
+  final identPattern = pattern('a-zA-Z') & pattern('a-zA-Z0-9_-').star();
 
-  // Lookahead for named argument: identifier followed by ':'
-  final namedArgLookahead = (ref0(identifier) & whitespace().star() & char(':'))
+  // Check for = after identifier pattern (doesn't consume, just peeks)
+  final assignmentLookahead = (identPattern & whitespace().star() & char('='))
+      .and();
+
+  // Check for : after identifier pattern (doesn't consume, just peeks)
+  final namedArgLookahead = (identPattern & whitespace().star() & char(':'))
       .and();
 
   return (
