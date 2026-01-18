@@ -67,10 +67,10 @@ class UnlessTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() {
-    return (ref0(unlessTag).trim() &
-            any().plusLazy(endUnlessTag()) &
-            endUnlessTag())
+  Parser parser([LiquidConfig? config]) {
+    return (unlessTag(config).trim() &
+            any().plusLazy(endUnlessTag(config)) &
+            endUnlessTag(config))
         .map((values) {
           return (values[0] as Tag).copyWith(
             body: parseInput((values[1] as List).join('')),
@@ -79,9 +79,10 @@ class UnlessTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 }
 
-Parser unlessTag() => someTag("unless");
+Parser unlessTag([LiquidConfig? config]) => someTag("unless", config: config);
 
-Parser endUnlessTag() =>
-    (tagStart() & string('endunless').trim() & tagEnd()).map((values) {
-      return Tag('endunless', []);
-    });
+Parser endUnlessTag([LiquidConfig? config]) =>
+    (createTagStart(config) & string('endunless').trim() & createTagEnd(config))
+        .map((values) {
+          return Tag('endunless', []);
+        });

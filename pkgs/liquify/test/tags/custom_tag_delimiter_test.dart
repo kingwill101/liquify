@@ -1,8 +1,8 @@
 import 'package:liquify/parser.dart';
 import 'package:liquify/src/buffer.dart';
+import 'package:liquify/src/config.dart';
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
-import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
 /// A custom tag using standard {% %} delimiters (default)
@@ -21,11 +21,12 @@ class HelloTag extends AbstractTag with CustomTagParser {
   // Uses default TagDelimiterType.tag - no override needed
 
   @override
-  Parser parser() {
-    return (tagStart() &
+  Parser parser([LiquidConfig? config]) {
+    // Use createTagStart/createTagEnd to support custom delimiters
+    return (createTagStart(config) &
             string('hello').trim() &
             ref0(expression).optional().trim() &
-            tagEnd())
+            createTagEnd(config))
         .map((values) {
           final expr = values[2];
           return Tag('hello', expr != null ? [expr as ASTNode] : []);
@@ -50,14 +51,15 @@ class GreetTag extends AbstractTag with CustomTagParser {
   TagDelimiterType get delimiterType => TagDelimiterType.variable;
 
   @override
-  Parser parser() {
+  Parser parser([LiquidConfig? config]) {
     // Matches: {{ greet("name") }} or {{ greet(variable) }}
-    return (varStart() &
+    // Use createVarStart/createVarEnd to support custom delimiters
+    return (createVarStart(config) &
             string('greet').trim() &
             char('(').trim() &
             ref0(expression).trim() &
             char(')').trim() &
-            varEnd())
+            createVarEnd(config))
         .map((values) {
           final expr = values[3] as ASTNode;
           return Tag('greet', [expr]);
@@ -79,12 +81,13 @@ class NowTag extends AbstractTag with CustomTagParser {
   TagDelimiterType get delimiterType => TagDelimiterType.variable;
 
   @override
-  Parser parser() {
-    return (varStart() &
+  Parser parser([LiquidConfig? config]) {
+    // Use createVarStart/createVarEnd to support custom delimiters
+    return (createVarStart(config) &
             string('now').trim() &
             char('(').trim() &
             char(')').trim() &
-            varEnd())
+            createVarEnd(config))
         .map((_) {
           return Tag('now', []);
         });

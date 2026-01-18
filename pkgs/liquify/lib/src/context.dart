@@ -1,3 +1,4 @@
+import 'package:liquify/src/config.dart';
 import 'package:liquify/src/fs.dart';
 
 import 'filter_registry.dart';
@@ -19,6 +20,7 @@ class Environment {
   final List<Map<String, dynamic>> _variableStack;
   final Map<String, dynamic> _registers;
   bool _strictMode = false;
+  LiquidConfig? _config;
 
   /// Constructs a new [Environment] instance with the provided initial data.
   ///
@@ -30,13 +32,16 @@ class Environment {
   /// - [data]: An optional map of initial variables and their values. Defaults to an empty map.
   /// - [register]: An optional map of initial register values. Defaults to an empty map.
   /// - [strictMode]: When true, only locally registered filters and tags are accessible. Defaults to false.
+  /// - [config]: Optional [LiquidConfig] for custom delimiters. Used by tags that re-parse content.
   Environment([
     Map<String, dynamic> data = const {},
     Map<String, dynamic>? register,
     bool strictMode = false,
+    LiquidConfig? config,
   ]) : _variableStack = [data],
        _registers = register ?? {},
-       _strictMode = strictMode;
+       _strictMode = strictMode,
+       _config = config;
 
   Environment.withStrictMode([
     Map<String, dynamic> data = const {},
@@ -45,7 +50,12 @@ class Environment {
        _registers = register ?? {},
        _strictMode = true;
 
-  Environment._clone(this._variableStack, this._registers, this._strictMode);
+  Environment._clone(
+    this._variableStack,
+    this._registers,
+    this._strictMode,
+    this._config,
+  );
 
   /// Creates a new [Environment] instance that is a deep copy of the current instance.
   ///
@@ -77,6 +87,7 @@ class Environment {
       clonedVariableStack,
       clonedRegisters,
       _strictMode,
+      _config,
     );
     cloned._root = _root;
     return cloned;
@@ -105,6 +116,42 @@ class Environment {
 
   /// Gets the current strict mode setting.
   bool get strictMode => _strictMode;
+
+  /// Gets the [LiquidConfig] for this environment.
+  ///
+  /// This is used by custom tags that need to re-parse content (e.g., block tags
+  /// with nested Liquid syntax) to use the same delimiters as the parent template.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// class MyBlockTag extends AbstractTag with CustomTagParser {
+  ///   @override
+  ///   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+  ///     final innerContent = body[0].toString();
+  ///
+  ///     // Get the config to re-parse with the same delimiters
+  ///     final config = evaluator.context.config;
+  ///     final liquid = Liquid(config: config ?? LiquidConfig.standard);
+  ///
+  ///     // Re-parse and render the inner content
+  ///     final result = liquid.renderString(innerContent, evaluator.context.all());
+  ///     buffer.write(result);
+  ///   }
+  /// }
+  /// ```
+  ///
+  /// Returns `null` if the template was parsed with default delimiters using
+  /// [Template.parse] instead of [Liquid.parse].
+  LiquidConfig? get config => _config;
+
+  /// Sets the [LiquidConfig] for this environment.
+  ///
+  /// This is automatically called by [LiquidTemplate] when rendering.
+  /// You typically don't need to call this directly.
+  void setConfig(LiquidConfig? config) {
+    _config = config;
+  }
 
   /// Registers a local filter function that is only available in this environment.
   void registerLocalFilter(String name, FilterFunction function) {

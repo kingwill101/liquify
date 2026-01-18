@@ -7,6 +7,9 @@
 ///
 /// 1. Parsing and Grammar (in `src/grammar/shared.dart`):
 ///    - Basic Liquid syntax parsers: [tagStart], [tagEnd], [varStart], [varEnd]
+///    - Configurable delimiter factories: [createTagStart], [createTagEnd],
+///      [createVarStart], [createVarEnd] - use these with [LiquidConfig] for
+///      custom delimiters
 ///    - Expression parsers: [expression], [literal], [identifier], [memberAccess]
 ///    - Tag helpers: [someTag], [breakTag], [continueTag], [elseTag]
 ///    - Main parsing function: [parseInput]
@@ -53,17 +56,20 @@
 ///   }
 ///
 ///   @override
-///   Parser parser() {
+///   Parser parser([LiquidConfig? config]) {
 ///     // Custom parser implementation for tags with end tags
-///     return (tagStart() &
+///     // Use createTagStart/createTagEnd to support custom delimiters
+///     final start = createTagStart(config);
+///     final end = createTagEnd(config);
+///     return (start &
 ///             string('uppercase').trim() &
-///             tagEnd() &
+///             end &
 ///             any()
-///                 .starLazy(tagStart() & string('enduppercase').trim() & tagEnd())
+///                 .starLazy(start & string('enduppercase').trim() & end)
 ///                 .flatten() &
-///             tagStart() &
+///             start &
 ///             string('enduppercase').trim() &
-///             tagEnd())
+///             end)
 ///         .map((values) {
 ///       return Tag("uppercase", [TextNode(values[3])]);
 ///     });
@@ -71,7 +77,11 @@
 /// }
 ///
 /// // For a simple tag without an end tag, you could use someTag:
-/// // Parser simpleParser() => someTag('simpletag');
+/// // Parser simpleParser([LiquidConfig? config]) => someTag('simpletag', config: config);
+///
+/// // For custom delimiters, use someTag with a config:
+/// // final config = LiquidConfig(tagStart: '[%', tagEnd: '%]');
+/// // Parser customParser([LiquidConfig? config]) => someTag('mytag', config: config);
 ///
 /// // Register the custom tag
 /// TagRegistry.register('uppercase', (content, filters) => UppercaseTag(content, filters));
@@ -93,3 +103,4 @@ library;
 export 'package:liquify/src/tag.dart';
 export 'package:liquify/src/tag_registry.dart';
 export 'package:liquify/src/context.dart';
+export 'package:liquify/src/config.dart';

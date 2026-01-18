@@ -36,17 +36,17 @@ class LiquidTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() =>
-      (tagStart() &
-              string('liquid').trim() &
-              any().starLazy(tagEnd()).flatten() &
-              tagEnd())
-          .map((values) {
-            return Tag(
-              "liquid",
-              liquidTagContents(values[2], TagRegistry.tags),
-            );
-          });
+  Parser parser([LiquidConfig? config]) {
+    final start = createTagStart(config);
+    final end = createTagEnd(config);
+    return (start &
+            string('liquid').trim() &
+            any().starLazy(end).flatten() &
+            end)
+        .map((values) {
+          return Tag("liquid", liquidTagContents(values[2], TagRegistry.tags));
+        });
+  }
 
   List<ASTNode> liquidTagContents(String content, List<String> tagRegistry) {
     if (content.contains('\r') && !content.contains('\n')) {

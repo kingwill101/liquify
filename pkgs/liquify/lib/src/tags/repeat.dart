@@ -49,22 +49,25 @@ class RepeatTag extends AbstractTag with AsyncTag, CustomTagParser {
     buffer.write(filtered);
   }
 
-  Parser repeatTag() => someTag("repeat");
+  Parser repeatTag([LiquidConfig? config]) => someTag("repeat", config: config);
 
-  Parser repeatBlock() =>
+  Parser repeatBlock([LiquidConfig? config]) =>
       seq3(
-        ref0(repeatTag),
-        ref0(element).starLazy(endRepeatTag()),
-        ref0(endRepeatTag),
+        repeatTag(config),
+        ref0(element).starLazy(endRepeatTag(config)),
+        endRepeatTag(config),
       ).map((values) {
         return values.$1.copyWith(body: values.$2.cast<ASTNode>());
       });
 
-  Parser endRepeatTag() =>
-      (tagStart() & string('endrepeat').trim() & tagEnd()).map((values) {
-        return Tag('endrepeat', []);
-      });
+  Parser endRepeatTag([LiquidConfig? config]) =>
+      (createTagStart(config) &
+              string('endrepeat').trim() &
+              createTagEnd(config))
+          .map((values) {
+            return Tag('endrepeat', []);
+          });
 
   @override
-  Parser parser() => repeatBlock();
+  Parser parser([LiquidConfig? config]) => repeatBlock(config);
 }

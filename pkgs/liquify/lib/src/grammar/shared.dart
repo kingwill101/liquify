@@ -5,6 +5,7 @@ import 'package:petitparser/debug.dart';
 import 'package:petitparser/reflection.dart';
 
 export 'package:liquify/src/ast.dart';
+export 'package:liquify/src/config.dart';
 export 'package:petitparser/petitparser.dart';
 
 List<ASTNode> collapseTextNodes(List<ASTNode> elements) {
@@ -35,13 +36,138 @@ List<ASTNode> collapseTextNodes(List<ASTNode> elements) {
   return result;
 }
 
+// ---------------------------------------------------------------------------
+// Configurable delimiter factory functions
+// ---------------------------------------------------------------------------
+// These functions create parsers with custom delimiters. Use them when building
+// custom tags that need to work with non-standard delimiters.
+//
+// ## Usage
+//
+// For most custom tags, use [someTag] with the `config` parameter:
+//
+// ```dart
+// final config = LiquidConfig(tagStart: '[%', tagEnd: '%]');
+// final myTag = someTag('mytag', config: config);
+// ```
+//
+// For low-level parser building, use the factory functions directly:
+//
+// ```dart
+// final start = createTagStart(config);
+// final end = createTagEnd(config);
+// final varStart = createVarStart(config);
+// final varEnd = createVarEnd(config);
+// ```
+
+/// Creates a tag start delimiter parser with optional custom config.
+///
+/// Returns a parser that matches the tag start delimiter (e.g., `{%` or `{%-`).
+/// The whitespace-stripping variant (e.g., `{%-`) strips preceding whitespace.
+///
+/// If [config] is null, uses standard Liquid delimiters.
+///
+/// ## Example
+///
+/// ```dart
+/// // Standard delimiters
+/// final tagStart = createTagStart();
+/// // Matches: {% or {%-
+///
+/// // Custom delimiters
+/// final config = LiquidConfig(tagStart: '[%', tagEnd: '%]');
+/// final myTagStart = createTagStart(config);
+/// // Matches: [% or [%-
+/// ```
+///
+/// See also:
+/// - [someTag] for creating complete tag parsers (recommended)
+/// - [createTagEnd] for the corresponding end delimiter
+Parser createTagStart([LiquidConfig? config]) {
+  final cfg = config ?? LiquidConfig.standard;
+  return (string(cfg.tagStartStrip).trim() | string(cfg.tagStart)).labeled(
+    'tagStart',
+  );
+}
+
+/// Creates a tag end delimiter parser with optional custom config.
+///
+/// Returns a parser that matches the tag end delimiter (e.g., `%}` or `-%}`).
+/// The whitespace-stripping variant (e.g., `-%}`) strips following whitespace.
+///
+/// If [config] is null, uses standard Liquid delimiters.
+///
+/// ## Example
+///
+/// ```dart
+/// final config = LiquidConfig(tagStart: '[%', tagEnd: '%]');
+/// final myTagEnd = createTagEnd(config);
+/// // Matches: %] or -%]
+/// ```
+Parser createTagEnd([LiquidConfig? config]) {
+  final cfg = config ?? LiquidConfig.standard;
+  return (string(cfg.tagEndStrip).trim() | string(cfg.tagEnd)).labeled(
+    'tagEnd',
+  );
+}
+
+/// Creates a variable start delimiter parser with optional custom config.
+///
+/// Returns a parser that matches the variable start delimiter (e.g., `{{` or `{{-`).
+/// The whitespace-stripping variant (e.g., `{{-`) strips preceding whitespace.
+///
+/// If [config] is null, uses standard Liquid delimiters.
+///
+/// ## Example
+///
+/// ```dart
+/// final config = LiquidConfig(varStart: '[[', varEnd: ']]');
+/// final myVarStart = createVarStart(config);
+/// // Matches: [[ or [[-
+/// ```
+Parser createVarStart([LiquidConfig? config]) {
+  final cfg = config ?? LiquidConfig.standard;
+  return (string(cfg.varStartStrip).trim() | string(cfg.varStart)).labeled(
+    'varStart',
+  );
+}
+
+/// Creates a variable end delimiter parser with optional custom config.
+///
+/// Returns a parser that matches the variable end delimiter (e.g., `}}` or `-}}`).
+/// The whitespace-stripping variant (e.g., `-}}`) strips following whitespace.
+///
+/// If [config] is null, uses standard Liquid delimiters.
+///
+/// ## Example
+///
+/// ```dart
+/// final config = LiquidConfig(varStart: '[[', varEnd: ']]');
+/// final myVarEnd = createVarEnd(config);
+/// // Matches: ]] or -]]
+/// ```
+Parser createVarEnd([LiquidConfig? config]) {
+  final cfg = config ?? LiquidConfig.standard;
+  return (string(cfg.varEndStrip).trim() | string(cfg.varEnd)).labeled(
+    'varEnd',
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Default delimiter parsers (backward compatible)
+// ---------------------------------------------------------------------------
+
 /// Tag start delimiter.
 /// The {%- variant strips preceding whitespace (via .trim()).
-Parser tagStart() => (string('{%-').trim() | string('{%')).labeled('tagStart');
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser tagStart([LiquidConfig? config]) => createTagStart(config);
 
 /// Tag end delimiter.
 /// The -%} variant strips following whitespace (via .trim()).
-Parser tagEnd() => (string('-%}').trim() | string('%}')).labeled('tagEnd');
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser tagEnd([LiquidConfig? config]) => createTagEnd(config);
 
 Parser filter() {
   return (char('|').trim() &
@@ -97,14 +223,24 @@ Parser argument() {
 
 /// Variable start delimiter. The whitespace-stripping variant {{- is handled
 /// semantically at evaluation time, not by the parser consuming whitespace.
-Parser varStart() => (string('{{-').trim() | string('{{')).labeled('varStart');
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser varStart([LiquidConfig? config]) => createVarStart(config);
 
 /// Variable end delimiter. The whitespace-stripping variant -}} is handled
 /// semantically at evaluation time, not by the parser consuming whitespace.
-Parser varEnd() => (string('-}}').trim() | string('}}')).labeled('varEnd');
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser varEnd([LiquidConfig? config]) => createVarEnd(config);
 
-Parser variable() =>
-    (varStart() & ref0(expression).trim() & filter().star().trim() & varEnd())
+/// Variable parser - parses `{{ expression | filter }}` syntax.
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser variable([LiquidConfig? config]) =>
+    (varStart(config) &
+            ref0(expression).trim() &
+            filter().star().trim() &
+            varEnd(config))
         .map((values) {
           ASTNode expr = values[1];
           String name = '';
@@ -502,10 +638,12 @@ Parser arrayAccess() =>
 
 /// Text parser - parses plain text content until a delimiter is encountered.
 ///
+/// If [config] is provided, uses custom delimiters to determine text boundaries.
+///
 /// Optimized to parse multiple characters at once using a pattern-based approach:
-/// - Characters that are not '{' or whitespace are always safe text
-/// - A '{' is safe only if not followed by '{' or '%'
-/// - Whitespace is safe only if not followed by '{{-' or '{%-' (strip delimiters)
+/// - Characters that are not delimiter start chars or whitespace are always safe text
+/// - A delimiter start char is safe only if not followed by the rest of the delimiter
+/// - Whitespace is safe only if not followed by strip delimiters
 ///
 /// The whitespace check is critical for Liquid's whitespace control feature:
 /// `{{-` and `{%-` strip preceding whitespace, so we must stop parsing text
@@ -514,26 +652,30 @@ Parser arrayAccess() =>
 /// This is much more efficient than the naive approach of checking
 /// (varStart() | tagStart()).neg() for each character, which requires
 /// 11 parser activations per character vs 2-3 for this pattern-based approach.
-Parser text() {
-  // Any character except '{' and whitespace is definitely safe
-  final safeChar = pattern('^{ \t\r\n');
+Parser text([LiquidConfig? config]) {
+  final cfg = config ?? LiquidConfig.standard;
 
-  // A '{' is safe if not followed by '{' or '%' (which would start a delimiter)
-  final safeBrace = char('{') & pattern('{%').not();
+  // Build character class for delimiter start characters
+  final delimiterChars = cfg.delimiterStartChars;
 
-  // Whitespace is safe if not followed by '{{-' or '{%-' (strip delimiters)
-  // We need to check the full delimiter with - to handle whitespace control
+  // Any character except delimiter start chars and whitespace is definitely safe
+  final safeCharPattern = '^$delimiterChars \t\r\n';
+  final safeChar = pattern(safeCharPattern);
+
+  // A delimiter start char is safe if not followed by the rest of the delimiter
+  final safeBrace = _safeDelimiterChar(cfg);
+
+  // Whitespace is safe if not followed by strip delimiters
   final safeWhitespace =
-      pattern(' \t\r\n') & (string('{{-') | string('{%-')).not();
+      pattern(' \t\r\n') &
+      (string(cfg.varStartStrip) | string(cfg.tagStartStrip)).not();
 
   // A text character is either:
-  // - A safe char (not { or whitespace)
-  // - A safe brace ({ not followed by { or %)
-  // - Safe whitespace (whitespace not followed by {{- or {%-)
+  // - A safe char (not delimiter start or whitespace)
+  // - A safe brace (delimiter start not followed by rest of delimiter)
+  // - Safe whitespace (whitespace not followed by strip delimiters)
   final textChar =
-      safeChar |
-      safeBrace.map((values) => values[0]) |
-      safeWhitespace.map((values) => values[0]);
+      safeChar | safeBrace | safeWhitespace.map((values) => values[0]);
 
   // Parse one or more text characters and combine into a single TextNode
   return textChar
@@ -541,6 +683,40 @@ Parser text() {
       .flatten()
       .map((text) => TextNode(text))
       .labeled('text block');
+}
+
+/// Creates a parser for delimiter start characters that are safe (not starting a real delimiter).
+Parser _safeDelimiterChar(LiquidConfig cfg) {
+  final firstChars = <String>{};
+  if (cfg.tagStart.isNotEmpty) firstChars.add(cfg.tagStart[0]);
+  if (cfg.varStart.isNotEmpty) firstChars.add(cfg.varStart[0]);
+
+  if (firstChars.isEmpty) {
+    return any();
+  }
+
+  final parsers = <Parser>[];
+  for (final ch in firstChars) {
+    final followups = <String>[];
+    if (cfg.tagStart.isNotEmpty && cfg.tagStart[0] == ch) {
+      followups.add(cfg.tagStart.substring(1));
+    }
+    if (cfg.varStart.isNotEmpty && cfg.varStart[0] == ch) {
+      followups.add(cfg.varStart.substring(1));
+    }
+
+    if (followups.isEmpty) {
+      parsers.add(char(ch));
+    } else {
+      final followupParser = followups
+          .map((f) => string(f))
+          .toList()
+          .toChoiceParser();
+      parsers.add((char(ch) & followupParser.not()).map((values) => values[0]));
+    }
+  }
+
+  return parsers.toChoiceParser();
 }
 
 Parser comparisonOperator() =>
@@ -679,15 +855,70 @@ Parser groupedExpression() {
   ).map((values) => GroupedExpression(values.$2)).labeled('groupedExpression');
 }
 
+/// Creates a tag parser for a named tag with optional custom delimiters.
+///
+/// This is the primary way to create custom tags. Use the [config] parameter
+/// to specify custom delimiters, or leave it null for standard Liquid delimiters.
+///
+/// ## Parameters
+///
+/// - [name]: The tag name to match (e.g., 'mytag' matches `{% mytag %}`)
+/// - [config]: Optional delimiter configuration. If null, uses standard delimiters.
+/// - [start]: Optional custom start delimiter parser (overrides config)
+/// - [end]: Optional custom end delimiter parser (overrides config)
+/// - [content]: Optional custom content parser
+/// - [filters]: Optional custom filters parser
+/// - [hasContent]: Whether the tag has content between delimiters (default: true)
+///
+/// ## Example with Custom Delimiters
+///
+/// ```dart
+/// final config = LiquidConfig(tagStart: '[%', tagEnd: '%]');
+///
+/// // Register a custom tag with custom delimiters
+/// TagRegistry.register('greeting', (content, filters) {
+///   return GreetingTag(content, filters);
+/// }, parser: () => someTag('greeting', config: config));
+///
+/// // Now parses: [% greeting "Hello" %]
+/// ```
+///
+/// ## Example with Standard Delimiters
+///
+/// ```dart
+/// // Register a custom tag with standard delimiters
+/// TagRegistry.register('mytag', (content, filters) {
+///   return MyTag(content, filters);
+/// }, parser: () => someTag('mytag'));
+///
+/// // Now parses: {% mytag %}
+/// ```
+///
+/// ## Example: Tag Without Content
+///
+/// ```dart
+/// final breakTag = someTag('break', hasContent: false);
+/// // Matches: {% break %}
+/// ```
+///
+/// See also:
+/// - [LiquidConfig] for delimiter configuration
+/// - [TagRegistry] for registering custom tags
+/// - [createTagStart], [createTagEnd] for low-level delimiter parsers
 Parser<Tag> someTag(
   String name, {
+  LiquidConfig? config,
   Parser<dynamic>? start,
   Parser<dynamic>? end,
   Parser<dynamic>? content,
   Parser<dynamic>? filters,
   bool hasContent = true,
 }) {
-  var parser = ((start ?? tagStart()) & string(name).trim());
+  // Use provided parsers, or create from config, or use defaults
+  final startParser = start ?? createTagStart(config);
+  final endParser = end ?? createTagEnd(config);
+
+  var parser = (startParser & string(name).trim());
 
   if (hasContent) {
     parser =
@@ -696,7 +927,7 @@ Parser<Tag> someTag(
         (filters ?? ref0(filter).star()).trim();
   }
 
-  parser = parser & (end ?? tagEnd());
+  parser = parser & endParser;
 
   return parser
       .map((values) {
@@ -714,12 +945,15 @@ Parser<Tag> someTag(
       .labeled('someTag');
 }
 
-Parser hashBlockComment() =>
-    (tagStart() &
+/// Hash block comment parser - parses `{# comment #}` syntax.
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser hashBlockComment([LiquidConfig? config]) =>
+    (tagStart(config) &
             pattern(' \t\n\r').star() &
             char('#') &
-            any().starLazy(tagEnd()).flatten() &
-            tagEnd())
+            any().starLazy(tagEnd(config)).flatten() &
+            tagEnd(config))
         .map((values) {
           return TextNode('');
         })
@@ -743,12 +977,15 @@ Parser tagContent() {
       .labeled('tagContent');
 }
 
-Parser tag() =>
-    (tagStart() &
+/// Generic tag parser - parses `{% tagname content %}` syntax.
+///
+/// If [config] is provided, uses custom delimiters from the config.
+Parser tag([LiquidConfig? config]) =>
+    (tagStart(config) &
             ref0(identifier).trim() &
             ref0(tagContent).optional().trim() &
             ref0(filter).star().trim() &
-            tagEnd())
+            tagEnd(config))
         .map((values) {
           final name = (values[1] as Identifier).name;
           final content = collapseTextNodes(values[2] as List<ASTNode>? ?? []);
@@ -760,31 +997,56 @@ Parser tag() =>
         })
         .labeled('tag');
 
-Parser<Tag> breakTag() =>
-    someTag('break', hasContent: false).labeled('breakTag');
+/// Break tag parser - parses `{% break %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser<Tag> breakTag([LiquidConfig? config]) =>
+    someTag('break', config: config, hasContent: false).labeled('breakTag');
 
-Parser<Tag> continueTag() =>
-    someTag('continue', hasContent: false).labeled('continueTag');
+/// Continue tag parser - parses `{% continue %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser<Tag> continueTag([LiquidConfig? config]) => someTag(
+  'continue',
+  config: config,
+  hasContent: false,
+).labeled('continueTag');
 
-Parser<Tag> elseTag() => someTag('else', hasContent: false).labeled('elseTag');
+/// Else tag parser - parses `{% else %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser<Tag> elseTag([LiquidConfig? config]) =>
+    someTag('else', config: config, hasContent: false).labeled('elseTag');
 
-Parser ifTag() => someTag("if").labeled('ifTag');
+/// If tag parser - parses `{% if condition %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser ifTag([LiquidConfig? config]) =>
+    someTag("if", config: config).labeled('ifTag');
 
-Parser elsifTag() => someTag("elsif").labeled('elsifTag');
+/// Elsif tag parser - parses `{% elsif condition %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser elsifTag([LiquidConfig? config]) =>
+    someTag("elsif", config: config).labeled('elsifTag');
 
-Parser endIfTag() => (tagStart() & string('endif').trim() & tagEnd())
-    .map((values) {
-      return Tag('endif', []);
-    })
-    .labeled('endIfTag');
+/// End if tag parser - parses `{% endif %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser endIfTag([LiquidConfig? config]) =>
+    (tagStart(config) & string('endif').trim() & tagEnd(config))
+        .map((values) {
+          return Tag('endif', []);
+        })
+        .labeled('endIfTag');
 
-Parser forTag() => someTag('for').labeled('forTag');
+/// For tag parser - parses `{% for item in collection %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser forTag([LiquidConfig? config]) =>
+    someTag('for', config: config).labeled('forTag');
 
-Parser endForTag() => (tagStart() & string('endfor').trim() & tagEnd())
-    .map((values) {
-      return Tag('endfor', []);
-    })
-    .labeled('endForTag');
+/// End for tag parser - parses `{% endfor %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser endForTag([LiquidConfig? config]) =>
+    (tagStart(config) & string('endfor').trim() & tagEnd(config))
+        .map((values) {
+          return Tag('endfor', []);
+        })
+        .labeled('endForTag');
 
 Parser forElseBranchContent() =>
     ref0(element).starLazy(ref0(endForTag)).labeled('forElseBranchContent');
@@ -816,15 +1078,24 @@ Parser forBlock() =>
         })
         .labeled('forBlock');
 
-Parser<Tag> whenTag() => someTag('when').labeled('whenTag');
+/// When tag parser - parses `{% when value %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser<Tag> whenTag([LiquidConfig? config]) =>
+    someTag('when', config: config).labeled('whenTag');
 
-Parser<Tag> caseTag() => someTag('case').labeled('caseTag');
+/// Case tag parser - parses `{% case variable %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser<Tag> caseTag([LiquidConfig? config]) =>
+    someTag('case', config: config).labeled('caseTag');
 
-Parser endCaseTag() => (tagStart() & string('endcase').trim() & tagEnd())
-    .map((values) {
-      return Tag('endcase', []);
-    })
-    .labeled('endCaseTag');
+/// End case tag parser - parses `{% endcase %}`.
+/// If [config] is provided, uses custom delimiters.
+Parser endCaseTag([LiquidConfig? config]) =>
+    (tagStart(config) & string('endcase').trim() & tagEnd(config))
+        .map((values) {
+          return Tag('endcase', []);
+        })
+        .labeled('endCaseTag');
 
 Parser whenBlock() =>
     seq2(
@@ -1009,13 +1280,29 @@ class ParsingException implements Exception {
 
 /// Parses the given input string and returns a list of [ASTNode] objects representing the parsed document.
 ///
-/// If [enableTrace] is true, the parser will output trace information during parsing.
-/// If [shouldLint] is true, the parser will output lint information for the parsed grammar.
+/// ## Parameters
+///
+/// - [input]: The Liquid template string to parse.
+/// - [config]: Optional delimiter configuration. If null, uses standard delimiters.
+/// - [enableTrace]: If true, outputs trace information during parsing.
+/// - [shouldLint]: If true, outputs lint information for the parsed grammar.
+///
+/// ## Example
+///
+/// ```dart
+/// // Standard delimiters
+/// final nodes = parseInput('Hello {{ name }}!');
+///
+/// // Custom delimiters
+/// final config = LiquidConfig(tagStart: '[%', tagEnd: '%]', varStart: '[[', varEnd: ']]');
+/// final nodes = parseInput('Hello [[ name ]]!', config: config);
+/// ```
 ///
 /// If the parsing is successful, the method returns the list of [ASTNode] objects representing the document.
-/// If the parsing fails, the method prints the error message and the input source, and returns an empty list.
+/// If the parsing fails, throws a [ParsingException] with details about the error.
 List<ASTNode> parseInput(
   String input, {
+  LiquidConfig? config,
   bool enableTrace = false,
   bool shouldLint = false,
 }) {
@@ -1024,7 +1311,7 @@ List<ASTNode> parseInput(
     return [];
   }
 
-  final parser = _getCachedParser();
+  final parser = _getCachedParser(config);
 
   if (shouldLint) {
     print(linter(parser).join('\n\n'));
@@ -1051,20 +1338,26 @@ List<ASTNode> parseInput(
   );
 }
 
-Parser _getCachedParser() {
+/// Cache for parsers keyed by config signature.
+final Map<int, Parser> _parserCache = {};
+
+Parser _getCachedParser(LiquidConfig? config) {
   registerBuiltIns();
-  final signature = _parserSignature();
-  if (_cachedParser == null || _cachedParserSignature != signature) {
-    _cachedParser = LiquidGrammar().build();
-    _cachedParserSignature = signature;
+  final signature = _parserSignature(config);
+
+  var parser = _parserCache[signature];
+  if (parser == null) {
+    parser = LiquidGrammar(config).build();
+    _parserCache[signature] = parser;
   }
-  return _cachedParser!;
+  return parser;
 }
 
-int _parserSignature() {
+int _parserSignature(LiquidConfig? config) {
   final parsers = TagRegistry.customParsers;
-  return Object.hashAll(parsers.map((parser) => parser.runtimeType));
+  final parserHash = Object.hashAll(
+    parsers.map((parser) => parser.runtimeType),
+  );
+  final configHash = config?.hashCode ?? 0;
+  return Object.hash(parserHash, configHash);
 }
-
-Parser? _cachedParser;
-int? _cachedParserSignature;
