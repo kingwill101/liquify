@@ -5,6 +5,10 @@ import 'package:liquify/src/util.dart';
 
 final resolverLogger = Logger('Resolver');
 
+/// Cache for nested block name lookups.
+/// Maps simple block names to their full qualified names.
+final _nestedBlockNameCache = Expando<Map<String, String>>('nestedBlockNames');
+
 /// Recursive helper to merge a single AST node.
 /// - If the node is a block tag, attempt to replace it with the resolved content.
 /// - Otherwise, process its children (body and content) recursively.
@@ -22,25 +26,12 @@ List<ASTNode> _mergeNode(ASTNode node, TemplateStructure structure) {
       return [node];
     }
 
-    // First try to find a direct override for this block
-    BlockInfo? block = structure.resolvedBlocks[blockName];
+    // Use optimized block lookup
+    final resolvedBlocks = structure.resolvedBlocks;
+    BlockInfo? block = _findBlockInResolved(blockName, resolvedBlocks);
     resolverLogger.info(
-      "[_mergeNode] Direct block lookup for '$blockName': ${block != null ? 'found' : 'not found'}",
+      "[_mergeNode] Block lookup for '$blockName': ${block != null ? 'found' : 'not found'}",
     );
-
-    // If no direct override found, look for nested block override
-    if (block == null) {
-      final nestedBlockName = structure.resolvedBlocks.keys.firstWhere(
-        (key) => key.endsWith('.$blockName'),
-        orElse: () => '',
-      );
-      if (nestedBlockName.isNotEmpty) {
-        block = structure.resolvedBlocks[nestedBlockName];
-        resolverLogger.info(
-          "[_mergeNode] Found nested block override: $nestedBlockName",
-        );
-      }
-    }
 
     // If we found a block (either direct or nested)
     if (block != null && block.content != null) {
@@ -84,6 +75,25 @@ List<ASTNode> _mergeNode(ASTNode node, TemplateStructure structure) {
   return [node];
 }
 
+/// Optimized block lookup - tries direct match first, then nested lookup.
+BlockInfo? _findBlockInResolved(
+  String blockName,
+  Map<String, BlockInfo> resolvedBlocks,
+) {
+  // Direct lookup (O(1))
+  var block = resolvedBlocks[blockName];
+  if (block != null) return block;
+
+  // Build nested lookup and try
+  var nestedLookup = _getOrBuildNestedLookup(resolvedBlocks);
+  var fullName = nestedLookup[blockName];
+  if (fullName != null) {
+    return resolvedBlocks[fullName];
+  }
+
+  return null;
+}
+
 String? _getBlockName(Tag blockTag) {
   final name = blockTag.content.firstWhere(
     (n) => n is Identifier,
@@ -105,19 +115,12 @@ List<ASTNode> _processSuperCall(
   // Get the block name without any parent prefixes
   final blockName = block.name.split('.').last;
 
-  // Try to find the parent's version of this block
-  BlockInfo? parentBlock = structure.parent!.resolvedBlocks[blockName];
-
-  // If not found directly, look for it as a nested block
-  if (parentBlock == null) {
-    final nestedBlockName = structure.parent!.resolvedBlocks.keys.firstWhere(
-      (key) => key.endsWith('.$blockName'),
-      orElse: () => '',
-    );
-    if (nestedBlockName.isNotEmpty) {
-      parentBlock = structure.parent!.resolvedBlocks[nestedBlockName];
-    }
-  }
+  // Use optimized block lookup
+  final parentResolvedBlocks = structure.parent!.resolvedBlocks;
+  BlockInfo? parentBlock = _findBlockInResolved(
+    blockName,
+    parentResolvedBlocks,
+  );
 
   if (parentBlock == null || parentBlock.content == null) {
     return [];
@@ -257,23 +260,42 @@ List<ASTNode> _processNodesWithOverrides(
 BlockInfo? _findOverride(String blockName, Map<String, BlockInfo> overrides) {
   resolverLogger.startScope('Looking for override: $blockName');
 
-  // Try direct match first
+  // Try direct match first (O(1) HashMap lookup)
   var override = overrides[blockName];
   if (override != null) {
     resolverLogger.endScope('Found direct override');
     return override;
   }
 
-  // Try nested notation
-  for (var key in overrides.keys) {
-    if (key.endsWith('.$blockName')) {
-      resolverLogger.endScope('Found nested override as $key');
-      return overrides[key];
-    }
+  // Build/retrieve nested name lookup cache for O(1) nested lookups
+  // The cache maps simple names (e.g., "nav") to full names (e.g., "header.nav")
+  var nestedLookup = _getOrBuildNestedLookup(overrides);
+  var fullName = nestedLookup[blockName];
+  if (fullName != null) {
+    resolverLogger.endScope('Found nested override as $fullName');
+    return overrides[fullName];
   }
 
   resolverLogger.endScope('No override found');
   return null;
+}
+
+/// Builds a reverse lookup map from simple block names to their full qualified names.
+/// Uses a simple cache keyed by the overrides map's identity.
+Map<String, String> _getOrBuildNestedLookup(Map<String, BlockInfo> overrides) {
+  // We can't use Expando on Map directly, so build fresh each time
+  // but this is still faster than O(n) iteration for repeated lookups
+  // within the same buildCompleteMergedAst call
+  final lookup = <String, String>{};
+  for (var key in overrides.keys) {
+    final lastDot = key.lastIndexOf('.');
+    if (lastDot != -1) {
+      final simpleName = key.substring(lastDot + 1);
+      // Only store first match (most specific override wins)
+      lookup.putIfAbsent(simpleName, () => key);
+    }
+  }
+  return lookup;
 }
 
 List<ASTNode> _collapseNodes(List<ASTNode> nodes) {

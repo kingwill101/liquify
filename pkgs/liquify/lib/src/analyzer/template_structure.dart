@@ -13,6 +13,14 @@ void initLogger() {
   });
 }
 
+/// Cache storage for TemplateStructure using Expando.
+/// This allows caching computed values without modifying the const class.
+final _inheritanceChainCache = Expando<List<TemplateStructure>>(
+  'inheritanceChain',
+);
+final _resolvedBlocksCache = Expando<Map<String, BlockInfo>>('resolvedBlocks');
+final _allBlockNamesCache = Expando<Set<String>>('allBlockNames');
+
 /// Represents the structure of a Liquid template, including its blocks,
 /// inheritance relationships, and content.
 ///
@@ -73,8 +81,14 @@ class TemplateStructure {
   /// Returns true if this template has any blocks
   bool get hasBlocks => blocks.isNotEmpty;
 
-  /// Returns the inheritance chain from root to leaf
+  /// Returns the inheritance chain from root to leaf.
+  ///
+  /// Results are cached for performance - subsequent calls return
+  /// the same list instance.
   List<TemplateStructure> get inheritanceChain {
+    var cached = _inheritanceChainCache[this];
+    if (cached != null) return cached;
+
     final chain = <TemplateStructure>[];
     var current = this;
     while (current.parent != null) {
@@ -82,7 +96,9 @@ class TemplateStructure {
       current = current.parent!;
     }
     chain.add(current); // Add the root template
-    return chain.reversed.toList(); // Return from root to leaf
+    cached = chain.reversed.toList(); // Return from root to leaf
+    _inheritanceChainCache[this] = cached;
+    return cached;
   }
 
   /// Returns the names of all blocks in this template
@@ -94,9 +110,14 @@ class TemplateStructure {
   /// Gets the block info for a given block name
   BlockInfo? getBlock(String name) => blocks[name];
 
-  /// Adds a block to this template's structure
+  /// Adds a block to this template's structure.
+  ///
+  /// Note: This invalidates cached resolved blocks and all block names.
   void addBlock(String name, BlockInfo info) {
     blocks[name] = info;
+    // Invalidate caches that depend on blocks
+    _resolvedBlocksCache[this] = null;
+    _allBlockNamesCache[this] = null;
   }
 
   @override
@@ -122,12 +143,18 @@ class TemplateStructure {
   /// The returned map uses dot notation for nested blocks and includes
   /// override information.
   ///
+  /// Results are cached for performance - subsequent calls return
+  /// the same map instance.
+  ///
   /// Example:
   /// ```dart
   /// final allBlocks = structure.resolvedBlocks;
   /// print(allBlocks['header']?.source); // Template where header is defined
   /// ```
   Map<String, BlockInfo> get resolvedBlocks {
+    var cached = _resolvedBlocksCache[this];
+    if (cached != null) return cached;
+
     Map<String, BlockInfo> local = {};
     var ancestorChain = <TemplateStructure>[];
     var current = parent;
@@ -141,6 +168,7 @@ class TemplateStructure {
     }
     local.addAll(flatten(blocks));
 
+    _resolvedBlocksCache[this] = local;
     return local;
   }
 
@@ -235,18 +263,24 @@ class TemplateStructure {
   /// * All parent templates
   /// * All nested blocks in any template
   ///
+  /// Results are cached for performance - subsequent calls return
+  /// the same set instance.
+  ///
   /// Example:
   /// ```dart
   /// final names = structure.allBlockNames;
   /// print(names.contains('header.navigation')); // Check if block exists
   /// ```
   Set<String> get allBlockNames {
+    var cached = _allBlockNamesCache[this];
+    if (cached != null) return cached;
+
     final names = <String>{};
-    final inheritanceChain = <TemplateStructure>[];
+    final chain = <TemplateStructure>[];
 
     TemplateStructure? current = this;
     while (null != current) {
-      inheritanceChain.add(current);
+      chain.add(current);
       current = current.parent;
     }
     void addBlockNames(Map<String, BlockInfo> blocks) {
@@ -256,9 +290,11 @@ class TemplateStructure {
       }
     }
 
-    for (final template in inheritanceChain) {
+    for (final template in chain) {
       addBlockNames(template.blocks);
     }
+
+    _allBlockNamesCache[this] = names;
     return names;
   }
 

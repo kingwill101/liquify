@@ -559,18 +559,18 @@ This content will be lost!
         );
       });
 
-      test('inheritanceChain returns new list instance each time', () {
+      test('inheritanceChain returns cached list instance', () {
         final analysis = analyzer.analyzeTemplate('level5.liquid').last;
         final structure = analysis.structures['level5.liquid']!;
 
         final chain1 = structure.inheritanceChain;
         final chain2 = structure.inheritanceChain;
 
-        // Currently creates new list each time
+        // Now cached - returns same instance
         expect(
           identical(chain1, chain2),
-          isFalse,
-          reason: 'inheritanceChain creates new list on each access',
+          isTrue,
+          reason: 'inheritanceChain should return cached list',
         );
 
         // Content should be the same
