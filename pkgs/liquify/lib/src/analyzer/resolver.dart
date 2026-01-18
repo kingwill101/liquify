@@ -310,26 +310,23 @@ Map<String, String> _getOrBuildNestedLookup(Map<String, BlockInfo> overrides) {
 
 List<ASTNode> _collapseNodes(List<ASTNode> nodes) {
   List<ASTNode> result = [];
-  TextNode? currentText;
+  StringBuffer? textBuffer;
 
   for (var node in nodes) {
     if (node is TextNode) {
-      if (currentText == null) {
-        currentText = node;
-      } else {
-        currentText = TextNode(currentText.text + node.text);
-      }
+      textBuffer ??= StringBuffer();
+      textBuffer.write(node.text);
     } else {
-      if (currentText != null) {
-        result.add(currentText);
-        currentText = null;
+      if (textBuffer != null) {
+        result.add(TextNode(textBuffer.toString()));
+        textBuffer = null;
       }
       result.add(node);
     }
   }
 
-  if (currentText != null) {
-    result.add(currentText);
+  if (textBuffer != null) {
+    result.add(TextNode(textBuffer.toString()));
   }
 
   return result;

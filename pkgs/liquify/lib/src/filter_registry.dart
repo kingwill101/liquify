@@ -27,6 +27,15 @@ class FilterRegistry {
     'url': UrlModule(),
   };
 
+  /// Cached unified filter lookup map for O(1) access.
+  static Map<String, FilterFunction>? _unifiedFilters;
+
+  /// Invalidates the unified filter cache.
+  /// Call this after registering new filters or modules.
+  static void _invalidateCache() {
+    _unifiedFilters = null;
+  }
+
   /// Registers a new filter function with the given name.
   ///
   /// [name] The name of the filter to be registered.
@@ -41,6 +50,7 @@ class FilterRegistry {
     if (dotNotation) {
       _dotNotationFilters.add(name);
     }
+    _invalidateCache();
   }
 
   /// List of filters that can be used with dot notation.
@@ -57,20 +67,24 @@ class FilterRegistry {
 
   /// Retrieves a filter function by its name.
   ///
+  /// Uses a cached unified lookup map for O(1) access instead of
+  /// iterating through modules.
+  ///
   /// [name] The name of the filter to retrieve.
   ///
   /// Returns the filter function if found, or null if not found.
   static FilterFunction? getFilter(String name) {
-    if (_filters.containsKey(name)) {
-      return _filters[name];
-    }
-    // search in modules first
-    for (var module in modules.values) {
-      if (module.filters.containsKey(name)) {
-        return module.filters[name];
+    // Build unified filter map lazily
+    if (_unifiedFilters == null) {
+      _unifiedFilters = <String, FilterFunction>{};
+      // Add module filters first (lower priority)
+      for (var module in modules.values) {
+        _unifiedFilters!.addAll(module.filters);
       }
+      // Add direct filters last (higher priority, overwrites module filters)
+      _unifiedFilters!.addAll(_filters);
     }
-    return null;
+    return _unifiedFilters![name];
   }
 
   /// Registers a new module with the given name.
@@ -80,12 +94,14 @@ class FilterRegistry {
   static void registerModule(String name, Module module) {
     module.register();
     modules[name] = module;
+    _invalidateCache();
   }
 
   static void initModules() {
     for (var module in modules.values) {
       module.register();
     }
+    _invalidateCache();
   }
 
   /// Returns a list of all registered filter names from the global registry.

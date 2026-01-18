@@ -334,6 +334,8 @@ class TemplateStructure {
   /// This method searches for a block through the entire template
   /// inheritance chain, including nested blocks.
   ///
+  /// Uses the cached [allBlockNames] set for O(1) lookup.
+  ///
   /// Parameters:
   /// * [blockName] - The name of the block to find
   ///
@@ -345,18 +347,5 @@ class TemplateStructure {
   ///   print('Navigation block exists in template hierarchy');
   /// }
   /// ```
-  bool hasBlockInChain(String blockName) {
-    // Check if this template has the block
-    if (blocks.containsKey(blockName)) {
-      return true;
-    }
-    // Check if any block in this template has the given block as a nested block
-    for (final block in blocks.values) {
-      if (block.nestedBlocks.containsKey(blockName)) {
-        return true;
-      }
-    }
-    // Check parent templates
-    return parent?.hasBlockInChain(blockName) ?? false;
-  }
+  bool hasBlockInChain(String blockName) => allBlockNames.contains(blockName);
 }
