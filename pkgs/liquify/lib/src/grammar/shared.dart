@@ -416,12 +416,32 @@ Parser arrayAccess() =>
         })
         .labeled('arrayAccess');
 
+/// Text parser - parses plain text content until a delimiter is encountered.
+///
+/// Optimized to parse multiple characters at once using a pattern-based approach:
+/// - Characters that are not '{' are always safe text
+/// - A '{' is safe only if not followed by '{' or '%'
+///
+/// This is much more efficient than the naive approach of checking
+/// (varStart() | tagStart()).neg() for each character, which requires
+/// 11 parser activations per character vs 2 for this pattern-based approach.
 Parser text() {
-  return ((varStart() | tagStart()).neg() | any()).labeled('text block').map((
-    text,
-  ) {
-    return TextNode(text);
-  });
+  // Any character except '{' is definitely safe
+  final safeChar = pattern('^{');
+
+  // A '{' is safe if not followed by '{' or '%' (which would start a delimiter)
+  final safeBrace = char('{') & pattern('{%').not();
+
+  // A text character is either a safe char or a safe brace
+  // For safe brace, we just want the '{' character, not the lookahead result
+  final textChar = safeChar | safeBrace.map((values) => values[0]);
+
+  // Parse one or more text characters and combine into a single TextNode
+  return textChar
+      .plus()
+      .flatten()
+      .map((text) => TextNode(text))
+      .labeled('text block');
 }
 
 Parser comparisonOperator() =>
