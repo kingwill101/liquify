@@ -138,8 +138,18 @@ Parser namedArgument() {
 /// _comparisonExpr, _arithmeticExpr, and primaryTerm.
 /// Kept for backwards compatibility and testing.
 
+/// Identifier parser - matches variable names, function names, etc.
+///
+/// Identifiers must start with a letter and can contain letters, digits,
+/// underscores, and hyphens. Reserved words (and, or, not, contains) are excluded.
+///
+/// Optimized to use pattern() instead of word() | char('-') for better performance.
+/// Pattern matching is more efficient than choice parsers for character classes.
 Parser identifier() {
-  return (letter() & (word() | char('-')).star())
+  // Use pattern for efficient character class matching
+  // First char: letter only
+  // Rest: letters, digits, underscore, or hyphen
+  return (pattern('a-zA-Z') & pattern('a-zA-Z0-9_-').star())
       .flatten()
       .where((name) => !['and', 'or', 'not', 'contains'].contains(name))
       .map((name) => Identifier(name))
