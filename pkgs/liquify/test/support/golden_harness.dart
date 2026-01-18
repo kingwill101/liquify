@@ -117,9 +117,11 @@ class _GoldenRecorder {
 
   final Directory _dir;
   final bool _update = Platform.environment['UPDATE_GOLDENS'] == '1';
+  final bool _skip = Platform.environment['SKIP_GOLDENS'] == '1';
 
   Directory get dir => _dir;
   bool get updating => _update;
+  bool get skipping => _skip;
 
   static Directory _resolveGoldenDir() {
     final override = Platform.environment['GOLDEN_DIR'];
@@ -176,6 +178,11 @@ class _GoldenRecorder {
   }
 
   void record(Object? actual, Object? matcher, StackTrace trace) {
+    // Skip golden comparison if SKIP_GOLDENS=1
+    if (_skip) {
+      return;
+    }
+
     final context = Zone.current[_goldenContextKey] as _GoldenContext?;
     if (context == null) {
       return;
