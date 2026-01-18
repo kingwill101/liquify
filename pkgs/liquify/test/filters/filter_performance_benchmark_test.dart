@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:liquify/liquify.dart';
 import 'package:liquify/parser.dart' show parseInput;
-import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
 
 /// Uncached version of expression evaluation for comparison
@@ -124,9 +123,7 @@ void main() {
       }
 
       // Cached: reuse RegExp
-      int cachedComparisons = 0;
       int cachedCompare(dynamic a, dynamic b) {
-        cachedComparisons++;
         String aStr = a.toString();
         String bStr = b.toString();
         // Reuse cached RegExp

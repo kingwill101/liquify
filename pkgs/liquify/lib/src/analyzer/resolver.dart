@@ -5,10 +5,6 @@ import 'package:liquify/src/util.dart';
 
 final resolverLogger = Logger('Resolver');
 
-/// Cache for nested block name lookups.
-/// Maps simple block names to their full qualified names.
-final _nestedBlockNameCache = Expando<Map<String, String>>('nestedBlockNames');
-
 /// Cache the last overrides map we built a lookup for.
 /// This allows reuse within a single buildCompleteMergedAst call.
 Map<String, BlockInfo>? _lastOverridesMap;
