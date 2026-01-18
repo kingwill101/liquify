@@ -13,6 +13,9 @@ class SuperTag extends AbstractTag with CustomTagParser {
   }
 
   @override
+  TagDelimiterType get delimiterType => TagDelimiterType.variable;
+
+  @override
   Parser parser() {
     // This matches syntax: {{ super() }}
     return (varStart() &
