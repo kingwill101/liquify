@@ -360,15 +360,18 @@ Parser<Literal> stringLiteral() {
 }
 
 Parser<Literal> booleanLiteral() {
-  return (string('true') | string('false'))
+  final wordBoundary = pattern('a-zA-Z0-9_-').not();
+  return ((string('true') | string('false')) & wordBoundary.and())
       .map((value) {
-        return Literal(value == 'true', LiteralType.boolean);
+        final keyword = value[0] as String;
+        return Literal(keyword == 'true', LiteralType.boolean);
       })
       .labeled('booleanLiteral');
 }
 
 Parser<Literal> nilLiteral() {
-  return (string('nil'))
+  final wordBoundary = pattern('a-zA-Z0-9_-').not();
+  return (string('nil') & wordBoundary.and())
       .map((value) {
         return Literal(null, LiteralType.nil);
       })
@@ -376,7 +379,8 @@ Parser<Literal> nilLiteral() {
 }
 
 Parser emptyLiteral() {
-  return (string('empty'))
+  final wordBoundary = pattern('a-zA-Z0-9_-').not();
+  return (string('empty') & wordBoundary.and())
       .map((value) {
         return Literal('empty', LiteralType.empty);
       })

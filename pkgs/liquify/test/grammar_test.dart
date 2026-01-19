@@ -1243,5 +1243,84 @@ void main() {
         });
       },
     );
+
+    group('Keyword Word Boundary Regression Tests', () {
+      // These tests ensure keywords like 'empty', 'true', 'false', 'nil'
+      // don't incorrectly match the prefix of identifiers.
+      // For example, 'empty_title' should parse as an identifier, not 'empty' + '_title'
+
+      test('empty_title parses as identifier, not empty keyword', () {
+        testParser('{{ empty_title }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Identifier>());
+          expect((variable.expression as Identifier).name, 'empty_title');
+        });
+      });
+
+      test('true_value parses as identifier, not true keyword', () {
+        testParser('{{ true_value }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Identifier>());
+          expect((variable.expression as Identifier).name, 'true_value');
+        });
+      });
+
+      test('false_flag parses as identifier, not false keyword', () {
+        testParser('{{ false_flag }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Identifier>());
+          expect((variable.expression as Identifier).name, 'false_flag');
+        });
+      });
+
+      test('nil_check parses as identifier, not nil keyword', () {
+        testParser('{{ nil_check }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Identifier>());
+          expect((variable.expression as Identifier).name, 'nil_check');
+        });
+      });
+
+      test('actual empty keyword still works', () {
+        testParser('{% if items == empty %}empty{% endif %}', (document) {
+          expect(document.children.length, 1);
+          final ifTag = document.children[0] as Tag;
+          final comparison = ifTag.content[0] as BinaryOperation;
+          expect(comparison.right, isA<Literal>());
+          expect((comparison.right as Literal).type, LiteralType.empty);
+        });
+      });
+
+      test('actual true keyword still works', () {
+        testParser('{{ true }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Literal>());
+          expect((variable.expression as Literal).value, true);
+        });
+      });
+
+      test('actual false keyword still works', () {
+        testParser('{{ false }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Literal>());
+          expect((variable.expression as Literal).value, false);
+        });
+      });
+
+      test('actual nil keyword still works', () {
+        testParser('{{ nil }}', (document) {
+          expect(document.children.length, 1);
+          final variable = document.children[0] as Variable;
+          expect(variable.expression, isA<Literal>());
+          expect((variable.expression as Literal).type, LiteralType.nil);
+        });
+      });
+    });
   });
 }

@@ -32,7 +32,7 @@ Add Liquify to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquify: ^1.5.0
+  liquify: ^1.5.1
 ```
 
 Then run `dart pub get` or `flutter pub get`.
