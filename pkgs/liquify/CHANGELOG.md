@@ -1,3 +1,8 @@
+## 1.5.1
+
+### Bug Fixes
+- **Fix keyword word boundary parsing** - Keywords `empty`, `true`, `false`, and `nil` no longer incorrectly match prefixes of identifiers (e.g., `empty_title`, `true_value`, `false_flag`, `nil_check` now correctly parse as identifiers)
+
 ## 1.5.0
 
 ### New Features
