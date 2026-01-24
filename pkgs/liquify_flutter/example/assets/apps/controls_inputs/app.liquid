@@ -1,0 +1,129 @@
+{% comment %}
+Controls inputs demo. Expects slider_value, switch_auto_sync, switch_quiet_hours,
+ search_controller, search_query, button_tap_count, profile_name, profile_email.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% assign slider_value_text = slider_value | times: 100 | round %}
+{% assign slider_label = "Intensity: " | append: slider_value_text | append: "%" %}
+{% assign button_tap_label = "Button taps: " | append: button_tap_count %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Inputs" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Slider" style: text_style_2 %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: slider_label style: text_style_3 %}
+          {% slider value: slider_value min: 0 max: 1 divisions: 10 onChanged: "controls:slider" %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_4 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Switches + Input" style: text_style_4 %}
+          {% row mainAxisAlignment: "spaceBetween" %}
+            {% assign text_style_5 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Auto sync" style: text_style_5 %}
+            {% switch value: switch_auto_sync onChanged: "controls:switch_auto_sync" %}
+          {% endrow %}
+          {% row mainAxisAlignment: "spaceBetween" %}
+            {% assign text_style_6 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Quiet hours" style: text_style_6 %}
+            {% switch value: switch_quiet_hours onChanged: "controls:switch_quiet_hours" %}
+          {% endrow %}
+          {% assign search_decoration = "" | input_decoration: labelText: "Search", hintText: "Type a command" %}
+          {% text_field decoration: search_decoration controller: search_controller %}
+          {% assign notes_decoration = "" | input_decoration: labelText: "Notes", hintText: "Add a note" %}
+          {% text_field decoration: notes_decoration %}
+          {% assign text_style_7 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: search_query style: text_style_7 %}
+          {% row spacing: 8 %}
+            {% text_button onPressed: "controls:search_clear" %}
+              {% text data: "Clear" %}
+            {% endtext_button %}
+          {% endrow %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_8 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Forms" style: text_style_8 %}
+          {% assign text_style_9 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Form field validation." style: text_style_9 %}
+          {% form autovalidateMode: "onUserInteraction" %}
+            {% column spacing: 12 crossAxisAlignment: "stretch" %}
+              {% assign name_decoration = "" | input_decoration: labelText: "Name" %}
+              {% text_form_field
+                decoration: name_decoration
+                initialValue: profile_name
+                validator: "Enter a name"
+                onChanged: "controls:profile_name" %}
+              {% assign email_decoration = "" | input_decoration: labelText: "Email" %}
+              {% text_form_field
+                decoration: email_decoration
+                initialValue: profile_email
+                keyboardType: "emailAddress"
+                onChanged: "controls:profile_email" %}
+            {% endcolumn %}
+          {% endform %}
+          {% assign text_style_10 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+          {% text data: "Custom field (FormField requires builder callback - demo placeholder)" style: text_style_10 %}
+          {% card color: "#101521" %}
+            {% assign text_style_11 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+            {% text data: "Inline field slot" style: text_style_11 %}
+          {% endcard %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_12 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Autocomplete" style: text_style_12 %}
+          {% assign text_style_13 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Autocomplete widget needs a custom optionsBuilder. Demo placeholder shown instead." style: text_style_13 %}
+          {% assign auto_decoration = "" | input_decoration: labelText: "Autocomplete", hintText: "Type to search" %}
+          {% text_field decoration: auto_decoration %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_14 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Button Variants" style: text_style_14 %}
+          {% assign text_style_15 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: button_tap_label style: text_style_15 %}
+          {% wrap spacing: 10 runSpacing: 10 %}
+            {% filled_button onPressed: "controls:button_tap" %}
+              {% text data: "Primary" %}
+            {% endfilled_button %}
+            {% elevated_button onPressed: "controls:button_tap" %}
+              {% text data: "Elevated" %}
+            {% endelevated_button %}
+            {% outlined_button onPressed: "controls:button_tap" %}
+              {% text data: "Outlined" %}
+            {% endoutlined_button %}
+            {% text_button onPressed: "controls:button_tap" %}
+              {% text data: "Text" %}
+            {% endtext_button %}
+            {% icon_button icon: "add" tooltip: "Add" onPressed: "controls:button_tap" %}
+          {% endwrap %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

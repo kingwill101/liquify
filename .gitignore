@@ -7,6 +7,12 @@
 .openspec
 openspec
 .github/prompts
+build/
+.codex*/
+.idea/
+.vscode/
+*.iml
+liquid_grammar.iml
 .idea
 .pub-cache
 .tooling

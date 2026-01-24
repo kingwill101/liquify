@@ -1,0 +1,154 @@
+{% comment %}
+Controls data demo. Expects list_preview_items, reorder_items, table_rows,
+ table_column_widths, table_border, data_table_columns, data_table_rows,
+ data_sort_column, data_sort_ascending, data_rows_per_page,
+ data_rows_per_page_options, data_page_start.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% assign page_start_label = "Page start: " | append: data_page_start %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Data" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Lists + Tables" style: text_style_2 %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Builder lists, reorderable rows, and data tables." style: text_style_3 %}
+          {% assign text_style_4 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "List builder" style: text_style_4 %}
+          {% column spacing: 8 crossAxisAlignment: "stretch" %}
+            {% for item in list_preview_items %}
+              {% card color: "#1f2431" %}
+                {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+                  {% assign text_style_5 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: item.title style: text_style_5 %}
+                  {% assign text_style_6 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: item.meta style: text_style_6 %}
+                {% endrow %}
+              {% endcard %}
+            {% endfor %}
+          {% endcolumn %}
+          {% assign text_style_7 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "List with separators" style: text_style_7 %}
+          {% column spacing: 8 crossAxisAlignment: "stretch" %}
+            {% for item in list_preview_items %}
+              {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+                {% assign text_style_8 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: item.title style: text_style_8 %}
+                {% assign text_style_9 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: item.meta style: text_style_9 %}
+              {% endrow %}
+              {% if forloop.last == false %}
+                {% divider color: "#1f2937" %}
+              {% endif %}
+            {% endfor %}
+          {% endcolumn %}
+          {% assign text_style_10 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "List view alias" style: text_style_10 %}
+          {% column spacing: 8 crossAxisAlignment: "stretch" %}
+            {% card color: "#111827" %}
+              {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+                {% assign text_style_11 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Snapshot" style: text_style_11 %}
+                {% assign text_style_12 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: "Alias" style: text_style_12 %}
+              {% endrow %}
+            {% endcard %}
+            {% card color: "#0f172a" %}
+              {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+                {% assign text_style_13 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "List view" style: text_style_13 %}
+                {% assign text_style_14 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: "Static" style: text_style_14 %}
+              {% endrow %}
+            {% endcard %}
+          {% endcolumn %}
+          {% assign text_style_15 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Reorderable list" style: text_style_15 %}
+          {% column spacing: 8 crossAxisAlignment: "stretch" %}
+            {% for item in reorder_items %}
+              {% card color: "#1f2431" %}
+                {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+                  {% assign text_style_16 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: item.title style: text_style_16 %}
+                  {% assign text_style_17 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: item.meta style: text_style_17 %}
+                {% endrow %}
+              {% endcard %}
+            {% endfor %}
+          {% endcolumn %}
+          {% assign text_style_18 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Reorderable list alias" style: text_style_18 %}
+          {% column spacing: 8 crossAxisAlignment: "stretch" %}
+            {% for item in reorder_items %}
+              {% card color: "#111827" %}
+                {% row mainAxisAlignment: "spaceBetween" crossAxisAlignment: "center" %}
+                  {% assign text_style_19 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: item.title style: text_style_19 %}
+                  {% assign text_style_20 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: item.meta style: text_style_20 %}
+                {% endrow %}
+              {% endcard %}
+            {% endfor %}
+          {% endcolumn %}
+          {% assign text_style_21 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Expansion tiles" style: text_style_21 %}
+          {% expansion_tile
+            title: "Notifications"
+            subtitle: "Daily summaries"
+            leading: "notifications"
+            trailing: "expand_more"
+            backgroundColor: "#111827"
+            collapsedBackgroundColor: "#0f172a"
+            initiallyExpanded: true %}
+            {% assign text_style_22 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Email updates" style: text_style_22 %}
+            {% assign text_style_23 = "" | text_style: fontSize: caption_size, color: "#94a3b8" %}
+{% text data: "Push alerts" style: text_style_23 %}
+          {% endexpansion_tile %}
+          {% assign text_style_24 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Selectable text" style: text_style_24 %}
+          {% assign text_style_25 = "" | text_style: color: "#e2e8f0" %}
+{% selectable_text data: "Select and copy this inline text sample." style: text_style_25 %}
+          {% assign text_style_26 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Table" style: text_style_26 %}
+          {% card color: "#101521" %}
+            {% column spacing: 6 crossAxisAlignment: "start" %}
+              {% for row in table_rows %}
+                {% row spacing: 12 %}
+                  {% for cell in row %}
+                    {% assign text_style_27 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: cell style: text_style_27 %}
+                  {% endfor %}
+                {% endrow %}
+              {% endfor %}
+            {% endcolumn %}
+          {% endcard %}
+          {% assign text_style_28 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Data table (summary)" style: text_style_28 %}
+          {% column spacing: 6 crossAxisAlignment: "start" %}
+            {% for row in data_table_rows %}
+              {% assign text_style_29 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: row.id style: text_style_29 %}
+            {% endfor %}
+          {% endcolumn %}
+          {% assign text_style_30 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: page_start_label style: text_style_30 %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

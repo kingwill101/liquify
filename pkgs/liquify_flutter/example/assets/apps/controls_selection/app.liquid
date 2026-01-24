@@ -1,0 +1,123 @@
+{% comment %}
+Controls selection demo. Expects segment_labels, segment_index, toggle_labels,
+ toggle_index, notifications_enabled, delivery_timing, chip_choice,
+ chip_filter_email, chip_filter_push, chip_filter_sms, chip_input_selected,
+ chip_action_count.
+Split list-tile selection uses notifications_enabled and delivery_timing.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Selection" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Segmented + Toggle" style: text_style_2 %}
+          {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Switch between modes and update selection." style: text_style_3 %}
+          {% wrap spacing: 8 runSpacing: 8 %}
+            {% for label in segment_labels %}
+              {% chip label: label %}
+            {% endfor %}
+          {% endwrap %}
+          {% wrap spacing: 8 runSpacing: 8 %}
+            {% for label in toggle_labels %}
+              {% choice_chip label: label selected: false onSelected: "controls:toggle" %}
+            {% endfor %}
+          {% endwrap %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_4 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Selection" style: text_style_4 %}
+          {% checkbox value: notifications_enabled onChanged: "controls:checkbox" %}
+          {% assign text_style_5 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Delivery" style: text_style_5 %}
+          {% wrap spacing: 8 runSpacing: 8 %}
+            {% choice_chip label: "Daily" selected: delivery_timing == "Daily" onSelected: "controls:radio" %}
+            {% choice_chip label: "Weekly" selected: delivery_timing == "Weekly" onSelected: "controls:radio" %}
+            {% choice_chip label: "Monthly" selected: delivery_timing == "Monthly" onSelected: "controls:radio" %}
+          {% endwrap %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_6 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "List tile selection" style: text_style_6 %}
+          {% checkbox_list_tile
+            title: "Email updates"
+            subtitle: "Receive product news"
+            value: notifications_enabled
+            fillColor: "#34d399"
+            overlayColor: "#0ea5e9"
+            checkboxScaleFactor: 1.1
+            titleAlignment: "center"
+            onChanged: "controls:checkbox" %}
+          {% list_tile title: "Daily digest" subtitle: "Delivered every morning" leading: "calendar_today" %}
+          {% endlist_tile %}
+          {% list_tile title: "Weekly digest" subtitle: "Every Monday" leading: "calendar_view_week" %}
+          {% endlist_tile %}
+          {% switch_list_tile
+            title: "Auto sync"
+            subtitle: "Keep settings in sync"
+            activeThumbColor: "#7dd3fc"
+            overlayColor: "#9333ea"
+            dragStartBehavior: "down"
+            value: notifications_enabled
+            onChanged: "controls:checkbox" %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_7 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Chips + Badges" style: text_style_7 %}
+          {% wrap spacing: 8 runSpacing: 8 %}
+            {% chip label: "Base chip" %}
+            {% action_chip label: "New report" onPressed: "controls:chip_action" %}
+            {% choice_chip label: "Daily" selected: chip_choice == "Daily" onSelected: "controls:chip_choice" %}
+            {% choice_chip label: "Weekly" selected: chip_choice == "Weekly" onSelected: "controls:chip_choice" %}
+            {% choice_chip label: "Monthly" selected: chip_choice == "Monthly" onSelected: "controls:chip_choice" %}
+            {% filter_chip label: "Email" selected: chip_filter_email onSelected: "controls:chip_filter" %}
+            {% filter_chip label: "Push" selected: chip_filter_push onSelected: "controls:chip_filter" %}
+            {% filter_chip label: "SMS" selected: chip_filter_sms onSelected: "controls:chip_filter" %}
+            {% input_chip label: "Draft" selected: chip_input_selected onSelected: "controls:chip_input" onDeleted: "controls:chip_delete" deleteIcon: "close" %}
+          {% endwrap %}
+          {% wrap spacing: 12 runSpacing: 12 crossAxisAlignment: "center" %}
+            {% circle_avatar backgroundColor: "#1e293b" foregroundColor: "#f6f7fb" %}
+              {% text data: "KD" %}
+            {% endcircle_avatar %}
+            {% circle_avatar backgroundColor: "#312e81" foregroundColor: "#f8fafc" %}
+              {% icon icon: "person" %}
+            {% endcircle_avatar %}
+            {% badge label: chip_action_count %}
+              {% circle_avatar backgroundColor: "#0f172a" foregroundColor: "#f8fafc" %}
+                {% icon icon: "notifications" %}
+              {% endcircle_avatar %}
+            {% endbadge %}
+            {% badge label: "PRO" backgroundColor: "#2563eb" textColor: "#f8fafc" %}
+              {% circle_avatar backgroundColor: "#111827" foregroundColor: "#f8fafc" %}
+                {% text data: "AM" %}
+              {% endcircle_avatar %}
+            {% endbadge %}
+          {% endwrap %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

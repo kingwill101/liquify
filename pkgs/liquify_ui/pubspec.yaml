@@ -1,0 +1,14 @@
+name: liquify_ui
+description: UI schema and render target for Liquify templates.
+version: 0.1.0
+publish_to: none
+
+resolution: workspace
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  liquify: ^1.4.1
+
+dev_dependencies:
+  test: ^1.28.0

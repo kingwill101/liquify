@@ -1,0 +1,11 @@
+tag: ignore_pointer
+widget: IgnorePointer
+properties:
+  - name: ignoring
+    type: bool
+    default: true
+  - name: ignoringSemantics
+    type: bool
+children:
+  kind: single
+  fallback: shrink

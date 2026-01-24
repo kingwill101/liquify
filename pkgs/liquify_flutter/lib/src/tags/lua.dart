@@ -1,0 +1,293 @@
+import 'package:flutter/widgets.dart';
+import 'package:liquify/parser.dart';
+import 'package:lualike/lualike.dart' as lualike;
+
+import '../lua_callback_drop.dart';
+import 'tag_helpers.dart';
+
+class LuaTag extends AbstractTag with CustomTagParser, AsyncTag {
+  LuaTag(super.content, super.filters, [super.body]);
+
+  @override
+  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    final allowSync =
+        evaluator.context.getRegister('_liquify_flutter_allow_sync_lua') ==
+            true;
+    if (allowSync) {
+      return null;
+    }
+    throw Exception('lua tag requires renderAsync()');
+  }
+
+  @override
+  Future<dynamic> evaluateWithContextAsync(
+    Evaluator evaluator,
+    Buffer buffer,
+  ) async {
+    String? assignName;
+    for (final arg in namedArgs) {
+      final name = arg.identifier.name;
+      switch (name) {
+        case 'assign':
+          if (arg.value is Identifier) {
+            assignName = (arg.value as Identifier).name;
+          } else {
+            final resolved = evaluator.evaluate(arg.value);
+            assignName = resolved?.toString().trim();
+          }
+          break;
+        default:
+          handleUnknownTagArg('lua', name);
+          break;
+      }
+    }
+
+    final script = _extractScript();
+    if (script.trim().isEmpty) {
+      return null;
+    }
+
+    // Use the page's Lua instance if available, otherwise create a new one
+    var lua = evaluator.context.getRegister('_liquify_flutter_lua') as lualike.LuaLike?;
+    final isPageLua = lua != null;
+    lua ??= lualike.LuaLike();
+    
+    // Only configure if it's a new Lua instance (page Lua is already configured)
+    if (!isPageLua) {
+      _configureLua(lua, evaluator);
+    } else {
+      // For page Lua, still need to expose get/set that use the evaluator context
+      // for template variables, but the page state is the source of truth
+      _configurePageLua(lua, evaluator);
+    }
+
+    final Object? result;
+    try {
+      result = await lua.execute(script, scriptPath: 'liquid:lua');
+    } catch (error) {
+      throw Exception('lua tag failed: $error');
+    }
+
+    final converted = _sanitizeData(
+      lualike.fromLuaValue(result),
+      path: 'lua',
+    );
+
+    if (assignName != null && assignName.isNotEmpty) {
+      evaluator.context.setVariable(assignName, converted);
+    }
+    return null;
+  }
+
+  void _configurePageLua(lualike.LuaLike lua, Evaluator evaluator) {
+    // The page Lua already has get/set/rebuild configured to use page state.
+    // We just need to ensure callback functions can be created.
+    // The page's _configureLua already sets these up.
+  }
+
+  String _extractScript() {
+    if (body.isEmpty) {
+      return '';
+    }
+    final buffer = StringBuffer();
+    for (final node in body) {
+      if (node is TextNode) {
+        buffer.write(node.text);
+      }
+    }
+    return buffer.toString();
+  }
+
+  void _configureLua(lualike.LuaLike lua, Evaluator evaluator) {
+    final globals = lua.vm.globals;
+    const blockedGlobals = <String>{
+      'io',
+      'os',
+      'debug',
+      'package',
+      'coroutine',
+      'crypto',
+      'dofile',
+      'loadfile',
+      'load',
+      'require',
+      'collectgarbage',
+    };
+    for (final name in blockedGlobals) {
+      globals.defineGlobal(name, null);
+    }
+
+    lua.expose('get', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('lua get(name) requires a key');
+      }
+      final key = _coerceKey(args.first);
+      final value = evaluator.context.getVariable(key);
+      final sanitized = _sanitizeData(value, path: key);
+      final luaReady = _toLuaInput(sanitized);
+      return lualike.toLuaValue(luaReady);
+    });
+
+    lua.expose('set', (List<Object?> args) {
+      if (args.length < 2) {
+        throw Exception('lua set(name, value) requires 2 arguments');
+      }
+      final key = _coerceKey(args[0]);
+      final value = _sanitizeData(lualike.fromLuaValue(args[1]), path: key);
+      evaluator.context.setVariable(key, value);
+      return null;
+    });
+
+    lua.expose('rebuild', (List<Object?> args) {
+      final callback = evaluator.context.getRegister('_liquify_flutter_rebuild');
+      if (callback is VoidCallback) {
+        callback();
+      }
+      return null;
+    });
+
+    lua.expose('log', (List<Object?> args) {
+      final message = args.isEmpty
+          ? ''
+          : args.map((value) => lualike.fromLuaValue(value)).join(' ');
+      debugPrint('[lua] $message');
+      return null;
+    });
+
+    // Expose callback creation functions
+    // callback(fn) - creates a VoidCallback-compatible drop
+    // callback1(fn) - creates a ValueChanged-compatible drop (1 arg)
+    // callback2(fn) - creates a drop for callbacks with 2 args
+    lua.expose('callback', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('callback(fn) requires a function argument');
+      }
+      final fn = args.first;
+      if (fn is! lualike.Value) {
+        throw Exception('callback(fn) requires a Lua function');
+      }
+      return LuaCallbackDrop(fn, lua);
+    });
+
+    lua.expose('callback1', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('callback1(fn) requires a function argument');
+      }
+      final fn = args.first;
+      if (fn is! lualike.Value) {
+        throw Exception('callback1(fn) requires a Lua function');
+      }
+      return LuaValueCallbackDrop(fn, lua);
+    });
+
+    lua.expose('callback2', (List<Object?> args) {
+      if (args.isEmpty) {
+        throw Exception('callback2(fn) requires a function argument');
+      }
+      final fn = args.first;
+      if (fn is! lualike.Value) {
+        throw Exception('callback2(fn) requires a Lua function');
+      }
+      return LuaCallback2Drop(fn, lua);
+    });
+  }
+
+  String _coerceKey(Object? value) {
+    final raw = lualike.fromLuaValue(value);
+    final key = raw?.toString().trim() ?? '';
+    if (key.isEmpty) {
+      throw Exception('lua key must be a non-empty string');
+    }
+    return key;
+  }
+
+  Object? _sanitizeData(Object? value, {required String path}) {
+    if (value is lualike.Value) {
+      return _sanitizeData(lualike.fromLuaValue(value), path: path);
+    }
+    if (value == null ||
+        value is String ||
+        value is num ||
+        value is bool) {
+      return value;
+    }
+    // Allow Lua callback drops through - they are valid callback values
+    if (value is LuaCallbackDrop || 
+        value is LuaValueCallbackDrop || 
+        value is LuaCallback2Drop) {
+      return value;
+    }
+    if (value is Widget) {
+      throw Exception('lua tag only supports data, not widgets ($path)');
+    }
+    if (value is Iterable) {
+      final items = <Object?>[];
+      var index = 0;
+      for (final entry in value) {
+        items.add(
+          _sanitizeData(
+            lualike.fromLuaValue(entry),
+            path: '$path[$index]',
+          ),
+        );
+        index += 1;
+      }
+      return items;
+    }
+    if (value is Map) {
+      final mapped = <String, Object?>{};
+      for (final entry in value.entries) {
+        final rawKey = lualike.fromLuaValue(entry.key);
+        if (rawKey is! String) {
+          throw Exception('lua map keys must be strings ($path)');
+        }
+        mapped[rawKey] = _sanitizeData(
+          lualike.fromLuaValue(entry.value),
+          path: '$path.$rawKey',
+        );
+      }
+      return mapped;
+    }
+    throw Exception('lua tag only supports data values ($path)');
+  }
+
+  Object? _toLuaInput(Object? value) {
+    if (value == null || value is String || value is num || value is bool) {
+      return value;
+    }
+    if (value is List) {
+      final table = <int, Object?>{};
+      for (var i = 0; i < value.length; i += 1) {
+        table[i + 1] = _toLuaInput(value[i]);
+      }
+      return table;
+    }
+    if (value is Map) {
+      final mapped = <String, Object?>{};
+      for (final entry in value.entries) {
+        mapped[entry.key.toString()] = _toLuaInput(entry.value);
+      }
+      return mapped;
+    }
+    return value;
+  }
+
+  @override
+  Parser parser() {
+    return (tagStart() &
+            string('lua').trim() &
+            tagContent().optional().trim() &
+            tagEnd() &
+            any()
+                .starLazy((tagStart() & string('endlua').trim() & tagEnd()))
+                .flatten() &
+            tagStart() &
+            string('endlua').trim() &
+            tagEnd())
+        .map((values) {
+      final content = values[2] as List<ASTNode>? ?? const [];
+      final script = values[4] as String? ?? '';
+      return Tag('lua', content, body: [TextNode(script)]);
+    });
+  }
+}

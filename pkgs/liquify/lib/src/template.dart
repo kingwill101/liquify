@@ -2,6 +2,7 @@ import 'package:liquify/parser.dart' as parser;
 import 'package:liquify/parser.dart';
 import 'package:liquify/src/fs.dart';
 import 'package:liquify/src/render_target.dart';
+import 'package:liquify/src/template_cache.dart';
 
 /// A compiled Liquid template that can be rendered with data.
 ///
@@ -34,6 +35,10 @@ class Template {
   final Evaluator _evaluator;
   final LiquidConfig? _config;
 
+  /// Whether to use the global template cache for parsing.
+  /// Defaults to true for better performance.
+  final bool useCache;
+
   /// Creates a new Template instance from a file.
   ///
   /// [templateName] is the name or path of the template to be rendered.
@@ -42,6 +47,7 @@ class Template {
   /// [config] is an optional delimiter configuration for custom delimiters.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
+  /// [useCache] enables/disables AST caching for this template (default: true).
   Template.fromFile(
     String templateName,
     Root root, {
@@ -49,6 +55,7 @@ class Template {
     LiquidConfig? config,
     Environment? environment,
     void Function(Environment)? environmentSetup,
+    this.useCache = true,
   }) : _templateContent = root.resolve(templateName).content,
        _config = config,
        _evaluator = Evaluator(
@@ -91,11 +98,20 @@ class Template {
     Root? root,
     Environment? environment,
     void Function(Environment)? environmentSetup,
+    this.useCache = true,
   }) : _templateContent = input,
        _config = config,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
        );
+
+  /// Parses the template content, using cache if enabled.
+  List<ASTNode> _parse() {
+    if (useCache) {
+      return templateCache.parse(_templateContent);
+    }
+    return parser.parseInput(_templateContent);
+  }
 
   /// Renders the template with the current context.
   ///

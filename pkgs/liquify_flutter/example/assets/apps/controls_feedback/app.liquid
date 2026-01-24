@@ -1,0 +1,121 @@
+{% comment %}
+Controls feedback demo. Expects slider_value.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Feedback" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Progress + Status" style: text_style_2 %}
+          {% linear_progress_indicator
+            value: slider_value
+            color: "#f5b74a"
+            backgroundColor: "#2a2f3a"
+            minHeight: 8 %}
+          {% row spacing: 12 crossAxisAlignment: "center" %}
+            {% sized_box width: 44 height: 44 %}
+              {% circular_progress_indicator
+                value: slider_value
+                color: "#7dd3fc"
+                strokeWidth: 5 %}
+            {% endsized_box %}
+            {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#cbd1dc" %}
+{% text data: "Loading" style: text_style_3 %}
+          {% endrow %}
+          {% assign text_style_4 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Alias tags" style: text_style_4 %}
+          {% row spacing: 12 crossAxisAlignment: "center" %}
+            {% expanded %}
+              {% linear_progress_indicator value: slider_value color: "#60a5fa" minHeight: 6 %}
+            {% endexpanded %}
+            {% circular_progress_indicator value: slider_value color: "#f97316" %}
+          {% endrow %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_5 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Dialogs + Overlays" style: text_style_5 %}
+          {% wrap spacing: 12 runSpacing: 12 %}
+            {% card color: "#101521" %}
+              {% column spacing: 6 crossAxisAlignment: "start" %}
+                {% assign text_style_6 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Alert dialog" style: text_style_6 %}
+                {% assign text_style_7 = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Remove access?" style: text_style_7 %}
+              {% endcolumn %}
+            {% endcard %}
+            {% card color: "#101521" %}
+              {% column spacing: 6 crossAxisAlignment: "start" %}
+                {% assign text_style_8 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Material banner" style: text_style_8 %}
+                {% assign text_style_9 = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Workspace permissions updated." style: text_style_9 %}
+              {% endcolumn %}
+            {% endcard %}
+            {% card color: "#101521" %}
+              {% column spacing: 6 crossAxisAlignment: "start" %}
+                {% assign text_style_10 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Bottom sheet" style: text_style_10 %}
+                {% assign text_style_11 = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Add quick actions or controls here." style: text_style_11 %}
+              {% endcolumn %}
+            {% endcard %}
+            {% card color: "#101521" %}
+              {% column spacing: 6 crossAxisAlignment: "start" %}
+                {% assign text_style_12 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Simple dialog" style: text_style_12 %}
+                {% assign text_style_13 = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Quick actions" style: text_style_13 %}
+              {% endcolumn %}
+            {% endcard %}
+            {% card color: "#101521" %}
+              {% column spacing: 6 crossAxisAlignment: "start" %}
+                {% assign text_style_14 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "About dialog" style: text_style_14 %}
+                {% assign text_style_15 = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Built for reusable UI demos." style: text_style_15 %}
+              {% endcolumn %}
+            {% endcard %}
+          {% endwrap %}
+          {% card color: "#101521" %}
+            {% column spacing: 6 crossAxisAlignment: "start" %}
+              {% assign text_style_snack = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "SnackBar preview" style: text_style_snack %}
+              {% row spacing: 12 mainAxisAlignment: "spaceBetween" %}
+                {% assign text_style_snack_msg = "" | text_style: fontSize: 12, color: "#98a0b1" %}
+{% text data: "Saved to workspace" style: text_style_snack_msg %}
+                {% text_button onPressed: "controls:snack_undo" %}
+                  {% text data: "Undo" %}
+                {% endtext_button %}
+              {% endrow %}
+            {% endcolumn %}
+          {% endcard %}
+          {% wrap spacing: 12 runSpacing: 12 crossAxisAlignment: "center" %}
+            {% tooltip message: "Copy the share link" %}
+              {% text_button onPressed: "controls:button_tap" %}
+                {% text data: "Tooltip" %}
+              {% endtext_button %}
+            {% endtooltip %}
+            {% icon_button icon: "more_vert" tooltip: "More actions" onPressed: "controls:button_tap" %}
+          {% endwrap %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

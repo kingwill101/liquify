@@ -1,0 +1,117 @@
+{% comment %}
+Controls navigation demo. Expects nav_items, nav_bottom_items, nav_rail_destinations,
+nav_index, rail_index.
+{% endcomment %}
+{% assign section_gap = "" | responsive: xs: 12, sm: 14, md: 16, lg: 18, default: 16 %}
+{% assign card_radius = "" | responsive: xs: 16, sm: 18, md: 20, lg: 22, default: 20 %}
+{% assign title_size = "" | responsive: xs: 18, sm: 20, md: 22, lg: 24, default: 22 %}
+{% assign caption_size = "" | responsive: xs: 12, sm: 13, md: 14, lg: 15, default: 14 %}
+{% assign fab_radius = "" | border_radius: circular: 16 %}
+{% assign fab_shape = "" | rounded_rectangle_border: borderRadius: fab_radius %}
+{% assign notch_shape = "" | circular_notched_rectangle %}
+{% assign tile_radius = "" | border_radius: circular: 14 %}
+{% assign tile_shape = "" | rounded_rectangle_border: borderRadius: tile_radius %}
+{% layout "controls/layouts/base.liquid" %}
+{% block content %}
+  {% single_child_scroll_view %}
+    {% column spacing: section_gap crossAxisAlignment: "stretch" %}
+      {% row spacing: 12 crossAxisAlignment: "center" %}
+        {% filled_button onPressed: "nav:controls" %}
+          {% text data: "Controls" %}
+        {% endfilled_button %}
+        {% assign text_style_1 = "" | text_style: fontSize: 18, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Controls: Navigation" style: text_style_1 %}
+      {% endrow %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_2 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "Navigation" style: text_style_2 %}
+          {% sized_box height: 220 %}
+            {% navigation_rail
+              selectedIndex: rail_index
+              onDestinationSelected: "controls:rail_select"
+              labelType: "none"
+              backgroundColor: "#101521"
+              extended: true
+              minWidth: 76
+              minExtendedWidth: 160
+              destinations: nav_rail_destinations %}
+          {% endsized_box %}
+          {% card color: "#1f2431" %}
+            {% column spacing: 6 crossAxisAlignment: "start" %}
+              {% assign text_style_3 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Rail content" style: text_style_3 %}
+              {% assign text_style_4 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Tap a destination to update the index." style: text_style_4 %}
+            {% endcolumn %}
+          {% endcard %}
+          {% bottom_navigation_bar
+            currentIndex: nav_index
+            onTap: "controls:nav_select"
+            type: "fixed"
+            showUnselectedLabels: true
+            items: nav_bottom_items %}
+          {% sized_box height: 180 %}
+            {% drawer width: 220 backgroundColor: "#141925" %}
+              {% column spacing: 8 crossAxisAlignment: "start" %}
+                {% assign text_style_6 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Drawer preview" style: text_style_6 %}
+                {% assign dashboard_icon = "dashboard" | icon %}
+                {% assign settings_icon = "settings" | icon %}
+                {% assign chevron_icon = "chevron_right" | icon %}
+                {% list_tile title: "Overview" leading: dashboard_icon trailing: chevron_icon %}
+                {% endlist_tile %}
+                {% list_tile title: "Settings" leading: settings_icon trailing: chevron_icon %}
+                {% endlist_tile %}
+              {% endcolumn %}
+            {% enddrawer %}
+          {% endsized_box %}
+          {% sized_box height: 220 %}
+            {% navigation_drawer selectedIndex: nav_index onDestinationSelected: "controls:nav_select" backgroundColor: "#141925" indicatorColor: "#1f2937" %}
+              {% drawer_header %}
+                {% column spacing: 6 crossAxisAlignment: "start" %}
+                  {% assign text_style_7 = "" | text_style: fontSize: caption_size, color: "#e2e8f0" %}
+{% text data: "Navigation drawer" style: text_style_7 %}
+                  {% assign text_style_8 = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "Material 3 destinations" style: text_style_8 %}
+                {% endcolumn %}
+              {% enddrawer_header %}
+              {% for item in nav_items %}
+                {% navigation_drawer_destination label: item.label icon: item.icon %}
+              {% endfor %}
+            {% endnavigation_drawer %}
+          {% endsized_box %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_11 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "App chrome" style: text_style_11 %}
+          {% assign text_style_note = "" | text_style: fontSize: caption_size, color: "#98a0b1" %}
+{% text data: "BottomAppBar and FloatingActionButton require Scaffold context. Showing simple icon buttons instead." style: text_style_note %}
+          {% row spacing: 12 mainAxisAlignment: "center" %}
+            {% icon_button icon: "add" tooltip: "Create" onPressed: "controls:fab_create" %}
+            {% icon_button icon: "edit" tooltip: "Edit" onPressed: "controls:fab_create" %}
+            {% icon_button icon: "delete" tooltip: "Delete" onPressed: "controls:fab_create" %}
+          {% endrow %}
+        {% endcolumn %}
+      {% endcard %}
+
+      {% card color: "#171b23" %}
+        {% column spacing: 12 crossAxisAlignment: "stretch" %}
+          {% assign text_style_13 = "" | text_style: fontSize: title_size, fontWeight: "bold", color: "#f6f7fb" %}
+{% text data: "List tiles" style: text_style_13 %}
+          {% assign person_icon = "person" | icon %}
+          {% assign lock_icon = "lock" | icon %}
+          {% assign chevron_r = "chevron_right" | icon %}
+          {% list_tile title: "Account" subtitle: "Manage profile" leading: person_icon trailing: chevron_r onTap: "controls:tile_account" shape: tile_shape %}
+          {% endlist_tile %}
+          {% list_tile title: "Security" subtitle: "Passwords & 2FA" leading: lock_icon trailing: chevron_r onTap: "controls:tile_security" %}
+          {% endlist_tile %}
+        {% endcolumn %}
+      {% endcard %}
+    {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endblock %}

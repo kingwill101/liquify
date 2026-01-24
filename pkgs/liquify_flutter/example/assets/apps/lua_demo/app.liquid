@@ -1,0 +1,111 @@
+{% comment %}
+Lua Callback Demo - Demonstrates over-the-wire UI interactions using Lua callbacks.
+All button behavior is defined in Liquid templates, no Dart code needed.
+{% endcomment %}
+
+{% comment %} Initialize state variables {% endcomment %}
+{% assign counter = counter | default: 0 %}
+{% assign message = message | default: "Click the buttons!" %}
+
+{% comment %} Define callbacks using Lua {% endcomment %}
+{% lua assign: increment_callback %}
+  return callback(function()
+    local current = get("counter") or 0
+    set("counter", current + 1)
+    set("message", "Incremented to " .. (current + 1))
+    log("Counter incremented to: " .. (current + 1))
+    rebuild()
+  end)
+{% endlua %}
+
+{% lua assign: decrement_callback %}
+  return callback(function()
+    local current = get("counter") or 0
+    set("counter", current - 1)
+    set("message", "Decremented to " .. (current - 1))
+    log("Counter decremented to: " .. (current - 1))
+    rebuild()
+  end)
+{% endlua %}
+
+{% lua assign: reset_callback %}
+  return callback(function()
+    set("counter", 0)
+    set("message", "Counter reset!")
+    log("Counter reset to 0")
+    rebuild()
+  end)
+{% endlua %}
+
+{% lua assign: slider_callback %}
+  return callback1(function(value)
+    local percent = math.floor(value * 100)
+    set("slider_value", value)
+    set("message", "Slider: " .. percent .. "%")
+    log("Slider changed to: " .. value)
+    rebuild()
+  end)
+{% endlua %}
+
+{% lua assign: nav_home_callback %}
+  return callback(function()
+    action("nav:home")
+  end)
+{% endlua %}
+
+{% comment %} Build the UI {% endcomment %}
+{% assign padding_value = 24 %}
+{% assign title_style = "" | text_style: fontSize: 24, fontWeight: "bold", color: "#f1f5f9" %}
+{% assign counter_style = "" | text_style: fontSize: 64, fontWeight: "bold", color: "#7dd3fc" %}
+{% assign message_style = "" | text_style: fontSize: 14, color: "#94a3b8" %}
+
+{% container padding: padding_value color: "#101216" %}
+  {% single_child_scroll_view %}
+    {% column crossAxisAlignment: "center" mainAxisAlignment: "center" spacing: 24 %}
+    
+    {% comment %} Title {% endcomment %}
+    {% text data: "Lua Callback Demo" style: title_style %}
+    
+    {% comment %} Counter display {% endcomment %}
+    {% text data: counter style: counter_style %}
+    
+    {% comment %} Message {% endcomment %}
+    {% text data: message style: message_style %}
+    
+    {% comment %} Button row {% endcomment %}
+    {% row mainAxisAlignment: "center" spacing: 16 %}
+      {% elevated_button onPressed: decrement_callback %}
+        {% text data: "−" %}
+      {% endelevated_button %}
+      
+      {% elevated_button onPressed: reset_callback %}
+        {% text data: "Reset" %}
+      {% endelevated_button %}
+      
+      {% elevated_button onPressed: increment_callback %}
+        {% text data: "+" %}
+      {% endelevated_button %}
+    {% endrow %}
+    
+    {% comment %} Slider section {% endcomment %}
+    {% sized_box height: 32 %}{% endsized_box %}
+    
+    {% text data: "Slider with Lua callback:" style: message_style %}
+    
+    {% assign slider_value = slider_value | default: 0.5 %}
+    {% sized_box width: 300 %}
+      {% card %}
+        {% slider value: slider_value onChanged: slider_callback %}{% endslider %}
+      {% endcard %}
+    {% endsized_box %}
+    
+    {% comment %} Navigation {% endcomment %}
+    {% sized_box height: 32 %}{% endsized_box %}
+    
+    {% filled_button onPressed: nav_home_callback %}
+      {% text data: "Back to Home" %}
+    {% endfilled_button %}
+    
+  {% endcolumn %}
+  {% endsingle_child_scroll_view %}
+{% endcontainer %}

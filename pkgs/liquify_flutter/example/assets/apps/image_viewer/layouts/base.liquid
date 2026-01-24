@@ -1,0 +1,12 @@
+{% comment %}
+Base layout for image viewer demo. Provides dark background and a content block.
+{% endcomment %}
+{% assign base_pad_inset = "" | edge_insets: all: 24 %}
+{% container color: "#0f1014" %}
+  {% padding padding: base_pad_inset %}
+    {% single_child_scroll_view %}
+      {% block content %}
+      {% endblock %}
+    {% endsingle_child_scroll_view %}
+  {% endpadding %}
+{% endcontainer %}

@@ -1,0 +1,27 @@
+builders:
+  liquify_flutter|widget_spec_builder:
+    import: "package:liquify_flutter/builders.dart"
+    builder_factories: ["widgetSpecBuilder"]
+    build_extensions:
+      tool/widgets_to_port.yaml:
+        - tool/tag_specs/generated/widgets.yaml
+        - tool/tag_specs/generated/widgets.report.json
+        - lib/src/generated/widget_tags.dart
+        - lib/src/generated/widget_tag_registry.dart
+        - test/generated/widget_tags_test.dart
+        - lib/src/generated/type_parsers.dart
+        - lib/src/generated/type_parser_aliases.dart
+        - lib/src/generated/type_filters.dart
+        - lib/src/generated/callback_drops.dart
+        - lib/src/generated/type_registry.dart
+        - tool/type_registry.generated.yaml
+        - tool/type_registry.yaml
+    auto_apply: root_package
+    build_to: source
+
+targets:
+  $default:
+    builders:
+      liquify_flutter|widget_spec_builder:
+        generate_for:
+          - tool/widgets_to_port.yaml
