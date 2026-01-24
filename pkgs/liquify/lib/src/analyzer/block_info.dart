@@ -140,20 +140,27 @@ class BlockInfo {
     };
   }
 
-  /// Creates a deep copy of this block with a new source template.
+  /// Creates a copy of this block for use in a child template.
   ///
-  /// This method creates a completely new instance of BlockInfo and all its
-  /// nested blocks, with the new source template path. This is useful when
-  /// copying blocks between templates.
+  /// This method creates a new BlockInfo that represents this block being
+  /// inherited by a child template. The copy:
+  /// * Has `isOverride: false` because it's the inherited version, not an override
+  /// * Has `parent` pointing to this block (the original)
+  /// * Preserves hasSuperCall status
+  /// * Recursively copies nested blocks
+  ///
+  /// Note: This is NOT a true deep copy - it's specifically for template
+  /// inheritance scenarios. For a true copy that preserves all properties,
+  /// use [copyWith].
   ///
   /// Parameters:
   /// * [newSource] - The new template path to use as the source
   ///
-  /// Returns a new [BlockInfo] instance with all nested blocks copied.
+  /// Returns a new [BlockInfo] representing this block as inherited.
   ///
   /// Example:
   /// ```dart
-  /// final copiedBlock = originalBlock.deepCopy('new_template.liquid');
+  /// final inheritedBlock = parentBlock.deepCopy('child_template.liquid');
   /// ```
   BlockInfo deepCopy(String newSource) {
     final nestedBlocksCopy = <String, BlockInfo>{};

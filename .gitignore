@@ -16,3 +16,11 @@ liquid_grammar.iml
 .idea
 .pub-cache
 .tooling
+
+# Flutter build artifacts
+**/build/
+**/ephemeral/
+**/*.xcconfig
+**/GeneratedPluginRegistrant.*
+**/local.properties
+**/flutter_export_environment.sh

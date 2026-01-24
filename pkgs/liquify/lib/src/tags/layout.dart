@@ -49,14 +49,16 @@ class LayoutTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 
   @override
-  Parser parser() {
-    return ((tagStart() &
+  Parser parser([LiquidConfig? config]) {
+    final start = createTagStart(config);
+    final end = createTagEnd(config);
+    return ((start &
                 string('layout').trim() &
                 ref0(identifier).or(ref0(stringLiteral)).trim() &
                 ref0(
                   namedArgument,
                 ).star().starSeparated(char(',') | whitespace()).trim() &
-                tagEnd()) &
+                end) &
             ref0(element).star())
         .map((values) {
           final arguments = [values[2] as ASTNode];

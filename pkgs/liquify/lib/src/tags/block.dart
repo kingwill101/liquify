@@ -23,15 +23,12 @@ class BlockTag extends AbstractTag with CustomTagParser {
   }
 
   @override
-  Parser parser() {
-    return ((tagStart() &
-                string('block').trim() &
-                ref0(identifier).trim() &
-                tagEnd()) &
-            ref0(
-              element,
-            ).starLazy(tagStart() & string('endblock').trim() & tagEnd()) &
-            (tagStart() & string('endblock').trim() & tagEnd()))
+  Parser parser([LiquidConfig? config]) {
+    final start = createTagStart(config);
+    final end = createTagEnd(config);
+    return ((start & string('block').trim() & ref0(identifier).trim() & end) &
+            ref0(element).starLazy(start & string('endblock').trim() & end) &
+            (start & string('endblock').trim() & end))
         .map((values) {
           final tag = Tag('block', [
             values[2] as ASTNode,

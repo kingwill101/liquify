@@ -77,16 +77,18 @@ class ReverseTag extends AbstractTag with CustomTagParser {
   }
 
   @override
-  Parser parser() {
-    return (tagStart() &
+  Parser parser([LiquidConfig? config]) {
+    final start = createTagStart(config);
+    final end = createTagEnd(config);
+    return (start &
             string('reverse').trim() &
-            tagEnd() &
+            end &
             any()
-                .starLazy(tagStart() & string('endreverse').trim() & tagEnd())
+                .starLazy(start & string('endreverse').trim() & end)
                 .flatten() &
-            tagStart() &
+            start &
             string('endreverse').trim() &
-            tagEnd())
+            end)
         .map((values) {
           return Tag("reverse", [TextNode(values[3])]);
         });

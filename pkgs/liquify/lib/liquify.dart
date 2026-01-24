@@ -187,6 +187,44 @@
 /// - Full Liquid syntax support including control flow and iteration
 /// - Drop interface for custom object behavior
 /// - Environment cloning for inheritance patterns
+/// - **Custom delimiters** for non-standard Liquid syntax
+///
+/// ## Custom Delimiters
+///
+/// Use the [Liquid] class for custom delimiter support:
+///
+/// ```dart
+/// // Standard delimiters (default)
+/// final liquid = Liquid();
+/// final template = liquid.parse('Hello {{ name }}!');
+/// final result = template.render({'name': 'World'});
+/// print(result); // Hello World!
+///
+/// // Custom delimiters
+/// final custom = Liquid(
+///   config: LiquidConfig(
+///     tagStart: '[%',
+///     tagEnd: '%]',
+///     varStart: '[[',
+///     varEnd: ']]',
+///   ),
+/// );
+/// final tpl = custom.parse('[% if show %]Hello [[ name ]]![% endif %]');
+/// print(tpl.render({'show': true, 'name': 'Alice'})); // Hello Alice!
+///
+/// // Convenience constructor
+/// final erb = Liquid.withDelimiters(
+///   tagStart: '<%',
+///   tagEnd: '%>',
+///   varStart: '<%=',
+///   varEnd: '%>',
+/// );
+///
+/// // ERB preset
+/// final erbLiquid = Liquid(config: LiquidConfig.erb);
+/// ```
+///
+/// See [Liquid], [LiquidConfig], and [LiquidTemplate] for full documentation.
 ///
 /// For detailed API documentation, see the individual class and function
 /// documentation.
@@ -202,3 +240,5 @@ export 'package:liquify/src/tag_registry.dart';
 export 'package:liquify/src/filter_registry.dart';
 export 'package:liquify/src/filters/module.dart';
 export 'package:liquify/src/render_target.dart';
+export 'package:liquify/src/config.dart';
+export 'package:liquify/src/liquid.dart';

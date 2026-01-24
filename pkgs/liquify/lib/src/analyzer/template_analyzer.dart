@@ -31,12 +31,38 @@ class TemplateAnalyzer {
   /// Logger instance for debugging and tracing template analysis.
   final Logger logger = Logger('TemplateAnalyzer');
 
+  /// Cache of already-analyzed template structures.
+  /// Key is the template path, value is the analyzed structure.
+  final Map<String, TemplateStructure> _structureCache = {};
+
+  /// Cache of parsed AST nodes for templates.
+  /// Key is the template path, value is the parsed nodes.
+  final Map<String, List<ASTNode>> _parseCache = {};
+
   /// Creates a new template analyzer with an optional root directory context.
   ///
   /// The [root] parameter provides the context for resolving template paths and
   /// reading template content. If not provided, the analyzer can only work with
   /// explicitly provided template content through [initialNodes].
   TemplateAnalyzer([this.root]);
+
+  /// Clears all cached analysis results.
+  ///
+  /// Call this when template files have been modified and need re-analysis.
+  void clearCache() {
+    _structureCache.clear();
+    _parseCache.clear();
+  }
+
+  /// Clears cached analysis for a specific template.
+  ///
+  /// Also clears cache for any templates that depend on it (children).
+  void invalidateTemplate(String templatePath) {
+    _structureCache.remove(templatePath);
+    _parseCache.remove(templatePath);
+    // Note: We don't track dependencies, so we can't invalidate children
+    // For full invalidation, use clearCache()
+  }
 
   /// Analyzes a template and yields analysis results as they become available.
   ///
@@ -130,22 +156,40 @@ class TemplateAnalyzer {
         if (node.content.isNotEmpty && node.content.first is Literal) {
           final parentPath = (node.content.first as Literal).value.toString();
           logger.info('[Analyzer] Found parent template: $parentPath');
-          final parentSource = root!.resolve(parentPath);
-          final parentNodes = parseInput(parentSource.content);
 
-          // Process parent structure completely before continuing
-          var lastParentStructure = parentStructure;
-          for (final structure in _analyzeStructure(
-            parentPath,
-            parentNodes,
-            analysis,
-          )) {
-            lastParentStructure = structure;
-            if (lastParentStructure != null) {
-              analysis.structures[parentPath] = lastParentStructure;
+          // Check cache first for parent structure
+          if (_structureCache.containsKey(parentPath)) {
+            parentStructure = _structureCache[parentPath];
+            analysis.structures[parentPath] = parentStructure!;
+            logger.info(
+              '[Analyzer] Using cached parent structure: $parentPath',
+            );
+          } else {
+            // Parse parent (with caching)
+            List<ASTNode> parentNodes;
+            if (_parseCache.containsKey(parentPath)) {
+              parentNodes = _parseCache[parentPath]!;
+            } else {
+              final parentSource = root!.resolve(parentPath);
+              parentNodes = parseInput(parentSource.content);
+              _parseCache[parentPath] = parentNodes;
             }
+
+            // Process parent structure completely before continuing
+            var lastParentStructure = parentStructure;
+            for (final structure in _analyzeStructure(
+              parentPath,
+              parentNodes,
+              analysis,
+            )) {
+              lastParentStructure = structure;
+              if (lastParentStructure != null) {
+                analysis.structures[parentPath] = lastParentStructure;
+                _structureCache[parentPath] = lastParentStructure;
+              }
+            }
+            parentStructure = lastParentStructure;
           }
-          parentStructure = lastParentStructure;
 
           // Ensure parent blocks are fully processed
           if (parentStructure != null) {
@@ -272,11 +316,9 @@ class TemplateAnalyzer {
               name: finalName,
               source: templatePath,
               content: node.body,
-              isOverride:
-                  isOverride ||
-                  hasOverriddenSubBlocks ||
-                  parentBlock != null ||
-                  parentStructure != null,
+              // A block is an override only if it actually exists in the parent chain
+              // Not just because there IS a parent template
+              isOverride: isOverride || hasOverriddenSubBlocks,
               parent: inheritedParent ?? parentBlock,
               nestedBlocks: {},
               hasSuperCall: foundSuper,

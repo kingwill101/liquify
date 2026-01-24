@@ -13,16 +13,16 @@ class DocTag extends AbstractTag with CustomTagParser, AsyncTag {
   ) async {}
 
   @override
-  Parser parser() {
-    return (tagStart() &
+  Parser parser([LiquidConfig? config]) {
+    final start = createTagStart(config);
+    final end = createTagEnd(config);
+    return (start &
             string('doc').trim() &
-            tagEnd() &
-            any()
-                .starLazy((tagStart() & string('enddoc').trim() & tagEnd()))
-                .flatten() &
-            tagStart() &
+            end &
+            any().starLazy((start & string('enddoc').trim() & end)).flatten() &
+            start &
             string('enddoc').trim() &
-            tagEnd())
+            end)
         .map((values) {
           return Tag("doc", [TextNode(values[3])]);
         });
