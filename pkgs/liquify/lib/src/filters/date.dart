@@ -2,6 +2,7 @@ import 'package:liquify/src/filters/module.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/intl.dart';
+import 'package:d4_time_format/d4_time_format.dart';
 
 typedef FilterFunction =
     dynamic Function(
@@ -20,11 +21,11 @@ void ensureTimezonesInitialized() {
 }
 
 /// Formats a date according to the specified format string.
+///
 /// Parameters:
 /// - value: The date to format (can be a DateTime, String, or number)
 /// - arguments[0]: (Optional) Format string (default: 'yyyy-MM-dd')
-/// Example usage:
-/// {{ "2023-05-15" | date: "MMMM d, yyyy" }} => May 15, 2023
+/// - arguments[1]: (Optional) Timezone offset in minutes or IANA timezone name
 FilterFunction date =
     (
       dynamic value,
@@ -32,20 +33,87 @@ FilterFunction date =
       Map<String, dynamic> namedArguments,
     ) {
       ensureTimezonesInitialized();
-      tz.TZDateTime? date = parseDate(value);
-      if (date == null) return value;
+      if (value == null) return '';
 
       String format = arguments.isNotEmpty
           ? arguments[0].toString()
           : 'yyyy-MM-dd';
-      return DateFormat(format).format(date.toLocal());
+
+      tz.Location? tzArg;
+      if (arguments.length > 1 && arguments[1] != null) {
+        tzArg = _resolveTimezone(arguments[1]);
+      }
+
+      tz.TZDateTime? date = parseDate(value, location: tzArg);
+      if (date == null) return value;
+
+      // If format contains %, treat as strftime; otherwise pass directly to DateFormat
+      if (format.contains('%')) {
+        return _applyStrftime(date, format);
+      }
+      return DateFormat(format).format(date);
     };
 
-/// Formats a date in XML Schema format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// Example usage:
-/// {{ "2023-05-15" | date_to_xmlschema }} => 2023-05-15T00:00:00.000-04:00
+tz.Location? _resolveTimezone(dynamic arg) {
+  if (arg is int || arg is double) {
+    final offset = Duration(minutes: -(arg as num).toInt());
+    return tz.Location(
+      '',
+      [],
+      [],
+      [tz.TimeZone(offset, isDst: false, abbreviation: '')],
+    );
+  } else if (arg is String) {
+    try {
+      return tz.getLocation(arg);
+    } catch (_) {
+      try {
+        final sign = arg[0];
+        final hours = int.parse(arg.substring(1, 3));
+        final minutes = int.parse(arg.substring(3, 5));
+        final offset = Duration(hours: hours, minutes: minutes);
+        final total = sign == '-' ? -offset : offset;
+        return tz.Location(
+          '',
+          [],
+          [],
+          [tz.TimeZone(total, isDst: false, abbreviation: '')],
+        );
+      } catch (e) {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+/// Applies a strftime-style format string to a TZDateTime using d4_time_format.
+String _applyStrftime(tz.TZDateTime date, String format) {
+  String processed = format
+      .replaceAll('%P', '\x00P\x00')
+      .replaceAll('%:z', '\x00:z\x00')
+      .replaceAll('%Z', '\x00Z\x00')
+      .replaceAll('%q', '\x00q\x00')
+      .replaceAll('%z', '%Z');
+
+  String result = timeFormat(processed)(date);
+
+  return result
+      .replaceAll('\x00P\x00', date.hour < 12 ? 'am' : 'pm')
+      .replaceAll('\x00:z\x00', _formatOffset(date.timeZoneOffset, withColon: true))
+      .replaceAll('\x00Z\x00', date.timeZoneName)
+      .replaceAll('\x00q\x00', _getOrdinalDay(date.day));
+}
+
+String _formatOffset(Duration offset, {required bool withColon}) {
+  final totalMinutes = offset.inMinutes.abs();
+  final hours = (totalMinutes ~/ 60).toString().padLeft(2, '0');
+  final minutes = (totalMinutes % 60).toString().padLeft(2, '0');
+  final sign = offset.isNegative || offset.inMinutes < 0 ? '-' : '+';
+  final sep = withColon ? ':' : '';
+  return '$sign$hours$sep$minutes';
+}
+
 FilterFunction dateToXmlschema =
     (
       dynamic value,
@@ -55,19 +123,9 @@ FilterFunction dateToXmlschema =
       ensureTimezonesInitialized();
       tz.TZDateTime? date = parseDate(value);
       if (date == null) return value;
-      String offset = date.timeZoneOffset.inHours.abs().toString().padLeft(
-        2,
-        '0',
-      );
-      String sign = date.timeZoneOffset.isNegative ? '-' : '+';
-      return '${date.toIso8601String().split('.')[0]}.000$sign$offset:00';
+      return '${date.toIso8601String().split('.')[0]}.000${_formatOffset(date.timeZoneOffset, withColon: true)}';
     };
 
-/// Formats a date in RFC 822 format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// Example usage:
-/// {{ "2023-05-15" | date_to_rfc822 }} => Mon, 15 May 2023 00:00:00 -0400
 FilterFunction dateToRfc822 =
     (
       dynamic value,
@@ -77,23 +135,10 @@ FilterFunction dateToRfc822 =
       ensureTimezonesInitialized();
       tz.TZDateTime? date = parseDate(value);
       if (date == null) return value;
-      String offset = date.timeZoneOffset.inHours.abs().toString().padLeft(
-        2,
-        '0',
-      );
-      String sign = date.timeZoneOffset.isNegative ? '-' : '+';
-      return '${DateFormat('EEE, dd MMM yyyy HH:mm:ss').format(date)} $sign${offset}00';
+      final offset = _formatOffset(date.timeZoneOffset, withColon: false);
+      return '${DateFormat('EEE, dd MMM yyyy HH:mm:ss').format(date)} $offset';
     };
 
-/// Formats a date to a short string format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// - arguments[0]: (Optional) 'ordinal' for ordinal date
-/// - arguments[1]: (Optional) 'US' for US-style formatting
-/// Example usage:
-/// {{ "2023-05-15" | date_to_string }} => 15 May 2023
-/// {{ "2023-05-15" | date_to_string: "ordinal" }} => 15th May 2023
-/// {{ "2023-05-15" | date_to_string: "ordinal", "US" }} => May 15th, 2023
 FilterFunction dateToString =
     (
       dynamic value,
@@ -104,15 +149,6 @@ FilterFunction dateToString =
       return stringifyDate(value, 'MMM', arguments);
     };
 
-/// Formats a date to a long string format.
-/// Parameters:
-/// - value: The date to format (can be a DateTime, String, or number)
-/// - arguments[0]: (Optional) 'ordinal' for ordinal date
-/// - arguments[1]: (Optional) 'US' for US-style formatting
-/// Example usage:
-/// {{ "2023-05-15" | date_to_long_string }} => 15 May 2023
-/// {{ "2023-05-15" | date_to_long_string: "ordinal" }} => 15th May 2023
-/// {{ "2023-05-15" | date_to_long_string: "ordinal", "US" }} => May 15th, 2023
 FilterFunction dateToLongString =
     (
       dynamic value,
@@ -148,39 +184,49 @@ String stringifyDate(
   return DateFormat('dd $monthFormat yyyy').format(date);
 }
 
-tz.TZDateTime? parseDate(dynamic value) {
-  tz.Location location = tz.local;
+tz.TZDateTime? parseDate(dynamic value, {tz.Location? location}) {
+  tz.Location loc = location ?? tz.local;
+
   if (value == 'now' || value == 'today') {
-    return tz.TZDateTime.now(location);
+    return tz.TZDateTime.now(loc);
   } else if (value is num) {
     return tz.TZDateTime.fromMillisecondsSinceEpoch(
-      location,
+      loc,
       value.toInt() * 1000,
     );
   } else if (value is String) {
+    if (value.isEmpty) return null;
     if (RegExp(r'^\d+$').hasMatch(value)) {
       return tz.TZDateTime.fromMillisecondsSinceEpoch(
-        location,
+        loc,
         int.parse(value) * 1000,
       );
     } else {
-      DateTime? dateTime = DateTime.parse(value);
-      return tz.TZDateTime(
-        location,
-        dateTime.year,
-        dateTime.month,
-        dateTime.day,
-        dateTime.hour,
-        dateTime.minute,
-        dateTime.second,
-        dateTime.millisecond,
-      );
+      try {
+        DateTime dateTime = DateTime.parse(value);
+        if (dateTime.isUtc) {
+          return tz.TZDateTime.fromMillisecondsSinceEpoch(
+            loc,
+            dateTime.millisecondsSinceEpoch,
+          );
+        }
+        return tz.TZDateTime(
+          loc,
+          dateTime.year,
+          dateTime.month,
+          dateTime.day,
+          dateTime.hour,
+          dateTime.minute,
+          dateTime.second,
+          dateTime.millisecond,
+        );
+      } catch (_) {
+        return null;
+      }
     }
   } else if (value is DateTime) {
-    // Use the DateTime's components directly to preserve the intended date/time
-    // regardless of the DateTime's timezone interpretation
     return tz.TZDateTime(
-      location,
+      loc,
       value.year,
       value.month,
       value.day,
