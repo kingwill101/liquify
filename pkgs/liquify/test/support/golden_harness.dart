@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'io.dart' if (dart.library.js_interop) 'io_stub.dart';
 import 'package:meta/meta.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:test/test.dart' as t;
 
 export 'package:test/test.dart' hide expect, group, test;
+
+const bool _kIsBrowser = bool.fromEnvironment('dart.library.js_util');
 
 final _goldenRecorder = _GoldenRecorder();
 
@@ -19,6 +21,7 @@ File goldenFile(String name) => File('${goldenDir.path}/$name.golden');
 bool get updatingGoldens => _goldenRecorder.updating;
 
 String readOrUpdateGolden(String name, String actual) {
+  if (_kIsBrowser) return _normalizeLineEndings(actual);
   final file = goldenFile(name);
   final normalizedActual = _normalizeLineEndings(actual);
   if (updatingGoldens) {
@@ -178,6 +181,7 @@ class _GoldenRecorder {
   }
 
   void record(Object? actual, Object? matcher, StackTrace trace) {
+    if (_kIsBrowser) return;
     // Skip golden comparison if SKIP_GOLDENS=1
     if (_skip) {
       return;

@@ -1,10 +1,12 @@
-import 'dart:io';
+import '../support/io.dart' if (dart.library.js_interop) '../support/io_stub.dart';
 import 'package:test/test.dart';
 import 'package:liquify/src/fs.dart';
-import 'package:file/local.dart';
+import 'package:file/local.dart' if (dart.library.js_interop) '../support/file_local_stub.dart';
+
+const bool _kIsBrowser = bool.fromEnvironment('dart.library.js_util');
 
 void main() {
-  group('FileSystemRoot', () {
+  group('FileSystemRoot', skip: _kIsBrowser ? 'Not available on browser' : null, () {
     late Directory tempDir;
     late FileSystemRoot root;
 
