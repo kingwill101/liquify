@@ -95,5 +95,5 @@ class FileSystemRoot extends FSystemRoot {
     super.extensions,
     super.throwOnMissing = false,
     super.base,
-  }) : super(fileSystem: LocalFileSystem());
+  }) : super(fileSystem: fileSystem ?? LocalFileSystem());
 }
