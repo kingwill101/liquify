@@ -109,6 +109,62 @@ main {
   grid-row: 1 / 3;
 }
 
+/* Mirrored code editor used for syntax highlighting. */
+.code-editor {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.code-mirror,
+.code-input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  tab-size: 2;
+}
+
+.code-mirror {
+  overflow: auto;
+  pointer-events: none;
+  background: var(--bg);
+}
+
+.code-mirror code.hljs {
+  display: block;
+  min-height: 100%;
+  background: transparent;
+  padding: 0;
+}
+
+.code-input {
+  overflow: auto;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--text);
+  z-index: 1;
+  white-space: pre;
+}
+
+.code-input::selection {
+  background: rgba(124, 58, 237, 0.35);
+}
+
+.code-input::-moz-selection {
+  background: rgba(124, 58, 237, 0.35);
+}
+
+.code-input::placeholder {
+  color: transparent;
+}
+
 textarea {
   flex: 1;
   padding: 0.75rem;

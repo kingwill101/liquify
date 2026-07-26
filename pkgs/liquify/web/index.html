@@ -7,6 +7,10 @@
   <meta name="scaffolded-by" content="https://github.com/dart-lang/sdk">
   <title>liquify</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/xml.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/json.min.js"></script>
   <script defer src="main.dart.js"></script>
 </head>
 <body>
@@ -25,7 +29,9 @@
         <h2>Template</h2>
         <span class="hint">Liquid markup</span>
       </div>
-      <textarea id="templateInput" spellcheck="false">{% assign title = "Hello, World!" %}
+      <div class="code-editor">
+        <pre class="code-mirror" aria-hidden="true"><code id="templateMirror" class="hljs language-xml"></code></pre>
+        <textarea id="templateInput" class="code-input" spellcheck="false">{% assign title = "Hello, World!" %}
 <h1>{{ title }}</h1>
 <p>Today is {{ "now" | date: "%B %d, %Y" }}</p>
 
@@ -38,6 +44,7 @@
     <span>{{ item.price | prepend: "$" }}</span>
   </div>
 {% endfor %}</textarea>
+      </div>
     </section>
 
     <section class="panel data-panel">
@@ -45,13 +52,16 @@
         <h2>Context (JSON)</h2>
         <span class="hint">Variables available to template</span>
       </div>
-      <textarea id="dataInput" spellcheck="false">{
+      <div class="code-editor">
+        <pre class="code-mirror" aria-hidden="true"><code id="dataMirror" class="hljs language-json"></code></pre>
+        <textarea id="dataInput" class="code-input" spellcheck="false">{
   "items": [
     { "name": "Widget", "price": 9.99 },
     { "name": "Gadget", "price": 24.99 },
     { "name": "Doohickey", "price": 4.99 }
   ]
 }</textarea>
+      </div>
     </section>
 
     <section class="panel output-panel">
@@ -63,5 +73,36 @@
     </section>
 
   </main>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const editors = [
+        {
+          input: document.getElementById('templateInput'),
+          mirror: document.getElementById('templateMirror'),
+        },
+        {
+          input: document.getElementById('dataInput'),
+          mirror: document.getElementById('dataMirror'),
+        },
+      ];
+
+      const syncEditor = ({input, mirror}) => {
+        mirror.textContent = input.value;
+        hljs.highlightElement(mirror);
+        mirror.parentElement.scrollTop = input.scrollTop;
+        mirror.parentElement.scrollLeft = input.scrollLeft;
+      };
+
+      for (const editor of editors) {
+        editor.input.addEventListener('input', () => syncEditor(editor));
+        editor.input.addEventListener('scroll', () => {
+          editor.mirror.parentElement.scrollTop = editor.input.scrollTop;
+          editor.mirror.parentElement.scrollLeft = editor.input.scrollLeft;
+        });
+        syncEditor(editor);
+      }
+    });
+  </script>
 </body>
 </html>
