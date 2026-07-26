@@ -1,0 +1,57 @@
+name: Web Build
+
+on:
+  push:
+    paths:
+      - 'pkgs/liquify/**'
+      - '.github/workflows/web_build.yml'
+  pull_request:
+    paths:
+      - 'pkgs/liquify/**'
+      - '.github/workflows/web_build.yml'
+  workflow_dispatch:
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pkgs/liquify
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Activate webdev
+        run: dart pub global activate webdev
+
+      - name: Build (webdev)
+        run: dart pub global run webdev build -o web:../liquify_pages
+
+      - name: Upload Pages artifact
+        if: success()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pkgs/liquify_pages
+
+  deploy-pages:
+    needs: build-web
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
