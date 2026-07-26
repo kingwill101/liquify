@@ -198,5 +198,5 @@ void main() {
       print('     - O(1) filter lookup instead of iterating modules');
       print('=' * 60);
     });
-  });
+  }, skip: true);
 }

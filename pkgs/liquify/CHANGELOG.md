@@ -1,3 +1,11 @@
+## 1.6.0
+
+### Browser Support
+- **Make the package usable from browser builds** - Split the filesystem exports so `webdev`/browser entrypoints no longer pull in `dart:io`, allowing the package to be used more freely in the browser and in the playground.
+
+### Bug Fixes
+- **Switch date filter strftime formatting to d4_time_format** - Replaced custom `_applyStrftime()` converter with `d4_time_format` package for standard strftime specifiers. Custom `%P`, `%:z`, `%Z` (timezone name), and `%q` (ordinal suffix) specifiers are preserved via a small shim.
+
 ## 1.5.1
 
 ### Bug Fixes
