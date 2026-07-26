@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="scaffolded-by" content="https://github.com/dart-lang/sdk">
+  <title>liquify</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="main.dart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Liquify Playground</h1>
+    <label class="auto-render">
+      <input type="checkbox" id="autoRender" checked>
+      Auto-render
+    </label>
+    <button id="renderBtn">Render</button>
+  </header>
+
+  <main>
+    <section class="panel template-panel">
+      <div class="panel-header">
+        <h2>Template</h2>
+        <span class="hint">Liquid markup</span>
+      </div>
+      <textarea id="templateInput" spellcheck="false">{% assign title = "Hello, World!" %}
+<h1>{{ title }}</h1>
+<p>Today is {{ "now" | date: "%B %d, %Y" }}</p>
+
+{% capture greeting %}Hello {{ "World" | upcase }}{% endcapture %}
+<p>{{ greeting }}</p>
+
+{% for item in items %}
+  <div class="item">
+    <span>{{ item.name }}</span>
+    <span>{{ item.price | prepend: "$" }}</span>
+  </div>
+{% endfor %}</textarea>
+    </section>
+
+    <section class="panel data-panel">
+      <div class="panel-header">
+        <h2>Context (JSON)</h2>
+        <span class="hint">Variables available to template</span>
+      </div>
+      <textarea id="dataInput" spellcheck="false">{
+  "items": [
+    { "name": "Widget", "price": 9.99 },
+    { "name": "Gadget", "price": 24.99 },
+    { "name": "Doohickey", "price": 4.99 }
+  ]
+}</textarea>
+    </section>
+
+    <section class="panel output-panel">
+      <div class="panel-header">
+        <h2>Output</h2>
+        <span class="hint" id="renderTime"></span>
+      </div>
+      <div id="output" class="output-content"></div>
+    </section>
+
+  </main>
+</body>
+</html>
