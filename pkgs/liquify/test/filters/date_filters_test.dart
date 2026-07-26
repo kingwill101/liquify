@@ -289,11 +289,10 @@ void main() {
 
       test('ISO string with an explicit offset preserves its instant', () {
         expect(
-          date(
-            '2023-05-15T03:04:05+05:30',
-            ['%Y-%m-%dT%H:%M:%S', 'America/New_York'],
-            {},
-          ),
+          date('2023-05-15T03:04:05+05:30', [
+            '%Y-%m-%dT%H:%M:%S',
+            'America/New_York',
+          ], {}),
           equals('2023-05-14T17:34:05'),
         );
       });

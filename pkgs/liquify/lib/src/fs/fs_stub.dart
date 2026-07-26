@@ -17,8 +17,7 @@ class FSystemRoot implements Root {
   }) : _fileSystem = fileSystem,
        _extensions = extensions ?? ['.liquid', '.html'],
        _baseDir =
-           base ??
-           fileSystem.directory(fileSystem.path.normalize(basePath));
+           base ?? fileSystem.directory(fileSystem.path.normalize(basePath));
 
   @override
   Source resolve(String relPath) {
