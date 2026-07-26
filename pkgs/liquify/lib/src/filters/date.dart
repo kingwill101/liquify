@@ -2,7 +2,6 @@ import 'package:liquify/src/filters/module.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/intl.dart';
-import 'package:d4_time_format/d4_time_format.dart';
 
 typedef FilterFunction =
     dynamic Function(
@@ -47,7 +46,7 @@ FilterFunction date =
       tz.TZDateTime? date = parseDate(value, location: tzArg);
       if (date == null) return value;
 
-      // If format contains %, treat as strftime; otherwise pass directly to DateFormat
+      // If format contains %, treat it as strftime; otherwise pass directly to DateFormat.
       if (format.contains('%')) {
         return _applyStrftime(date, format);
       }
@@ -57,12 +56,9 @@ FilterFunction date =
 tz.Location? _resolveTimezone(dynamic arg) {
   if (arg is int || arg is double) {
     final offset = Duration(minutes: -(arg as num).toInt());
-    return tz.Location(
-      '',
-      [],
-      [],
-      [tz.TimeZone(offset, isDst: false, abbreviation: '')],
-    );
+    return tz.Location('', [], [], [
+      tz.TimeZone(offset, isDst: false, abbreviation: ''),
+    ]);
   } else if (arg is String) {
     try {
       return tz.getLocation(arg);
@@ -73,12 +69,9 @@ tz.Location? _resolveTimezone(dynamic arg) {
         final minutes = int.parse(arg.substring(3, 5));
         final offset = Duration(hours: hours, minutes: minutes);
         final total = sign == '-' ? -offset : offset;
-        return tz.Location(
-          '',
-          [],
-          [],
-          [tz.TimeZone(total, isDst: false, abbreviation: '')],
-        );
+        return tz.Location('', [], [], [
+          tz.TimeZone(total, isDst: false, abbreviation: ''),
+        ]);
       } catch (e) {
         return null;
       }
@@ -87,22 +80,112 @@ tz.Location? _resolveTimezone(dynamic arg) {
   return null;
 }
 
-/// Applies a strftime-style format string to a TZDateTime using d4_time_format.
+/// Applies a strftime-style format string to a TZDateTime.
 String _applyStrftime(tz.TZDateTime date, String format) {
-  String processed = format
-      .replaceAll('%P', '\x00P\x00')
-      .replaceAll('%:z', '\x00:z\x00')
-      .replaceAll('%Z', '\x00Z\x00')
-      .replaceAll('%q', '\x00q\x00')
-      .replaceAll('%z', '%Z');
+  final buffer = StringBuffer();
 
-  String result = timeFormat(processed)(date);
+  for (var i = 0; i < format.length; i++) {
+    final char = format[i];
+    if (char != '%') {
+      buffer.write(char);
+      continue;
+    }
 
-  return result
-      .replaceAll('\x00P\x00', date.hour < 12 ? 'am' : 'pm')
-      .replaceAll('\x00:z\x00', _formatOffset(date.timeZoneOffset, withColon: true))
-      .replaceAll('\x00Z\x00', date.timeZoneName)
-      .replaceAll('\x00q\x00', _getOrdinalDay(date.day));
+    if (i + 1 >= format.length) {
+      buffer.write('%');
+      break;
+    }
+
+    final next = format[++i];
+    if (next == '%') {
+      buffer.write('%');
+      continue;
+    }
+
+    if (next == '-') {
+      if (i + 1 >= format.length) {
+        buffer.write('%-');
+        break;
+      }
+      final specifier = format[++i];
+      buffer.write(_formatStrftime(date, specifier, pad: false));
+      continue;
+    }
+
+    if (next == ':') {
+      if (i + 1 >= format.length) {
+        buffer.write('%:');
+        break;
+      }
+      final specifier = format[++i];
+      if (specifier == 'z') {
+        buffer.write(_formatOffset(date.timeZoneOffset, withColon: true));
+      } else {
+        buffer.write('%:$specifier');
+      }
+      continue;
+    }
+
+    buffer.write(_formatStrftime(date, next));
+  }
+
+  return buffer.toString();
+}
+
+String _formatStrftime(
+  tz.TZDateTime date,
+  String specifier, {
+  bool pad = true,
+}) {
+  switch (specifier) {
+    case 'a':
+      return DateFormat('EEE').format(date);
+    case 'A':
+      return DateFormat('EEEE').format(date);
+    case 'b':
+      return DateFormat('MMM').format(date);
+    case 'B':
+      return DateFormat('MMMM').format(date);
+    case 'Y':
+      return DateFormat('yyyy').format(date);
+    case 'y':
+      return DateFormat('yy').format(date);
+    case 'm':
+      return pad
+          ? date.month.toString().padLeft(2, '0')
+          : date.month.toString();
+    case 'd':
+      return pad ? date.day.toString().padLeft(2, '0') : date.day.toString();
+    case 'e':
+      return date.day.toString().padLeft(2, ' ');
+    case 'H':
+      return pad ? date.hour.toString().padLeft(2, '0') : date.hour.toString();
+    case 'I':
+      final hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
+      return pad ? hour.toString().padLeft(2, '0') : hour.toString();
+    case 'M':
+      return pad
+          ? date.minute.toString().padLeft(2, '0')
+          : date.minute.toString();
+    case 'S':
+      return pad
+          ? date.second.toString().padLeft(2, '0')
+          : date.second.toString();
+    case 'p':
+      return date.hour < 12 ? 'AM' : 'PM';
+    case 'P':
+      return date.hour < 12 ? 'am' : 'pm';
+    case 's':
+      return (date.millisecondsSinceEpoch ~/ 1000).toString();
+    case 'z':
+      return _formatOffset(date.timeZoneOffset, withColon: false);
+    case 'Z':
+      return date.timeZoneName;
+    case 'q':
+      return _getOrdinalDay(date.day);
+    default:
+      return '%$specifier';
+  }
 }
 
 String _formatOffset(Duration offset, {required bool withColon}) {
@@ -190,10 +273,7 @@ tz.TZDateTime? parseDate(dynamic value, {tz.Location? location}) {
   if (value == 'now' || value == 'today') {
     return tz.TZDateTime.now(loc);
   } else if (value is num) {
-    return tz.TZDateTime.fromMillisecondsSinceEpoch(
-      loc,
-      value.toInt() * 1000,
-    );
+    return tz.TZDateTime.fromMillisecondsSinceEpoch(loc, value.toInt() * 1000);
   } else if (value is String) {
     if (value.isEmpty) return null;
     if (RegExp(r'^\d+$').hasMatch(value)) {
@@ -224,7 +304,12 @@ tz.TZDateTime? parseDate(dynamic value, {tz.Location? location}) {
         return null;
       }
     }
+  } else if (value is tz.TZDateTime) {
+    return location == null ? value : tz.TZDateTime.from(value, loc);
   } else if (value is DateTime) {
+    if (value.isUtc) {
+      return tz.TZDateTime.from(value, loc);
+    }
     return tz.TZDateTime(
       loc,
       value.year,
@@ -234,9 +319,8 @@ tz.TZDateTime? parseDate(dynamic value, {tz.Location? location}) {
       value.minute,
       value.second,
       value.millisecond,
+      value.microsecond,
     );
-  } else if (value is tz.TZDateTime) {
-    return value;
   }
   return null;
 }

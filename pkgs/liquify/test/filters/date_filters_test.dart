@@ -27,20 +27,14 @@ void main() {
         final utcTs =
             DateTime.parse('2017-03-07T12:00:00Z').millisecondsSinceEpoch ~/
             1000;
-        expect(
-          date(utcTs, ['%Y-%m-%d'], {}),
-          equals('2017-03-07'),
-        );
+        expect(date(utcTs, ['%Y-%m-%d'], {}), equals('2017-03-07'));
       });
 
       test('unix timestamp string', () {
         final utcTs =
             DateTime.parse('2017-03-07T12:00:00Z').millisecondsSinceEpoch ~/
             1000;
-        expect(
-          date(utcTs.toString(), ['%Y-%m-%d'], {}),
-          equals('2017-03-07'),
-        );
+        expect(date(utcTs.toString(), ['%Y-%m-%d'], {}), equals('2017-03-07'));
       });
 
       test('null returns empty string', () {
@@ -56,32 +50,20 @@ void main() {
       test('%a - abbreviated weekday', () {
         // 2024-07-21 is a Sunday; in America/New_York (EDT, UTC-4)
         // July 21 20:24 UTC = July 21 16:24 EDT, still Sunday
-        expect(
-          date('2024-07-21T20:24:00.000Z', ['%a'], {}),
-          equals('Sun'),
-        );
+        expect(date('2024-07-21T20:24:00.000Z', ['%a'], {}), equals('Sun'));
       });
 
       test('%A - full weekday', () {
-        expect(
-          date('2024-07-21T20:24:00.000Z', ['%A'], {}),
-          equals('Sunday'),
-        );
+        expect(date('2024-07-21T20:24:00.000Z', ['%A'], {}), equals('Sunday'));
       });
 
       test('%b - abbreviated month', () {
         // 2024-07-31 20:24 UTC in America/New_York (EDT) = July 31
-        expect(
-          date('2024-07-31T20:24:00.000Z', ['%b'], {}),
-          equals('Jul'),
-        );
+        expect(date('2024-07-31T20:24:00.000Z', ['%b'], {}), equals('Jul'));
       });
 
       test('%B - full month', () {
-        expect(
-          date('2024-07-31T20:24:00.000Z', ['%B'], {}),
-          equals('July'),
-        );
+        expect(date('2024-07-31T20:24:00.000Z', ['%B'], {}), equals('July'));
       });
 
       test('%Y - 4-digit year', () {
@@ -148,36 +130,18 @@ void main() {
 
       test('%p - uppercase am/pm', () {
         // Using DateTime directly to avoid timezone ambiguity
-        expect(
-          date(DateTime(2023, 5, 15, 3, 4, 5), ['%p'], {}),
-          equals('AM'),
-        );
-        expect(
-          date(DateTime(2023, 5, 15, 15, 4, 5), ['%p'], {}),
-          equals('PM'),
-        );
+        expect(date(DateTime(2023, 5, 15, 3, 4, 5), ['%p'], {}), equals('AM'));
+        expect(date(DateTime(2023, 5, 15, 15, 4, 5), ['%p'], {}), equals('PM'));
       });
 
       test('%P - lowercase am/pm', () {
-        expect(
-          date(DateTime(2023, 5, 15, 3, 4, 5), ['%P'], {}),
-          equals('am'),
-        );
-        expect(
-          date(DateTime(2023, 5, 15, 15, 4, 5), ['%P'], {}),
-          equals('pm'),
-        );
+        expect(date(DateTime(2023, 5, 15, 3, 4, 5), ['%P'], {}), equals('am'));
+        expect(date(DateTime(2023, 5, 15, 15, 4, 5), ['%P'], {}), equals('pm'));
       });
 
       test('%e - space-padded day', () {
-        expect(
-          date('2023-05-05', ['%e'], {}),
-          equals(' 5'),
-        );
-        expect(
-          date('2023-05-15', ['%e'], {}),
-          equals('15'),
-        );
+        expect(date('2023-05-05', ['%e'], {}), equals(' 5'));
+        expect(date('2023-05-15', ['%e'], {}), equals('15'));
       });
 
       test('%% - literal percent', () {
@@ -213,10 +177,7 @@ void main() {
       });
 
       test('%B %-d, %Y', () {
-        expect(
-          date('2023-05-15', ['%B %-d, %Y'], {}),
-          equals('May 15, 2023'),
-        );
+        expect(date('2023-05-15', ['%B %-d, %Y'], {}), equals('May 15, 2023'));
       });
     });
 
@@ -232,11 +193,10 @@ void main() {
       test('timezone as IANA name argument', () {
         // 1990-12-31T23:00:00Z in Asia/Colombo (+05:30) => 1991-01-01T04:30:00
         expect(
-          date(
-            '1990-12-31T23:00:00Z',
-            ['%Y-%m-%dT%H:%M:%S', 'Asia/Colombo'],
-            {},
-          ),
+          date('1990-12-31T23:00:00Z', [
+            '%Y-%m-%dT%H:%M:%S',
+            'Asia/Colombo',
+          ], {}),
           equals('1991-01-01T04:30:00'),
         );
       });
@@ -244,11 +204,10 @@ void main() {
       test('timezone with DST not active', () {
         // 2021-01-01T23:00:00Z in America/New_York (-05:00) => 18:00
         expect(
-          date(
-            '2021-01-01T23:00:00Z',
-            ['%Y-%m-%dT%H:%M:%S', 'America/New_York'],
-            {},
-          ),
+          date('2021-01-01T23:00:00Z', [
+            '%Y-%m-%dT%H:%M:%S',
+            'America/New_York',
+          ], {}),
           equals('2021-01-01T18:00:00'),
         );
       });
@@ -256,11 +215,10 @@ void main() {
       test('timezone with DST active', () {
         // 2021-06-01T23:00:00Z in America/New_York (-04:00) => 19:00
         expect(
-          date(
-            '2021-06-01T23:00:00Z',
-            ['%Y-%m-%dT%H:%M:%S', 'America/New_York'],
-            {},
-          ),
+          date('2021-06-01T23:00:00Z', [
+            '%Y-%m-%dT%H:%M:%S',
+            'America/New_York',
+          ], {}),
           equals('2021-06-01T19:00:00'),
         );
       });
@@ -268,25 +226,76 @@ void main() {
       test('%z - timezone offset in +HHMM format', () {
         final result = date('2023-05-15', ['%z'], {});
         expect(result, isA<String>());
-        expect(
-          result.toString(),
-          matches(r'^[+-]\d{4}$'),
-        );
+        expect(result.toString(), matches(r'^[+-]\d{4}$'));
       });
 
       test('%:z - timezone offset in +HH:MM format', () {
         final result = date('2023-05-15', ['%:z'], {});
         expect(result, isA<String>());
-        expect(
-          result.toString(),
-          matches(r'^[+-]\d{2}:\d{2}$'),
-        );
+        expect(result.toString(), matches(r'^[+-]\d{2}:\d{2}$'));
       });
 
       test('%Z - timezone name', () {
         final result = date('2023-05-15', ['%Z'], {});
         expect(result, isA<String>());
         expect(result.toString(), isNotEmpty);
+      });
+    });
+
+    group('instant semantics', () {
+      test('UTC DateTime is converted as an instant', () {
+        expect(
+          date(DateTime.utc(2023, 5, 15, 3, 4, 5), [
+            '%Y-%m-%dT%H:%M:%S %z',
+            'America/New_York',
+          ], {}),
+          equals('2023-05-14T23:04:05 -0400'),
+        );
+      });
+
+      test('TZDateTime retains its original timezone without an override', () {
+        final input = tz.TZDateTime(
+          tz.getLocation('Asia/Colombo'),
+          2023,
+          5,
+          15,
+          3,
+          4,
+          5,
+        );
+
+        expect(
+          date(input, ['%Y-%m-%dT%H:%M:%S %z'], {}),
+          equals('2023-05-15T03:04:05 +0530'),
+        );
+      });
+
+      test('TZDateTime override converts the instant', () {
+        final input = tz.TZDateTime(
+          tz.getLocation('Asia/Colombo'),
+          2023,
+          5,
+          15,
+          3,
+          4,
+          5,
+        );
+
+        expect(
+          date(input, ['%Y-%m-%dT%H:%M:%S %z', 'America/New_York'], {}),
+          equals('2023-05-14T17:34:05 -0400'),
+        );
+      });
+
+      test('ISO string with an explicit offset preserves its instant', () {
+        expect(
+          date(
+            '2023-05-15T03:04:05+05:30',
+            ['%Y-%m-%dT%H:%M:%S', 'America/New_York'],
+            {},
+          ),
+          equals('2023-05-14T17:34:05'),
+        );
       });
     });
 
@@ -354,10 +363,7 @@ void main() {
       });
 
       test('RFC 822 day of week is correct', () {
-        expect(
-          dateToRfc822('2023-05-15', [], {}),
-          startsWith('Mon'),
-        );
+        expect(dateToRfc822('2023-05-15', [], {}), startsWith('Mon'));
       });
     });
 
@@ -394,10 +400,7 @@ void main() {
 
     group('date_to_long_string filter', () {
       test('default non-ordinal UK style', () {
-        expect(
-          dateToLongString('2023-05-15', [], {}),
-          equals('15 May 2023'),
-        );
+        expect(dateToLongString('2023-05-15', [], {}), equals('15 May 2023'));
       });
 
       test('ordinal style', () {
