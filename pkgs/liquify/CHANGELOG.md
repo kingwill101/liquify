@@ -1,3 +1,8 @@
+## Unreleased
+
+### Browser Support
+- **Make the package usable from browser builds** - Split the filesystem exports so `webdev`/browser entrypoints no longer pull in `dart:io`, allowing the package to be used more freely in the browser and in the playground.
+
 ## 1.5.2
 
 ### Bug Fixes
