@@ -10,7 +10,7 @@ resolution: workspace
 topics:
   - liquid
   - templating
-  - teamplate-engine
+  - template-engine
   - dart
 
 environment:
