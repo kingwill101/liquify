@@ -1,81 +1,341 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta id="themeColorMeta" name="theme-color" content="#071018">
   <meta name="scaffolded-by" content="https://github.com/dart-lang/sdk">
-  <title>liquify</title>
+  <meta name="description"
+    content="Experiment with Liquify templates, layouts, blocks, and JSON context directly in your browser.">
+  <title>Liquify Playground</title>
+
+  <link rel="icon" href="https://github.com/kingwill101/liquify/raw/master/pkgs/liquify/assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script>
+    (() => {
+      const storageKey = 'liquify-theme';
+      let storedTheme = null;
+      try {
+        storedTheme = localStorage.getItem(storageKey);
+      } catch (_) { }
+
+      const systemTheme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const theme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : systemTheme;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/xml.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/json.min.js"></script>
   <script defer src="main.dart.js"></script>
 </head>
+
 <body>
-  <header>
-    <h1>Liquify Playground</h1>
-    <label class="auto-render">
-      <input type="checkbox" id="autoRender" checked>
-      Auto-render
-    </label>
-    <button id="renderBtn">Render</button>
+  <header class="app-header">
+    <div class="brand-lockup">
+      <a class="brand" href="https://github.com/kingwill101/liquify" target="_blank" rel="noreferrer"
+        aria-label="Open the Liquify repository on GitHub">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="https://github.com/kingwill101/liquify/raw/master/pkgs/liquify/assets/logo.png" alt="" height="1024"
+            width="1024">
+        </span>
+        <span class="brand-copy">
+          <span class="brand-kicker">Liquid templates for Dart</span>
+          <span class="brand-title">
+            <span class="brand-name">Liquify</span>
+            <span class="brand-divider">/</span>
+            <span class="brand-product">Playground</span>
+          </span>
+        </span>
+      </a>
+      <span class="brand-status"><span></span>Browser runtime</span>
+    </div>
+
+    <div class="header-controls">
+      <label class="example-picker" for="exampleSelect">
+        <span class="control-label">Example</span>
+        <span class="select-shell">
+          <select id="exampleSelect" aria-label="Example">
+            <optgroup label="Getting started">
+              <option value="basic">Filters and loops</option>
+            </optgroup>
+            <optgroup label="Composition">
+              <option value="layout">Layout inheritance</option>
+              <option value="dynamic-layout">Dynamic layout selection</option>
+              <option value="render-partials">Render and nested partials</option>
+            </optgroup>
+            <optgroup label="Built-in tags">
+              <option value="control-flow">Control flow</option>
+              <option value="iteration">Loops, cycle, table rows</option>
+              <option value="variables-output">Variables and output</option>
+            </optgroup>
+            <optgroup label="Data transformation">
+              <option value="filters">Filter pipeline</option>
+            </optgroup>
+          </select>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="m6 8 4 4 4-4"></path>
+          </svg>
+        </span>
+      </label>
+
+      <button id="resetBtn" class="button button-secondary reset-button" type="button">
+        Reset
+      </button>
+
+      <label class="auto-render">
+        <input type="checkbox" id="autoRender" checked>
+        <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+        <span>Auto-render</span>
+      </label>
+
+      <button id="themeToggle" class="button button-secondary theme-toggle" type="button"
+        aria-label="Switch to light mode" aria-pressed="false" title="Switch to light mode">
+        <svg class="theme-icon sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3.5"></circle>
+          <path d="M12 2.5v2M12 19.5v2M4.5 4.5l1.4 1.4M18.1 18.1l1.4 1.4M2.5 12h2M19.5 12h2M4.5 19.5l1.4-1.4M18.1 5.9l1.4-1.4"></path>
+        </svg>
+        <svg class="theme-icon moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 15.1A8.4 8.4 0 0 1 8.9 4a8.4 8.4 0 1 0 11.1 11.1Z"></path>
+        </svg>
+      </button>
+
+      <a class="repo-link" href="https://github.com/kingwill101/liquify" target="_blank" rel="noreferrer"
+        title="View Liquify on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M5.75 3.75h10.5A2.75 2.75 0 0 1 19 6.5v11a2.75 2.75 0 0 1-2.75 2.75H7.5A2.5 2.5 0 0 1 5 17.75v-11a3 3 0 0 1 .75-2Z">
+          </path>
+          <path d="M8 3.75v16.5M11.5 8h4M11.5 12h4"></path>
+        </svg>
+        <span>GitHub</span>
+        <span class="external-arrow" aria-hidden="true">↗</span>
+      </a>
+
+      <button id="renderBtn" class="button button-primary render-button" type="button"
+        title="Render (Ctrl/Cmd + Enter)">
+        Render
+      </button>
+    </div>
   </header>
 
-  <main>
-    <section class="panel template-panel">
+  <main class="playground-grid">
+    <section class="panel template-panel" aria-labelledby="templatesHeading">
       <div class="panel-header">
-        <h2>Template</h2>
-        <span class="hint">Liquid markup</span>
+        <div class="panel-title-group">
+          <span class="panel-icon templates-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20">
+              <path d="M5.5 3.5h6l3 3v10h-9z"></path>
+              <path d="M11.5 3.5v3h3M8 10h4M8 13h4"></path>
+            </svg>
+          </span>
+          <div class="panel-heading-copy">
+            <h2 id="templatesHeading">Templates</h2>
+            <span class="hint" id="workspaceHint">Virtual file system</span>
+          </div>
+        </div>
+        <span class="count-pill" id="fileCount"></span>
       </div>
-      <div class="code-editor">
-        <pre class="code-mirror" aria-hidden="true"><code id="templateMirror" class="hljs language-xml"></code></pre>
-        <textarea id="templateInput" class="code-input" spellcheck="false">{% assign title = "Hello, World!" %}
-<h1>{{ title }}</h1>
-<p>Today is {{ "now" | date: "%B %d, %Y" }}</p>
 
-{% capture greeting %}Hello {{ "World" | upcase }}{% endcapture %}
-<p>{{ greeting }}</p>
+      <div class="template-workspace">
+        <aside class="file-sidebar" aria-label="Template files">
+          <div class="file-sidebar-toolbar">
+            <span class="sidebar-label">Workspace</span>
+            <button id="newFileBtn" class="button button-compact button-secondary" type="button">
+              New file
+            </button>
+          </div>
 
-{% for item in items %}
-  <div class="item">
-    <span>{{ item.name }}</span>
-    <span>{{ item.price | prepend: "$" }}</span>
-  </div>
-{% endfor %}</textarea>
+          <nav id="fileList" class="file-list" aria-label="Template files"></nav>
+
+          <div class="entry-summary">
+            <span class="entry-summary-label">Entry template</span>
+            <code id="entryPath"></code>
+          </div>
+        </aside>
+
+        <div class="editor-column">
+          <div class="editor-toolbar">
+            <div class="active-file-label">
+              <span class="active-file-dot" aria-hidden="true"></span>
+              <code id="activePath" class="active-path"></code>
+            </div>
+            <div class="editor-actions">
+              <button id="setEntryBtn" class="text-button" type="button">Set as entry</button>
+              <button id="renameFileBtn" class="text-button" type="button">Rename</button>
+              <button id="deleteFileBtn" class="text-button danger-text" type="button">Delete</button>
+            </div>
+          </div>
+
+          <div class="code-editor">
+            <pre class="code-mirror"
+              aria-hidden="true"><code id="templateMirror" class="hljs language-xml"></code></pre>
+            <textarea id="templateInput" class="code-input" aria-label="Selected Liquid template" autocomplete="off"
+              autocapitalize="off" spellcheck="false"></textarea>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="panel data-panel">
+    <section class="panel data-panel" aria-labelledby="contextHeading">
       <div class="panel-header">
-        <h2>Context (JSON)</h2>
-        <span class="hint">Variables available to template</span>
+        <div class="panel-title-group">
+          <span class="panel-icon context-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20">
+              <path
+                d="M7 4.5H5.8c-1 0-1.8.8-1.8 1.8V8c0 1.1-.6 1.8-1.5 2 .9.2 1.5.9 1.5 2v1.7c0 1 .8 1.8 1.8 1.8H7M13 4.5h1.2c1 0 1.8.8 1.8 1.8V8c0 1.1.6 1.8 1.5 2-.9.2-1.5.9-1.5 2v1.7c0 1-.8 1.8-1.8 1.8H13">
+              </path>
+            </svg>
+          </span>
+          <div class="panel-heading-copy">
+            <h2 id="contextHeading">Context</h2>
+            <span class="hint">JSON variables available to every template</span>
+          </div>
+        </div>
+        <span class="format-pill">JSON</span>
       </div>
+
       <div class="code-editor">
         <pre class="code-mirror" aria-hidden="true"><code id="dataMirror" class="hljs language-json"></code></pre>
-        <textarea id="dataInput" class="code-input" spellcheck="false">{
-  "items": [
-    { "name": "Widget", "price": 9.99 },
-    { "name": "Gadget", "price": 24.99 },
-    { "name": "Doohickey", "price": 4.99 }
-  ]
-}</textarea>
+        <textarea id="dataInput" class="code-input" aria-label="JSON context" autocomplete="off" autocapitalize="off"
+          spellcheck="false"></textarea>
       </div>
     </section>
 
-    <section class="panel output-panel">
-      <div class="panel-header">
-        <h2>Output</h2>
-        <span class="hint" id="renderTime"></span>
-      </div>
-      <div id="output" class="output-content"></div>
-    </section>
+    <section class="panel output-panel" aria-labelledby="outputHeading">
+      <div class="panel-header output-header">
+        <div class="panel-title-group">
+          <span class="panel-icon output-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20">
+              <path d="m5 7 3 3-3 3M10 13h5"></path>
+              <rect x="2.5" y="3.5" width="15" height="13" rx="2"></rect>
+            </svg>
+          </span>
+          <div class="panel-heading-copy">
+            <h2 id="outputHeading">Output</h2>
+            <span class="hint render-status" id="renderStatus" aria-live="polite"></span>
+          </div>
+        </div>
 
+        <div class="output-controls">
+          <div class="output-tabs" role="tablist" aria-label="Output view">
+            <button id="rawTabBtn" class="output-tab active" type="button" role="tab" aria-selected="true">
+              Raw
+            </button>
+            <button id="previewTabBtn" class="output-tab" type="button" role="tab" aria-selected="false">
+              Preview
+            </button>
+          </div>
+          <span class="render-time" id="renderTime"></span>
+        </div>
+      </div>
+
+      <div class="output-body">
+        <pre id="rawOutputPanel" class="output-content"><code id="outputRaw" class="hljs language-xml"></code></pre>
+        <iframe id="previewOutput" class="preview-frame" title="Rendered HTML preview" sandbox hidden></iframe>
+      </div>
+    </section>
   </main>
+
+  <dialog id="fileDialog" class="modal">
+    <form id="fileForm" class="modal-card">
+      <div class="modal-header">
+        <div>
+          <span class="modal-eyebrow">Template workspace</span>
+          <h2 id="fileDialogTitle">Add template</h2>
+        </div>
+        <button id="fileDialogCloseBtn" class="icon-button" type="button" aria-label="Close">×</button>
+      </div>
+
+      <label class="field" for="filePathInput">
+        <span>Template path</span>
+        <input id="filePathInput" type="text" autocomplete="off" spellcheck="false" placeholder="snippets/card.liquid">
+      </label>
+
+      <p id="fileDialogError" class="field-error" aria-live="polite"></p>
+
+      <div class="modal-actions">
+        <button id="fileDialogCancelBtn" class="button button-secondary" type="button">Cancel</button>
+        <button class="button button-primary" type="submit">Save template</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="deleteDialog" class="modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <span class="modal-eyebrow danger-eyebrow">Destructive action</span>
+          <h2>Delete template?</h2>
+        </div>
+      </div>
+      <p class="modal-copy">
+        Remove <code id="deletePath"></code> from this playground workspace?
+      </p>
+      <div class="modal-actions">
+        <button id="cancelDeleteBtn" class="button button-secondary" type="button">Cancel</button>
+        <button id="confirmDeleteBtn" class="button button-danger" type="button">Delete template</button>
+      </div>
+    </div>
+  </dialog>
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
+      const storageKey = 'liquify-theme';
+      const themeToggle = document.getElementById('themeToggle');
+      const themeColorMeta = document.getElementById('themeColorMeta');
+      const systemTheme = matchMedia('(prefers-color-scheme: light)');
+
+      const storedTheme = () => {
+        try {
+          return localStorage.getItem(storageKey);
+        } catch (_) {
+          return null;
+        }
+      };
+
+      const updateThemeControl = (theme) => {
+        const isLight = theme === 'light';
+        const nextTheme = isLight ? 'dark' : 'light';
+        const label = `Switch to ${nextTheme} mode`;
+        themeToggle.setAttribute('aria-label', label);
+        themeToggle.setAttribute('aria-pressed', String(isLight));
+        themeToggle.title = label;
+        themeColorMeta.content = isLight ? '#edf7f8' : '#071018';
+      };
+
+      const applyTheme = (theme, persist = false) => {
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        updateThemeControl(theme);
+        if (persist) {
+          try {
+            localStorage.setItem(storageKey, theme);
+          } catch (_) { }
+        }
+      };
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.dataset.theme;
+        applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
+      });
+
+      systemTheme.addEventListener('change', (event) => {
+        if (storedTheme() === null) applyTheme(event.matches ? 'light' : 'dark');
+      });
+
+      updateThemeControl(document.documentElement.dataset.theme || 'dark');
+
       const editors = [
         {
           input: document.getElementById('templateInput'),
@@ -87,11 +347,20 @@
         },
       ];
 
-      const syncEditor = ({input, mirror}) => {
+      const highlight = (element) => {
+        element.removeAttribute('data-highlighted');
+        hljs.highlightElement(element);
+      };
+
+      const syncEditor = ({ input, mirror }) => {
         mirror.textContent = input.value;
-        hljs.highlightElement(mirror);
+        highlight(mirror);
         mirror.parentElement.scrollTop = input.scrollTop;
         mirror.parentElement.scrollLeft = input.scrollLeft;
+      };
+
+      const syncAllEditors = () => {
+        for (const editor of editors) syncEditor(editor);
       };
 
       for (const editor of editors) {
@@ -100,9 +369,18 @@
           editor.mirror.parentElement.scrollTop = editor.input.scrollTop;
           editor.mirror.parentElement.scrollLeft = editor.input.scrollLeft;
         });
-        syncEditor(editor);
       }
+
+      const outputCode = document.getElementById('outputRaw');
+      const syncOutput = () => highlight(outputCode);
+
+      document.addEventListener('liquify-editor-refresh', syncAllEditors);
+      document.addEventListener('liquify-output-refresh', syncOutput);
+
+      syncAllEditors();
+      syncOutput();
     });
   </script>
 </body>
+
 </html>
