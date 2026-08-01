@@ -1,3 +1,6 @@
+## 1.6.1
+- fix topic typo
+
 ## 1.6.0
 
 ### Browser Support
