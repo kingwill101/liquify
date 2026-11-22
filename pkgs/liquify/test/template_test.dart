@@ -87,6 +87,23 @@ void main() {
       expect(await template.renderAsync(), 'first|last|');
     });
 
+    test('renders the Liquid string representation of collections', () async {
+      final template = Template.parse(
+        '{{ items }}|{{ record }}|{{ record.first }}',
+        data: {
+          'items': [
+            1,
+            null,
+            [2, 3],
+          ],
+          'record': {'key': 'value'},
+        },
+      );
+
+      expect(template.render(), '123|{"key"=>"value"}|keyvalue');
+      expect(await template.renderAsync(), '123|{"key"=>"value"}|keyvalue');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

@@ -81,6 +81,10 @@ dynamic first(
   if (value is String) {
     return value.isEmpty ? '' : String.fromCharCode(value.runes.first);
   }
+  if (value is Map && value.isNotEmpty) {
+    final entry = value.entries.first;
+    return [entry.key, entry.value];
+  }
   if (value is! List || value.isEmpty) return '';
   return value.first;
 }

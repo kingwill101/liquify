@@ -31,9 +31,6 @@ FilterFunction defaultFilter =
           ? namedArguments['allow_false'] == true
           : arguments.length > 1 && arguments[1] == true;
 
-      if (value is List || value is String) {
-        return (value as dynamic).isEmpty ? defaultValue : value;
-      }
       if (value == false && allowFalse) return false;
       return isFalsy(value) ? defaultValue : value;
     };
@@ -192,9 +189,9 @@ FilterFunction raw =
 bool isFalsy(dynamic value) {
   return value == null ||
       value == false ||
-      (value is num && value == 0) ||
       (value is String && value.isEmpty) ||
-      (value is Iterable && value.isEmpty);
+      (value is Iterable && value.isEmpty) ||
+      (value is Map && value.isEmpty);
 }
 
 class MiscModule extends Module {

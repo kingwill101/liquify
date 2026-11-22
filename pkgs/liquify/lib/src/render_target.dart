@@ -1,3 +1,23 @@
+import 'dart:convert';
+
+String _renderLiquidValue(Object? value) => switch (value) {
+  null => '',
+  List() => value.map(_renderLiquidValue).join(),
+  Map() => _inspectLiquidValue(value),
+  _ => value.toString(),
+};
+
+String _inspectLiquidValue(Object? value) => switch (value) {
+  null => 'nil',
+  String() => jsonEncode(value),
+  List() => '[${value.map(_inspectLiquidValue).join(', ')}]',
+  Map() =>
+    '{${value.entries.map((entry) {
+      return '${_inspectLiquidValue(entry.key)}=>${_inspectLiquidValue(entry.value)}';
+    }).join(', ')}}',
+  _ => value.toString(),
+};
+
 abstract class RenderTarget<R> {
   const RenderTarget();
 
@@ -40,11 +60,7 @@ class StringRenderSink extends RenderSink {
 
   @override
   void write(Object? value) {
-    if (value == null) {
-      _buffer.write('');
-    } else {
-      _buffer.write(value.toString());
-    }
+    _buffer.write(_renderLiquidValue(value));
   }
 
   @override

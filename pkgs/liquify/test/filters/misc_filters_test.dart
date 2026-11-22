@@ -30,13 +30,13 @@ void main() {
       );
     });
 
-    test('defaultFilter does not treat empty maps as falsy', () {
+    test('defaultFilter uses the fallback for empty maps', () {
       final input = <String, dynamic>{};
-      expect(defaultFilter(input, ['default'], {}), equals(input));
+      expect(defaultFilter(input, ['default'], {}), equals('default'));
     });
 
-    test('defaultFilter still treats 0 as falsy', () {
-      expect(defaultFilter(0, ['default', true], {}), equals('default'));
+    test('defaultFilter preserves zero', () {
+      expect(defaultFilter(0, ['default', true], {}), equals(0));
     });
 
     test('json', () {
