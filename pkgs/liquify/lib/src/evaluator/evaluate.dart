@@ -93,14 +93,7 @@ extension Evaluation on Evaluator {
       context.setRegister('ifchanged', <String, String>{});
     }
     try {
-      for (final node in nodes) {
-        if (node is Assignment) continue;
-        if (node is Tag) {
-          node.accept(this);
-        } else {
-          currentBuffer.write(node.accept(this));
-        }
-      }
+      evaluateBody(nodes);
       return buffer.toString();
     } finally {
       if (ownsForRegister) context.removeRegister('for');
@@ -118,18 +111,33 @@ extension Evaluation on Evaluator {
       context.setRegister('ifchanged', <String, String>{});
     }
     try {
-      for (final node in nodes) {
-        if (node is Assignment) continue;
-        if (node is Tag) {
-          await node.acceptAsync(this);
-        } else {
-          currentBuffer.write(await node.acceptAsync(this));
-        }
-      }
+      await evaluateBodyAsync(nodes);
       return buffer.toString();
     } finally {
       if (ownsForRegister) context.removeRegister('for');
       if (ownsIfChangedRegister) context.removeRegister('ifchanged');
+    }
+  }
+
+  void evaluateBody(List<ASTNode> nodes) {
+    for (final node in nodes) {
+      if (node is Assignment) continue;
+      if (node is Tag) {
+        node.accept(this);
+      } else {
+        currentBuffer.write(node.accept(this));
+      }
+    }
+  }
+
+  Future<void> evaluateBodyAsync(List<ASTNode> nodes) async {
+    for (final node in nodes) {
+      if (node is Assignment) continue;
+      if (node is Tag) {
+        await node.acceptAsync(this);
+      } else {
+        currentBuffer.write(await node.acceptAsync(this));
+      }
     }
   }
 }

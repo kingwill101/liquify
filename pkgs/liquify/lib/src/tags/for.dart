@@ -157,12 +157,11 @@ class ForTag extends AbstractTag with AsyncTag {
       return;
     }
 
-    final parentLoop =
-        evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
+    final parentLoop = evaluator.context.getVariable('forloop');
     final forLoop = ForLoopObject(
       length: iterable.length,
       name: loopName,
-      parentloop: parentLoop != null
+      parentloop: parentLoop is Map<String, dynamic>
           ? ForLoopObject.fromJson(parentLoop)
           : null,
     );
@@ -225,12 +224,11 @@ class ForTag extends AbstractTag with AsyncTag {
       return;
     }
 
-    final parentLoop =
-        evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
+    final parentLoop = evaluator.context.getVariable('forloop');
     final forLoop = ForLoopObject(
       length: iterable.length,
       name: loopName,
-      parentloop: parentLoop != null
+      parentloop: parentLoop is Map<String, dynamic>
           ? ForLoopObject.fromJson(parentLoop)
           : null,
     );

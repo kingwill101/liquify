@@ -199,6 +199,45 @@ void main() {
       },
     );
 
+    test('counter names do not interfere with loop metadata', () async {
+      Template template() => Template.parse(
+        '{% increment forloop %}{% for n in (1..2) %}{{forloop.index}}{% endfor %}'
+        '{% increment tablerowloop %}'
+        '{% tablerow n in (1..1) %}{{tablerowloop.index}}{% endtablerow %}',
+      );
+      const expected = '0120<tr class="row1">\n<td class="col1">1</td></tr>\n';
+      expect(template().render(), expected);
+      expect(await template().renderAsync(), expected);
+    });
+
+    test(
+      'tablerow closes its cell and row when break interrupts the body',
+      () async {
+        final template = Template.parse(
+          '{% tablerow n in (1..3) cols:2 %}{{n}}{% break %}ignored{% endtablerow %}',
+        );
+        const expected = '<tr class="row1">\n<td class="col1">1</td></tr>\n';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
+    test(
+      'tablerow continue closes its cell and advances to the next row',
+      () async {
+        final template = Template.parse(
+          '{% tablerow n in (1..3) cols:2 %}{{n}}'
+          '{% if n == 2 %}{% continue %}{% endif %}!{% endtablerow %}',
+        );
+        const expected =
+            '<tr class="row1">\n'
+            '<td class="col1">1!</td><td class="col2">2</td></tr>\n'
+            '<tr class="row2"><td class="col1">3!</td></tr>\n';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

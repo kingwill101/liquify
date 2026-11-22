@@ -149,12 +149,11 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
   dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     if (!hasCollection) return;
 
-    final parentLoop =
-        evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
+    final parentLoop = evaluator.context.getVariable('tablerowloop');
     final tableRowLoop = TableRowLoopObject(
       length: iterable.length,
       cols: cols,
-      parentloop: parentLoop != null
+      parentloop: parentLoop is Map<String, dynamic>
           ? TableRowLoopObject.fromJson(parentLoop)
           : null,
     );
@@ -170,7 +169,7 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
 
         buffer.write('<td class="col${tableRowLoop.col}">');
         try {
-          evaluator.evaluateNodes(body);
+          evaluator.evaluateBody(body);
         } on BreakException {
           break;
         } on ContinueException {
@@ -198,12 +197,11 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
   ) async {
     if (!hasCollection) return;
 
-    final parentLoop =
-        evaluator.context.getVariable('tablerowloop') as Map<String, dynamic>?;
+    final parentLoop = evaluator.context.getVariable('tablerowloop');
     final tableRowLoop = TableRowLoopObject(
       length: iterable.length,
       cols: cols,
-      parentloop: parentLoop != null
+      parentloop: parentLoop is Map<String, dynamic>
           ? TableRowLoopObject.fromJson(parentLoop)
           : null,
     );
@@ -219,7 +217,7 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
 
         buffer.write('<td class="col${tableRowLoop.col}">');
         try {
-          await evaluator.evaluateNodesAsync(body);
+          await evaluator.evaluateBodyAsync(body);
         } on BreakException {
           break;
         } on ContinueException {
