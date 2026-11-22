@@ -685,18 +685,14 @@ void main() {
         final tag = document.children[0] as Tag;
         expect(tag.name, 'if');
 
-        // The root operation should be 'or'
         final rootOperation = tag.content[0] as BinaryOperation;
-        expect(rootOperation.operator, 'or');
+        expect(rootOperation.operator, 'and');
+        expect((rootOperation.left as Literal).value, true);
 
-        // The left-hand side of 'or' should be an 'and' operation
-        final leftOperation = rootOperation.left as BinaryOperation;
-        expect(leftOperation.operator, 'and');
-        expect((leftOperation.left as Literal).value, true);
-        expect((leftOperation.right as Literal).value, false);
-
-        // The right-hand side of 'or' should be a Literal true
-        expect((rootOperation.right as Literal).value, true);
+        final rightOperation = rootOperation.right as BinaryOperation;
+        expect(rightOperation.operator, 'or');
+        expect((rightOperation.left as Literal).value, false);
+        expect((rightOperation.right as Literal).value, true);
       });
     });
 
@@ -753,26 +749,21 @@ void main() {
 
           final operation = tag.content[0] as BinaryOperation;
 
-          // Expect OR operation as the root
-          expect(operation.operator, 'or');
+          expect(operation.operator, 'and');
 
-          // The left side should be an AND operation
-          final leftOperation = operation.left as BinaryOperation;
-          expect(leftOperation.operator, 'and');
-
-          // The left side of the AND should be a NOT operation
-          final notOperation = leftOperation.left as UnaryOperation;
+          final notOperation = operation.left as UnaryOperation;
           expect(notOperation.operator, 'not');
           expect((notOperation.expression as Literal).value, false);
 
-          // The right side of the AND should be a comparison
-          final comparison = leftOperation.right as BinaryOperation;
+          final rightOperation = operation.right as BinaryOperation;
+          expect(rightOperation.operator, 'or');
+
+          final comparison = rightOperation.left as BinaryOperation;
           expect(comparison.operator, '==');
           expect((comparison.left as Literal).value, 1);
           expect((comparison.right as Literal).value, 1);
 
-          // The right side of the OR should be a comparison
-          final rightComparison = operation.right as BinaryOperation;
+          final rightComparison = rightOperation.right as BinaryOperation;
           expect(rightComparison.operator, '<');
           expect((rightComparison.left as Literal).value, 2);
           expect((rightComparison.right as Literal).value, 3);

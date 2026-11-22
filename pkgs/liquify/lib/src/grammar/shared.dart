@@ -534,14 +534,16 @@ Parser logicalExpr() {
   return (ref0(comparisonExpr) &
           (ref0(logicalOperator) & ref0(comparisonExpr)).star())
       .map((values) {
-        var left = values[0];
         final pairs = values[1] as List;
-        for (final pair in pairs) {
-          final op = pair[0];
-          final right = pair[1];
-          left = BinaryOperation(left, op, right);
+        if (pairs.isEmpty) return values[0];
+
+        // Liquid groups logical operators from right to left.
+        var right = pairs.last[1];
+        for (var index = pairs.length - 1; index >= 0; index--) {
+          final left = index == 0 ? values[0] : pairs[index - 1][1];
+          right = BinaryOperation(left, pairs[index][0], right);
         }
-        return left;
+        return right;
       })
       .labeled('logicalExpr');
 }

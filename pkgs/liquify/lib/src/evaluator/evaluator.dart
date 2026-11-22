@@ -175,6 +175,8 @@ class Evaluator implements ASTVisitor<dynamic> {
   @override
   dynamic visitBinaryOperation(BinaryOperation node) {
     final left = node.left.accept(this);
+    if (node.operator == 'and' && !isTruthy(left)) return false;
+    if (node.operator == 'or' && isTruthy(left)) return true;
     final right = node.right.accept(this);
 
     return _binaryOp(left, node.operator, right);
@@ -418,6 +420,8 @@ class Evaluator implements ASTVisitor<dynamic> {
   @override
   Future<dynamic> visitBinaryOperationAsync(BinaryOperation node) async {
     final left = await node.left.acceptAsync(this);
+    if (node.operator == 'and' && !isTruthy(left)) return false;
+    if (node.operator == 'or' && isTruthy(left)) return true;
     final right = await node.right.acceptAsync(this);
     return _binaryOp(left, node.operator, right);
   }
