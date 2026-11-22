@@ -563,14 +563,20 @@ dynamic has(
   Map<String, dynamic> namedArguments,
 ) {
   if (value is! List || arguments.isEmpty) return false;
-  final property = arguments[0].toString();
+  final key = arguments[0];
+  final property = key.toString();
   final expected = arguments.length > 1 ? arguments[1] : null;
 
   for (final item in value) {
-    if (item is! Map) continue;
-    final itemValue = item[property];
+    final itemValue = switch (item) {
+      Map() => item[property],
+      int() when key is int => key < 0 ? 0 : (item >> key) & 1,
+      _ => null,
+    };
 
     if (expected == null) {
+      // Ruby integer indexing returns a bit, and both 0 and 1 are truthy.
+      if (item is int && key is int) return true;
       // Check for truthy value
       if (itemValue != null &&
           itemValue != false &&

@@ -513,6 +513,15 @@ void main() {
       expect(has(input, [], {}), equals(false));
     });
 
+    test('has indexes bits in integer items', () {
+      final input = [1, 2, 3];
+
+      expect(has(input, [2], {}), isTrue);
+      expect(has(input, [2, 1], {}), isFalse);
+      expect(has(input, [2, 0], {}), isTrue);
+      expect(has(input, [-1, 0], {}), isTrue);
+    });
+
     test('has ignores non-map items', () {
       expect(has([1, 2, 3], ['active'], {}), equals(false));
     });
