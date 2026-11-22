@@ -17,23 +17,32 @@ class IncludeTag extends AbstractTag with AsyncTag {
     final value = binding == null
         ? evaluator.context.getVariable(name)
         : evaluator.evaluate(binding);
-    final bindings = <String, dynamic>{};
+    final assignments = <String, dynamic>{};
     final bindingName = arguments.bindingName(name);
+    final argumentsToBind = namedArgs;
+    final localNames = {
+      bindingName,
+      for (final arg in argumentsToBind) arg.identifier.name,
+    };
     evaluator.context.pushScope();
     try {
-      for (final arg in namedArgs) {
+      for (final arg in argumentsToBind) {
         final key = arg.identifier.name;
         final argumentValue = evaluator.evaluate(arg.value);
-        bindings[key] = argumentValue;
         evaluator.context.setVariable(key, argumentValue);
       }
       for (final item in value is List ? value : [value]) {
-        bindings[bindingName] = item;
         evaluator.context.setVariable(bindingName, item);
-        evaluator.evaluateBody(nodes);
+        evaluator.context.pushScope();
+        try {
+          evaluator.evaluateBody(nodes);
+        } finally {
+          _collectAssignments(evaluator, assignments, localNames);
+        }
       }
     } finally {
-      _leavePartial(evaluator, bindings);
+      evaluator.context.popScope();
+      evaluator.context.merge(assignments);
     }
   }
 
@@ -49,34 +58,47 @@ class IncludeTag extends AbstractTag with AsyncTag {
     final value = binding == null
         ? evaluator.context.getVariable(name)
         : await evaluator.evaluateAsync(binding);
-    final bindings = <String, dynamic>{};
+    final assignments = <String, dynamic>{};
     final bindingName = arguments.bindingName(name);
+    final argumentsToBind = namedArgs;
+    final localNames = {
+      bindingName,
+      for (final arg in argumentsToBind) arg.identifier.name,
+    };
     evaluator.context.pushScope();
     try {
-      for (final arg in namedArgs) {
+      for (final arg in argumentsToBind) {
         final key = arg.identifier.name;
         final argumentValue = await evaluator.evaluateAsync(arg.value);
-        bindings[key] = argumentValue;
         evaluator.context.setVariable(key, argumentValue);
       }
       for (final item in value is List ? value : [value]) {
-        bindings[bindingName] = item;
         evaluator.context.setVariable(bindingName, item);
-        await evaluator.evaluateBodyAsync(nodes);
+        evaluator.context.pushScope();
+        try {
+          await evaluator.evaluateBodyAsync(nodes);
+        } finally {
+          _collectAssignments(evaluator, assignments, localNames);
+        }
       }
     } finally {
-      _leavePartial(evaluator, bindings);
+      evaluator.context.popScope();
+      evaluator.context.merge(assignments);
     }
   }
 
-  void _leavePartial(Evaluator evaluator, Map<String, dynamic> bindings) {
-    final values = evaluator.context.all();
+  void _collectAssignments(
+    Evaluator evaluator,
+    Map<String, dynamic> assignments,
+    Set<String> localNames,
+  ) {
+    final written = evaluator.context.currentScopeVariables();
     evaluator.context.popScope();
+    assignments.addAll(written);
 
-    // Bindings are local, while assignments from the included template persist.
-    for (final entry in bindings.entries) {
-      if (identical(values[entry.key], entry.value)) values.remove(entry.key);
-    }
-    evaluator.context.merge(values);
+    // Later iterations can read previous assignments. Temporary arguments
+    // retain precedence inside this include and are discarded on exit.
+    written.removeWhere((name, _) => localNames.contains(name));
+    evaluator.context.merge(written);
   }
 }

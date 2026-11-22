@@ -18,7 +18,7 @@ class LiquidTag extends AbstractTag with CustomTagParser, AsyncTag {
       innerEvaluator.evaluateNodes(content);
     }
 
-    evaluator.context.merge(innerEvaluator.context.all());
+    evaluator.context.merge(innerEvaluator.context.currentScopeVariables());
     return null;
   }
 

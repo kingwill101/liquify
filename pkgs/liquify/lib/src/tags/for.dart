@@ -172,7 +172,6 @@ class ForTag extends AbstractTag with AsyncTag {
 
     evaluator.context.pushScope();
 
-    Map<String, dynamic> merged = {};
     try {
       outerLoop:
       for (final item in iterable) {
@@ -199,7 +198,7 @@ class ForTag extends AbstractTag with AsyncTag {
         forLoop.increment();
       }
     } finally {
-      merged = evaluator.context.all();
+      final merged = evaluator.context.currentScopeVariables();
       evaluator.context.popScope();
       merged.remove('forloop');
       merged.remove(variableName);
@@ -239,7 +238,6 @@ class ForTag extends AbstractTag with AsyncTag {
 
     evaluator.context.pushScope();
 
-    Map<String, dynamic> merged = {};
     try {
       outerLoop:
       for (final item in iterable) {
@@ -266,7 +264,7 @@ class ForTag extends AbstractTag with AsyncTag {
         forLoop.increment();
       }
     } finally {
-      merged = evaluator.context.all();
+      final merged = evaluator.context.currentScopeVariables();
       evaluator.context.popScope();
       merged.remove('forloop');
       merged.remove(variableName);

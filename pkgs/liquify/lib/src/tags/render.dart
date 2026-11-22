@@ -44,9 +44,11 @@ class RenderTag extends AbstractTag with AsyncTag {
     Buffer buffer,
     Map<String, dynamic> variables,
   ) {
-    final context = Environment(variables)
+    final context = Environment()
       ..setRoot(parent.context.getRoot())
-      ..setConfig(parent.context.config);
+      ..setConfig(parent.context.config)
+      ..pushScope()
+      ..merge(variables);
     return Evaluator.withBuffer(context, buffer);
   }
 

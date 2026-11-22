@@ -372,6 +372,9 @@ class Environment {
     });
   }
 
+  /// Returns the variables written in the current scope.
+  Map<String, dynamic> currentScopeVariables() => Map.of(_variableStack.last);
+
   /// Returns a map containing all variables in the current context.
   ///
   /// This method iterates through the variable stack and collects all the

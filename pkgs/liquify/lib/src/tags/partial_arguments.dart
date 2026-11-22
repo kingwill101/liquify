@@ -24,11 +24,14 @@ class PartialArguments {
   }
 
   static String? _alias(List<ASTNode> nodes) {
-    if (!_keywordAt(nodes, 2, 'as')) return null;
-    if (nodes.length < 4 || nodes[3] is! Identifier) {
+    final aliasIndex =
+        _keywordAt(nodes, 0, 'for') || _keywordAt(nodes, 0, 'with') ? 2 : 0;
+    if (!_keywordAt(nodes, aliasIndex, 'as')) return null;
+    final nameIndex = aliasIndex + 1;
+    if (nodes.length <= nameIndex || nodes[nameIndex] is! Identifier) {
       throw ArgumentError('Expected a partial binding alias');
     }
-    return (nodes[3] as Identifier).name;
+    return (nodes[nameIndex] as Identifier).name;
   }
 
   String bindingName(String template) => alias ?? template.split('/').last;

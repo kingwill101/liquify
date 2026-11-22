@@ -340,6 +340,45 @@ void main() {
       expect(await template.renderAsync(), 'x|ab|y');
     });
 
+    test('partial aliases and render parameters stay local', () async {
+      final template = Template.parse(
+        "{% include 'card' as entry %}|{% render 'counter', n: 5 %}",
+        data: {'card': 7},
+        root: MapRoot({
+          'card': '{{entry}}',
+          'counter': '{% increment n %}|{{n}}',
+        }),
+      );
+
+      expect(template.render(), '7|0|5');
+      expect(await template.renderAsync(), '7|0|5');
+    });
+
+    test(
+      'an explicit assignment keeps precedence even when its value matches',
+      () async {
+        Template template() => Template.parse(
+          '{% if true %}{% assign n = original %}{% endif %}'
+          '{% increment n %}|{{n}}',
+          data: {'n': 5, 'original': 5},
+        );
+
+        expect(template().render(), '5|5');
+        expect(await template().renderAsync(), '5|5');
+      },
+    );
+
+    test('include can assign the same value as a temporary argument', () async {
+      Template template() => Template.parse(
+        "{% include 'save', x: 'new' %}|{{x}}",
+        data: {'x': 'old'},
+        root: MapRoot({'save': '{% assign x = x %}{{x}}'}),
+      );
+
+      expect(template().render(), 'new|new');
+      expect(await template().renderAsync(), 'new|new');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 
