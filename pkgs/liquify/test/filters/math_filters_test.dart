@@ -32,7 +32,7 @@ void main() {
 
     test('divided_by', () {
       expect(dividedBy(10, [2], {}), equals(5));
-      expect(dividedBy(10, [3], {}), equals(10 / 3));
+      expect(dividedBy(10, [3], {}), equals(3));
       expect(dividedBy(10, [3, true], {}), equals(3));
       expect(() => dividedBy(10, [], {}), throwsArgumentError);
     });
@@ -60,11 +60,25 @@ void main() {
       },
     );
 
+    test('math filters coerce Liquid values', () {
+      expect(plus('2.5', [2], {}), 4.5);
+      expect(plus(false, [2], {}), 2);
+      expect(minus([], [2], {}), -2);
+      expect(times('3 items', [2], {}), 6);
+      expect(dividedBy(-5, [2], {}), -3);
+      expect(dividedBy(5, [2.0], {}), 2.5);
+      expect(modulo(2.5, [-2], {}), -1.5);
+      expect(round(5, [1], {}), isA<int>());
+      expect(round(1.005, [2], {}), 1.01);
+      expect(round(-15, [-1], {}), -20);
+      expect(plus(0.1, [0.2], {}), 0.3);
+    });
+
     test('modulo', () {
       expect(modulo(10, [3], {}), equals(1));
       expect(modulo(-10, [3], {}), equals(2));
-      expect(modulo(10, [-3], {}), equals(1));
-      expect(modulo(-10, [-3], {}), equals(2));
+      expect(modulo(10, [-3], {}), equals(-2));
+      expect(modulo(-10, [-3], {}), equals(-1));
       expect(() => modulo(10, [], {}), throwsArgumentError);
     });
 

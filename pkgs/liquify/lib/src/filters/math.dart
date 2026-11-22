@@ -18,8 +18,7 @@ FilterFunction abs =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      if (value == null) return 0;
-      return (value as num).abs();
+      return toLiquidNumber(value).abs();
     };
 
 /// Returns the maximum of the input value and the argument.
@@ -39,8 +38,8 @@ FilterFunction atLeast =
       Map<String, dynamic> namedArguments,
     ) {
       if (arguments.isEmpty) throw ArgumentError('at_least expects 1 argument');
-      num val = value == null ? 0 : value as num;
-      num arg = arguments[0] == null ? 0 : arguments[0] as num;
+      num val = toLiquidNumber(value);
+      num arg = toLiquidNumber(arguments[0]);
       return math.max(val, arg);
     };
 
@@ -61,8 +60,8 @@ FilterFunction atMost =
       Map<String, dynamic> namedArguments,
     ) {
       if (arguments.isEmpty) throw ArgumentError('at_most expects 1 argument');
-      num val = value == null ? 0 : value as num;
-      num arg = arguments[0] == null ? 0 : arguments[0] as num;
+      num val = toLiquidNumber(value);
+      num arg = toLiquidNumber(arguments[0]);
       return math.min(val, arg);
     };
 
@@ -81,20 +80,19 @@ FilterFunction ceil =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      if (value == null) return 0;
-      return (value as num).ceil();
+      return toLiquidNumber(value).ceil();
     };
 
 /// Divides the input value by the argument.
 ///
 /// [value]: The dividend. If null, treated as 0.
-/// [arguments]: A list containing the divisor and an optional boolean for integer arithmetic.
+/// [arguments]: A list containing the divisor and an optional boolean to force integer arithmetic.
 ///
 /// Examples:
 /// ```
 /// {{ 10 | divided_by: 3 }}
 /// ```
-/// Output: 3.3333333333333335
+/// Output: 3
 ///
 /// ```
 /// {{ 10 | divided_by: 3, true }}
@@ -109,8 +107,8 @@ FilterFunction dividedBy =
       if (arguments.isEmpty) {
         throw ArgumentError('divided_by expects at least 1 argument');
       }
-      num dividend = value == null ? 0 : value as num;
-      num divisor = arguments[0] == null ? 1 : arguments[0] as num;
+      num dividend = toLiquidNumber(value);
+      num divisor = arguments[0] == null ? 1 : toLiquidNumber(arguments[0]);
       bool integerArithmetic = arguments.length > 1
           ? arguments[1] as bool
           : false;
@@ -118,9 +116,15 @@ FilterFunction dividedBy =
       // Prevent division by zero
       if (divisor == 0) return 0;
 
-      return integerArithmetic
-          ? (dividend / divisor).floor()
-          : dividend / divisor;
+      if (dividend is int && divisor is int) {
+        final quotient = dividend ~/ divisor;
+        final remainder = dividend.remainder(divisor);
+        return remainder != 0 && dividend.isNegative != divisor.isNegative
+            ? quotient - 1
+            : quotient;
+      }
+      final quotient = dividend / divisor;
+      return integerArithmetic ? quotient.floor() : quotient;
     };
 
 /// Returns the largest integer less than or equal to the input value.
@@ -138,8 +142,7 @@ FilterFunction floor =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      if (value == null) return 0;
-      return (value as num).floor();
+      return toLiquidNumber(value).floor();
     };
 
 /// Subtracts the argument from the input value.
@@ -159,21 +162,48 @@ FilterFunction minus =
       Map<String, dynamic> namedArguments,
     ) {
       if (arguments.isEmpty) throw ArgumentError('minus expects 1 argument');
-      num val = value == null ? 0 : value as num;
-      num arg = arguments[0] == null ? 0 : arguments[0] as num;
+      num val = toLiquidNumber(value);
+      num arg = toLiquidNumber(arguments[0]);
       if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
         return val - arg;
       }
-
-      final (left, leftScale) = _decimalParts(val);
-      final (right, rightScale) = _decimalParts(arg);
-      final scale = leftScale > rightScale ? leftScale : rightScale;
-      final ten = BigInt.from(10);
-      final result =
-          left * ten.pow(scale - leftScale) -
-          right * ten.pow(scale - rightScale);
-      return double.parse('${result}e${-scale}');
+      return _decimalOperation(val, arg, (left, right) => left - right);
     };
+
+final _decimalPattern = RegExp(r'^-?[0-9]+\.[0-9]+$');
+final _integerPrefix = RegExp(r'^[+-]?[0-9]+(?:_[0-9]+)*');
+
+/// Converts a filter operand using Liquid's numeric coercion rules.
+num toLiquidNumber(Object? value) {
+  if (value is num) return value;
+  if (value is! String) return 0;
+  final text = value.trim();
+  if (_decimalPattern.hasMatch(text)) return double.parse(text);
+  final digits = _integerPrefix.stringMatch(text);
+  return digits == null ? 0 : int.tryParse(digits.replaceAll('_', '')) ?? 0;
+}
+
+final _ten = BigInt.from(10);
+
+double _decimalOperation(
+  num first,
+  num second,
+  BigInt Function(BigInt, BigInt) operation,
+) {
+  final (left, leftScale) = _decimalParts(first);
+  final (right, rightScale) = _decimalParts(second);
+  final scale = math.max(leftScale, rightScale);
+  return _decimalValue(
+    operation(
+      left * _ten.pow(scale - leftScale),
+      right * _ten.pow(scale - rightScale),
+    ),
+    scale,
+  );
+}
+
+double _decimalValue(BigInt digits, int scale) =>
+    double.parse('${digits}e${-scale}');
 
 // Match Liquid's decimal arithmetic using the operands' decimal text.
 (BigInt, int) _decimalParts(num value) {
@@ -201,13 +231,25 @@ FilterFunction modulo =
       Map<String, dynamic> namedArguments,
     ) {
       if (arguments.isEmpty) throw ArgumentError('modulo expects 1 argument');
-      num a = value == null ? 0 : value as num;
-      num b = arguments[0] == null ? 1 : arguments[0] as num;
+      num a = toLiquidNumber(value);
+      num b = arguments[0] == null ? 1 : toLiquidNumber(arguments[0]);
 
       // Prevent modulo by zero
       if (b == 0) return 0;
 
-      return ((a % b) + b) % b; // This ensures the result is always positive
+      if ((a is int && b is int) || !a.isFinite || !b.isFinite) {
+        final remainder = a.remainder(b);
+        return remainder != 0 && remainder.isNegative != b.isNegative
+            ? remainder + b
+            : remainder;
+      }
+      return _decimalOperation(a, b, (left, right) {
+        final remainder = left.remainder(right);
+        return remainder != BigInt.zero &&
+                remainder.isNegative != right.isNegative
+            ? remainder + right
+            : remainder;
+      });
     };
 
 /// Multiplies the input value by the argument.
@@ -227,9 +269,14 @@ FilterFunction times =
       Map<String, dynamic> namedArguments,
     ) {
       if (arguments.isEmpty) throw ArgumentError('times expects 1 argument');
-      num val = value == null ? 0 : value as num;
-      num arg = arguments[0] == null ? 0 : arguments[0] as num;
-      return val * arg;
+      num val = toLiquidNumber(value);
+      num arg = toLiquidNumber(arguments[0]);
+      if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
+        return val * arg;
+      }
+      final (left, leftScale) = _decimalParts(val);
+      final (right, rightScale) = _decimalParts(arg);
+      return _decimalValue(left * right, leftScale + rightScale);
     };
 
 /// Rounds the input value to the specified number of decimal places.
@@ -253,11 +300,30 @@ FilterFunction round =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      if (value == null) return 0;
-      num v = value as num;
-      int arg = arguments.isNotEmpty ? arguments[0] as int : 0;
-      double amp = math.pow(10, arg).toDouble();
-      return (v * amp).round() / amp;
+      final valueNumber = toLiquidNumber(value);
+      final precision = arguments.isEmpty
+          ? 0
+          : toLiquidNumber(arguments[0]).toInt();
+      if (valueNumber is int && precision >= 0) return valueNumber;
+      final (digits, scale) = _decimalParts(valueNumber);
+      if (precision >= scale) {
+        return precision == 0 ? valueNumber.toInt() : valueNumber;
+      }
+      if (digits == BigInt.zero ||
+          precision < scale - digits.abs().toString().length) {
+        return valueNumber is int || precision == 0 ? 0 : 0.0;
+      }
+      final divisor = _ten.pow(scale - precision);
+      final magnitude = digits.abs();
+      var rounded = magnitude ~/ divisor;
+      if ((magnitude % divisor) * BigInt.from(2) >= divisor) {
+        rounded += BigInt.one;
+      }
+      if (digits.isNegative) rounded = -rounded;
+      if (valueNumber is int || precision == 0) {
+        return (rounded * _ten.pow(-precision)).toInt();
+      }
+      return _decimalValue(rounded, precision);
     };
 
 /// Adds the argument to the input value.
@@ -277,9 +343,12 @@ FilterFunction plus =
       Map<String, dynamic> namedArguments,
     ) {
       if (arguments.isEmpty) throw ArgumentError('plus expects 1 argument');
-      num val = value == null ? 0 : value as num;
-      num arg = arguments[0] == null ? 0 : arguments[0] as num;
-      return val + arg;
+      num val = toLiquidNumber(value);
+      num arg = toLiquidNumber(arguments[0]);
+      if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
+        return val + arg;
+      }
+      return _decimalOperation(val, arg, (left, right) => left + right);
     };
 
 class MathModule extends Module {
