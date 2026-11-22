@@ -128,7 +128,10 @@ class ForTag extends AbstractTag with AsyncTag {
       if (arg.identifier.name == 'limit') {
         limit = evaluator.evaluate(arg.value);
       } else if (arg.identifier.name == 'offset') {
-        offset = evaluator.evaluate(arg.value);
+        final value = arg.value;
+        offset = value is Identifier && value.name == 'continue'
+            ? evaluator.forLoopOffsets[loopName]
+            : evaluator.evaluate(value);
       }
     }
 
@@ -146,6 +149,10 @@ class ForTag extends AbstractTag with AsyncTag {
     if (limit != null) {
       iterable = iterable.take(limit!).toList();
     }
+
+    evaluator.forLoopOffsets[loopName] =
+        (startOffset != null && startOffset > 0 ? startOffset : 0) +
+        iterable.length;
 
     if (reversed) {
       iterable = iterable.reversed.toList();

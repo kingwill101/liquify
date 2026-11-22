@@ -119,8 +119,11 @@ abstract class AbstractTag {
     final dynamic result;
     try {
       final innerContext = evaluator.context.clone();
-      final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
-        ..context.setRoot(evaluator.context.getRoot());
+      final innerEvaluator = Evaluator.withBuffer(
+        innerContext,
+        buffer,
+        forLoopOffsets: evaluator.forLoopOffsets,
+      )..context.setRoot(evaluator.context.getRoot());
 
       result = await evaluateWithContextAsync(innerEvaluator, buffer);
       variables = innerEvaluator.context.all();
@@ -138,8 +141,11 @@ abstract class AbstractTag {
     final dynamic result;
     try {
       final innerContext = evaluator.context.clone();
-      final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
-        ..context.setRoot(evaluator.context.getRoot());
+      final innerEvaluator = Evaluator.withBuffer(
+        innerContext,
+        buffer,
+        forLoopOffsets: evaluator.forLoopOffsets,
+      )..context.setRoot(evaluator.context.getRoot());
 
       result = evaluateWithContext(innerEvaluator, buffer);
       variables = innerEvaluator.context.all();

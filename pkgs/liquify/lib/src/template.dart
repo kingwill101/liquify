@@ -107,6 +107,7 @@ class Template {
   ///
   /// If [clearBuffer] is true (default), the internal buffer will be cleared after rendering.
   String render({bool clearBuffer = true}) {
+    _evaluator.forLoopOffsets.clear();
     final parsed = parser.parseInput(_templateContent, config: _config);
     _evaluator.evaluateNodes(parsed);
     final result = _evaluator.buffer.toString();
@@ -123,6 +124,7 @@ class Template {
   ///
   /// If [clearBuffer] is true (default), the internal buffer will be cleared after rendering.
   Future<String> renderAsync({bool clearBuffer = true}) async {
+    _evaluator.forLoopOffsets.clear();
     final parsed = parser.parseInput(_templateContent, config: _config);
     if (clearBuffer) {
       _evaluator.buffer.clear();
@@ -137,6 +139,7 @@ class Template {
   ///
   /// [clearBuffer] determines whether to clear the temporary buffer after rendering.
   R renderWith<R>(RenderTarget<R> target, {bool clearBuffer = true}) {
+    _evaluator.forLoopOffsets.clear();
     final parsed = parser.parseInput(_templateContent, config: _config);
     final sink = target.createSink();
     final buffer = Buffer(sink: sink);
@@ -153,6 +156,7 @@ class Template {
     RenderTarget<R> target, {
     bool clearBuffer = true,
   }) async {
+    _evaluator.forLoopOffsets.clear();
     final parsed = parser.parseInput(_templateContent, config: _config);
     final sink = target.createSink();
     final buffer = Buffer(sink: sink);

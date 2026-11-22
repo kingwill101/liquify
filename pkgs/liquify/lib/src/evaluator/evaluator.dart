@@ -21,14 +21,19 @@ part 'visit_async.dart';
 /// through [ASTVisitor] to evaluate different types of AST nodes.
 class Evaluator implements ASTVisitor<dynamic> {
   final Environment context;
+  final Map<String, int> forLoopOffsets;
   Buffer buffer = Buffer();
   final List<Buffer> _blockBuffers = [];
   final Map<String, ASTNode> nodeMap = {};
 
-  Evaluator(this.context);
+  Evaluator(this.context) : forLoopOffsets = {};
 
   /// Creates a new `Evaluator` instance with the provided `Environment` context and `Buffer`.
-  Evaluator.withBuffer(this.context, this.buffer);
+  Evaluator.withBuffer(
+    this.context,
+    this.buffer, {
+    Map<String, int>? forLoopOffsets,
+  }) : forLoopOffsets = forLoopOffsets ?? {};
 
   /// Creates a new `Evaluator` instance with a cloned `Environment` context and the same `Buffer`.
   Evaluator createInnerEvaluator() {
