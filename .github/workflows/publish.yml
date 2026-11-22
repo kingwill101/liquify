@@ -21,6 +21,8 @@ jobs:
     # This job uses the common publish workflow provided by the ecosystem.
     # See https://github.com/dart-lang/ecosystem/wiki/Publishing-automation
     uses: dart-lang/ecosystem/.github/workflows/publish.yaml@main
+    with:
+      write-comments: false
     permissions:
       id-token: write
       pull-requests: write

@@ -1,0 +1,15 @@
+name: Comment on publishing validation
+
+on:
+  workflow_run:
+    workflows: [Publish]
+    types: [completed]
+
+jobs:
+  comment:
+    if: github.event.workflow_run.event == 'pull_request'
+    uses: dart-lang/ecosystem/.github/workflows/post_summaries.yaml@main
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
