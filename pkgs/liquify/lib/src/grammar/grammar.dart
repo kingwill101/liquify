@@ -85,6 +85,7 @@ class LiquidGrammar extends GrammarDefinition {
     // Tag/block parsers (start with tagStart or tagStartStrip)
     final tagElements = [
       ref0(ifBlock),
+      ref0(unlessBlock),
       ref0(forBlock),
       ref0(caseBlock),
       ref0(whenBlock),
@@ -264,6 +265,9 @@ class LiquidGrammar extends GrammarDefinition {
   // ---------------------------------------------------------------------------
   // If block
   // ---------------------------------------------------------------------------
+
+  Parser<Tag> unlessBlock() =>
+      conditionalBlock(ref0(element), 'unless', config);
 
   Parser<Tag> ifTag() => someTag(
     "if",

@@ -973,6 +973,45 @@ Parser hashBlockComment([LiquidConfig? config]) =>
         })
         .labeled('hashBlockComment');
 
+Parser<Tag> conditionalBlock(
+  Parser elementParser,
+  String name,
+  LiquidConfig? config,
+) {
+  final open = someTag(
+    name,
+    config: config,
+    content: ref0(conditionTagContent),
+  );
+  final elsif = elsifTag(config);
+  final otherwise = elseTag(config);
+  final end = someTag('end$name', config: config, hasContent: false);
+  final branchBody = elementParser.starLazy(elsif.or(otherwise).or(end));
+  final elseIfBlock = seq2(
+    elsif,
+    branchBody,
+  ).map((parts) => (parts.$1 as Tag).copyWith(body: parts.$2.cast<ASTNode>()));
+  final elseBlock = seq2(
+    otherwise,
+    elementParser.starLazy(end),
+  ).map((parts) => parts.$1.copyWith(body: parts.$2.cast<ASTNode>()));
+  return seq5(
+    open,
+    branchBody,
+    elseIfBlock.star(),
+    elseBlock.optional(),
+    end,
+  ).map(
+    (parts) => parts.$1.copyWith(
+      body: [
+        ...parts.$2.cast<ASTNode>(),
+        ...parts.$3,
+        if (parts.$4 case final Tag otherwise) otherwise,
+      ],
+    ),
+  );
+}
+
 Parser<List<ASTNode>> conditionTagContent() => tagContent().map(
   (values) => (values as List<ASTNode>).map(_conditionOperand).toList(),
 );
@@ -1238,6 +1277,8 @@ Parser elseBlock() => seq2(ref0(elseTag), ref0(elseBranchContent))
     })
     .labeled('elseBlock');
 
+Parser<Tag> unlessBlock() => conditionalBlock(ref0(element), 'unless', null);
+
 /// Optimized element parser using lookahead to avoid unnecessary backtracking.
 ///
 /// Instead of trying all parsers in order, we first check the delimiter:
@@ -1272,6 +1313,7 @@ Parser element() {
   // Tag/block parsers (start with {% or {%-)
   final tagElements = [
     ref0(ifBlock),
+    ref0(unlessBlock),
     ref0(forBlock),
     ref0(caseBlock),
     ref0(whenBlock),
