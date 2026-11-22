@@ -1,6 +1,31 @@
-## unreleased
-## Bug Fixes 
-- **Fix negative range loop handling** - `for` and `tablerow` tags now align with shopify liquid when handling negative ranges
+## 2.0.0-wip
+
+Prerelease for the upcoming Liquify 2.0.0 release. This release aligns rendering with Shopify Liquid and can change the output of existing templates.
+
+### Breaking Changes
+
+- `divided_by` floors the result when both operands are integers. `default` preserves zero and uses the fallback for empty maps.
+- Mixed `and` and `or` expressions group from right to left. `blank` and `empty` use distinct predicates in comparisons.
+- Arrays and maps render using Shopify Liquid’s string formats, and `tablerow` emits Shopify-compatible HTML. Update output snapshots that depend on Liquify 1.x formatting.
+- `sort_natural` sorts strings case-insensitively in lexicographic order. `find_index` renders empty when no item matches.
+
+### Bug Fixes
+
+- Treat negative `for` and `tablerow` offsets as zero, return empty descending ranges, and accept spaces around `..`.
+- Support strings in `first` and `last` filters and dot notation.
+- Support integer bit lookup in `has`, honor named `allow_false` in `default`, and improve decimal precision in `minus`.
+- Evaluate bare `blank` and `empty` as empty strings in ordinary expressions.
+- Preserve whitespace in `capture` and suppress all content inside nested comments.
+- Resolve `include` partials with access to outer variables.
+- Expose `forloop.name` and make updated counters visible to templates.
+- Preserve `tablerow` cell output when a loop breaks and reset column metadata between rows.
+- Support `offset: continue` and preserve loop indices after `continue`.
+- Render `else` and `elsif` branches in `unless`.
+- Align numeric coercion, modulo, and decimal arithmetic with Shopify Liquid.
+- Resolve dynamic and negative indices, handle missing properties, and compare strings and maps correctly.
+- Support property arguments and Shopify Liquid’s truthiness rules in collection filters.
+- Handle partial bindings, seeded counters, `ifchanged`, and empty `tablerow` collections.
+- Correct Unicode text filtering, escaping, and whitespace stripping.
 
 ## 1.6.1
 - fix topic typo
