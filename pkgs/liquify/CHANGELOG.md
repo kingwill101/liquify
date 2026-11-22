@@ -1,4 +1,4 @@
-## 2.0.0-wip
+## 2.0.0-wip.1
 
 Prerelease for the upcoming Liquify 2.0.0 release. This release aligns rendering with Shopify Liquid and can change the output of existing templates.
 
