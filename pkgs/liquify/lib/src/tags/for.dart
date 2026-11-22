@@ -135,11 +135,8 @@ class ForTag extends AbstractTag with AsyncTag {
       }
     }
 
-    for (final arg in args) {
-      if (arg.name == 'reversed') {
-        reversed = true;
-      }
-    }
+    final modifier = content.length > 1 ? content[1] : null;
+    reversed = modifier is Identifier && modifier.name == 'reversed';
 
     final startOffset = offset;
     if (startOffset != null && startOffset > 0) {
