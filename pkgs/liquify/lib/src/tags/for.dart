@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:liquify/src/ast.dart';
 import 'package:liquify/src/buffer.dart';
 import 'package:liquify/src/evaluator.dart';
@@ -109,6 +111,7 @@ class ForTag extends AbstractTag with AsyncTag {
 
     variableName = left.name;
     loopName = '$variableName-${_collectionName(right)}';
+    final continuationKey = '$variableName-${jsonEncode(right.toJson())}';
 
     final collection = evaluator.evaluate(right);
 
@@ -122,7 +125,7 @@ class ForTag extends AbstractTag with AsyncTag {
       } else if (arg.identifier.name == 'offset') {
         final value = arg.value;
         offset = value is Identifier && value.name == 'continue'
-            ? offsets[loopName]
+            ? offsets[continuationKey]
             : evaluator.evaluate(value);
       }
     }
@@ -132,7 +135,8 @@ class ForTag extends AbstractTag with AsyncTag {
 
     final startOffset = offset ?? 0;
     iterable = sliceLoopItems(collection, startOffset, limit);
-    offsets[loopName] = (startOffset < 0 ? 0 : startOffset) + iterable.length;
+    offsets[continuationKey] =
+        (startOffset < 0 ? 0 : startOffset) + iterable.length;
 
     if (reversed) {
       iterable = iterable.reversed.toList();

@@ -322,6 +322,24 @@ void main() {
       expect(await template.renderAsync(), expected);
     });
 
+    test('continuation distinguishes quoted keys from dynamic keys', () async {
+      final template = Template.parse(
+        '{% for x in groups[key] limit:1 %}{{x}}{% endfor %}|'
+        "{% for x in groups['key'] offset:continue %}{{x}}{% endfor %}|"
+        '{% for x in groups[key] offset:continue %}{{x}}{% endfor %}',
+        data: {
+          'key': 'other',
+          'groups': {
+            'other': ['x', 'y'],
+            'key': ['a', 'b'],
+          },
+        },
+      );
+
+      expect(template.render(), 'x|ab|y');
+      expect(await template.renderAsync(), 'x|ab|y');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 
