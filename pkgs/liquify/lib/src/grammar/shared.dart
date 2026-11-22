@@ -815,7 +815,7 @@ Parser unaryOperand() {
 Parser range() {
   return (char('(').trim() &
           (ref0(memberAccess) | ref0(literal) | ref0(identifier)) &
-          string('..') &
+          string('..').trim() &
           (ref0(memberAccess) | ref0(literal) | ref0(identifier)) &
           char(')').trim())
       .map((values) {
