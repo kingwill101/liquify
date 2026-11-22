@@ -141,6 +141,10 @@ void registerBuiltInTags() {
     (content, filters) => tags.DocTag(content, filters),
   );
   TagRegistry.register(
+    'include',
+    (content, filters) => tags.IncludeTag(content, filters),
+  );
+  TagRegistry.register(
     'render',
     (content, filters) => tags.RenderTag(content, filters),
   );

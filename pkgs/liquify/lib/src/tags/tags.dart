@@ -13,6 +13,7 @@ export 'capture.dart' show CaptureTag;
 export 'liquid.dart' show LiquidTag;
 export 'raw.dart' show RawTag;
 export 'render.dart' show RenderTag;
+export 'include.dart' show IncludeTag;
 export 'increment.dart' show IncrementTag;
 export 'decrement.dart' show DecrementTag;
 export 'block.dart' show BlockTag;
