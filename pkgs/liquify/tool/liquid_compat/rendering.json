@@ -1,0 +1,6566 @@
+[
+  {
+    "label": "tablerow column metadata",
+    "source": "{% tablerow n in (1..3) cols:2 %}{{tablerowloop.col0}}:{{tablerowloop.col_first}}:{{tablerowloop.col_last}}{% endtablerow %}"
+  },
+  {
+    "label": "tablerow empty collection",
+    "source": "{% tablerow n in values %}{{n}}{% endtablerow %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "ifchanged",
+    "source": "{% for n in values %}{% ifchanged %}{{n}}{% endifchanged %}{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        1,
+        2,
+        2,
+        1
+      ]
+    }
+  },
+  {
+    "label": "case alternatives",
+    "source": "{% case v %}{% when 'a' or 'b' %}match{% else %}miss{% endcase %}",
+    "data": {
+      "v": "b"
+    }
+  },
+  {
+    "label": "string negative index",
+    "source": "{{ text[-1] }}",
+    "data": {
+      "text": "abc"
+    }
+  },
+  {
+    "label": "Unicode string size",
+    "source": "{{ text.size }}|{{ text | size }}",
+    "data": {
+      "text": "a😀"
+    }
+  },
+  {
+    "label": "map size and key collision",
+    "source": "{{ a.size }}|{{ b.size }}",
+    "data": {
+      "a": {
+        "x": 1,
+        "y": 2
+      },
+      "b": {
+        "size": "key"
+      }
+    }
+  },
+  {
+    "label": "unknown string property",
+    "source": "[{{ text.missing }}]",
+    "data": {
+      "text": "abc"
+    }
+  },
+  {
+    "label": "negative string slice",
+    "source": "{{ text | slice: -2, 2 }}",
+    "data": {
+      "text": "abcdef"
+    }
+  },
+  {
+    "label": "negative list slice",
+    "source": "{{ values | slice: -2, 2 | join: ',' }}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "label": "default zero and empty map",
+    "source": "{{ zero | default: 'fallback' }}|{{ map | default: 'fallback' }}",
+    "data": {
+      "zero": 0,
+      "map": {}
+    }
+  },
+  {
+    "label": "default allow false",
+    "source": "{{ false | default: 'fallback', allow_false: true }}"
+  },
+  {
+    "label": "sort maps by property",
+    "source": "{{ rows | sort: 'title' | map: 'title' | join: ',' }}",
+    "data": {
+      "rows": [
+        {
+          "title": "foo"
+        },
+        {
+          "title": "Baz"
+        },
+        {
+          "title": "bar"
+        }
+      ]
+    }
+  },
+  {
+    "label": "where property truthiness",
+    "source": "{{ rows | where: 'active' | map: 'name' | join: ',' }}",
+    "data": {
+      "rows": [
+        {
+          "active": 0,
+          "name": "zero"
+        },
+        {
+          "active": "",
+          "name": "empty"
+        },
+        {
+          "active": false,
+          "name": "false"
+        },
+        {
+          "active": true,
+          "name": "true"
+        }
+      ]
+    }
+  },
+  {
+    "label": "uniq by property",
+    "source": "{{ rows | uniq: 'name' | map: 'name' | join: ',' }}",
+    "data": {
+      "rows": [
+        {
+          "name": "a",
+          "id": 1
+        },
+        {
+          "name": "a",
+          "id": 2
+        },
+        {
+          "name": "b",
+          "id": 3
+        }
+      ]
+    }
+  },
+  {
+    "label": "integer divided by float",
+    "source": "{{ 5 | divided_by: 2.0 }}"
+  },
+  {
+    "label": "float addition",
+    "source": "{{ 0.1 | plus: 0.2 }}"
+  },
+  {
+    "label": "number string addition",
+    "source": "{{ '2.5' | plus: 2 }}"
+  },
+  {
+    "label": "trim around control tags",
+    "source": "A \n {%- if true -%} \n B \n {%- endif -%} \n C"
+  },
+  {
+    "label": "nested capture",
+    "source": "{% capture x %}A{% capture y %}B{% endcapture %}C{% endcapture %}{{ x }}:{{ y }}"
+  },
+  {
+    "label": "include with alias",
+    "source": "{% include 'item' with value as entry %}",
+    "data": {
+      "value": {
+        "name": "example"
+      }
+    },
+    "partials": {
+      "item": "{{ entry.name }}"
+    }
+  },
+  {
+    "label": "render reads outer data",
+    "source": "{% render 'item' %}",
+    "data": {
+      "name": "outer"
+    },
+    "partials": {
+      "item": "[{{name}}]"
+    }
+  },
+  {
+    "label": "render partial receives default with binding",
+    "source": "{% render 'item' with value %}",
+    "data": {
+      "value": {
+        "name": "supplied"
+      }
+    },
+    "partials": {
+      "item": "[{{item.name}}]"
+    }
+  },
+  {
+    "label": "render for loop index",
+    "source": "{% render 'item' for values as entry %}",
+    "data": {
+      "values": [
+        "a",
+        "b"
+      ]
+    },
+    "partials": {
+      "item": "{{forloop.index}}/{{forloop.length}}:{{entry}};"
+    }
+  },
+  {
+    "label": "include assignments stay visible",
+    "source": "{% include 'item' %}[{{new_value}}]",
+    "partials": {
+      "item": "{% assign new_value = 'inside' %}"
+    }
+  },
+  {
+    "label": "include array with default binding",
+    "source": "{% include 'item' with values %}",
+    "data": {
+      "values": [
+        "a",
+        "b"
+      ]
+    },
+    "partials": {
+      "item": "[{{item}}]"
+    }
+  },
+  {
+    "label": "raw preserves delimiters",
+    "source": "{% raw %}{{ value }} {% if true %}{% endraw %}",
+    "data": {
+      "value": "visible"
+    }
+  },
+  {
+    "label": "empty raw block",
+    "source": "a{% raw %}{% endraw %}b"
+  },
+  {
+    "label": "inline hash comment",
+    "source": "a{% # a comment %}b"
+  },
+  {
+    "label": "cycle explicit groups",
+    "source": "{% cycle 'a': 'x', 'y' %}{% cycle 'b': 'x', 'y' %}{% cycle 'a': 'x', 'y' %}"
+  },
+  {
+    "label": "cycle across loop iterations",
+    "source": "{% for i in (1..5) %}{% cycle 'odd', 'even' %};{% endfor %}"
+  },
+  {
+    "label": "continue inside capture",
+    "source": "{% for i in (1..3) %}{% capture x %}{% if i == 2 %}{% continue %}{% endif %}{{i}}{% endcapture %}[{{x}}]{% endfor %}"
+  },
+  {
+    "label": "counter seeded from render data",
+    "source": "{% increment n %}|{{n}}|{% decrement n %}|{{n}}",
+    "data": {
+      "n": 5
+    }
+  },
+  {
+    "label": "filters in echo",
+    "source": "{% echo word | upcase | append: '!' %}",
+    "data": {
+      "word": "hello"
+    }
+  },
+  {
+    "label": "array index out of bounds",
+    "source": "[{{ a[99] }}]|[{{ a[-5] }}]",
+    "data": {
+      "a": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "dynamic nested lookup key",
+    "source": "{{ obj[key].name }}",
+    "data": {
+      "obj": {
+        "item": {
+          "name": "yes"
+        }
+      },
+      "key": "item"
+    }
+  },
+  {
+    "label": "numeric properties via bracket",
+    "source": "[{{ item[1] }}]",
+    "data": {
+      "item": 2
+    }
+  },
+  {
+    "label": "comparison numeric strings",
+    "source": "{% if a > b %}yes{% else %}no{% endif %}",
+    "data": {
+      "a": "10",
+      "b": "2"
+    }
+  },
+  {
+    "label": "contains map key",
+    "source": "{% if obj contains 'key' %}yes{% else %}no{% endif %}",
+    "data": {
+      "obj": {
+        "key": 1
+      }
+    }
+  },
+  {
+    "label": "compact retains false and empty string",
+    "source": "{{ a | compact | join: ',' }}",
+    "data": {
+      "a": [
+        null,
+        false,
+        "",
+        0,
+        "x"
+      ]
+    }
+  },
+  {
+    "label": "compact by property",
+    "source": "{{ a | compact: 'name' | map: 'id' | join: ',' }}",
+    "data": {
+      "a": [
+        {
+          "id": 1
+        },
+        {
+          "id": 2,
+          "name": false
+        },
+        {
+          "id": 3,
+          "name": ""
+        },
+        {
+          "id": 4,
+          "name": "ok"
+        }
+      ]
+    }
+  },
+  {
+    "label": "concat with array input and nil",
+    "source": "{{ a | concat: missing | join: ',' }}",
+    "data": {
+      "a": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "sum numeric properties",
+    "source": "{{ a | sum: 'price' }}",
+    "data": {
+      "a": [
+        {
+          "price": "2.5"
+        },
+        {
+          "price": 1
+        },
+        {}
+      ]
+    }
+  },
+  {
+    "label": "sort natural numeric strings and nil",
+    "source": "{{ a | sort_natural | join: ',' }}",
+    "data": {
+      "a": [
+        "b",
+        "B",
+        "10",
+        "2",
+        null
+      ]
+    }
+  },
+  {
+    "label": "split and join trailing empty fields",
+    "source": "{{ 'a,b,,' | split: ',' | join: ':' }}"
+  },
+  {
+    "label": "escape_once named and numeric entities",
+    "source": "{{ a | escape_once }}",
+    "data": {
+      "a": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "url encode punctuation and space",
+    "source": "{{ a | url_encode }}",
+    "data": {
+      "a": "a b~!*'()"
+    }
+  },
+  {
+    "label": "truncate Unicode text",
+    "source": "{{ a | truncate: 4, '…' }}",
+    "data": {
+      "a": "a😀bcd"
+    }
+  },
+  {
+    "label": "replace_last with empty needle",
+    "source": "{{ 'abc' | replace_last: '', 'X' }}"
+  },
+  {
+    "label": "negative rounding tie",
+    "source": "{{ -1.25 | round: 1 }}"
+  },
+  {
+    "label": "integer division with negative operand",
+    "source": "{{ -5 | divided_by: 2 }}"
+  },
+  {
+    "label": "modulo with negative divisor",
+    "source": "{{ 5 | modulo: -2 }}"
+  },
+  {
+    "label": "arithmetic / plus: 2 on nil",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on nil",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on nil",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on nil",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on nil",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on nil",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on nil",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on nil",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "scalar filters / size on nil",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "scalar filters / first on nil",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "scalar filters / last on nil",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "comparison / nil == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "comparison / nil == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "comparison / nil > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "comparison / nil contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "lookups / nil.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "lookups / nil.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "lookups / nil.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "lookups / nil.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": null
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on false",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on false",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on false",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on false",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on false",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on false",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on false",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on false",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "scalar filters / size on false",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "scalar filters / first on false",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "scalar filters / last on false",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "comparison / false == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "comparison / false == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "comparison / false > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "comparison / false contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "lookups / false.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "lookups / false.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "lookups / false.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "lookups / false.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": false
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on true",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on true",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on true",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on true",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on true",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on true",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on true",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on true",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "scalar filters / size on true",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "scalar filters / first on true",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "scalar filters / last on true",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "comparison / true == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "comparison / true == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "comparison / true > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "comparison / true contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "lookups / true.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "lookups / true.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "lookups / true.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "lookups / true.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": true
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on zero",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on zero",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on zero",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on zero",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on zero",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on zero",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on zero",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on zero",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "scalar filters / size on zero",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "scalar filters / first on zero",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "scalar filters / last on zero",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "comparison / zero == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "comparison / zero == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "comparison / zero > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "comparison / zero contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "lookups / zero.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "lookups / zero.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "lookups / zero.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "lookups / zero.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": 0
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on negative",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on negative",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on negative",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on negative",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on negative",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on negative",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on negative",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on negative",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "scalar filters / size on negative",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "scalar filters / first on negative",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "scalar filters / last on negative",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "comparison / negative == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "comparison / negative == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "comparison / negative > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "comparison / negative contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "lookups / negative.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "lookups / negative.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "lookups / negative.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "lookups / negative.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": -5
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on integer",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on integer",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on integer",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on integer",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on integer",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on integer",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on integer",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on integer",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "scalar filters / size on integer",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "scalar filters / first on integer",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "scalar filters / last on integer",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "comparison / integer == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "comparison / integer == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "comparison / integer > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "comparison / integer contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "lookups / integer.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "lookups / integer.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "lookups / integer.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "lookups / integer.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": 5
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on float",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on float",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on float",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on float",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on float",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on float",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on float",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on float",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "scalar filters / size on float",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "scalar filters / first on float",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "scalar filters / last on float",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "comparison / float == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "comparison / float == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "comparison / float > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "comparison / float contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "lookups / float.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "lookups / float.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "lookups / float.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "lookups / float.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": 2.5
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on numeric string",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on numeric string",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on numeric string",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on numeric string",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on numeric string",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on numeric string",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on numeric string",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on numeric string",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "scalar filters / size on numeric string",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "scalar filters / first on numeric string",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "scalar filters / last on numeric string",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "comparison / numeric string == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "comparison / numeric string == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "comparison / numeric string > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "comparison / numeric string contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "lookups / numeric string.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "lookups / numeric string.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "lookups / numeric string.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "lookups / numeric string.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": "2.5"
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on nonnumeric string",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on nonnumeric string",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on nonnumeric string",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on nonnumeric string",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on nonnumeric string",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on nonnumeric string",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on nonnumeric string",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on nonnumeric string",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "scalar filters / size on nonnumeric string",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "scalar filters / first on nonnumeric string",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "scalar filters / last on nonnumeric string",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "comparison / nonnumeric string == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "comparison / nonnumeric string == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "comparison / nonnumeric string > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "comparison / nonnumeric string contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "lookups / nonnumeric string.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "lookups / nonnumeric string.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "lookups / nonnumeric string.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "lookups / nonnumeric string.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": "abc"
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on empty string",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on empty string",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on empty string",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on empty string",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on empty string",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on empty string",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on empty string",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on empty string",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "scalar filters / size on empty string",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "scalar filters / first on empty string",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "scalar filters / last on empty string",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "comparison / empty string == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "comparison / empty string == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "comparison / empty string > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "comparison / empty string contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "lookups / empty string.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "lookups / empty string.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "lookups / empty string.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "lookups / empty string.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on whitespace",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on whitespace",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on whitespace",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on whitespace",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on whitespace",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on whitespace",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on whitespace",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on whitespace",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "scalar filters / size on whitespace",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "scalar filters / first on whitespace",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "scalar filters / last on whitespace",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "comparison / whitespace == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "comparison / whitespace == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "comparison / whitespace > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "comparison / whitespace contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "lookups / whitespace.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "lookups / whitespace.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "lookups / whitespace.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "lookups / whitespace.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": " \t"
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on Unicode",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on Unicode",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on Unicode",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on Unicode",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on Unicode",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on Unicode",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on Unicode",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on Unicode",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "scalar filters / size on Unicode",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "scalar filters / first on Unicode",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "scalar filters / last on Unicode",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "comparison / Unicode == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "comparison / Unicode == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "comparison / Unicode > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "comparison / Unicode contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "lookups / Unicode.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "lookups / Unicode.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "lookups / Unicode.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "lookups / Unicode.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": "a😀b"
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on empty list",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on empty list",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on empty list",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on empty list",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on empty list",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on empty list",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on empty list",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on empty list",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "scalar filters / size on empty list",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "scalar filters / first on empty list",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "scalar filters / last on empty list",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "comparison / empty list == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "comparison / empty list == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "comparison / empty list > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "comparison / empty list contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "lookups / empty list.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "lookups / empty list.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "lookups / empty list.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "lookups / empty list.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": []
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on list",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on list",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on list",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on list",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on list",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on list",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on list",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on list",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "scalar filters / size on list",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "scalar filters / first on list",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "scalar filters / last on list",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "comparison / list == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "comparison / list == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "comparison / list > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "comparison / list contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "lookups / list.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "lookups / list.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "lookups / list.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "lookups / list.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on empty map",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on empty map",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on empty map",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on empty map",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on empty map",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on empty map",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on empty map",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on empty map",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "scalar filters / size on empty map",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "scalar filters / first on empty map",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "scalar filters / last on empty map",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "comparison / empty map == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "comparison / empty map == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "comparison / empty map > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "comparison / empty map contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "lookups / empty map.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "lookups / empty map.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "lookups / empty map.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "lookups / empty map.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": {}
+    }
+  },
+  {
+    "label": "arithmetic / plus: 2 on map",
+    "source": "{{ v | plus: 2 }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "arithmetic / minus: 2 on map",
+    "source": "{{ v | minus: 2 }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "arithmetic / times: 2 on map",
+    "source": "{{ v | times: 2 }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "arithmetic / divided_by: 2 on map",
+    "source": "{{ v | divided_by: 2 }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "arithmetic / modulo: -2 on map",
+    "source": "{{ v | modulo: -2 }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "arithmetic / round: 1 on map",
+    "source": "{{ v | round: 1 }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\" on map",
+    "source": "{{ v | default: \"F\" }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "scalar filters / default: \"F\", allow_false: true on map",
+    "source": "{{ v | default: \"F\", allow_false: true }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "scalar filters / size on map",
+    "source": "{{ v | size }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "scalar filters / first on map",
+    "source": "{{ v | first }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "scalar filters / last on map",
+    "source": "{{ v | last }}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "comparison / map == blank",
+    "source": "{% if v == blank %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "comparison / map == empty",
+    "source": "{% if v == empty %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "comparison / map > 0",
+    "source": "{% if v > 0 %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "comparison / map contains \"x\"",
+    "source": "{% if v contains \"x\" %}T{% else %}F{% endif %}",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "lookups / map.size",
+    "source": "[{{ v.size }}]",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "lookups / map.first",
+    "source": "[{{ v.first }}]",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "lookups / map.last",
+    "source": "[{{ v.last }}]",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "lookups / map.missing",
+    "source": "[{{ v.missing }}]",
+    "data": {
+      "v": {
+        "x": 1
+      }
+    }
+  },
+  {
+    "label": "text filters / capitalize on ASCII",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / upcase on ASCII",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / downcase on ASCII",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / strip on ASCII",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on ASCII",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / strip_html on ASCII",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / escape on ASCII",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / escape_once on ASCII",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / url_encode on ASCII",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on ASCII",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on ASCII",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on ASCII",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on ASCII",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on ASCII",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on ASCII",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on ASCII",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on ASCII",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": "aBc def"
+    }
+  },
+  {
+    "label": "text filters / capitalize on Unicode",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / upcase on Unicode",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / downcase on Unicode",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / strip on Unicode",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on Unicode",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / strip_html on Unicode",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / escape on Unicode",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / escape_once on Unicode",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / url_encode on Unicode",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on Unicode",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on Unicode",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on Unicode",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on Unicode",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on Unicode",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on Unicode",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on Unicode",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on Unicode",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": "a😀b café"
+    }
+  },
+  {
+    "label": "text filters / capitalize on punctuation",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / upcase on punctuation",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / downcase on punctuation",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / strip on punctuation",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on punctuation",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / strip_html on punctuation",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / escape on punctuation",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / escape_once on punctuation",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / url_encode on punctuation",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on punctuation",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on punctuation",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on punctuation",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on punctuation",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on punctuation",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on punctuation",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on punctuation",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on punctuation",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": "a b~!*'()<>"
+    }
+  },
+  {
+    "label": "text filters / capitalize on entities",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / upcase on entities",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / downcase on entities",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / strip on entities",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on entities",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / strip_html on entities",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / escape on entities",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / escape_once on entities",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / url_encode on entities",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on entities",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on entities",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on entities",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on entities",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on entities",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on entities",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on entities",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on entities",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": "&amp; &#39; &#x27; &unknown; <"
+    }
+  },
+  {
+    "label": "text filters / capitalize on HTML",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / upcase on HTML",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / downcase on HTML",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / strip on HTML",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on HTML",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / strip_html on HTML",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / escape on HTML",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / escape_once on HTML",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / url_encode on HTML",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on HTML",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on HTML",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on HTML",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on HTML",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on HTML",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on HTML",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on HTML",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on HTML",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": "<p>Hello<br>there</p>"
+    }
+  },
+  {
+    "label": "text filters / capitalize on whitespace",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / upcase on whitespace",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / downcase on whitespace",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / strip on whitespace",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on whitespace",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / strip_html on whitespace",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / escape on whitespace",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / escape_once on whitespace",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / url_encode on whitespace",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on whitespace",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on whitespace",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on whitespace",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on whitespace",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on whitespace",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on whitespace",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on whitespace",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on whitespace",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": " \ta\n b \r\n"
+    }
+  },
+  {
+    "label": "text filters / capitalize on empty",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / upcase on empty",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / downcase on empty",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / strip on empty",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on empty",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / strip_html on empty",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / escape on empty",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / escape_once on empty",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / url_encode on empty",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on empty",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on empty",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on empty",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on empty",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on empty",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on empty",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on empty",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on empty",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": ""
+    }
+  },
+  {
+    "label": "text filters / capitalize on delimited",
+    "source": "{{ v | capitalize }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / upcase on delimited",
+    "source": "{{ v | upcase }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / downcase on delimited",
+    "source": "{{ v | downcase }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / strip on delimited",
+    "source": "{{ v | strip }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / strip_newlines on delimited",
+    "source": "{{ v | strip_newlines }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / strip_html on delimited",
+    "source": "{{ v | strip_html }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / escape on delimited",
+    "source": "{{ v | escape }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / escape_once on delimited",
+    "source": "{{ v | escape_once }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / url_encode on delimited",
+    "source": "{{ v | url_encode }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / slice: 1, 2 on delimited",
+    "source": "{{ v | slice: 1, 2 }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / slice: -2, 3 on delimited",
+    "source": "{{ v | slice: -2, 3 }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / truncate: 4, \"…\" on delimited",
+    "source": "{{ v | truncate: 4, \"…\" }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / truncatewords: 2, \"…\" on delimited",
+    "source": "{{ v | truncatewords: 2, \"…\" }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / split: \",\" | join: \"|\" on delimited",
+    "source": "{{ v | split: \",\" | join: \"|\" }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / replace: \"\", \"x\" on delimited",
+    "source": "{{ v | replace: \"\", \"x\" }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / replace_first: \"\", \"x\" on delimited",
+    "source": "{{ v | replace_first: \"\", \"x\" }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "text filters / replace_last: \"\", \"x\" on delimited",
+    "source": "{{ v | replace_last: \"\", \"x\" }}",
+    "data": {
+      "v": "a,,b,,"
+    }
+  },
+  {
+    "label": "collection filters / sort | join: \"|\" on structured",
+    "source": "{{ v | sort | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort: \"key\" | map: \"key\" | join: \"|\" on structured",
+    "source": "{{ v | sort: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort_natural | join: \"|\" on structured",
+    "source": "{{ v | sort_natural | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact | join: \"|\" on structured",
+    "source": "{{ v | compact | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact: \"key\" | map: \"key\" | join: \"|\" on structured",
+    "source": "{{ v | compact: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq | join: \"|\" on structured",
+    "source": "{{ v | uniq | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq: \"key\" | map: \"key\" | join: \"|\" on structured",
+    "source": "{{ v | uniq: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum on structured",
+    "source": "{{ v | sum }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum: \"n\" on structured",
+    "source": "{{ v | sum: \"n\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / map: \"key\" | join: \"|\" on structured",
+    "source": "{{ v | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / where: \"flag\" | map: \"key\" | join: \"|\" on structured",
+    "source": "{{ v | where: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reject: \"flag\" | map: \"key\" | join: \"|\" on structured",
+    "source": "{{ v | reject: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find: \"key\", \"b\" | map: \"n\" | join: \"|\" on structured",
+    "source": "{{ v | find: \"key\", \"b\" | map: \"n\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find_index: \"flag\" on structured",
+    "source": "{{ v | find_index: \"flag\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reverse | join: \"|\" on structured",
+    "source": "{{ v | reverse | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / slice: -2, 3 | join: \"|\" on structured",
+    "source": "{{ v | slice: -2, 3 | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / concat: extra | join: \"|\" on structured",
+    "source": "{{ v | concat: extra | join: \"|\" }}",
+    "data": {
+      "v": [
+        {
+          "key": "b",
+          "n": "2.5",
+          "flag": false
+        },
+        {
+          "key": "A",
+          "n": 2,
+          "flag": 0
+        },
+        {
+          "key": "a",
+          "n": null,
+          "flag": ""
+        },
+        {
+          "key": "b",
+          "n": -1,
+          "flag": true
+        },
+        {
+          "n": 4
+        }
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort | join: \"|\" on numbers",
+    "source": "{{ v | sort | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort: \"key\" | map: \"key\" | join: \"|\" on numbers",
+    "source": "{{ v | sort: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort_natural | join: \"|\" on numbers",
+    "source": "{{ v | sort_natural | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact | join: \"|\" on numbers",
+    "source": "{{ v | compact | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact: \"key\" | map: \"key\" | join: \"|\" on numbers",
+    "source": "{{ v | compact: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq | join: \"|\" on numbers",
+    "source": "{{ v | uniq | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq: \"key\" | map: \"key\" | join: \"|\" on numbers",
+    "source": "{{ v | uniq: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum on numbers",
+    "source": "{{ v | sum }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum: \"n\" on numbers",
+    "source": "{{ v | sum: \"n\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / map: \"key\" | join: \"|\" on numbers",
+    "source": "{{ v | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / where: \"flag\" | map: \"key\" | join: \"|\" on numbers",
+    "source": "{{ v | where: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reject: \"flag\" | map: \"key\" | join: \"|\" on numbers",
+    "source": "{{ v | reject: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find: \"key\", \"b\" | map: \"n\" | join: \"|\" on numbers",
+    "source": "{{ v | find: \"key\", \"b\" | map: \"n\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find_index: \"flag\" on numbers",
+    "source": "{{ v | find_index: \"flag\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reverse | join: \"|\" on numbers",
+    "source": "{{ v | reverse | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / slice: -2, 3 | join: \"|\" on numbers",
+    "source": "{{ v | slice: -2, 3 | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / concat: extra | join: \"|\" on numbers",
+    "source": "{{ v | concat: extra | join: \"|\" }}",
+    "data": {
+      "v": [
+        3,
+        1,
+        2,
+        1
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort | join: \"|\" on mixed",
+    "source": "{{ v | sort | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort: \"key\" | map: \"key\" | join: \"|\" on mixed",
+    "source": "{{ v | sort: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort_natural | join: \"|\" on mixed",
+    "source": "{{ v | sort_natural | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact | join: \"|\" on mixed",
+    "source": "{{ v | compact | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact: \"key\" | map: \"key\" | join: \"|\" on mixed",
+    "source": "{{ v | compact: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq | join: \"|\" on mixed",
+    "source": "{{ v | uniq | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq: \"key\" | map: \"key\" | join: \"|\" on mixed",
+    "source": "{{ v | uniq: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum on mixed",
+    "source": "{{ v | sum }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum: \"n\" on mixed",
+    "source": "{{ v | sum: \"n\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / map: \"key\" | join: \"|\" on mixed",
+    "source": "{{ v | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / where: \"flag\" | map: \"key\" | join: \"|\" on mixed",
+    "source": "{{ v | where: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reject: \"flag\" | map: \"key\" | join: \"|\" on mixed",
+    "source": "{{ v | reject: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find: \"key\", \"b\" | map: \"n\" | join: \"|\" on mixed",
+    "source": "{{ v | find: \"key\", \"b\" | map: \"n\" | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find_index: \"flag\" on mixed",
+    "source": "{{ v | find_index: \"flag\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reverse | join: \"|\" on mixed",
+    "source": "{{ v | reverse | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / slice: -2, 3 | join: \"|\" on mixed",
+    "source": "{{ v | slice: -2, 3 | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / concat: extra | join: \"|\" on mixed",
+    "source": "{{ v | concat: extra | join: \"|\" }}",
+    "data": {
+      "v": [
+        "b",
+        "A",
+        "a",
+        "10",
+        "2",
+        null,
+        false
+      ],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort | join: \"|\" on empty",
+    "source": "{{ v | sort | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort: \"key\" | map: \"key\" | join: \"|\" on empty",
+    "source": "{{ v | sort: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort_natural | join: \"|\" on empty",
+    "source": "{{ v | sort_natural | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact | join: \"|\" on empty",
+    "source": "{{ v | compact | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact: \"key\" | map: \"key\" | join: \"|\" on empty",
+    "source": "{{ v | compact: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq | join: \"|\" on empty",
+    "source": "{{ v | uniq | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq: \"key\" | map: \"key\" | join: \"|\" on empty",
+    "source": "{{ v | uniq: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum on empty",
+    "source": "{{ v | sum }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum: \"n\" on empty",
+    "source": "{{ v | sum: \"n\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / map: \"key\" | join: \"|\" on empty",
+    "source": "{{ v | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / where: \"flag\" | map: \"key\" | join: \"|\" on empty",
+    "source": "{{ v | where: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reject: \"flag\" | map: \"key\" | join: \"|\" on empty",
+    "source": "{{ v | reject: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find: \"key\", \"b\" | map: \"n\" | join: \"|\" on empty",
+    "source": "{{ v | find: \"key\", \"b\" | map: \"n\" | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find_index: \"flag\" on empty",
+    "source": "{{ v | find_index: \"flag\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reverse | join: \"|\" on empty",
+    "source": "{{ v | reverse | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / slice: -2, 3 | join: \"|\" on empty",
+    "source": "{{ v | slice: -2, 3 | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / concat: extra | join: \"|\" on empty",
+    "source": "{{ v | concat: extra | join: \"|\" }}",
+    "data": {
+      "v": [],
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort | join: \"|\" on nil",
+    "source": "{{ v | sort | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort: \"key\" | map: \"key\" | join: \"|\" on nil",
+    "source": "{{ v | sort: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort_natural | join: \"|\" on nil",
+    "source": "{{ v | sort_natural | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact | join: \"|\" on nil",
+    "source": "{{ v | compact | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact: \"key\" | map: \"key\" | join: \"|\" on nil",
+    "source": "{{ v | compact: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq | join: \"|\" on nil",
+    "source": "{{ v | uniq | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq: \"key\" | map: \"key\" | join: \"|\" on nil",
+    "source": "{{ v | uniq: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum on nil",
+    "source": "{{ v | sum }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum: \"n\" on nil",
+    "source": "{{ v | sum: \"n\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / map: \"key\" | join: \"|\" on nil",
+    "source": "{{ v | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / where: \"flag\" | map: \"key\" | join: \"|\" on nil",
+    "source": "{{ v | where: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reject: \"flag\" | map: \"key\" | join: \"|\" on nil",
+    "source": "{{ v | reject: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find: \"key\", \"b\" | map: \"n\" | join: \"|\" on nil",
+    "source": "{{ v | find: \"key\", \"b\" | map: \"n\" | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find_index: \"flag\" on nil",
+    "source": "{{ v | find_index: \"flag\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reverse | join: \"|\" on nil",
+    "source": "{{ v | reverse | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / slice: -2, 3 | join: \"|\" on nil",
+    "source": "{{ v | slice: -2, 3 | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / concat: extra | join: \"|\" on nil",
+    "source": "{{ v | concat: extra | join: \"|\" }}",
+    "data": {
+      "v": null,
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort | join: \"|\" on single map",
+    "source": "{{ v | sort | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort: \"key\" | map: \"key\" | join: \"|\" on single map",
+    "source": "{{ v | sort: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sort_natural | join: \"|\" on single map",
+    "source": "{{ v | sort_natural | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact | join: \"|\" on single map",
+    "source": "{{ v | compact | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / compact: \"key\" | map: \"key\" | join: \"|\" on single map",
+    "source": "{{ v | compact: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq | join: \"|\" on single map",
+    "source": "{{ v | uniq | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / uniq: \"key\" | map: \"key\" | join: \"|\" on single map",
+    "source": "{{ v | uniq: \"key\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum on single map",
+    "source": "{{ v | sum }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / sum: \"n\" on single map",
+    "source": "{{ v | sum: \"n\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / map: \"key\" | join: \"|\" on single map",
+    "source": "{{ v | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / where: \"flag\" | map: \"key\" | join: \"|\" on single map",
+    "source": "{{ v | where: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reject: \"flag\" | map: \"key\" | join: \"|\" on single map",
+    "source": "{{ v | reject: \"flag\" | map: \"key\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find: \"key\", \"b\" | map: \"n\" | join: \"|\" on single map",
+    "source": "{{ v | find: \"key\", \"b\" | map: \"n\" | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / find_index: \"flag\" on single map",
+    "source": "{{ v | find_index: \"flag\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / reverse | join: \"|\" on single map",
+    "source": "{{ v | reverse | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / slice: -2, 3 | join: \"|\" on single map",
+    "source": "{{ v | slice: -2, 3 | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "collection filters / concat: extra | join: \"|\" on single map",
+    "source": "{{ v | concat: extra | join: \"|\" }}",
+    "data": {
+      "v": {
+        "key": "A",
+        "n": 2
+      },
+      "extra": [
+        6
+      ]
+    }
+  },
+  {
+    "label": "loops / for list",
+    "source": "{% for v in values  %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / for list limit: 1",
+    "source": "{% for v in values limit: 1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / for list offset: 9",
+    "source": "{% for v in values offset: 9 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / for list offset: -1",
+    "source": "{% for v in values offset: -1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / for list limit: 0",
+    "source": "{% for v in values limit: 0 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / for list reversed limit: 2",
+    "source": "{% for v in values reversed limit: 2 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / tablerow list",
+    "source": "{% tablerow v in values  %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / tablerow list cols: 2",
+    "source": "{% tablerow v in values cols: 2 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / tablerow list cols: 2 limit: 0",
+    "source": "{% tablerow v in values cols: 2 limit: 0 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / tablerow list cols: 2 offset: 9",
+    "source": "{% tablerow v in values cols: 2 offset: 9 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "label": "loops / for empty list",
+    "source": "{% for v in values  %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / for empty list limit: 1",
+    "source": "{% for v in values limit: 1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / for empty list offset: 9",
+    "source": "{% for v in values offset: 9 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / for empty list offset: -1",
+    "source": "{% for v in values offset: -1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / for empty list limit: 0",
+    "source": "{% for v in values limit: 0 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / for empty list reversed limit: 2",
+    "source": "{% for v in values reversed limit: 2 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / tablerow empty list",
+    "source": "{% tablerow v in values  %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / tablerow empty list cols: 2",
+    "source": "{% tablerow v in values cols: 2 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / tablerow empty list cols: 2 limit: 0",
+    "source": "{% tablerow v in values cols: 2 limit: 0 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / tablerow empty list cols: 2 offset: 9",
+    "source": "{% tablerow v in values cols: 2 offset: 9 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": []
+    }
+  },
+  {
+    "label": "loops / for map",
+    "source": "{% for v in values  %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / for map limit: 1",
+    "source": "{% for v in values limit: 1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / for map offset: 9",
+    "source": "{% for v in values offset: 9 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / for map offset: -1",
+    "source": "{% for v in values offset: -1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / for map limit: 0",
+    "source": "{% for v in values limit: 0 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / for map reversed limit: 2",
+    "source": "{% for v in values reversed limit: 2 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / tablerow map",
+    "source": "{% tablerow v in values  %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / tablerow map cols: 2",
+    "source": "{% tablerow v in values cols: 2 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / tablerow map cols: 2 limit: 0",
+    "source": "{% tablerow v in values cols: 2 limit: 0 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / tablerow map cols: 2 offset: 9",
+    "source": "{% tablerow v in values cols: 2 offset: 9 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": {
+        "a": 1,
+        "b": 2
+      }
+    }
+  },
+  {
+    "label": "loops / for string",
+    "source": "{% for v in values  %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / for string limit: 1",
+    "source": "{% for v in values limit: 1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / for string offset: 9",
+    "source": "{% for v in values offset: 9 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / for string offset: -1",
+    "source": "{% for v in values offset: -1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / for string limit: 0",
+    "source": "{% for v in values limit: 0 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / for string reversed limit: 2",
+    "source": "{% for v in values reversed limit: 2 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / tablerow string",
+    "source": "{% tablerow v in values  %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / tablerow string cols: 2",
+    "source": "{% tablerow v in values cols: 2 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / tablerow string cols: 2 limit: 0",
+    "source": "{% tablerow v in values cols: 2 limit: 0 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / tablerow string cols: 2 offset: 9",
+    "source": "{% tablerow v in values cols: 2 offset: 9 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": "abc"
+    }
+  },
+  {
+    "label": "loops / for nil",
+    "source": "{% for v in values  %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / for nil limit: 1",
+    "source": "{% for v in values limit: 1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / for nil offset: 9",
+    "source": "{% for v in values offset: 9 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / for nil offset: -1",
+    "source": "{% for v in values offset: -1 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / for nil limit: 0",
+    "source": "{% for v in values limit: 0 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / for nil reversed limit: 2",
+    "source": "{% for v in values reversed limit: 2 %}{{forloop.index}}={{v}};{% else %}empty{% endfor %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / tablerow nil",
+    "source": "{% tablerow v in values  %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / tablerow nil cols: 2",
+    "source": "{% tablerow v in values cols: 2 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / tablerow nil cols: 2 limit: 0",
+    "source": "{% tablerow v in values cols: 2 limit: 0 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "loops / tablerow nil cols: 2 offset: 9",
+    "source": "{% tablerow v in values cols: 2 offset: 9 %}{{tablerowloop.row}}:{{tablerowloop.col0}}{% endtablerow %}",
+    "data": {
+      "values": null
+    }
+  },
+  {
+    "label": "lookups / v[k].name",
+    "source": "[{{ v[k].name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v[\"key\"].name",
+    "source": "[{{ v[\"key\"].name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.key.name",
+    "source": "[{{ v.key.name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list[-1].name",
+    "source": "[{{ v.list[-1].name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list[0].name",
+    "source": "[{{ v.list[0].name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list[k]",
+    "source": "[{{ v.list[k] }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list[missing]",
+    "source": "[{{ v.list[missing] }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list.first.name",
+    "source": "[{{ v.list.first.name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list.last.name",
+    "source": "[{{ v.list.last.name }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.list.size",
+    "source": "[{{ v.list.size }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.map.size",
+    "source": "[{{ v.map.size }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.map.first",
+    "source": "[{{ v.map.first }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.map.last",
+    "source": "[{{ v.map.last }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v.name[\"size\"]",
+    "source": "[{{ v.name[\"size\"] }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "lookups / v[\"name\"].size",
+    "source": "[{{ v[\"name\"].size }}]",
+    "data": {
+      "v": {
+        "key": {
+          "name": "ok"
+        },
+        "list": [
+          {
+            "name": "a"
+          },
+          {
+            "name": "b"
+          }
+        ],
+        "map": {
+          "x": 1,
+          "y": 2
+        },
+        "name": "a😀"
+      },
+      "k": "key"
+    }
+  },
+  {
+    "label": "partials / include 'p'",
+    "source": "{% include 'p' %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include 'p', x: data",
+    "source": "{% include 'p', x: data %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include 'p' with data",
+    "source": "{% include 'p' with data %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include 'p' with data as x",
+    "source": "{% include 'p' with data as x %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include 'p' for items as x",
+    "source": "{% include 'p' for items as x %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include 'p' for items",
+    "source": "{% include 'p' for items %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include partial",
+    "source": "{% include partial %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / include 'missing'",
+    "source": "{% include 'missing' %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'p'",
+    "source": "{% render 'p' %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'p', x: data",
+    "source": "{% render 'p', x: data %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'p' with data",
+    "source": "{% render 'p' with data %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'p' with data as x",
+    "source": "{% render 'p' with data as x %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'p' for items as x",
+    "source": "{% render 'p' for items as x %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'p' for items",
+    "source": "{% render 'p' for items %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render partial",
+    "source": "{% render partial %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "partials / render 'missing'",
+    "source": "{% render 'missing' %}|{{ x.name }}|{{ created }}",
+    "data": {
+      "data": {
+        "name": "one"
+      },
+      "items": [
+        {
+          "name": "a"
+        },
+        {
+          "name": "b"
+        }
+      ],
+      "partial": "p",
+      "x": {
+        "name": "outer"
+      }
+    },
+    "partials": {
+      "p": "[{{p.name}}:{{x.name}}:{{forloop.index}}]{% assign created = 1 %}"
+    }
+  },
+  {
+    "label": "whitespace / '' {% %}",
+    "source": "A{% if true %}B{% endif %}C"
+  },
+  {
+    "label": "whitespace / '' {%- %}",
+    "source": "A{%- if true %}B{%- endif %}C"
+  },
+  {
+    "label": "whitespace / '' {% -%}",
+    "source": "A{% if true -%}B{% endif -%}C"
+  },
+  {
+    "label": "whitespace / '' {%- -%}",
+    "source": "A{%- if true -%}B{%- endif -%}C"
+  },
+  {
+    "label": "whitespace / ' ' {% %}",
+    "source": "A {% if true %} B {% endif %} C"
+  },
+  {
+    "label": "whitespace / ' ' {%- %}",
+    "source": "A {%- if true %} B {%- endif %} C"
+  },
+  {
+    "label": "whitespace / ' ' {% -%}",
+    "source": "A {% if true -%} B {% endif -%} C"
+  },
+  {
+    "label": "whitespace / ' ' {%- -%}",
+    "source": "A {%- if true -%} B {%- endif -%} C"
+  },
+  {
+    "label": "whitespace / '\\n ' {% %}",
+    "source": "A\n {% if true %}\n B\n {% endif %}\n C"
+  },
+  {
+    "label": "whitespace / '\\n ' {%- %}",
+    "source": "A\n {%- if true %}\n B\n {%- endif %}\n C"
+  },
+  {
+    "label": "whitespace / '\\n ' {% -%}",
+    "source": "A\n {% if true -%}\n B\n {% endif -%}\n C"
+  },
+  {
+    "label": "whitespace / '\\n ' {%- -%}",
+    "source": "A\n {%- if true -%}\n B\n {%- endif -%}\n C"
+  },
+  {
+    "label": "whitespace / '\\r\\n\\t ' {% %}",
+    "source": "A\r\n\t {% if true %}\r\n\t B\r\n\t {% endif %}\r\n\t C"
+  },
+  {
+    "label": "whitespace / '\\r\\n\\t ' {%- %}",
+    "source": "A\r\n\t {%- if true %}\r\n\t B\r\n\t {%- endif %}\r\n\t C"
+  },
+  {
+    "label": "whitespace / '\\r\\n\\t ' {% -%}",
+    "source": "A\r\n\t {% if true -%}\r\n\t B\r\n\t {% endif -%}\r\n\t C"
+  },
+  {
+    "label": "whitespace / '\\r\\n\\t ' {%- -%}",
+    "source": "A\r\n\t {%- if true -%}\r\n\t B\r\n\t {%- endif -%}\r\n\t C"
+  }
+]

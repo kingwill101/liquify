@@ -1,0 +1,218 @@
+[
+  {
+    "label": "has integer",
+    "source": "{{ a | has: 2 }}",
+    "data": {
+      "a": [
+        1,
+        2,
+        3
+      ]
+    },
+    "expected": "true"
+  },
+  {
+    "label": "default allow_false",
+    "source": "{{ false | default: 'bar', allow_false:true }}",
+    "data": {},
+    "expected": "false"
+  },
+  {
+    "label": "blank alias",
+    "source": "{% assign x = blank %}{% if '' == x %}TRUE{% else %}FALSE{% endif %}",
+    "data": {},
+    "expected": "TRUE"
+  },
+  {
+    "label": "string last",
+    "source": "{{ s.last }}",
+    "data": {
+      "s": "hello"
+    },
+    "expected": "o"
+  },
+  {
+    "label": "capture and reassignment",
+    "source": "{% capture some %}hello{% endcapture %}{% assign other = some %}{% assign some = 'foo' %}{{ some }}-{{ other }}",
+    "data": {},
+    "expected": "foo-hello"
+  },
+  {
+    "label": "increment visibility",
+    "source": "{% increment foo %} {{ foo }}",
+    "data": {},
+    "expected": "0 1"
+  },
+  {
+    "label": "forloop name",
+    "source": "{% for tag in product.tags limit:1 %}{{ forloop.name }}{% endfor %}",
+    "data": {
+      "product": {
+        "tags": [
+          "sports",
+          "garden"
+        ]
+      }
+    },
+    "expected": "tag-product.tags"
+  },
+  {
+    "label": "capture whitespace",
+    "source": "{% capture x %}  {% endcapture %}[{{ x }}]",
+    "data": {},
+    "expected": "[  ]"
+  },
+  {
+    "label": "nested comments",
+    "source": "{% comment %}    {% comment %}    {% comment %}{%    endcomment     %}    {% endcomment %}{% endcomment %}",
+    "data": {},
+    "expected": ""
+  },
+  {
+    "label": "spaced range",
+    "source": "{{ (1 .. 5) | join: '#' }}",
+    "data": {},
+    "expected": "1#2#3#4#5"
+  },
+  {
+    "label": "decimal subtraction",
+    "source": "{{ 10.1 | minus: 2.2 }}",
+    "data": {},
+    "expected": "7.9"
+  },
+  {
+    "label": "blank filter coercion",
+    "source": "{{ blank | split: '' | join: '-' }}",
+    "data": {},
+    "expected": ""
+  },
+  {
+    "label": "tablerow break",
+    "source": "{% tablerow n in (1..3) cols:2 %}{{n}}{% break %}{{n}}{% endtablerow %}",
+    "data": {},
+    "expected": "<tr class=\"row1\">\n<td class=\"col1\">1</td></tr>\n"
+  },
+  {
+    "label": "include outer scope",
+    "source": "{% include 'outer-scope' %}",
+    "data": {
+      "customer": {
+        "first_name": "Holly"
+      }
+    },
+    "partials": {
+      "outer-scope": "Hello, {{ customer.first_name }}"
+    },
+    "expected": "Hello, Holly"
+  },
+  {
+    "label": "blank and empty expression literals",
+    "source": "{% assign a = blank %}{% assign b = empty %}{{ a | append: 'x' }}|{{ b | append: 'y' }}|{{ blank_label }}",
+    "data": {
+      "blank_label": "literal boundary"
+    },
+    "expected": "x|y|literal boundary"
+  },
+  {
+    "label": "blank and empty equality across value types",
+    "source": "{% for value in values %}{% if value == blank %}B{% else %}-{% endif %}{% if empty == value %}E{% else %}-{% endif %};{% endfor %}",
+    "data": {
+      "values": [
+        null,
+        false,
+        true,
+        0,
+        "",
+        " \t",
+        "text",
+        [],
+        {},
+        [
+          1
+        ],
+        {
+          "a": 1
+        },
+        "\u00a0"
+      ]
+    },
+    "expected": "B-;B-;--;--;BE;B-;--;BE;BE;--;--;--;"
+  },
+  {
+    "label": "assigned and quoted blank are ordinary values",
+    "source": "{% assign a = blank %}{% assign b = empty %}{% if value == a or value == b or value == 'blank' %}ordinary{% elsif value == blank %}predicate{% endif %}{% unless value != blank %}!{% endunless %}",
+    "data": {
+      "value": "  "
+    },
+    "expected": "predicate!"
+  },
+  {
+    "label": "blank and empty case alternatives",
+    "source": "{% case value %}{% when 'text' or empty %}empty{% when 'other', blank %}blank{% else %}other{% endcase %}",
+    "data": {
+      "value": " \t"
+    },
+    "expected": "blank"
+  },
+  {
+    "label": "offset continue",
+    "source": "{% for n in (1..5) limit:2 %}{{n}}{% endfor %}|{% for n in (1..5) offset:continue %}{{n}}{% endfor %}",
+    "expected": "12|345"
+  },
+  {
+    "label": "reversed with limit and offset",
+    "source": "{% for n in (1..5) offset:1 limit:2 reversed %}{{n}}{% endfor %}",
+    "expected": "23"
+  },
+  {
+    "label": "reversed before options",
+    "source": "{% for n in (1..5) reversed offset:1 limit:2 %}{{n}}{% endfor %}",
+    "expected": "32"
+  },
+  {
+    "label": "forloop index after continue",
+    "source": "{% for n in (1..3) %}{% if n == 2 %}{% continue %}{% endif %}{{n}}:{{forloop.index}};{% endfor %}",
+    "expected": "1:1;3:3;"
+  },
+  {
+    "label": "unless with else",
+    "source": "{% unless enabled %}off{% else %}on{% endunless %}",
+    "data": {
+      "enabled": true
+    },
+    "expected": "on"
+  },
+  {
+    "label": "unless with elsif",
+    "source": "{% unless enabled %}off{% elsif ready %}ready{% else %}waiting{% endunless %}",
+    "data": {
+      "enabled": true,
+      "ready": true
+    },
+    "expected": "ready"
+  },
+  {
+    "label": "mixed boolean operators",
+    "source": "{% if a and b or c %}yes{% else %}no{% endif %}",
+    "data": {
+      "a": false,
+      "b": false,
+      "c": true
+    },
+    "expected": "no"
+  },
+  {
+    "label": "nested unless uses the matching end tag",
+    "source": "{% unless a %}{% unless b %}inner{% else %}inner else{% endunless %}{% else %}outer else{% endunless %}",
+    "data": {
+      "a": false,
+      "b": true
+    },
+    "expected": "inner else"
+  },
+  {
+    "label": "offset continue shares state across conditional scopes",
+    "source": "{% if true %}{% for n in (1..5) limit:2 %}{{n}}{% endfor %}{% endif %}|{% unless false %}{% for n in (1..5) offset:continue %}{{n}}{% endfor %}{% endunless %}",
+    "expected": "12|345"
+  }
+]
