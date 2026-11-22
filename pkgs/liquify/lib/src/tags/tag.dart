@@ -115,38 +115,38 @@ abstract class AbstractTag {
   FutureOr<dynamic> evaluateAsync(Evaluator evaluator, Buffer buffer) async {
     evaluator.context.pushScope();
 
-    final innerContext = evaluator.context.clone();
-    final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
-      ..context.setRoot(evaluator.context.getRoot());
+    final Map<String, dynamic> variables;
+    final dynamic result;
+    try {
+      final innerContext = evaluator.context.clone();
+      final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
+        ..context.setRoot(evaluator.context.getRoot());
 
-    var result = await evaluateWithContextAsync(innerEvaluator, buffer);
-
-    // Store the variables from the current scope before popping it
-    final currentScopeVariables = innerEvaluator.context.all();
-    evaluator.context.popScope();
-
-    // Merge the stored variables back into the previous scope
-    evaluator.context.merge(currentScopeVariables);
-
+      result = await evaluateWithContextAsync(innerEvaluator, buffer);
+      variables = innerEvaluator.context.all();
+    } finally {
+      evaluator.context.popScope();
+    }
+    evaluator.context.merge(variables);
     return result;
   }
 
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     evaluator.context.pushScope();
 
-    final innerContext = evaluator.context.clone();
-    final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
-      ..context.setRoot(evaluator.context.getRoot());
+    final Map<String, dynamic> variables;
+    final dynamic result;
+    try {
+      final innerContext = evaluator.context.clone();
+      final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
+        ..context.setRoot(evaluator.context.getRoot());
 
-    var result = evaluateWithContext(innerEvaluator, buffer);
-
-    // Store the variables from the current scope before popping it
-    final currentScopeVariables = innerEvaluator.context.all();
-    evaluator.context.popScope();
-
-    // Merge the stored variables back into the previous scope
-    evaluator.context.merge(currentScopeVariables);
-
+      result = evaluateWithContext(innerEvaluator, buffer);
+      variables = innerEvaluator.context.all();
+    } finally {
+      evaluator.context.popScope();
+    }
+    evaluator.context.merge(variables);
     return result;
   }
 
