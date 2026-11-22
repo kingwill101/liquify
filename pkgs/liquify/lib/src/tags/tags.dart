@@ -21,3 +21,4 @@ export 'layout.dart' show LayoutTag;
 export 'super_tag.dart' show SuperTag;
 export 'comment.dart' show CommentTag;
 export 'doc_tag.dart' show DocTag;
+export 'ifchanged.dart' show IfChangedTag;

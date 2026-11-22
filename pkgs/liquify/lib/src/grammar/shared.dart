@@ -1289,6 +1289,18 @@ Parser elseBlock() => seq2(ref0(elseTag), ref0(elseBranchContent))
     })
     .labeled('elseBlock');
 
+Parser<Tag> parseIfChangedBlock(Parser bodyElement, [LiquidConfig? config]) {
+  final open = someTag('ifchanged', config: config, hasContent: false);
+  final close = someTag('endifchanged', config: config, hasContent: false);
+  return seq3(
+    open,
+    bodyElement.starLazy(close),
+    close,
+  ).map((parts) => parts.$1.copyWith(body: parts.$2.cast<ASTNode>()));
+}
+
+Parser<Tag> ifChangedBlock() => parseIfChangedBlock(ref0(element));
+
 Parser<Tag> unlessBlock() => conditionalBlock(ref0(element), 'unless', null);
 
 /// Optimized element parser using lookahead to avoid unnecessary backtracking.
@@ -1326,6 +1338,7 @@ Parser element() {
   final tagElements = [
     ref0(ifBlock),
     ref0(unlessBlock),
+    ref0(ifChangedBlock),
     ref0(forBlock),
     ref0(caseBlock),
     ref0(whenBlock),

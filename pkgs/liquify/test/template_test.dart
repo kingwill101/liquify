@@ -157,6 +157,18 @@ void main() {
       },
     );
 
+    test('ifchanged writes only when the rendered contents change', () async {
+      final template = Template.parse(
+        '{% for n in values %}{% ifchanged %}{{n}}{% endifchanged %}{% endfor %}',
+        data: {
+          'values': [1, 1, 2, 2, 1],
+        },
+      );
+      expect(template.render(), '121');
+      expect(template.render(), '121');
+      expect(await template.renderAsync(), '121');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

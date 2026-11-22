@@ -88,6 +88,10 @@ extension Evaluation on Evaluator {
     // Tag environment clones share the register value within that render.
     final ownsForRegister = !context.registers.containsKey('for');
     if (ownsForRegister) context.setRegister('for', <String, int>{});
+    final ownsIfChangedRegister = !context.registers.containsKey('ifchanged');
+    if (ownsIfChangedRegister) {
+      context.setRegister('ifchanged', <String, String>{});
+    }
     try {
       for (final node in nodes) {
         if (node is Assignment) continue;
@@ -100,6 +104,7 @@ extension Evaluation on Evaluator {
       return buffer.toString();
     } finally {
       if (ownsForRegister) context.removeRegister('for');
+      if (ownsIfChangedRegister) context.removeRegister('ifchanged');
     }
   }
 
@@ -108,6 +113,10 @@ extension Evaluation on Evaluator {
     // Tag environment clones share the register value within that render.
     final ownsForRegister = !context.registers.containsKey('for');
     if (ownsForRegister) context.setRegister('for', <String, int>{});
+    final ownsIfChangedRegister = !context.registers.containsKey('ifchanged');
+    if (ownsIfChangedRegister) {
+      context.setRegister('ifchanged', <String, String>{});
+    }
     try {
       for (final node in nodes) {
         if (node is Assignment) continue;
@@ -120,6 +129,7 @@ extension Evaluation on Evaluator {
       return buffer.toString();
     } finally {
       if (ownsForRegister) context.removeRegister('for');
+      if (ownsIfChangedRegister) context.removeRegister('ifchanged');
     }
   }
 }

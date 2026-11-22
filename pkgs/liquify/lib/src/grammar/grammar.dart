@@ -86,6 +86,7 @@ class LiquidGrammar extends GrammarDefinition {
     final tagElements = [
       ref0(ifBlock),
       ref0(unlessBlock),
+      ref0(ifChangedBlock),
       ref0(forBlock),
       ref0(caseBlock),
       ref0(whenBlock),
@@ -265,6 +266,8 @@ class LiquidGrammar extends GrammarDefinition {
   // ---------------------------------------------------------------------------
   // If block
   // ---------------------------------------------------------------------------
+
+  Parser<Tag> ifChangedBlock() => parseIfChangedBlock(ref0(element), config);
 
   Parser<Tag> unlessBlock() =>
       conditionalBlock(ref0(element), 'unless', config);
