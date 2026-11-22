@@ -169,6 +169,20 @@ void main() {
       expect(await template.renderAsync(), '121');
     });
 
+    test(
+      'counters start from supplied data without overriding assignments',
+      () async {
+        Template template() => Template.parse(
+          '{% increment n %}|{{n}}|{% decrement n %}|{{n}}|'
+          '{% assign n = 42 %}{% increment n %}|{{n}}',
+          data: {'n': 5},
+        );
+
+        expect(template().render(), '5|6|5|5|5|42');
+        expect(await template().renderAsync(), '5|6|5|5|5|42');
+      },
+    );
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

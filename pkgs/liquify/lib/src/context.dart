@@ -270,18 +270,29 @@ class Environment {
   /// [name] The name of the variable to retrieve.
   /// [return] The value of the variable, or `null` if the variable is not found.
   dynamic getVariable(String name) {
-    // Iterate from the top of the stack (most recent scope) to the bottom (global scope)
-    for (var i = _variableStack.length - 1; i >= 0; i--) {
+    for (var i = _variableStack.length - 1; i > 0; i--) {
       if (_variableStack[i].containsKey(name)) {
         return _variableStack[i][name];
       }
     }
-    // An assigned variable takes precedence over a counter of the same name.
+
+    final supplied = _variableStack.first;
+    const counterPrefix = 'counter:';
+    if (name.startsWith(counterPrefix)) {
+      return supplied.containsKey(name)
+          ? supplied[name]
+          : supplied[name.substring(counterPrefix.length)];
+    }
+
+    // Assignments in template scopes take precedence over counters. A
+    // counter, in turn, takes precedence over its initial supplied value.
     for (var i = _variableStack.length - 1; i >= 0; i--) {
       final scope = _variableStack[i];
-      if (scope.containsKey('counter:$name')) return scope['counter:$name'];
+      if (scope.containsKey('$counterPrefix$name')) {
+        return scope['$counterPrefix$name'];
+      }
     }
-    return null;
+    return supplied[name];
   }
 
   /// Sets a variable in the current scope.

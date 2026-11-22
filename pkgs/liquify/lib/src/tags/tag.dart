@@ -119,11 +119,16 @@ abstract class AbstractTag {
     final dynamic result;
     try {
       final innerContext = evaluator.context.clone();
+      final inherited = innerContext.all();
       final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
         ..context.setRoot(evaluator.context.getRoot());
 
       result = await evaluateWithContextAsync(innerEvaluator, buffer);
-      variables = innerEvaluator.context.all();
+      variables = innerEvaluator.context.all()
+        ..removeWhere(
+          (name, value) =>
+              inherited.containsKey(name) && identical(inherited[name], value),
+        );
     } finally {
       evaluator.context.popScope();
     }
@@ -138,11 +143,16 @@ abstract class AbstractTag {
     final dynamic result;
     try {
       final innerContext = evaluator.context.clone();
+      final inherited = innerContext.all();
       final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
         ..context.setRoot(evaluator.context.getRoot());
 
       result = evaluateWithContext(innerEvaluator, buffer);
-      variables = innerEvaluator.context.all();
+      variables = innerEvaluator.context.all()
+        ..removeWhere(
+          (name, value) =>
+              inherited.containsKey(name) && identical(inherited[name], value),
+        );
     } finally {
       evaluator.context.popScope();
     }
