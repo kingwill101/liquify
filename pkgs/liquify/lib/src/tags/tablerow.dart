@@ -165,57 +165,34 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
     evaluator.context.pushScope();
 
     try {
-      buffer.writeln('  <tr class="row${tableRowLoop.row}">');
+      buffer.writeln('<tr class="row1">');
 
       for (var i = 0; i < iterable.length; i++) {
-        final item = iterable[i];
         evaluator.context.setVariable('tablerowloop', tableRowLoop.toMap());
-        evaluator.context.setVariable(accessor.name, item);
+        evaluator.context.setVariable(accessor.name, iterable[i]);
 
-        buffer.writeln('    <td class="col${tableRowLoop.col}">');
-
-        var cellBuffer = Buffer();
-        final originalBuffer = evaluator.buffer;
-        evaluator.buffer = cellBuffer;
-
-        for (final node in body) {
-          try {
-            if (node is Tag) {
-              evaluator.evaluate(node);
-            } else {
-              cellBuffer.write(evaluator.evaluate(node));
-            }
-          } on BreakException {
-            evaluator.buffer = originalBuffer;
-            buffer.writeln('    </td>');
-            buffer.writeln('  </tr>');
-            return;
-          } on ContinueException {
-            evaluator.buffer = originalBuffer;
-            continue;
-          }
+        buffer.write('<td class="col${tableRowLoop.col}">');
+        try {
+          evaluator.evaluateNodes(body);
+        } on BreakException {
+          break;
+        } on ContinueException {
+          // Continue with the next cell after closing this one.
+        } finally {
+          buffer.write('</td>');
         }
 
-        evaluator.buffer = originalBuffer;
-
-        buffer.writeln('      ${cellBuffer.toString().trim()}');
-        buffer.writeln('    </td>');
-
         if (tableRowLoop.col == cols) {
-          buffer.write('  </tr>');
           if (i < iterable.length - 1) {
             tableRowLoop.row++;
-            buffer.writeln('\n  <tr class="row${tableRowLoop.row}">');
+            buffer.write('</tr>\n<tr class="row${tableRowLoop.row}">');
           }
           tableRowLoop.col = 0;
         }
 
         tableRowLoop.increment();
       }
-
-      if (tableRowLoop.col != 1) {
-        buffer.write('  </tr>');
-      }
+      buffer.writeln('</tr>');
     } finally {
       evaluator.context.popScope();
     }
@@ -241,57 +218,34 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
     evaluator.context.pushScope();
 
     try {
-      buffer.writeln('  <tr class="row${tableRowLoop.row}">');
+      buffer.writeln('<tr class="row1">');
 
       for (var i = 0; i < iterable.length; i++) {
-        final item = iterable[i];
         evaluator.context.setVariable('tablerowloop', tableRowLoop.toMap());
-        evaluator.context.setVariable(accessor.name, item);
+        evaluator.context.setVariable(accessor.name, iterable[i]);
 
-        buffer.writeln('    <td class="col${tableRowLoop.col}">');
-
-        var cellBuffer = Buffer();
-        final originalBuffer = evaluator.buffer;
-        evaluator.buffer = cellBuffer;
-
-        for (final node in body) {
-          try {
-            if (node is Tag) {
-              await evaluator.evaluateAsync(node);
-            } else {
-              cellBuffer.write(await evaluator.evaluateAsync(node));
-            }
-          } on BreakException {
-            evaluator.buffer = originalBuffer;
-            buffer.writeln('    </td>');
-            buffer.writeln('  </tr>');
-            return;
-          } on ContinueException {
-            evaluator.buffer = originalBuffer;
-            continue;
-          }
+        buffer.write('<td class="col${tableRowLoop.col}">');
+        try {
+          await evaluator.evaluateNodesAsync(body);
+        } on BreakException {
+          break;
+        } on ContinueException {
+          // Continue with the next cell after closing this one.
+        } finally {
+          buffer.write('</td>');
         }
 
-        evaluator.buffer = originalBuffer;
-
-        buffer.writeln('      ${cellBuffer.toString().trim()}');
-        buffer.writeln('    </td>');
-
         if (tableRowLoop.col == cols) {
-          buffer.write('  </tr>');
           if (i < iterable.length - 1) {
             tableRowLoop.row++;
-            buffer.writeln('\n  <tr class="row${tableRowLoop.row}">');
+            buffer.write('</tr>\n<tr class="row${tableRowLoop.row}">');
           }
           tableRowLoop.col = 0;
         }
 
         tableRowLoop.increment();
       }
-
-      if (tableRowLoop.col != 1) {
-        buffer.write('  </tr>');
-      }
+      buffer.writeln('</tr>');
     } finally {
       evaluator.context.popScope();
     }

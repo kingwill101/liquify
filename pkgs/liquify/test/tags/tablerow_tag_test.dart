@@ -76,26 +76,15 @@ void main() {
           (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      Cool Shirt
-    </td>
-    <td class="col2">
-      Alien Poster
-    </td>
-    <td class="col3">
-      Batman Poster
-    </td>
-    <td class="col4">
-      Bullseye Shirt
-    </td>
-    <td class="col5">
-      Another Classic Vinyl
-    </td>
-    <td class="col6">
-      Awesome Jeans
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">Cool Shirt
+</td><td class="col2">Alien Poster
+</td><td class="col3">Batman Poster
+</td><td class="col4">Bullseye Shirt
+</td><td class="col5">Another Classic Vinyl
+</td><td class="col6">Awesome Jeans
+</td></tr>
+
 </table>''');
           },
         );
@@ -111,30 +100,17 @@ void main() {
           (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      Cool Shirt
-    </td>
-    <td class="col2">
-      Alien Poster
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      Batman Poster
-    </td>
-    <td class="col2">
-      Bullseye Shirt
-    </td>
-  </tr>
-  <tr class="row3">
-    <td class="col1">
-      Another Classic Vinyl
-    </td>
-    <td class="col2">
-      Awesome Jeans
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">Cool Shirt
+</td><td class="col2">Alien Poster
+</td></tr>
+<tr class="row2"><td class="col1">Batman Poster
+</td><td class="col2">Bullseye Shirt
+</td></tr>
+<tr class="row3"><td class="col1">Another Classic Vinyl
+</td><td class="col2">Awesome Jeans
+</td></tr>
+
 </table>''');
           },
         );
@@ -150,22 +126,14 @@ void main() {
           (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      1
-    </td>
-    <td class="col2">
-      2
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      3
-    </td>
-    <td class="col2">
-      4
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">1
+</td><td class="col2">2
+</td></tr>
+<tr class="row2"><td class="col1">3
+</td><td class="col2">4
+</td></tr>
+
 </table>''');
           },
         );
@@ -181,19 +149,13 @@ void main() {
           (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      4
-    </td>
-    <td class="col2">
-      5
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      6
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">4
+</td><td class="col2">5
+</td></tr>
+<tr class="row2"><td class="col1">6
+</td></tr>
+
 </table>''');
           },
         );
@@ -209,28 +171,16 @@ void main() {
           (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      3
-    </td>
-    <td class="col2">
-      4
-    </td>
-    <td class="col3">
-      5
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      6
-    </td>
-    <td class="col2">
-      7
-    </td>
-    <td class="col3">
-      8
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">3
+</td><td class="col2">4
+</td><td class="col3">5
+</td></tr>
+<tr class="row2"><td class="col1">6
+</td><td class="col2">7
+</td><td class="col3">8
+</td></tr>
+
 </table>''');
           },
         );
@@ -247,20 +197,13 @@ void main() {
           (document) {
             evaluator.evaluateNodes(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      1
-    </td>
-    <td class="col2">
-      2
-    </td>
-    <td class="col3">
-      3
-    </td>
-    <td class="col4">
-      4
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">1
+</td><td class="col2">2
+</td><td class="col3">3
+</td><td class="col4">4
+</td></tr>
+
 </table>''');
           },
         );
@@ -278,26 +221,15 @@ void main() {
           (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      Cool Shirt
-    </td>
-    <td class="col2">
-      Alien Poster
-    </td>
-    <td class="col3">
-      Batman Poster
-    </td>
-    <td class="col4">
-      Bullseye Shirt
-    </td>
-    <td class="col5">
-      Another Classic Vinyl
-    </td>
-    <td class="col6">
-      Awesome Jeans
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">Cool Shirt
+</td><td class="col2">Alien Poster
+</td><td class="col3">Batman Poster
+</td><td class="col4">Bullseye Shirt
+</td><td class="col5">Another Classic Vinyl
+</td><td class="col6">Awesome Jeans
+</td></tr>
+
 </table>''');
           },
         );
@@ -313,30 +245,17 @@ void main() {
           (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      Cool Shirt
-    </td>
-    <td class="col2">
-      Alien Poster
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      Batman Poster
-    </td>
-    <td class="col2">
-      Bullseye Shirt
-    </td>
-  </tr>
-  <tr class="row3">
-    <td class="col1">
-      Another Classic Vinyl
-    </td>
-    <td class="col2">
-      Awesome Jeans
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">Cool Shirt
+</td><td class="col2">Alien Poster
+</td></tr>
+<tr class="row2"><td class="col1">Batman Poster
+</td><td class="col2">Bullseye Shirt
+</td></tr>
+<tr class="row3"><td class="col1">Another Classic Vinyl
+</td><td class="col2">Awesome Jeans
+</td></tr>
+
 </table>''');
           },
         );
@@ -352,22 +271,14 @@ void main() {
           (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      1
-    </td>
-    <td class="col2">
-      2
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      3
-    </td>
-    <td class="col2">
-      4
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">1
+</td><td class="col2">2
+</td></tr>
+<tr class="row2"><td class="col1">3
+</td><td class="col2">4
+</td></tr>
+
 </table>''');
           },
         );
@@ -383,19 +294,13 @@ void main() {
           (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      4
-    </td>
-    <td class="col2">
-      5
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      6
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">4
+</td><td class="col2">5
+</td></tr>
+<tr class="row2"><td class="col1">6
+</td></tr>
+
 </table>''');
           },
         );
@@ -411,28 +316,16 @@ void main() {
           (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      3
-    </td>
-    <td class="col2">
-      4
-    </td>
-    <td class="col3">
-      5
-    </td>
-  </tr>
-  <tr class="row2">
-    <td class="col1">
-      6
-    </td>
-    <td class="col2">
-      7
-    </td>
-    <td class="col3">
-      8
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">3
+</td><td class="col2">4
+</td><td class="col3">5
+</td></tr>
+<tr class="row2"><td class="col1">6
+</td><td class="col2">7
+</td><td class="col3">8
+</td></tr>
+
 </table>''');
           },
         );
@@ -449,20 +342,13 @@ void main() {
           (document) async {
             await evaluator.evaluateNodesAsync(document.children);
             expect(evaluator.buffer.toString(), '''<table>
-  <tr class="row1">
-    <td class="col1">
-      1
-    </td>
-    <td class="col2">
-      2
-    </td>
-    <td class="col3">
-      3
-    </td>
-    <td class="col4">
-      4
-    </td>
-  </tr>
+<tr class="row1">
+<td class="col1">1
+</td><td class="col2">2
+</td><td class="col3">3
+</td><td class="col4">4
+</td></tr>
+
 </table>''');
           },
         );
