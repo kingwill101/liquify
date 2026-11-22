@@ -85,28 +85,17 @@ abstract class AbstractTag {
   dynamic applyFilters(dynamic value, Evaluator evaluator) {
     var result = value;
     for (final filter in filters) {
-      final filterFunction = evaluator.context.getFilter(filter.name.name);
-      if (filterFunction == null) {
-        throw Exception('Undefined filter: ${filter.name.name}');
-      }
-      final args = filter.arguments
-          .map((arg) => evaluator.evaluate(arg))
-          .toList();
-      result = filterFunction(result, args, {});
+      final filterFunction = evaluator.evaluate(filter) as Function;
+      result = filterFunction(result);
     }
     return result;
   }
 
   Future<dynamic> applyFiltersAsync(dynamic value, Evaluator evaluator) async {
     for (final filter in filters) {
-      final filterFunction = evaluator.context.getFilter(filter.name.name);
-      if (filterFunction == null) {
-        throw Exception('Undefined filter: ${filter.name.name}');
-      }
-      final args = await Future.wait(
-        filter.arguments.map((arg) => evaluator.evaluateAsync(arg)),
-      );
-      value = filterFunction(value, args, {});
+      final filterFunction = await evaluator.evaluateAsync(filter) as Function;
+      final filtered = filterFunction(value);
+      value = filtered is Future ? await filtered : filtered;
     }
     return value;
   }

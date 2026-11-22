@@ -2,6 +2,7 @@ import 'package:liquify/src/filter_registry.dart';
 import 'dart:math' as math;
 
 import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/liquid_number.dart';
 
 /// Returns the absolute value of the input.
 ///
@@ -18,7 +19,10 @@ FilterFunction abs =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      return toLiquidNumber(value).abs();
+      final number = toLiquidNumber(value);
+      return _integerOperand(value, number)
+          ? number.abs()
+          : preserveLiquidDecimal(number.abs().toDouble());
     };
 
 /// Returns the maximum of the input value and the argument.
@@ -40,7 +44,8 @@ FilterFunction atLeast =
       if (arguments.isEmpty) throw ArgumentError('at_least expects 1 argument');
       num val = toLiquidNumber(value);
       num arg = toLiquidNumber(arguments[0]);
-      return math.max(val, arg);
+      final result = math.max(val, arg);
+      return _preserveOperandKind(result == val ? value : arguments[0], result);
     };
 
 /// Returns the minimum of the input value and the argument.
@@ -62,7 +67,8 @@ FilterFunction atMost =
       if (arguments.isEmpty) throw ArgumentError('at_most expects 1 argument');
       num val = toLiquidNumber(value);
       num arg = toLiquidNumber(arguments[0]);
-      return math.min(val, arg);
+      final result = math.min(val, arg);
+      return _preserveOperandKind(result == val ? value : arguments[0], result);
     };
 
 /// Returns the smallest integer greater than or equal to the input value.
@@ -84,6 +90,9 @@ FilterFunction ceil =
     };
 
 /// Divides the input value by the argument.
+///
+/// Two integer operands use floor division. A decimal operand preserves a
+/// decimal result unless integer arithmetic is explicitly requested.
 ///
 /// [value]: The dividend. If null, treated as 0.
 /// [arguments]: A list containing the divisor and an optional boolean to force integer arithmetic.
@@ -116,7 +125,8 @@ FilterFunction dividedBy =
       // Prevent division by zero
       if (divisor == 0) return 0;
 
-      if (dividend is int && divisor is int) {
+      if (_integerOperand(value, dividend) &&
+          _integerOperand(arguments[0], divisor)) {
         final quotient = dividend ~/ divisor;
         final remainder = dividend.remainder(divisor);
         return remainder != 0 && dividend.isNegative != divisor.isNegative
@@ -124,7 +134,9 @@ FilterFunction dividedBy =
             : quotient;
       }
       final quotient = dividend / divisor;
-      return integerArithmetic ? quotient.floor() : quotient;
+      return integerArithmetic
+          ? quotient.floor()
+          : preserveLiquidDecimal(quotient);
     };
 
 /// Returns the largest integer less than or equal to the input value.
@@ -164,10 +176,14 @@ FilterFunction minus =
       if (arguments.isEmpty) throw ArgumentError('minus expects 1 argument');
       num val = toLiquidNumber(value);
       num arg = toLiquidNumber(arguments[0]);
-      if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
+      if ((_integerOperand(value, val) && _integerOperand(arguments[0], arg)) ||
+          !val.isFinite ||
+          !arg.isFinite) {
         return val - arg;
       }
-      return _decimalOperation(val, arg, (left, right) => left - right);
+      return preserveLiquidDecimal(
+        _decimalOperation(val, arg, (left, right) => left - right),
+      );
     };
 
 final _decimalPattern = RegExp(r'^-?[0-9]+\.[0-9]+$');
@@ -175,6 +191,7 @@ final _integerPrefix = RegExp(r'^[+-]?[0-9]+(?:_[0-9]+)*');
 
 /// Converts a filter operand using Liquid's numeric coercion rules.
 num toLiquidNumber(Object? value) {
+  if (value is LiquidDecimal) return value.value;
   if (value is num) return value;
   if (value is! String) return 0;
   final text = value.trim();
@@ -182,6 +199,16 @@ num toLiquidNumber(Object? value) {
   final digits = _integerPrefix.stringMatch(text);
   return digits == null ? 0 : int.tryParse(digits.replaceAll('_', '')) ?? 0;
 }
+
+bool _integerOperand(Object? input, num number) =>
+    number is int &&
+    input is! LiquidDecimal &&
+    (input is! String || !_decimalPattern.hasMatch(input.trim()));
+
+Object _preserveOperandKind(Object? input, num number) =>
+    _integerOperand(input, number)
+    ? number
+    : preserveLiquidDecimal(number.toDouble());
 
 final _ten = BigInt.from(10);
 
@@ -237,19 +264,23 @@ FilterFunction modulo =
       // Prevent modulo by zero
       if (b == 0) return 0;
 
-      if ((a is int && b is int) || !a.isFinite || !b.isFinite) {
+      if ((_integerOperand(value, a) && _integerOperand(arguments[0], b)) ||
+          !a.isFinite ||
+          !b.isFinite) {
         final remainder = a.remainder(b);
         return remainder != 0 && remainder.isNegative != b.isNegative
             ? remainder + b
             : remainder;
       }
-      return _decimalOperation(a, b, (left, right) {
-        final remainder = left.remainder(right);
-        return remainder != BigInt.zero &&
-                remainder.isNegative != right.isNegative
-            ? remainder + right
-            : remainder;
-      });
+      return preserveLiquidDecimal(
+        _decimalOperation(a, b, (left, right) {
+          final remainder = left.remainder(right);
+          return remainder != BigInt.zero &&
+                  remainder.isNegative != right.isNegative
+              ? remainder + right
+              : remainder;
+        }),
+      );
     };
 
 /// Multiplies the input value by the argument.
@@ -271,12 +302,16 @@ FilterFunction times =
       if (arguments.isEmpty) throw ArgumentError('times expects 1 argument');
       num val = toLiquidNumber(value);
       num arg = toLiquidNumber(arguments[0]);
-      if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
+      if ((_integerOperand(value, val) && _integerOperand(arguments[0], arg)) ||
+          !val.isFinite ||
+          !arg.isFinite) {
         return val * arg;
       }
       final (left, leftScale) = _decimalParts(val);
       final (right, rightScale) = _decimalParts(arg);
-      return _decimalValue(left * right, leftScale + rightScale);
+      return preserveLiquidDecimal(
+        _decimalValue(left * right, leftScale + rightScale),
+      );
     };
 
 /// Rounds the input value to the specified number of decimal places.
@@ -304,14 +339,17 @@ FilterFunction round =
       final precision = arguments.isEmpty
           ? 0
           : toLiquidNumber(arguments[0]).toInt();
-      if (valueNumber is int && precision >= 0) return valueNumber;
+      final isInteger = _integerOperand(value, valueNumber);
+      if (isInteger && precision >= 0) return valueNumber;
       final (digits, scale) = _decimalParts(valueNumber);
       if (precision >= scale) {
-        return precision == 0 ? valueNumber.toInt() : valueNumber;
+        return precision == 0
+            ? valueNumber.toInt()
+            : _preserveOperandKind(value, valueNumber);
       }
       if (digits == BigInt.zero ||
           precision < scale - digits.abs().toString().length) {
-        return valueNumber is int || precision == 0 ? 0 : 0.0;
+        return isInteger || precision == 0 ? 0 : preserveLiquidDecimal(0.0);
       }
       final divisor = _ten.pow(scale - precision);
       final magnitude = digits.abs();
@@ -320,10 +358,10 @@ FilterFunction round =
         rounded += BigInt.one;
       }
       if (digits.isNegative) rounded = -rounded;
-      if (valueNumber is int || precision == 0) {
+      if (isInteger || precision == 0) {
         return (rounded * _ten.pow(-precision)).toInt();
       }
-      return _decimalValue(rounded, precision);
+      return preserveLiquidDecimal(_decimalValue(rounded, precision));
     };
 
 /// Adds the argument to the input value.
@@ -345,10 +383,14 @@ FilterFunction plus =
       if (arguments.isEmpty) throw ArgumentError('plus expects 1 argument');
       num val = toLiquidNumber(value);
       num arg = toLiquidNumber(arguments[0]);
-      if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
+      if ((_integerOperand(value, val) && _integerOperand(arguments[0], arg)) ||
+          !val.isFinite ||
+          !arg.isFinite) {
         return val + arg;
       }
-      return _decimalOperation(val, arg, (left, right) => left + right);
+      return preserveLiquidDecimal(
+        _decimalOperation(val, arg, (left, right) => left + right),
+      );
     };
 
 class MathModule extends Module {

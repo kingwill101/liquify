@@ -1,3 +1,4 @@
+import 'package:liquify/src/filters/math.dart' show toLiquidNumber;
 import 'dart:async';
 
 import 'package:liquify/src/filter_registry.dart';
@@ -366,7 +367,7 @@ void main() {
 
     test('sum', () {
       expect(sum([1, 2, 3, 4], [], {}), equals(10));
-      expect(sum([1.5, 2.5, 3.0], [], {}), equals(7.0));
+      expect(toLiquidNumber(sum([1.5, 2.5, 3.0], [], {})), equals(7.0));
       expect(sum([], [], {}), equals(0));
       expect(sum([1, 'not a number', 3], [], {}), equals(4));
 

@@ -2,6 +2,7 @@ import 'package:liquify/parser.dart' show parseInput, Tag;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
 import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/liquid_number.dart';
 import 'package:liquify/src/tag_registry.dart';
 import 'package:liquify/src/util.dart';
 
@@ -105,7 +106,10 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   dynamic visitLiteral(Literal node) {
-    return node.value;
+    final value = node.value;
+    return node.isDecimal && value is double
+        ? preserveLiquidDecimal(value)
+        : value;
   }
 
   @override
@@ -115,18 +119,29 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   dynamic _binaryOp(dynamic left, String op, dynamic right) {
+    if (op == '+' && (left is String || right is String)) {
+      return '${left ?? ''}${right ?? ''}';
+    }
+    final isDecimal =
+        left is LiquidDecimal ||
+        right is LiquidDecimal ||
+        (left is double && left is! int) ||
+        (right is double && right is! int);
+    left = unwrapLiquidNumber(left);
+    right = unwrapLiquidNumber(right);
+
+    dynamic numericResult(dynamic result) =>
+        isDecimal && result is double ? preserveLiquidDecimal(result) : result;
+
     switch (op) {
       case '+':
-        if (left is String || right is String) {
-          return '${left ?? ''}${(right ?? '')}';
-        }
-        return (left ?? 0) + (right ?? 0);
+        return numericResult((left ?? 0) + (right ?? 0));
       case '-':
-        return (left ?? 0) - (right ?? 0);
+        return numericResult((left ?? 0) - (right ?? 0));
       case '*':
-        return (left ?? 1) * (right ?? 1);
+        return numericResult((left ?? 1) * (right ?? 1));
       case '/':
-        return (left ?? 1) / (right ?? 1);
+        return numericResult((left ?? 1) / (right ?? 1));
       case '==':
         return liquidEquals(left, right);
       case '!=':
@@ -248,26 +263,15 @@ class Evaluator implements ASTVisitor<dynamic> {
       }
     }
 
-    return (value) => filterFunction(value, args, namedArgs);
+    return (value) =>
+        _applyFilter(node.name.name, filterFunction, value, args, namedArgs);
   }
 
   @override
   dynamic visitFilterExpression(FilteredExpression node) {
-    dynamic value;
-    if (node.expression is Assignment) {
-      (node.expression as Assignment).value.accept(this);
-      if ((node.expression as Assignment).value is Literal) {
-        value = ((node.expression as Assignment).value as Literal).value;
-      } else if ((node.expression as Assignment).value is Identifier) {
-        value = context.getVariable(
-          ((node.expression as Assignment).value as Identifier).name,
-        );
-      } else {
-        value = (node.expression as Assignment).value.accept(this);
-      }
-    } else {
-      value = node.expression.accept(this);
-    }
+    final expression = node.expression;
+    final operand = expression is Assignment ? expression.value : expression;
+    var value = operand.accept(this);
 
     for (final filter in node.filters) {
       final filterFunction = filter.accept(this);
@@ -395,26 +399,15 @@ class Evaluator implements ASTVisitor<dynamic> {
       }
     }
 
-    return (value) => filterFunction(value, args, namedArgs);
+    return (value) =>
+        _applyFilter(node.name.name, filterFunction, value, args, namedArgs);
   }
 
   @override
   Future<dynamic> visitFilterExpressionAsync(FilteredExpression node) async {
-    dynamic value;
-    if (node.expression is Assignment) {
-      await (node.expression as Assignment).value.acceptAsync(this);
-      if ((node.expression as Assignment).value is Literal) {
-        value = ((node.expression as Assignment).value as Literal).value;
-      } else if ((node.expression as Assignment).value is Identifier) {
-        value = context.getVariable(
-          ((node.expression as Assignment).value as Identifier).name,
-        );
-      } else {
-        value = await (node.expression as Assignment).value.acceptAsync(this);
-      }
-    } else {
-      value = await node.expression.acceptAsync(this);
-    }
+    final expression = node.expression;
+    final operand = expression is Assignment ? expression.value : expression;
+    var value = await operand.acceptAsync(this);
 
     for (final filter in node.filters) {
       final filterFunction = await filter.acceptAsync(this);
@@ -435,9 +428,7 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  Future<dynamic> visitLiteralAsync(Literal node) async {
-    return node.value;
-  }
+  Future<dynamic> visitLiteralAsync(Literal node) async => visitLiteral(node);
 
   @override
   Future<dynamic> visitMemberAccessAsync(MemberAccess node) async {

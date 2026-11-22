@@ -315,7 +315,11 @@ Parser numericLiteral() {
       .flatten()
       .map((value) {
         if (value.contains('.')) {
-          return Literal(double.parse(value), LiteralType.number);
+          return Literal(
+            double.parse(value),
+            LiteralType.number,
+            isDecimal: true,
+          );
         } else {
           return Literal(int.parse(value), LiteralType.number);
         }

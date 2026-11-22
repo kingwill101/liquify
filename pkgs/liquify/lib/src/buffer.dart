@@ -1,3 +1,4 @@
+import 'package:liquify/src/liquid_number.dart';
 import 'package:liquify/src/render_target.dart';
 
 class Buffer {
@@ -9,15 +10,18 @@ class Buffer {
   ///
   /// If the object is null, an empty string is written.
   void write(Object? obj) {
-    _sink.write(obj);
+    _sink.write(_sinkValue(obj));
   }
 
   /// Writes the given object to the buffer, followed by a newline.
   ///
   /// If no object is provided, only a newline is written.
   void writeln([Object? obj]) {
-    _sink.writeln(obj);
+    _sink.writeln(_sinkValue(obj));
   }
+
+  Object? _sinkValue(Object? value) =>
+      _sink is StringRenderSink ? value : unwrapLiquidNumber(value);
 
   /// Returns the contents of the buffer as a string.
   @override

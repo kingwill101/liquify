@@ -4,7 +4,7 @@ extension Evaluation on Evaluator {
   bool liquidEquals(Object? left, Object? right) {
     if (left is ConditionPredicate) return _matchesPredicate(left, right);
     if (right is ConditionPredicate) return _matchesPredicate(right, left);
-    return left == right;
+    return unwrapLiquidNumber(left) == unwrapLiquidNumber(right);
   }
 
   bool _matchesPredicate(ConditionPredicate predicate, Object? value) {
@@ -52,6 +52,34 @@ extension Evaluation on Evaluator {
     if (value is! List || key is! int) return null;
     final index = key < 0 ? value.length + key : key;
     return index >= 0 && index < value.length ? value[index] : null;
+  }
+
+  dynamic _applyFilter(
+    String name,
+    FilterFunction filter,
+    Object? value,
+    List<dynamic> arguments,
+    Map<String, dynamic> namedArguments,
+  ) {
+    final hasDecimal =
+        value is LiquidDecimal ||
+        arguments.any((argument) => argument is LiquidDecimal) ||
+        namedArguments.values.any((argument) => argument is LiquidDecimal);
+    if (!hasDecimal ||
+        FilterRegistry.modules.values.any(
+          (module) => identical(module.filters[name], filter),
+        )) {
+      return filter(value, arguments, namedArguments);
+    }
+
+    // Custom filters continue to receive ordinary Dart numbers.
+    return filter(
+      unwrapLiquidNumber(value),
+      arguments.map(unwrapLiquidNumber).toList(),
+      namedArguments.map(
+        (key, value) => MapEntry(key, unwrapLiquidNumber(value)),
+      ),
+    );
   }
 
   dynamic evaluate(ASTNode node) {

@@ -66,7 +66,7 @@ void main() {
       expect(minus([], [2], {}), -2);
       expect(times('3 items', [2], {}), 6);
       expect(dividedBy(-5, [2], {}), -3);
-      expect(dividedBy(5, [2.0], {}), 2.5);
+      expect(dividedBy(5, ['2.0'], {}), 2.5);
       expect(modulo(2.5, [-2], {}), -1.5);
       expect(round(5, [1], {}), isA<int>());
       expect(round(1.005, [2], {}), 1.01);

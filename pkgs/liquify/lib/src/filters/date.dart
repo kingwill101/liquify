@@ -1,4 +1,5 @@
 import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/liquid_number.dart' show unwrapLiquidNumber;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:intl/intl.dart';
@@ -40,10 +41,13 @@ FilterFunction date =
 
       tz.Location? tzArg;
       if (arguments.length > 1 && arguments[1] != null) {
-        tzArg = _resolveTimezone(arguments[1]);
+        tzArg = _resolveTimezone(unwrapLiquidNumber(arguments[1]));
       }
 
-      tz.TZDateTime? date = parseDate(value, location: tzArg);
+      tz.TZDateTime? date = parseDate(
+        unwrapLiquidNumber(value),
+        location: tzArg,
+      );
       if (date == null) return value;
 
       // If format contains %, treat it as strftime; otherwise pass directly to DateFormat.

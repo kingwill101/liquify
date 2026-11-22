@@ -8,6 +8,7 @@ import 'package:liquify/src/evaluator.dart';
 import 'package:liquify/src/ast.dart' show ASTNode;
 
 import 'package:liquify/src/filters/math.dart' show plus, toLiquidNumber;
+import 'package:liquify/src/liquid_number.dart' show unwrapLiquidNumber;
 import 'package:liquify/src/render_target.dart' show liquidValueToString;
 import 'package:liquify/src/util.dart' show isTruthy;
 
@@ -213,8 +214,8 @@ List<Object?>? _sortItems(
       ),
   ];
   keyed.sort((a, b) {
-    final left = a.key;
-    final right = b.key;
+    final left = ignoreCase ? a.key : unwrapLiquidNumber(a.key);
+    final right = ignoreCase ? b.key : unwrapLiquidNumber(b.key);
     final int result;
     if (left == null || right == null) {
       result = left == null ? (right == null ? 0 : 1) : -1;
@@ -515,10 +516,7 @@ dynamic sum(
   final values = property == null
       ? items
       : _arrayItems(items.map((item) => _property(item, property)).toList());
-  return values.fold<num>(
-    0,
-    (total, item) => plus(total, [toLiquidNumber(item)], {}) as num,
-  );
+  return values.fold<Object?>(0, (total, item) => plus(total, [item], {}));
 }
 
 /// Sorts an array using case-insensitive lexicographic ordering.

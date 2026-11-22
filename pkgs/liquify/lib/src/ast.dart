@@ -204,7 +204,10 @@ class Literal extends ASTNode {
   final dynamic _value;
   final LiteralType type;
 
-  Literal(this._value, this.type);
+  /// Whether the token used decimal notation, even on JavaScript targets.
+  final bool isDecimal;
+
+  Literal(this._value, this.type, {this.isDecimal = false});
 
   dynamic get value => switch (type) {
     LiteralType.string => _value.toString(),

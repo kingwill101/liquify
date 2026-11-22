@@ -2,6 +2,7 @@ import 'package:liquify/src/filter_registry.dart';
 import 'dart:convert';
 
 import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/liquid_number.dart' show unwrapLiquidNumber;
 
 /// Returns the input value if it's not falsy, otherwise returns the default value.
 ///
@@ -161,8 +162,9 @@ FilterFunction toInteger =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      if (value is num) {
-        return value.round();
+      final number = unwrapLiquidNumber(value);
+      if (number is num) {
+        return number.round();
       }
       return int.parse(value.toString());
     };
