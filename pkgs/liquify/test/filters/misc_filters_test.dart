@@ -15,6 +15,21 @@ void main() {
       expect(() => defaultFilter('value', [], {}), throwsArgumentError);
     });
 
+    test('defaultFilter accepts the named allow_false option', () {
+      const fallback = ['fallback'];
+      const allowFalse = {'allow_false': true};
+      const disallowFalse = {'allow_false': false};
+
+      expect(defaultFilter(false, fallback, allowFalse), isFalse);
+      expect(defaultFilter(false, fallback, disallowFalse), 'fallback');
+      expect(defaultFilter(null, fallback, allowFalse), 'fallback');
+      expect(defaultFilter('', fallback, allowFalse), 'fallback');
+      expect(
+        defaultFilter(false, ['fallback', true], disallowFalse),
+        'fallback',
+      );
+    });
+
     test('defaultFilter does not treat empty maps as falsy', () {
       final input = <String, dynamic>{};
       expect(defaultFilter(input, ['default'], {}), equals(input));

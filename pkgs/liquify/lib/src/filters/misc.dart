@@ -27,7 +27,9 @@ FilterFunction defaultFilter =
         throw ArgumentError('default filter requires at least one argument');
       }
       dynamic defaultValue = arguments[0];
-      bool allowFalse = arguments.length > 1 ? arguments[1] as bool : false;
+      final allowFalse = namedArguments.containsKey('allow_false')
+          ? namedArguments['allow_false'] == true
+          : arguments.length > 1 && arguments[1] == true;
 
       if (value is List || value is String) {
         return (value as dynamic).isEmpty ? defaultValue : value;
