@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:liquify/src/ast.dart';
 import 'package:liquify/src/buffer.dart';
 import 'package:liquify/src/evaluator.dart';
@@ -23,43 +21,40 @@ class AssignTag extends AbstractTag with AsyncTag {
     return null;
   }
 
-  Future<dynamic> _evaluateAssignment(
-    Evaluator evaluator, {
-    bool isAsync = false,
-  }) async {
-    if (assignmentIsVariable()) {
-      final value = isAsync
-          ? await evaluator.evaluateAsync(assignment!.value)
-          : evaluator.evaluate(assignment!.value);
-      evaluator.context.setVariable(variable.name, value);
-      return null;
+  (Identifier, ASTNode)? _assignmentTarget() {
+    final direct = assignment;
+    if (direct case Assignment(
+      variable: final Identifier target,
+      :final value,
+    )) {
+      return (target, value);
     }
+
     final filtered = filteredAssignment;
-    if (filtered != null) {
-      final assignmentExpr = filtered.expression as Assignment;
-      if (assignmentExpr.variable is Identifier) {
-        final filteredValue = isAsync
-            ? await evaluator.evaluateAsync(filtered)
-            : evaluator.evaluate(filtered);
-        evaluator.context.setVariable(
-          (assignmentExpr.variable as Identifier).name,
-          filteredValue,
-        );
-      }
+    if (filtered case FilteredExpression(
+      expression: Assignment(variable: final Identifier target),
+    )) {
+      return (target, filtered);
     }
     return null;
   }
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    return _evaluateAssignment(evaluator, isAsync: false);
+  void evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    if (_assignmentTarget() case (final target, final expression)) {
+      final value = evaluator.evaluate(expression);
+      evaluator.context.setVariable(target.name, value);
+    }
   }
 
   @override
-  Future<dynamic> evaluateWithContextAsync(
+  Future<void> evaluateWithContextAsync(
     Evaluator evaluator,
     Buffer buffer,
   ) async {
-    return _evaluateAssignment(evaluator, isAsync: true);
+    if (_assignmentTarget() case (final target, final expression)) {
+      final value = await evaluator.evaluateAsync(expression);
+      evaluator.context.setVariable(target.name, value);
+    }
   }
 }

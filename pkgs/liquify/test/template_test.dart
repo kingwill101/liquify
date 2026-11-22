@@ -388,5 +388,34 @@ void main() {
       template.updateContext({'greeting': 'Goodbye'});
       expect(await template.renderAsync(), equals('Goodbye World!'));
     });
+    test('render reports an assignment filter error to its caller', () {
+      final failure = StateError('test filter failure');
+      final template = Template.parse(
+        '{% assign result = "value" | fail %}',
+        environmentSetup: (environment) {
+          environment.registerLocalFilter('fail', (_, _, _) => throw failure);
+        },
+      );
+
+      expect(template.render, throwsA(same(failure)));
+    });
+
+    test(
+      'renderAsync reports an assignment filter error to its caller',
+      () async {
+        final failure = StateError('test filter failure');
+        final template = Template.parse(
+          '{% assign result = "value" | fail %}',
+          environmentSetup: (environment) {
+            environment.registerLocalFilter(
+              'fail',
+              (_, _, _) async => throw failure,
+            );
+          },
+        );
+
+        await expectLater(template.renderAsync(), throwsA(same(failure)));
+      },
+    );
   });
 }
