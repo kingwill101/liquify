@@ -285,6 +285,26 @@ void main() {
       expect(await evaluator.evaluateNodesAsync(nodes), 'hello');
     });
 
+    test('accepts repeated and spaced bracket suffixes', () async {
+      final template = Template.parse(
+        '{{ matrix[0][1] }}|{{ shop.items [0] }}|{{ values[keys[i]] }}',
+        data: {
+          'matrix': [
+            ['a', 'b'],
+          ],
+          'shop': {
+            'items': ['c'],
+          },
+          'values': {'item': 'd'},
+          'keys': ['item'],
+          'i': 0,
+        },
+      );
+
+      expect(template.render(), 'b|c|d');
+      expect(await template.renderAsync(), 'b|c|d');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

@@ -436,8 +436,7 @@ Parser primaryTerm() {
   final letterCases =
       pattern('a-zA-Z').and() &
       (ref0(unaryOperation) | // 'not x'
-          ref0(memberAccess) | // x, x.y (has fast path for simple identifiers)
-          ref0(arrayAccess) | // x[0]
+          ref0(lookupAccess) | // x.y, x[0], x[y[z]], and combinations
           ref0(literal) | // true, false, nil, empty
           ref0(identifier)); // fallback
 
@@ -595,15 +594,15 @@ Parser arithmeticExpr() {
       .labeled('arithmeticExpr');
 }
 
-/// Member access parser - handles dot notation like `product.name.first`.
+/// Parses compound variable lookups such as `product.variants[0].name`.
 ///
 /// Optimized with a two-tier approach:
 /// 1. Fast path: Pattern-based parsing for simple identifier chains (no array access)
 ///    Uses a single pattern match + string split instead of parsing each identifier
-/// 2. Slow path: Original recursive parsing for complex cases with array access
+/// 2. Slow path: Each identifier and its bracket suffixes are parsed together.
 ///
 /// The fast path provides ~50% reduction in parser activations for simple cases.
-Parser memberAccess() {
+Parser lookupAccess() {
   // Fast path: Simple identifier chain without array access
   // Pattern matches: identifier(.identifier)+ where no segment is followed by '['
   final identChar = pattern('a-zA-Z0-9_-');
@@ -616,9 +615,10 @@ Parser memberAccess() {
   final additionalSegment = dot & pattern('a-zA-Z') & identChar.star();
 
   // Fast path parser - matches simple chains and ensures not followed by '['
-  // The negative lookahead char('[').not() ensures we don't match when array access follows
+  // Use the same bracket parser as the slow path, including leading whitespace.
   final simpleMemberAccess =
-      ((firstIdent & additionalSegment.plus()).flatten() & char('[').not())
+      ((firstIdent & additionalSegment.plus()).flatten() &
+              _lookupBracketStart().not())
           .pick(0) // Get just the flattened string, not the lookahead result
           .cast<String>()
           .where((value) {
@@ -638,33 +638,45 @@ Parser memberAccess() {
             return MemberAccess(object, members.cast<ASTNode>());
           });
 
-  // Slow path: Original recursive parsing for complex cases (with array access)
-  final complexMemberAccess =
-      ((ref0(arrayAccess) | ref0(identifier)) &
-              (char('.') & (ref0(arrayAccess) | ref0(identifier))).plus())
-          .map((values) {
-            final object = values[0] as ASTNode;
-            var members = (values[1] as List)
-                .map((m) => m[1] as ASTNode)
-                .toList();
-            return MemberAccess(object, members);
+  // Keep the established member AST shape, with indexed segments represented
+  // by ArrayAccess nodes. The root and each following segment are parsed once.
+  final indexedAccess =
+      seq2(ref0(_lookupSegment), (dot & ref0(_lookupSegment)).pick(1).star())
+          .where((parts) => parts.$1 is ArrayAccess || parts.$2.isNotEmpty)
+          .map((parts) {
+            final root = parts.$1;
+            final members = parts.$2.cast<ASTNode>();
+            return members.isEmpty ? root : MemberAccess(root, members);
           });
 
-  // Try fast path first, fall back to slow path
-  return (simpleMemberAccess | complexMemberAccess).labeled('memberAccess');
+  return (simpleMemberAccess | indexedAccess).labeled('lookupAccess');
 }
 
-Parser arrayAccess() =>
-    seq4(
-          ref0(identifier),
-          char('[').trim(),
-          ref0(primaryTerm).trim(),
-          char(']'),
-        )
-        .map((array) {
-          return ArrayAccess(array.$1, array.$3);
-        })
-        .labeled('arrayAccess');
+Parser _lookupBracketStart() => char('[').trim();
+
+Parser<ASTNode> _lookupSegment() =>
+    seq2(
+      ref0(identifier),
+      seq3(
+        _lookupBracketStart(),
+        ref0(primaryTerm).trim(),
+        char(']'),
+      ).map((parts) => parts.$2 as ASTNode).star(),
+    ).map((parts) {
+      ASTNode segment = parts.$1 as Identifier;
+      for (final key in parts.$2) {
+        segment = ArrayAccess(segment, key);
+      }
+      return segment;
+    });
+
+Parser memberAccess() => ref0(
+  lookupAccess,
+).where((value) => value is MemberAccess).labeled('memberAccess');
+
+Parser arrayAccess() => ref0(
+  _lookupSegment,
+).where((value) => value is ArrayAccess).labeled('arrayAccess');
 
 /// Text parser - parses plain text content until a delimiter is encountered.
 ///
@@ -831,8 +843,7 @@ Parser unaryOperation() => (ref0(unaryOperator) & ref0(unaryOperand))
 Parser unaryOperand() {
   return (ref0(groupedExpression) |
           ref0(range) |
-          ref0(memberAccess) |
-          ref0(arrayAccess) |
+          ref0(lookupAccess) |
           ref0(literal) |
           ref0(identifier))
       .labeled('unaryOperand');
