@@ -208,6 +208,7 @@ class ForTag extends AbstractTag with AsyncTag {
           } on BreakException {
             return;
           } on ContinueException {
+            forLoop.increment();
             continue outerLoop;
           }
         }
@@ -275,6 +276,7 @@ class ForTag extends AbstractTag with AsyncTag {
           } on BreakException {
             return;
           } on ContinueException {
+            forLoop.increment();
             continue outerLoop;
           }
         }
