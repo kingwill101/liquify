@@ -50,6 +50,16 @@ void main() {
       expect(() => minus(10, [], {}), throwsArgumentError);
     });
 
+    test(
+      'minus subtracts decimal operands without binary rounding artifacts',
+      () {
+        expect(minus(10.1, [2.2], {}), 7.9);
+        expect(minus(0.1, [0.3], {}), -0.2);
+        expect(minus(2, [-0.1], {}), 2.1);
+        expect(minus(1.2e-8, [2e-9], {}), 1e-8);
+      },
+    );
+
     test('modulo', () {
       expect(modulo(10, [3], {}), equals(1));
       expect(modulo(-10, [3], {}), equals(2));

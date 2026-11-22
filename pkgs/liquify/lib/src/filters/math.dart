@@ -161,8 +161,28 @@ FilterFunction minus =
       if (arguments.isEmpty) throw ArgumentError('minus expects 1 argument');
       num val = value == null ? 0 : value as num;
       num arg = arguments[0] == null ? 0 : arguments[0] as num;
-      return val - arg;
+      if ((val is int && arg is int) || !val.isFinite || !arg.isFinite) {
+        return val - arg;
+      }
+
+      final (left, leftScale) = _decimalParts(val);
+      final (right, rightScale) = _decimalParts(arg);
+      final scale = leftScale > rightScale ? leftScale : rightScale;
+      final ten = BigInt.from(10);
+      final result =
+          left * ten.pow(scale - leftScale) -
+          right * ten.pow(scale - rightScale);
+      return double.parse('${result}e${-scale}');
     };
+
+// Match Liquid's decimal arithmetic using the operands' decimal text.
+(BigInt, int) _decimalParts(num value) {
+  final parts = value.toString().split('e');
+  final digits = parts.first.split('.');
+  final fraction = digits.length == 2 ? digits.last : '';
+  final exponent = parts.length == 2 ? int.parse(parts.last) : 0;
+  return (BigInt.parse('${digits.first}$fraction'), fraction.length - exponent);
+}
 
 /// Returns the remainder of dividing the input value by the argument.
 ///
