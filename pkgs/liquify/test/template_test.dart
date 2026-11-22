@@ -1,3 +1,4 @@
+import 'package:liquify/src/fs.dart' show MapRoot;
 import 'package:liquify/src/template.dart';
 import 'package:test/test.dart';
 
@@ -132,6 +133,29 @@ void main() {
       expect(template.render(), expected);
       expect(await template.renderAsync(), expected);
     });
+
+    test(
+      'binds partial arguments and keeps render assignments isolated',
+      () async {
+        final template = Template.parse(
+          "{% include 'item' for items as entry %}|{{ saved }}|"
+          "{% render 'item' with fallback as entry %}|"
+          "{% render 'indexed' for items %}|{{ saved }}",
+          data: {
+            'items': ['a', 'b'],
+            'fallback': 'c',
+          },
+          root: MapRoot({
+            'item': '{{ entry }}{% assign saved = entry %}',
+            'indexed': '{{ forloop.index }}:{{ indexed }};',
+          }),
+        );
+
+        const expected = 'ab|b|c|1:a;2:b;|b';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
 
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');

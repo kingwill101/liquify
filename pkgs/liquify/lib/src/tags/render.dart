@@ -1,159 +1,89 @@
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/tag.dart';
 import 'package:liquify/src/tags/for.dart';
+import 'package:liquify/src/tags/partial_arguments.dart';
 
 class RenderTag extends AbstractTag with AsyncTag {
   late String templateName;
-  late Map<String, dynamic> variables;
-  bool hasFor = false;
+  late PartialArguments _arguments;
 
   RenderTag(super.content, super.filters);
 
   @override
   void preprocess(Evaluator evaluator) {
-    if (content.isEmpty || content.first is! Literal) {
-      throw Exception(
-        'RenderTag requires a template name as the first argument.',
-      );
+    final name = content.firstOrNull;
+    if (name is! Literal || name.type != LiteralType.string) {
+      throw ArgumentError('Render template name must be a quoted string');
     }
-
-    templateName = (content.first as Literal).value;
-    variables = {};
-
-    for (final arg in namedArgs) {
-      variables[arg.identifier.name] = evaluator.evaluate(arg.value);
-    }
-
-    if (args.length > 1) {
-      final withArg = args[0];
-      if (withArg.name == 'with') {
-        if (args.length < 3) {
-          throw Exception('RenderTag with "with" requires an object to pass.');
-        }
-        final object = evaluator.evaluate(args[1]);
-        if (args.length == 4 && args[2].name == 'as') {
-          variables[(args[3]).name] = object;
-        } else {
-          variables.addAll(object as Map<String, dynamic>);
-        }
-      } else if (withArg.name == 'for') {
-        if (args.length < 3) {
-          throw Exception(
-            'RenderTag with "for" requires an enumerable object.',
-          );
-        }
-        hasFor = true;
-      }
-    }
-  }
-
-  void _renderTemplateSync(
-    String template,
-    Evaluator evaluator,
-    Buffer buffer,
-    Map<String, dynamic> localVariables,
-  ) {
-    final templateNodes = evaluator.resolveAndParseTemplate(template);
-    var env = Environment();
-    final currentRoot = evaluator.context.getRoot();
-
-    if (currentRoot != null) {
-      env.setRoot(currentRoot);
-    }
-
-    final innerEvaluator = Evaluator.withBuffer(env, buffer);
-    innerEvaluator.context.pushScope();
-
-    for (final entry in localVariables.entries) {
-      innerEvaluator.context.setVariable(entry.key, entry.value);
-    }
-
-    innerEvaluator.evaluateNodes(templateNodes);
-    innerEvaluator.context.popScope();
-  }
-
-  Future<void> _renderTemplateAsync(
-    String template,
-    Evaluator evaluator,
-    Buffer buffer,
-    Map<String, dynamic> localVariables,
-  ) async {
-    final templateNodes = await evaluator.resolveAndParseTemplateAsync(
-      template,
+    templateName = name.value as String;
+    _arguments = PartialArguments(
+      content.skip(1).where((node) => node is! NamedArgument).toList(),
     );
-    var env = Environment();
-    final currentRoot = evaluator.context.getRoot();
-
-    if (currentRoot != null) {
-      env.setRoot(currentRoot);
-    }
-
-    final innerEvaluator = Evaluator.withBuffer(env, buffer);
-    innerEvaluator.context.pushScope();
-
-    for (final entry in localVariables.entries) {
-      innerEvaluator.context.setVariable(entry.key, entry.value);
-    }
-
-    await innerEvaluator.evaluateNodesAsync(templateNodes);
-    innerEvaluator.context.popScope();
   }
 
-  @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    if (hasFor) {
-      if (args.length != 4 || args[2].name != 'as') {
-        throw Exception(
-          'RenderTag with "for" requires "as" and a variable name.',
-        );
-      }
+  Iterable<Map<String, dynamic>> _iterations(
+    Object? binding,
+    Map<String, dynamic> variables,
+  ) sync* {
+    final bindingName = _arguments.bindingName(templateName);
+    if (!_arguments.iterate || (binding is! List && binding is! Map)) {
+      yield {...variables, bindingName: ?binding};
+      return;
+    }
 
-      final enumerable = evaluator.evaluate(args[1]);
-      for (var i = 0; i < enumerable.length; i++) {
-        final localVariables = Map<String, dynamic>.from(variables);
-        localVariables['forloop'] = ForLoopObject(
-          index: i,
-          length: enumerable.length,
-        ).toMap();
-        localVariables[args[3].name] = enumerable[i];
-
-        _renderTemplateSync(templateName, evaluator, buffer, localVariables);
-      }
-    } else {
-      _renderTemplateSync(templateName, evaluator, buffer, variables);
+    final items = sliceLoopItems(binding, 0, null);
+    final loop = ForLoopObject(name: templateName, length: items.length);
+    for (final item in items) {
+      yield {...variables, 'forloop': loop.toMap(), bindingName: ?item};
+      loop.increment();
     }
   }
 
+  Evaluator _partialEvaluator(
+    Evaluator parent,
+    Buffer buffer,
+    Map<String, dynamic> variables,
+  ) {
+    final context = Environment(variables)
+      ..setRoot(parent.context.getRoot())
+      ..setConfig(parent.context.config);
+    return Evaluator.withBuffer(context, buffer);
+  }
+
   @override
-  Future<dynamic> evaluateWithContextAsync(
+  void evaluateWithContext(Evaluator evaluator, Buffer buffer) {
+    final nodes = evaluator.resolveAndParseTemplate(templateName);
+    final binding = _arguments.binding;
+    final value = binding == null ? null : evaluator.evaluate(binding);
+    final variables = {
+      for (final arg in namedArgs)
+        arg.identifier.name: evaluator.evaluate(arg.value),
+    };
+    for (final scope in _iterations(value, variables)) {
+      _partialEvaluator(evaluator, buffer, scope).evaluateNodes(nodes);
+    }
+  }
+
+  @override
+  Future<void> evaluateWithContextAsync(
     Evaluator evaluator,
     Buffer buffer,
   ) async {
-    if (hasFor) {
-      if (args.length != 4 || args[2].name != 'as') {
-        throw Exception(
-          'RenderTag with "for" requires "as" and a variable name.',
-        );
-      }
-
-      final enumerable = await evaluator.evaluateAsync(args[1]);
-      for (var i = 0; i < enumerable.length; i++) {
-        final localVariables = Map<String, dynamic>.from(variables);
-        localVariables['forloop'] = ForLoopObject(
-          index: i,
-          length: enumerable.length,
-        ).toMap();
-        localVariables[args[3].name] = enumerable[i];
-
-        await _renderTemplateAsync(
-          templateName,
-          evaluator,
-          buffer,
-          localVariables,
-        );
-      }
-    } else {
-      await _renderTemplateAsync(templateName, evaluator, buffer, variables);
+    final nodes = await evaluator.resolveAndParseTemplateAsync(templateName);
+    final binding = _arguments.binding;
+    final value = binding == null
+        ? null
+        : await evaluator.evaluateAsync(binding);
+    final variables = {
+      for (final arg in namedArgs)
+        arg.identifier.name: await evaluator.evaluateAsync(arg.value),
+    };
+    for (final scope in _iterations(value, variables)) {
+      await _partialEvaluator(
+        evaluator,
+        buffer,
+        scope,
+      ).evaluateNodesAsync(nodes);
     }
   }
 }

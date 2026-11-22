@@ -69,7 +69,7 @@ extension Evaluation on Evaluator {
     }
 
     final source = root.resolve(templateName);
-    return parseInput(source.content);
+    return parseInput(source.content, config: context.config);
   }
 
   Future<List<ASTNode>> resolveAndParseTemplateAsync(
@@ -80,7 +80,7 @@ extension Evaluation on Evaluator {
       throw Exception('No root directory set for template resolution');
     }
     final source = await root.resolveAsync(templateName);
-    return parseInput(source.content);
+    return parseInput(source.content, config: context.config);
   }
 
   String evaluateNodes(List<ASTNode> nodes) {
