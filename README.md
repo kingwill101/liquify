@@ -39,7 +39,7 @@ Add Liquify to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquify: ^1.5.1
+  liquify: ^1.6.1
 ```
 
 Basic usage:
