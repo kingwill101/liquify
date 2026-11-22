@@ -53,6 +53,19 @@ void main() {
       expect(await template.renderAsync(clearBuffer: true), equals('test'));
     });
 
+    test('loop continuation is scoped to each render', () async {
+      final template = Template.parse(
+        '{% if true %}{% for n in (1..3) offset:continue limit:1 %}'
+        '{{n}}{% endfor %}{% endif %}|'
+        '{% for n in (1..3) offset:continue %}{{n}}{% endfor %}',
+      );
+
+      expect(template.render(), '1|23');
+      expect(template.render(), '1|23');
+      expect(await template.renderAsync(), '1|23');
+      expect(await template.renderAsync(), '1|23');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

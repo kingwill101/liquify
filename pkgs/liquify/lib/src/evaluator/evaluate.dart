@@ -51,27 +51,43 @@ extension Evaluation on Evaluator {
   }
 
   String evaluateNodes(List<ASTNode> nodes) {
-    for (final node in nodes) {
-      if (node is Assignment) continue;
-      if (node is Tag) {
-        node.accept(this);
-      } else {
-        currentBuffer.write(node.accept(this));
+    // Like Shopify Liquid, store continuation in the render's for register.
+    // Tag environment clones share the register value within that render.
+    final ownsForRegister = !context.registers.containsKey('for');
+    if (ownsForRegister) context.setRegister('for', <String, int>{});
+    try {
+      for (final node in nodes) {
+        if (node is Assignment) continue;
+        if (node is Tag) {
+          node.accept(this);
+        } else {
+          currentBuffer.write(node.accept(this));
+        }
       }
+      return buffer.toString();
+    } finally {
+      if (ownsForRegister) context.removeRegister('for');
     }
-    return buffer.toString();
   }
 
   Future<dynamic> evaluateNodesAsync(List<ASTNode> nodes) async {
-    for (final node in nodes) {
-      if (node is Assignment) continue;
-      if (node is Tag) {
-        await node.acceptAsync(this);
-      } else {
-        currentBuffer.write(await node.acceptAsync(this));
+    // Like Shopify Liquid, store continuation in the render's for register.
+    // Tag environment clones share the register value within that render.
+    final ownsForRegister = !context.registers.containsKey('for');
+    if (ownsForRegister) context.setRegister('for', <String, int>{});
+    try {
+      for (final node in nodes) {
+        if (node is Assignment) continue;
+        if (node is Tag) {
+          await node.acceptAsync(this);
+        } else {
+          currentBuffer.write(await node.acceptAsync(this));
+        }
       }
+      return buffer.toString();
+    } finally {
+      if (ownsForRegister) context.removeRegister('for');
     }
-    return buffer.toString();
   }
 }
 
