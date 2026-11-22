@@ -98,7 +98,7 @@ void main() {
         expect(assignTag.name, 'assign');
         final assignment = assignTag.content[0] as Assignment;
         expect(assignment.value, isA<Literal>());
-        expect((assignment.value as Literal).value, Empty());
+        expect((assignment.value as Literal).value, '');
       });
     });
 
@@ -1291,7 +1291,10 @@ void main() {
           final ifTag = document.children[0] as Tag;
           final comparison = ifTag.content[0] as BinaryOperation;
           expect(comparison.right, isA<Literal>());
-          expect((comparison.right as Literal).type, LiteralType.empty);
+          expect(
+            (comparison.right as Literal).type,
+            LiteralType.emptyPredicate,
+          );
         });
       });
 

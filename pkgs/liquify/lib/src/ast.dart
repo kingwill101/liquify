@@ -220,7 +220,9 @@ class Literal extends ASTNode {
           : false,
     LiteralType.array => _value as List,
     LiteralType.nil => null,
-    LiteralType.empty => Empty(),
+    LiteralType.blank || LiteralType.empty => '',
+    LiteralType.blankPredicate => ConditionPredicate.blank,
+    LiteralType.emptyPredicate => ConditionPredicate.empty,
   };
 
   @override
@@ -233,7 +235,7 @@ class Literal extends ASTNode {
   @override
   Map<String, dynamic> toJson() => {
     'type': 'Literal',
-    'value': value,
+    'value': value is ConditionPredicate ? '' : value,
     'literalType': type.toString().split('.').last,
   };
 
@@ -249,7 +251,19 @@ class Literal extends ASTNode {
   int get hashCode => Object.hashAll([value]);
 }
 
-enum LiteralType { string, number, boolean, array, nil, empty }
+enum LiteralType {
+  string,
+  number,
+  boolean,
+  array,
+  nil,
+  empty,
+  blank,
+  emptyPredicate,
+  blankPredicate,
+}
+
+enum ConditionPredicate { empty, blank }
 
 class TextNode extends ASTNode {
   final String text;

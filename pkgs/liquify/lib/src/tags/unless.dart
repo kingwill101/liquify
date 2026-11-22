@@ -79,7 +79,8 @@ class UnlessTag extends AbstractTag with CustomTagParser, AsyncTag {
   }
 }
 
-Parser unlessTag([LiquidConfig? config]) => someTag("unless", config: config);
+Parser unlessTag([LiquidConfig? config]) =>
+    someTag("unless", config: config, content: ref0(conditionTagContent));
 
 Parser endUnlessTag([LiquidConfig? config]) =>
     (createTagStart(config) & string('endunless').trim() & createTagEnd(config))

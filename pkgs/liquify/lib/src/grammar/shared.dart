@@ -297,6 +297,7 @@ Parser literal() {
           ref0(booleanLiteral) |
           ref0(numericLiteral) |
           ref0(emptyLiteral) |
+          ref0(blankLiteral) |
           ref0(stringLiteral))
       .labeled('literal');
 }
@@ -385,6 +386,13 @@ Parser emptyLiteral() {
         return Literal('empty', LiteralType.empty);
       })
       .labeled('emptyLiteral');
+}
+
+Parser blankLiteral() {
+  final wordBoundary = pattern('a-zA-Z0-9_-').not();
+  return (string('blank') & wordBoundary.and())
+      .map((_) => Literal('blank', LiteralType.blank))
+      .labeled('blankLiteral');
 }
 
 /// Arithmetic operator parser.
@@ -963,6 +971,45 @@ Parser hashBlockComment([LiquidConfig? config]) =>
         })
         .labeled('hashBlockComment');
 
+Parser<List<ASTNode>> conditionTagContent() => tagContent().map(
+  (values) => (values as List<ASTNode>).map(_conditionOperand).toList(),
+);
+
+Parser<List<ASTNode>> whenTagContent() => tagContent().map(
+  (values) => (values as List<ASTNode>).expand(_whenOperands).toList(),
+);
+
+Iterable<ASTNode> _whenOperands(ASTNode node) sync* {
+  if (node case BinaryOperation(:final left, operator: 'or', :final right)) {
+    yield* _whenOperands(left);
+    yield* _whenOperands(right);
+  } else {
+    yield _conditionOperand(node);
+  }
+}
+
+// Bare literals in conditions carry a predicate. Values obtained by
+// evaluating an ordinary expression remain ordinary values.
+ASTNode _conditionOperand(ASTNode node) => switch (node) {
+  Literal(type: LiteralType.blank) => Literal('', LiteralType.blankPredicate),
+  Literal(type: LiteralType.empty) => Literal('', LiteralType.emptyPredicate),
+  BinaryOperation(:final left, :final operator, :final right)
+      when const {'==', '!=', 'and', 'or'}.contains(operator) =>
+    BinaryOperation(
+      _conditionOperand(left),
+      operator,
+      _conditionOperand(right),
+    ),
+  GroupedExpression(:final expression) => GroupedExpression(
+    _conditionOperand(expression),
+  ),
+  UnaryOperation(:final operator, :final expression) => UnaryOperation(
+    operator,
+    _conditionOperand(expression),
+  ),
+  _ => node,
+};
+
 Parser tagContent() {
   // Expression now handles assignment internally via _assignmentExpr
   return (ref0(argument) | ref0(expression))
@@ -1021,13 +1068,19 @@ Parser<Tag> elseTag([LiquidConfig? config]) =>
 
 /// If tag parser - parses `{% if condition %}`.
 /// If [config] is provided, uses custom delimiters.
-Parser ifTag([LiquidConfig? config]) =>
-    someTag("if", config: config).labeled('ifTag');
+Parser ifTag([LiquidConfig? config]) => someTag(
+  "if",
+  config: config,
+  content: ref0(conditionTagContent),
+).labeled('ifTag');
 
 /// Elsif tag parser - parses `{% elsif condition %}`.
 /// If [config] is provided, uses custom delimiters.
-Parser elsifTag([LiquidConfig? config]) =>
-    someTag("elsif", config: config).labeled('elsifTag');
+Parser elsifTag([LiquidConfig? config]) => someTag(
+  "elsif",
+  config: config,
+  content: ref0(conditionTagContent),
+).labeled('elsifTag');
 
 /// End if tag parser - parses `{% endif %}`.
 /// If [config] is provided, uses custom delimiters.
@@ -1084,8 +1137,11 @@ Parser forBlock() =>
 
 /// When tag parser - parses `{% when value %}`.
 /// If [config] is provided, uses custom delimiters.
-Parser<Tag> whenTag([LiquidConfig? config]) =>
-    someTag('when', config: config).labeled('whenTag');
+Parser<Tag> whenTag([LiquidConfig? config]) => someTag(
+  'when',
+  config: config,
+  content: ref0(whenTagContent),
+).labeled('whenTag');
 
 /// Case tag parser - parses `{% case variable %}`.
 /// If [config] is provided, uses custom delimiters.

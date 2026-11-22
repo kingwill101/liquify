@@ -1,6 +1,26 @@
 part of 'evaluator.dart';
 
 extension Evaluation on Evaluator {
+  bool liquidEquals(Object? left, Object? right) {
+    if (left is ConditionPredicate) return _matchesPredicate(left, right);
+    if (right is ConditionPredicate) return _matchesPredicate(right, left);
+    return left == right;
+  }
+
+  bool _matchesPredicate(ConditionPredicate predicate, Object? value) {
+    if (predicate == ConditionPredicate.blank) {
+      if (value == null || value == false) return true;
+      if (value is String) return _blankString.hasMatch(value);
+    }
+
+    return switch (value) {
+      String() => value.isEmpty,
+      List() => value.isEmpty,
+      Map() => value.isEmpty,
+      _ => false,
+    };
+  }
+
   dynamic evaluate(ASTNode node) {
     return node.accept(this);
   }
@@ -54,3 +74,6 @@ extension Evaluation on Evaluator {
     return buffer.toString();
   }
 }
+
+// Match the whitespace characters in Ruby's condition predicate.
+final _blankString = RegExp(r'^[ \t\n\r\f\x0B]*$');

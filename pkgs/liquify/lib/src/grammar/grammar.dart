@@ -265,9 +265,16 @@ class LiquidGrammar extends GrammarDefinition {
   // If block
   // ---------------------------------------------------------------------------
 
-  Parser<Tag> ifTag() => someTag("if", config: config).labeled('ifTag');
-  Parser<Tag> elsifTag() =>
-      someTag("elsif", config: config).labeled('elsifTag');
+  Parser<Tag> ifTag() => someTag(
+    "if",
+    config: config,
+    content: ref0(conditionTagContent),
+  ).labeled('ifTag');
+  Parser<Tag> elsifTag() => someTag(
+    "elsif",
+    config: config,
+    content: ref0(conditionTagContent),
+  ).labeled('elsifTag');
   Parser<Tag> elseTag() =>
       someTag('else', config: config, hasContent: false).labeled('elseTag');
 
@@ -374,7 +381,11 @@ class LiquidGrammar extends GrammarDefinition {
   // Case block
   // ---------------------------------------------------------------------------
 
-  Parser<Tag> whenTag() => someTag('when', config: config).labeled('whenTag');
+  Parser<Tag> whenTag() => someTag(
+    'when',
+    config: config,
+    content: ref0(whenTagContent),
+  ).labeled('whenTag');
   Parser<Tag> caseTag() => someTag('case', config: config).labeled('caseTag');
 
   Parser endCaseTag() =>

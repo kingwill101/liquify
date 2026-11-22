@@ -128,9 +128,9 @@ class Evaluator implements ASTVisitor<dynamic> {
       case '/':
         return (left ?? 1) / (right ?? 1);
       case '==':
-        return left == right;
+        return liquidEquals(left, right);
       case '!=':
-        return left != right;
+        return !liquidEquals(left, right);
       case '<':
         return (left ?? 0) < (right ?? 0);
       case '>':
