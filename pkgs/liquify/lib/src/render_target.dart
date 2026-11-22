@@ -1,22 +1,42 @@
 import 'dart:convert';
 
-String liquidValueToString(Object? value) => switch (value) {
-  null => '',
-  List() => value.map(liquidValueToString).join(),
-  Map() => _inspectLiquidValue(value),
-  _ => value.toString(),
-};
+String liquidValueToString(Object? value) =>
+    _liquidString(value, Set<Object>.identity(), inspect: false);
 
-String _inspectLiquidValue(Object? value) => switch (value) {
-  null => 'nil',
-  String() => jsonEncode(value),
-  List() => '[${value.map(_inspectLiquidValue).join(', ')}]',
-  Map() =>
-    '{${value.entries.map((entry) {
-      return '${_inspectLiquidValue(entry.key)}=>${_inspectLiquidValue(entry.value)}';
-    }).join(', ')}}',
-  _ => value.toString(),
-};
+String _liquidString(
+  Object? value,
+  Set<Object> active, {
+  required bool inspect,
+}) {
+  if (value == null) return inspect ? 'nil' : '';
+  if (value is String) return inspect ? jsonEncode(value) : value;
+
+  if (value is List) {
+    if (!active.add(value)) return '[...]';
+    try {
+      final items = value.map(
+        (item) => _liquidString(item, active, inspect: inspect),
+      );
+      return inspect ? '[${items.join(', ')}]' : items.join();
+    } finally {
+      active.remove(value);
+    }
+  }
+  if (value is Map) {
+    if (!active.add(value)) return '{...}';
+    try {
+      final entries = value.entries.map((entry) {
+        final key = _liquidString(entry.key, active, inspect: true);
+        final item = _liquidString(entry.value, active, inspect: true);
+        return '$key=>$item';
+      });
+      return '{${entries.join(', ')}}';
+    } finally {
+      active.remove(value);
+    }
+  }
+  return value.toString();
+}
 
 abstract class RenderTarget<R> {
   const RenderTarget();

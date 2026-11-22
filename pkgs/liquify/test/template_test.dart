@@ -305,6 +305,23 @@ void main() {
       expect(await template.renderAsync(), 'b|c|d');
     });
 
+    test('renders cyclic collections and repeated references', () async {
+      final shared = {'value': 1};
+      final map = <String, Object?>{'first': shared, 'second': shared};
+      final list = <Object?>[1];
+      map['self'] = map;
+      list.add(list);
+      final template = Template.parse(
+        '{{ map }}|{{ list }}',
+        data: {'map': map, 'list': list},
+      );
+      const expected =
+          '{"first"=>{"value"=>1}, "second"=>{"value"=>1}, "self"=>{...}}|1[...]';
+
+      expect(template.render(), expected);
+      expect(await template.renderAsync(), expected);
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 
