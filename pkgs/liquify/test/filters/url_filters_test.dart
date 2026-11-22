@@ -12,6 +12,7 @@ void main() {
 
     test('urlEncode', () {
       expect(urlEncode('hello world', [], {}), equals('hello+world'));
+      expect(urlEncode("a b~!*'()", [], {}), 'a+b~%21%2A%27%28%29');
       expect(urlEncode(null, [], {}), equals(''));
     });
 

@@ -61,7 +61,7 @@ void main() {
             evaluator.evaluateNodes(document.children);
             expect(
               evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-              '0-10',
+              '000',
             );
           },
         );
@@ -132,7 +132,7 @@ void main() {
             await evaluator.evaluateNodesAsync(document.children);
             expect(
               evaluator.buffer.toString().replaceAll(RegExp(r'\s+'), ''),
-              '0-10',
+              '000',
             );
           },
         );

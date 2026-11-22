@@ -7,7 +7,7 @@ void main() {
     test('escape should escape " and < >', () {
       expect(
         html.escape('"Hello" <world>', [], {}),
-        equals('&#34;Hello&#34; &lt;world&gt;'),
+        equals('&quot;Hello&quot; &lt;world&gt;'),
       );
     });
 
@@ -38,6 +38,10 @@ void main() {
     });
 
     test('escape_once should escape nil value to empty string', () {
+      expect(
+        html.escapeOnce('&unknown; &#39; &#x27; <', [], {}),
+        '&unknown; &#39; &amp;#x27; &lt;',
+      );
       expect(html.escapeOnce(null, [], {}), equals(''));
     });
 
@@ -46,6 +50,11 @@ void main() {
         html.xmlEscape("Have you read 'James & the Giant Peach'?", [], {}),
         equals("Have you read &#39;James &amp; the Giant Peach&#39;?"),
       );
+    });
+
+    test('unescape decodes both forms of the double quote entity once', () {
+      expect(html.unescape(html.escape('"', [], {}), [], {}), '"');
+      expect(html.unescape('&quot;&#34;&amp;quot;', [], {}), '""&quot;');
     });
 
     test('unescape should restore known entities', () {

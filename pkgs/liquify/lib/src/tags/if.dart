@@ -10,6 +10,8 @@ class IfTag extends AbstractTag with AsyncTag {
 
   IfTag(super.content, super.filters);
 
+  bool get negateCondition => false;
+
   void _renderBlockSync(
     Evaluator evaluator,
     Buffer buffer,
@@ -74,7 +76,7 @@ class IfTag extends AbstractTag with AsyncTag {
         .toList();
 
     // Main if condition
-    if (conditionMet) {
+    if (conditionMet != negateCondition) {
       // Filter out else/elsif nodes from main body evaluation
       final mainBody = body
           .where((n) => !(n is Tag && (n.name == 'else' || n.name == 'elsif')))
@@ -117,7 +119,7 @@ class IfTag extends AbstractTag with AsyncTag {
         .toList();
 
     // Main if condition
-    if (conditionMet) {
+    if (conditionMet != negateCondition) {
       // Filter out else/elsif nodes from main body evaluation
       final mainBody = body
           .where((n) => !(n is Tag && (n.name == 'else' || n.name == 'elsif')))

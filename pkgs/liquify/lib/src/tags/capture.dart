@@ -1,6 +1,6 @@
 import 'package:liquify/src/tag.dart';
 
-class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
+class CaptureTag extends AbstractTag with AsyncTag {
   late String variableName;
 
   CaptureTag(super.content, super.filters);
@@ -15,46 +15,28 @@ class CaptureTag extends AbstractTag with CustomTagParser, AsyncTag {
     variableName = (content.first as Identifier).name;
   }
 
-  Future<dynamic> _evaluateCapture(
-    Evaluator evaluator,
-    Buffer buffer, {
-    bool isAsync = false,
-  }) async {
-    if (variableName.isEmpty) {
-      return '';
-    }
-
+  @override
+  void evaluateWithContext(Evaluator evaluator, Buffer buffer) {
     evaluator.startBlockCapture();
-    if (isAsync) {
-      await evaluator.evaluateNodesAsync(body);
-    } else {
+    try {
       evaluator.evaluateNodes(body);
+    } finally {
+      final captured = evaluator.endBlockCapture();
+      evaluator.context.setVariable(variableName, captured);
     }
-    final captured = evaluator.endBlockCapture();
-    evaluator.context.setVariable(variableName, captured);
   }
 
   @override
-  dynamic evaluateWithContext(Evaluator evaluator, Buffer buffer) {
-    return _evaluateCapture(evaluator, buffer, isAsync: false);
-  }
-
-  @override
-  Future<dynamic> evaluateWithContextAsync(
+  Future<void> evaluateWithContextAsync(
     Evaluator evaluator,
     Buffer buffer,
   ) async {
-    return _evaluateCapture(evaluator, buffer, isAsync: true);
-  }
-
-  @override
-  Parser parser([LiquidConfig? config]) {
-    return seq3(
-      createTagStart(config) & string('capture').trim(),
-      ref0(identifier).trim(),
-      createTagEnd(config),
-    ).map((values) {
-      return Tag('capture', [values.$2 as ASTNode]);
-    });
+    evaluator.startBlockCapture();
+    try {
+      await evaluator.evaluateNodesAsync(body);
+    } finally {
+      final captured = evaluator.endBlockCapture();
+      evaluator.context.setVariable(variableName, captured);
+    }
   }
 }

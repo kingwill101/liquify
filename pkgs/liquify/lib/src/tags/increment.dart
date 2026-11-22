@@ -20,11 +20,9 @@ class IncrementTag extends AbstractTag with AsyncTag {
     bool isAsync = false,
   }) async {
     final stateKey = _getStateKey();
-    final currentValue = evaluator.context.getVariable(stateKey) ?? -1;
-    final newValue = currentValue + 1;
-
-    buffer.write(newValue);
-    evaluator.context.setVariable(stateKey, newValue);
+    final currentValue = evaluator.context.getVariable(stateKey) ?? 0;
+    buffer.write(currentValue);
+    evaluator.context.setVariable(stateKey, currentValue + 1);
   }
 
   @override

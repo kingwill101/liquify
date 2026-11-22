@@ -1,4 +1,6 @@
-import 'package:liquify/src/template.dart';
+import 'package:liquify/liquify.dart';
+import 'package:liquify/src/ast.dart' show TextNode;
+import 'package:liquify/src/evaluator.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -51,6 +53,330 @@ void main() {
 
       // Third render should start fresh with cleared buffer
       expect(await template.renderAsync(clearBuffer: true), equals('test'));
+    });
+
+    test('loop continuation is scoped to each render', () async {
+      final template = Template.parse(
+        '{% if true %}{% for n in (1..3) offset:continue limit:1 %}'
+        '{{n}}{% endfor %}{% endif %}|'
+        '{% for n in (1..3) offset:continue %}{{n}}{% endfor %}',
+      );
+
+      expect(template.render(), '1|23');
+      expect(template.render(), '1|23');
+      expect(await template.renderAsync(), '1|23');
+      expect(await template.renderAsync(), '1|23');
+    });
+
+    test('evaluates chained dynamic and negative lookups', () async {
+      final template = Template.parse(
+        '{{ rows[key].name }}|{{ data.rows[-1].name }}|{{ text.missing }}',
+        data: {
+          'key': 0,
+          'rows': [
+            {'name': 'first'},
+          ],
+          'data': {
+            'rows': [
+              {'name': 'last'},
+            ],
+          },
+          'text': 'ignored',
+        },
+      );
+
+      expect(template.render(), 'first|last|');
+      expect(await template.renderAsync(), 'first|last|');
+    });
+
+    test('renders the Liquid string representation of collections', () async {
+      final template = Template.parse(
+        '{{ items }}|{{ record }}|{{ record.first }}',
+        data: {
+          'items': [
+            1,
+            null,
+            [2, 3],
+          ],
+          'record': {'key': 'value'},
+        },
+      );
+
+      expect(template.render(), '123|{"key"=>"value"}|keyvalue');
+      expect(await template.renderAsync(), '123|{"key"=>"value"}|keyvalue');
+    });
+
+    test('a trim marker consumes the entire preceding whitespace run', () {
+      final template = Template.parse(
+        'A \r\n\t {%- if true -%} B {%- endif -%} C',
+      );
+
+      expect(template.render(), 'ABC');
+    });
+
+    test('uses Liquid collection semantics for for and tablerow', () async {
+      final template = Template.parse(
+        '{% for c in text limit:0 offset:9 %}{{c}}{% endfor %}|'
+        '{% tablerow p in record cols:1 %}{{p.first}}:'
+        '{{tablerowloop.col0}}:{{tablerowloop.col_last}}{% endtablerow %}|'
+        '{% tablerow x in empty_list %}{{x}}{% endtablerow %}',
+        data: {
+          'text': 'abc',
+          'record': {'a': 1, 'b': 2},
+          'empty_list': [],
+        },
+      );
+      const expected =
+          'abc|<tr class="row1">\n<td class="col1">a:0:true</td>'
+          '</tr>\n<tr class="row2"><td class="col1">b:0:true</td></tr>\n'
+          '|<tr class="row1">\n</tr>\n';
+
+      expect(template.render(), expected);
+      expect(await template.renderAsync(), expected);
+    });
+
+    test(
+      'binds partial arguments and keeps render assignments isolated',
+      () async {
+        final template = Template.parse(
+          "{% include 'item' for items as entry %}|{{ saved }}|"
+          "{% render 'item' with fallback as entry %}|"
+          "{% render 'indexed' for items %}|{{ saved }}",
+          data: {
+            'items': ['a', 'b'],
+            'fallback': 'c',
+          },
+          root: MapRoot({
+            'item': '{{ entry }}{% assign saved = entry %}',
+            'indexed': '{{ forloop.index }}:{{ indexed }};',
+          }),
+        );
+
+        const expected = 'ab|b|c|1:a;2:b;|b';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
+    test('ifchanged writes only when the rendered contents change', () async {
+      final template = Template.parse(
+        '{% for n in values %}{% ifchanged %}{{n}}{% endifchanged %}{% endfor %}',
+        data: {
+          'values': [1, 1, 2, 2, 1],
+        },
+      );
+      expect(template.render(), '121');
+      expect(template.render(), '121');
+      expect(await template.renderAsync(), '121');
+    });
+
+    test(
+      'counters start from supplied data without overriding assignments',
+      () async {
+        Template template() => Template.parse(
+          '{% increment n %}|{{n}}|{% decrement n %}|{{n}}|'
+          '{% assign n = 42 %}{% increment n %}|{{n}}',
+          data: {'n': 5},
+        );
+
+        expect(template().render(), '5|6|5|5|5|42');
+        expect(await template().renderAsync(), '5|6|5|5|5|42');
+      },
+    );
+
+    test(
+      'capture recognizes closing tags only between complete elements',
+      () async {
+        final template = Template.parse(
+          '{% capture x %}{{ "{% endcapture %}" }}'
+          '{% raw %}{% endcapture %}{% endraw %}'
+          '{% comment %}{% endcapture %}{% endcomment %}'
+          '{% capture nested %}inner{% endcapture %}{{ nested }}'
+          '{% endcapture %}{{ x }}',
+        );
+        const expected = '{% endcapture %}{% endcapture %}inner';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
+    test(
+      'include evaluates named arguments in order without leaking them',
+      () async {
+        Template template() => Template.parse(
+          "{% include 'pair' x: 'new', y: x %}|{{x}}|{{saved}}|"
+          "{% include 'counter' %}{% include 'counter' %}",
+          data: {'x': 'old'},
+          root: MapRoot({
+            'pair': '{{x}}:{{y}}{% assign saved = y %}',
+            'counter': '{% increment count %}',
+          }),
+        );
+        expect(template().render(), 'new:new|old|new|01');
+        expect(await template().renderAsync(), 'new:new|old|new|01');
+      },
+    );
+
+    test('counter names do not interfere with loop metadata', () async {
+      Template template() => Template.parse(
+        '{% increment forloop %}{% for n in (1..2) %}{{forloop.index}}{% endfor %}'
+        '{% increment tablerowloop %}'
+        '{% tablerow n in (1..1) %}{{tablerowloop.index}}{% endtablerow %}',
+      );
+      const expected = '0120<tr class="row1">\n<td class="col1">1</td></tr>\n';
+      expect(template().render(), expected);
+      expect(await template().renderAsync(), expected);
+    });
+
+    test(
+      'tablerow closes its cell and row when break interrupts the body',
+      () async {
+        final template = Template.parse(
+          '{% tablerow n in (1..3) cols:2 %}{{n}}{% break %}ignored{% endtablerow %}',
+        );
+        const expected = '<tr class="row1">\n<td class="col1">1</td></tr>\n';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
+    test(
+      'tablerow continue closes its cell and advances to the next row',
+      () async {
+        final template = Template.parse(
+          '{% tablerow n in (1..3) cols:2 %}{{n}}'
+          '{% if n == 2 %}{% continue %}{% endif %}!{% endtablerow %}',
+        );
+        const expected =
+            '<tr class="row1">\n'
+            '<td class="col1">1!</td><td class="col2">2</td></tr>\n'
+            '<tr class="row2"><td class="col1">3!</td></tr>\n';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
+    test(
+      'strict dot lookup uses the filters registered in its environment',
+      () async {
+        final environment = Environment.withStrictMode({
+          'items': [1, 2],
+          'record': {'size': 'key'},
+        });
+        final source = '{{ items.size }}|{{ record.size }}';
+
+        expect(
+          Template.parse(source, environment: environment).render(),
+          '|key',
+        );
+        environment.registerLocalFilter('size', (value, _, _) => 42);
+        final template = Template.parse(source, environment: environment);
+        expect(template.render(), '42|key');
+        expect(await template.renderAsync(), '42|key');
+      },
+    );
+
+    test('an environment with constant registers can render text', () async {
+      final evaluator = Evaluator(Environment({}, const {}));
+      final nodes = [TextNode('hello')];
+
+      expect(evaluator.evaluateNodes(nodes), 'hello');
+      evaluator.buffer.clear();
+      expect(await evaluator.evaluateNodesAsync(nodes), 'hello');
+    });
+
+    test('accepts repeated and spaced bracket suffixes', () async {
+      final template = Template.parse(
+        '{{ matrix[0][1] }}|{{ shop.items [0] }}|{{ values[keys[i]] }}',
+        data: {
+          'matrix': [
+            ['a', 'b'],
+          ],
+          'shop': {
+            'items': ['c'],
+          },
+          'values': {'item': 'd'},
+          'keys': ['item'],
+          'i': 0,
+        },
+      );
+
+      expect(template.render(), 'b|c|d');
+      expect(await template.renderAsync(), 'b|c|d');
+    });
+
+    test('renders cyclic collections and repeated references', () async {
+      final shared = {'value': 1};
+      final map = <String, Object?>{'first': shared, 'second': shared};
+      final list = <Object?>[1];
+      map['self'] = map;
+      list.add(list);
+      final template = Template.parse(
+        '{{ map }}|{{ list }}',
+        data: {'map': map, 'list': list},
+      );
+      const expected =
+          '{"first"=>{"value"=>1}, "second"=>{"value"=>1}, "self"=>{...}}|1[...]';
+
+      expect(template.render(), expected);
+      expect(await template.renderAsync(), expected);
+    });
+
+    test('continuation distinguishes quoted keys from dynamic keys', () async {
+      final template = Template.parse(
+        '{% for x in groups[key] limit:1 %}{{x}}{% endfor %}|'
+        "{% for x in groups['key'] offset:continue %}{{x}}{% endfor %}|"
+        '{% for x in groups[key] offset:continue %}{{x}}{% endfor %}',
+        data: {
+          'key': 'other',
+          'groups': {
+            'other': ['x', 'y'],
+            'key': ['a', 'b'],
+          },
+        },
+      );
+
+      expect(template.render(), 'x|ab|y');
+      expect(await template.renderAsync(), 'x|ab|y');
+    });
+
+    test('partial aliases and render parameters stay local', () async {
+      final template = Template.parse(
+        "{% include 'card' as entry %}|{% render 'counter', n: 5 %}",
+        data: {'card': 7},
+        root: MapRoot({
+          'card': '{{entry}}',
+          'counter': '{% increment n %}|{{n}}',
+        }),
+      );
+
+      expect(template.render(), '7|0|5');
+      expect(await template.renderAsync(), '7|0|5');
+    });
+
+    test(
+      'an explicit assignment keeps precedence even when its value matches',
+      () async {
+        Template template() => Template.parse(
+          '{% if true %}{% assign n = original %}{% endif %}'
+          '{% increment n %}|{{n}}',
+          data: {'n': 5, 'original': 5},
+        );
+
+        expect(template().render(), '5|5');
+        expect(await template().renderAsync(), '5|5');
+      },
+    );
+
+    test('include can assign the same value as a temporary argument', () async {
+      Template template() => Template.parse(
+        "{% include 'save', x: 'new' %}|{{x}}",
+        data: {'x': 'old'},
+        root: MapRoot({'save': '{% assign x = x %}{{x}}'}),
+      );
+
+      expect(template().render(), 'new|new');
+      expect(await template().renderAsync(), 'new|new');
     });
 
     test('context updates between renders', () async {

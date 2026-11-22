@@ -2,6 +2,7 @@ import 'package:liquify/parser.dart' show parseInput, Tag;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/drop.dart';
 import 'package:liquify/src/filter_registry.dart';
+import 'package:liquify/src/liquid_number.dart';
 import 'package:liquify/src/tag_registry.dart';
 import 'package:liquify/src/util.dart';
 
@@ -105,7 +106,10 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   dynamic visitLiteral(Literal node) {
-    return node.value;
+    final value = node.value;
+    return node.isDecimal && value is double
+        ? preserveLiquidDecimal(value)
+        : value;
   }
 
   @override
@@ -115,30 +119,45 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   dynamic _binaryOp(dynamic left, String op, dynamic right) {
+    if (op == '+' && (left is String || right is String)) {
+      return '${left ?? ''}${right ?? ''}';
+    }
+    final isDecimal =
+        left is LiquidDecimal ||
+        right is LiquidDecimal ||
+        (left is double && left is! int) ||
+        (right is double && right is! int);
+    left = unwrapLiquidNumber(left);
+    right = unwrapLiquidNumber(right);
+
+    dynamic numericResult(dynamic result) =>
+        isDecimal && result is double ? preserveLiquidDecimal(result) : result;
+
     switch (op) {
       case '+':
-        if (left is String || right is String) {
-          return '${left ?? ''}${(right ?? '')}';
-        }
-        return (left ?? 0) + (right ?? 0);
+        return numericResult((left ?? 0) + (right ?? 0));
       case '-':
-        return (left ?? 0) - (right ?? 0);
+        return numericResult((left ?? 0) - (right ?? 0));
       case '*':
-        return (left ?? 1) * (right ?? 1);
+        return numericResult((left ?? 1) * (right ?? 1));
       case '/':
-        return (left ?? 1) / (right ?? 1);
+        return numericResult((left ?? 1) / (right ?? 1));
       case '==':
-        return left == right;
+        return liquidEquals(left, right);
       case '!=':
-        return left != right;
+        return !liquidEquals(left, right);
       case '<':
-        return (left ?? 0) < (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison < 0;
       case '>':
-        return (left ?? 0) > (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison > 0;
       case '<=':
-        return (left ?? 0) <= (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison <= 0;
       case '>=':
-        return (left ?? 0) >= (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison >= 0;
       case 'and':
         return isTruthy(left) && isTruthy(right);
       case 'or':
@@ -154,14 +173,13 @@ class Evaluator implements ASTVisitor<dynamic> {
         }
         return right.contains(left);
       case 'contains':
-        if (left is String && right is String) {
-          return left.contains(right);
-        } else if (left is Iterable && right is String) {
-          return left.contains(right);
-        }
-        throw Exception(
-          'contains operator requires string or iterable on left side and string on right side',
-        );
+        if (!isTruthy(right)) return false;
+        return switch (left) {
+          String() => left.contains(right.toString()),
+          Iterable() => left.contains(right),
+          Map() => left.containsKey(right),
+          _ => false,
+        };
       default:
         throw UnsupportedError('Unsupported operator: $op');
     }
@@ -170,6 +188,8 @@ class Evaluator implements ASTVisitor<dynamic> {
   @override
   dynamic visitBinaryOperation(BinaryOperation node) {
     final left = node.left.accept(this);
+    if (node.operator == 'and' && !isTruthy(left)) return false;
+    if (node.operator == 'or' && isTruthy(left)) return true;
     final right = node.right.accept(this);
 
     return _binaryOp(left, node.operator, right);
@@ -243,26 +263,15 @@ class Evaluator implements ASTVisitor<dynamic> {
       }
     }
 
-    return (value) => filterFunction(value, args, namedArgs);
+    return (value) =>
+        _applyFilter(node.name.name, filterFunction, value, args, namedArgs);
   }
 
   @override
   dynamic visitFilterExpression(FilteredExpression node) {
-    dynamic value;
-    if (node.expression is Assignment) {
-      (node.expression as Assignment).value.accept(this);
-      if ((node.expression as Assignment).value is Literal) {
-        value = ((node.expression as Assignment).value as Literal).value;
-      } else if ((node.expression as Assignment).value is Identifier) {
-        value = context.getVariable(
-          ((node.expression as Assignment).value as Identifier).name,
-        );
-      } else {
-        value = (node.expression as Assignment).value.accept(this);
-      }
-    } else {
-      value = node.expression.accept(this);
-    }
+    final expression = node.expression;
+    final operand = expression is Assignment ? expression.value : expression;
+    var value = operand.accept(this);
 
     for (final filter in node.filters) {
       final filterFunction = filter.accept(this);
@@ -273,56 +282,26 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   dynamic visitMemberAccess(MemberAccess node) {
-    var object = node.object;
-    final objName = (object as Identifier).name;
-    var objectVal = context.getVariable(objName);
-
-    if (objectVal == null) return null;
-
+    var value = node.object.accept(this);
     for (final member in node.members) {
-      final keyName = member is Identifier
-          ? member.name
-          : ((member as ArrayAccess).array as Identifier).name;
-      final isArray = member is ArrayAccess;
-
-      if (isArray) {
-        final key = (member.array as Identifier).name;
-        final index = (member.key as Literal).value;
-        objectVal = objectVal[key];
-
-        if (objectVal == null) return;
-        if (objectVal is List) {
-          if (index >= 0 && index < objectVal.length) {
-            objectVal = objectVal[index];
-          } else {
-            return null;
-          }
-        } else {
-          objectVal = objectVal[index];
-        }
-      } else if (objectVal is Drop) {
-        if (member is Identifier) {
-          objectVal = objectVal(Symbol(keyName));
-        }
-      } else if (objectVal is List && member is Identifier) {
-        // Check if it's a registered dot notation filter
-        if (FilterRegistry.isDotNotationFilter(keyName)) {
-          final filterFunction = FilterRegistry.getFilter(keyName);
-          if (filterFunction != null) {
-            objectVal = filterFunction(objectVal, [], {});
-          }
-        }
-      } else if (objectVal is Map) {
-        if (!objectVal.containsKey(keyName)) {
-          return null;
-        }
-        objectVal = objectVal[keyName];
-      } else if (objectVal == null) {
-        return null;
-      }
+      if (value == null) return null;
+      value = _resolveMember(value, member, (key) => key.accept(this));
     }
-    return objectVal;
+    return value;
   }
+
+  dynamic _resolveMember(
+    Object? value,
+    ASTNode member,
+    Object? Function(ASTNode) evaluateKey,
+  ) => switch (member) {
+    Identifier(:final name) => _lookupMember(value, name),
+    ArrayAccess(:final array, :final key) => _lookupIndex(
+      _resolveMember(value, array, evaluateKey),
+      evaluateKey(key),
+    ),
+    _ => null,
+  };
 
   @override
   dynamic visitNamedArgument(NamedArgument node) {
@@ -352,34 +331,14 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  visitArrayAccess(ArrayAccess arrayAccess) {
-    final array = arrayAccess.array.accept(this);
-    final key = arrayAccess.key.accept(this);
-    if (array is List) {
-      final index = key is int ? key : int.parse(key);
-      if (index >= 0 && index < array.length) {
-        return array[index];
-      }
-    } else if (array is Map && array.containsKey(key)) {
-      return array[key];
-    }
-    return null;
-  }
+  dynamic visitArrayAccess(ArrayAccess node) =>
+      _lookupIndex(node.array.accept(this), node.key.accept(this));
 
   @override
-  Future<dynamic> visitArrayAccessAsync(ArrayAccess arrayAccess) async {
-    final array = await arrayAccess.array.acceptAsync(this);
-    final key = await arrayAccess.key.acceptAsync(this);
-    if (array is List) {
-      final index = key is int ? key : int.parse(key);
-      if (index >= 0 && index < array.length) {
-        return array[index];
-      }
-    } else if (array is Map && array.containsKey(key)) {
-      return array[key];
-    }
-    return null;
-  }
+  Future<dynamic> visitArrayAccessAsync(ArrayAccess node) async => _lookupIndex(
+    await node.array.acceptAsync(this),
+    await node.key.acceptAsync(this),
+  );
 
   @override
   Future<dynamic> visitAssignmentAsync(Assignment node) async {
@@ -412,6 +371,8 @@ class Evaluator implements ASTVisitor<dynamic> {
   @override
   Future<dynamic> visitBinaryOperationAsync(BinaryOperation node) async {
     final left = await node.left.acceptAsync(this);
+    if (node.operator == 'and' && !isTruthy(left)) return false;
+    if (node.operator == 'or' && isTruthy(left)) return true;
     final right = await node.right.acceptAsync(this);
     return _binaryOp(left, node.operator, right);
   }
@@ -438,26 +399,15 @@ class Evaluator implements ASTVisitor<dynamic> {
       }
     }
 
-    return (value) => filterFunction(value, args, namedArgs);
+    return (value) =>
+        _applyFilter(node.name.name, filterFunction, value, args, namedArgs);
   }
 
   @override
   Future<dynamic> visitFilterExpressionAsync(FilteredExpression node) async {
-    dynamic value;
-    if (node.expression is Assignment) {
-      await (node.expression as Assignment).value.acceptAsync(this);
-      if ((node.expression as Assignment).value is Literal) {
-        value = ((node.expression as Assignment).value as Literal).value;
-      } else if ((node.expression as Assignment).value is Identifier) {
-        value = context.getVariable(
-          ((node.expression as Assignment).value as Identifier).name,
-        );
-      } else {
-        value = await (node.expression as Assignment).value.acceptAsync(this);
-      }
-    } else {
-      value = await node.expression.acceptAsync(this);
-    }
+    final expression = node.expression;
+    final operand = expression is Assignment ? expression.value : expression;
+    var value = await operand.acceptAsync(this);
 
     for (final filter in node.filters) {
       final filterFunction = await filter.acceptAsync(this);
@@ -478,61 +428,25 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  Future<dynamic> visitLiteralAsync(Literal node) async {
-    return node.value;
-  }
+  Future<dynamic> visitLiteralAsync(Literal node) async => visitLiteral(node);
 
   @override
   Future<dynamic> visitMemberAccessAsync(MemberAccess node) async {
-    var object = node.object;
-    final objName = (object as Identifier).name;
-    var objectVal = context.getVariable(objName);
-
-    if (objectVal == null) return null;
-
+    var value = await node.object.acceptAsync(this);
     for (final member in node.members) {
-      final keyName = member is Identifier
-          ? member.name
-          : ((member as ArrayAccess).array as Identifier).name;
-      final isArray = member is ArrayAccess;
-
-      if (isArray) {
-        final key = (member.array as Identifier).name;
-        final index = (member.key as Literal).value;
-        objectVal = objectVal[key];
-
-        if (objectVal == null) return;
-        if (objectVal is List) {
-          if (index >= 0 && index < objectVal.length) {
-            objectVal = objectVal[index];
-          } else {
-            return null;
-          }
-        } else {
-          objectVal = objectVal[index];
-        }
-      } else if (objectVal is Drop) {
-        if (member is Identifier) {
-          objectVal = objectVal(Symbol(keyName));
-        }
-      } else if (objectVal is List && member is Identifier) {
-        // Check if it's a registered dot notation filter
-        if (FilterRegistry.isDotNotationFilter(keyName)) {
-          final filterFunction = FilterRegistry.getFilter(keyName);
-          if (filterFunction != null) {
-            objectVal = await filterFunction(objectVal, [], {});
-          }
-        }
-      } else if (objectVal is Map) {
-        if (!objectVal.containsKey(keyName)) {
-          return null;
-        }
-        objectVal = objectVal[keyName];
-      } else if (objectVal == null) {
-        return null;
-      }
+      if (value == null) return null;
+      value = await _resolveMemberAsync(value, member);
     }
-    return objectVal;
+    return value;
+  }
+
+  Future<dynamic> _resolveMemberAsync(Object? value, ASTNode member) async {
+    if (member is Identifier) return _lookupMember(value, member.name);
+    if (member is ArrayAccess) {
+      final collection = await _resolveMemberAsync(value, member.array);
+      return _lookupIndex(collection, await member.key.acceptAsync(this));
+    }
+    return null;
   }
 
   @override

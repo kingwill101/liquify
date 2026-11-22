@@ -55,7 +55,9 @@ class CaseTag extends AbstractTag with AsyncTag {
           final whenValues = node.content
               .map((e) => evaluator.evaluate(e))
               .toList();
-          if (whenValues.contains(caseValue)) {
+          if (whenValues.any(
+            (value) => evaluator.liquidEquals(caseValue, value),
+          )) {
             _evaluateBody(node.body, evaluator, buffer);
             matchFound = true;
           }
@@ -85,7 +87,9 @@ class CaseTag extends AbstractTag with AsyncTag {
           final whenValues = await Future.wait(
             node.content.map((e) => evaluator.evaluateAsync(e)),
           );
-          if (whenValues.contains(caseValue)) {
+          if (whenValues.any(
+            (value) => evaluator.liquidEquals(caseValue, value),
+          )) {
             await _evaluateBodyAsync(node.body, evaluator, buffer);
             matchFound = true;
           }

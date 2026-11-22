@@ -1,3 +1,4 @@
+import 'package:liquify/src/filters/math.dart' show toLiquidNumber;
 import 'dart:async';
 
 import 'package:liquify/src/filter_registry.dart';
@@ -63,33 +64,39 @@ void main() {
     test('first', () {
       expect(first([1, 2, 3], [], {}), equals(1));
       expect(first([], [], {}), equals(''));
-      expect(first('not a list', [], {}), equals(''));
+      expect(first('😀abc', [], {}), equals('😀'));
+      expect(first('', [], {}), equals(''));
+      expect(first(' 😀\n', [], {}), equals(' '));
     });
 
     test('last', () {
       expect(last([1, 2, 3], [], {}), equals(3));
       expect(last([], [], {}), equals(''));
-      expect(last('not a list', [], {}), equals(''));
+      expect(last('abc😀', [], {}), equals('😀'));
+      expect(last('', [], {}), equals(''));
+      expect(last(' 😀\n', [], {}), equals('\n'));
     });
 
     test('reverse', () {
       expect(reverse([1, 2, 3], [], {}), equals([3, 2, 1]));
       expect(reverse([], [], {}), equals([]));
-      expect(reverse('not a list', [], {}), equals('not a list'));
+      expect(reverse('not a list', [], {}), equals(['not a list']));
     });
 
     test('size', () {
       expect(size([1, 2, 3], [], {}), equals(3));
       expect(size([], [], {}), equals(0));
       expect(size('string', [], {}), equals(6));
-      expect(size(123, [], {}), equals(0));
+      expect(size(123, [], {}), equals(8));
+      expect(size('a😀b', [], {}), equals(3));
+      expect(size({'a': 1}, [], {}), equals(1));
     });
 
     test('sort', () {
       expect(sort([3, 1, 2], [], {}), equals([1, 2, 3]));
       expect(sort(['c', 'a', 'b'], [], {}), equals(['a', 'b', 'c']));
       expect(sort([], [], {}), equals([]));
-      expect(sort('not a list', [], {}), equals('not a list'));
+      expect(sort('not a list', [], {}), equals(['not a list']));
     });
 
     test('map', () {
@@ -99,8 +106,8 @@ void main() {
       ];
       expect(map(input, ['name'], {}), equals(['Alice', 'Bob']));
       expect(map([], ['name'], {}), equals([]));
-      expect(map('not a list', ['name'], {}), equals('not a list'));
-      expect(map([1, 2, 3], ['nonexistent'], {}), equals([null, null, null]));
+      expect(map('not a list', ['name'], {}), equals([null]));
+      expect(() => map([1, 2, 3], ['nonexistent'], {}), throwsArgumentError);
     });
 
     test('map without property returns input', () {
@@ -139,7 +146,7 @@ void main() {
       );
       expect(where(input, ['age'], {}), equals(input));
       expect(where([], ['age', 30], {}), equals([]));
-      expect(where('not a list', ['age', 30], {}), equals('not a list'));
+      expect(where('not a list', ['age', 30], {}), equals([]));
     });
 
     test('where excludes null properties', () {
@@ -159,7 +166,7 @@ void main() {
       expect(uniq([1, 2, 2, 3, 3, 3], [], {}), equals([1, 2, 3]));
       expect(uniq(['a', 'b', 'b', 'c'], [], {}), equals(['a', 'b', 'c']));
       expect(uniq([], [], {}), equals([]));
-      expect(uniq('not a list', [], {}), equals('not a list'));
+      expect(uniq('not a list', [], {}), equals(['not a list']));
     });
 
     test('slice', () {
@@ -168,7 +175,7 @@ void main() {
       expect(slice('abcde', [1, 2], {}), equals('bc'));
       expect(slice([], [1, 2], {}), equals([]));
       expect(slice('', [1, 2], {}), equals(''));
-      expect(slice(123, [1, 2], {}), equals(123));
+      expect(slice(123, [1, 2], {}), equals('23'));
       expect(slice([1, 2, 3], [10, 2], {}), equals([]));
       expect(slice([1, 2, 3], [-1, 2], {}), equals([3]));
       expect(slice([1, 2, 3], [-2, 2], {}), equals([2, 3]));
@@ -176,7 +183,7 @@ void main() {
       expect(slice('abcde', [3, 5], {}), equals('de'));
       expect(slice([1], [0, 0], {}), equals([]));
       expect(slice([1, 2, 3], [1, -1], {}), equals([]));
-      expect(slice([1, 2, 3], [-5, 2], {}), equals([1, 2]));
+      expect(slice([1, 2, 3], [-5, 2], {}), equals([]));
     });
 
     test('compact', () {
@@ -184,7 +191,7 @@ void main() {
       expect(compact([null, null], [], {}), equals([]));
       expect(compact([1, 2, 3], [], {}), equals([1, 2, 3]));
       expect(compact([], [], {}), equals([]));
-      expect(compact('not a list', [], {}), equals('not a list'));
+      expect(compact('not a list', [], {}), equals(['not a list']));
       expect(
         compact([1, '', false, 0, null], [], {}),
         equals([1, '', false, 0]),
@@ -219,14 +226,14 @@ void main() {
         equals([1, 2]),
       );
       expect(concat([1, 2], [[]], {}), equals([1, 2]));
-      expect(concat([1, 2], [], {}), equals([1, 2]));
+      expect(() => concat([1, 2], [], {}), throwsArgumentError);
       expect(
         concat('not a list', [
           [1, 2],
         ], {}),
-        equals('not a list'),
+        equals(['not a list', 1, 2]),
       );
-      expect(concat([1, 2], ['not a list'], {}), equals([1, 2]));
+      expect(() => concat([1, 2], ['not a list'], {}), throwsArgumentError);
     });
 
     test('reject', () {
@@ -256,15 +263,13 @@ void main() {
         equals([
           {'available': false, 'name': 'Item2'},
           {'available': null, 'name': 'Item3'},
-          {'available': '', 'name': 'Item4'},
-          {'available': 0, 'name': 'Item5'},
         ]),
       );
 
       expect(reject([], ['type', 'kitchen'], {}), equals([]));
       expect(
         reject('not a list', ['type', 'kitchen'], {}),
-        equals('not a list'),
+        equals(['not a list']),
       );
       expect(reject(input, [], {}), equals(input));
     });
@@ -347,22 +352,22 @@ void main() {
 
       expect(findIndex(input, ['name', 'Bob'], {}), equals(1));
       expect(findIndex(input, ['age', 30], {}), equals(0));
-      expect(findIndex(input, ['name', 'David'], {}), equals(-1));
+      expect(findIndex(input, ['name', 'David'], {}), isNull);
 
       expect(findIndex(input, ['active'], {}), equals(0));
 
-      expect(findIndex([], ['name', 'Bob'], {}), equals(-1));
-      expect(findIndex('not a list', ['name', 'Bob'], {}), equals(-1));
-      expect(findIndex(input, [], {}), equals(-1));
+      expect(findIndex([], ['name', 'Bob'], {}), isNull);
+      expect(findIndex('not a list', ['name', 'Bob'], {}), isNull);
+      expect(findIndex(input, [], {}), isNull);
     });
 
     test('findIndex ignores non-map items', () {
-      expect(findIndex(['Alice', 'Bob'], ['name', 'Bob'], {}), equals(-1));
+      expect(findIndex(['Alice', 'Bob'], ['name', 'Bob'], {}), isNull);
     });
 
     test('sum', () {
       expect(sum([1, 2, 3, 4], [], {}), equals(10));
-      expect(sum([1.5, 2.5, 3.0], [], {}), equals(7.0));
+      expect(toLiquidNumber(sum([1.5, 2.5, 3.0], [], {})), equals(7.0));
       expect(sum([], [], {}), equals(0));
       expect(sum([1, 'not a number', 3], [], {}), equals(4));
 
@@ -401,11 +406,11 @@ void main() {
     test('sortNatural', () {
       expect(
         sortNatural(['item10', 'item2', 'item1'], [], {}),
-        equals(['item1', 'item2', 'item10']),
+        equals(['item1', 'item10', 'item2']),
       );
       expect(
         sortNatural(['file1.txt', 'file10.txt', 'file2.txt'], [], {}),
-        equals(['file1.txt', 'file2.txt', 'file10.txt']),
+        equals(['file1.txt', 'file10.txt', 'file2.txt']),
       );
 
       expect(
@@ -419,13 +424,46 @@ void main() {
 
       expect(
         sortNatural(['test', 'test1', 'test10', 'test2'], [], {}),
-        equals(['test', 'test1', 'test2', 'test10']),
+        equals(['test', 'test1', 'test10', 'test2']),
       );
 
       expect(sortNatural([3, 1, 2], [], {}), equals([1, 2, 3]));
 
       expect(sortNatural([], [], {}), equals([]));
-      expect(sortNatural('not a list', [], {}), equals('not a list'));
+      expect(sortNatural('not a list', [], {}), equals(['not a list']));
+    });
+
+    test('collection filters use property keys and Liquid truthiness', () {
+      final rows = [
+        {'name': 'b', 'price': '2.5', 'active': false},
+        {'name': 'A', 'price': 2, 'active': 0},
+        {'name': 'b', 'price': 1, 'active': ''},
+        {'price': 3},
+      ];
+      expect(map(sort(rows, ['name'], {}), ['name'], {}), [
+        'A',
+        'b',
+        'b',
+        null,
+      ]);
+      expect(compact(rows, ['name'], {}), rows.take(3).toList());
+      expect(uniq(rows, ['name'], {}), [rows[0], rows[1], rows[3]]);
+      expect(where(rows, ['active'], {}), [rows[1], rows[2]]);
+      expect(findIndex(rows, ['active'], {}), 1);
+      expect(sum(rows, ['price'], {}), 8.5);
+      expect(
+        join(
+          [
+            1,
+            null,
+            {'x': 2},
+          ],
+          ['|'],
+          {},
+        ),
+        '1||{"x"=>2}',
+      );
+      expect(slice('a😀b', [1, 1], {}), '😀');
     });
 
     test('groupBy', () {
@@ -509,8 +547,42 @@ void main() {
       expect(has(input, [], {}), equals(false));
     });
 
+    test('has indexes bits in integer items', () {
+      final input = [1, 2, 3];
+
+      expect(has(input, [2], {}), isTrue);
+      expect(has(input, [2, 1], {}), isFalse);
+      expect(has(input, [2, 0], {}), isTrue);
+      expect(has(input, [-1, 0], {}), isTrue);
+    });
+
     test('has ignores non-map items', () {
       expect(has([1, 2, 3], ['active'], {}), equals(false));
+    });
+
+    test('integer property lookup preserves bits above index 31', () {
+      expect(has([8589934592], [33, 1], {}), isTrue);
+      expect(has([8589934592], [33, 0], {}), isFalse);
+      expect(map([-1, 8589934592], [33], {}), [1, 1]);
+    });
+
+    test('expression filters apply predicates only in condition mode', () {
+      final empty = {'tags': [], 'name': ' '};
+      final filled = {
+        'tags': ['tag'],
+        'name': 'named',
+      };
+      final records = [empty, filled];
+      final args = ['item', 'empty == item.tags and item.name == blank'];
+
+      expect(whereExp(records, args, {}), [empty]);
+      expect(rejectExp(records, args, {}), [filled]);
+      expect(findExp(records, args, {}), empty);
+      expect(findIndexExp(records, args, {}), 0);
+      expect(hasExp(records, args, {}), isTrue);
+      expect(groupByExp(records, ['item', 'blank'], {}), [
+        {'name': '', 'items': records},
+      ]);
     });
 
     test('length', () {

@@ -85,6 +85,9 @@ class LiquidGrammar extends GrammarDefinition {
     // Tag/block parsers (start with tagStart or tagStartStrip)
     final tagElements = [
       ref0(ifBlock),
+      ref0(unlessBlock),
+      ref0(ifChangedBlock),
+      ref0(captureBlock),
       ref0(forBlock),
       ref0(caseBlock),
       ref0(whenBlock),
@@ -127,7 +130,7 @@ class LiquidGrammar extends GrammarDefinition {
             if (expr is Identifier) {
               name = expr.name;
             } else if (expr is MemberAccess) {
-              name = (expr.object as Identifier).name;
+              name = lookupRootName(expr.object);
             }
 
             if (filters.isNotEmpty) {
@@ -160,7 +163,7 @@ class LiquidGrammar extends GrammarDefinition {
 
     // Whitespace is safe if not followed by strip delimiters
     final safeWhitespace =
-        pattern(' \t\r\n') &
+        pattern(' \t\r\n').plus() &
         (string(cfg.varStartStrip) | string(cfg.tagStartStrip)).not();
 
     final textChar =
@@ -265,9 +268,23 @@ class LiquidGrammar extends GrammarDefinition {
   // If block
   // ---------------------------------------------------------------------------
 
-  Parser<Tag> ifTag() => someTag("if", config: config).labeled('ifTag');
-  Parser<Tag> elsifTag() =>
-      someTag("elsif", config: config).labeled('elsifTag');
+  Parser<Tag> captureBlock() => parseCaptureBlock(ref0(element), config);
+
+  Parser<Tag> ifChangedBlock() => parseIfChangedBlock(ref0(element), config);
+
+  Parser<Tag> unlessBlock() =>
+      conditionalBlock(ref0(element), 'unless', config);
+
+  Parser<Tag> ifTag() => someTag(
+    "if",
+    config: config,
+    content: ref0(conditionTagContent),
+  ).labeled('ifTag');
+  Parser<Tag> elsifTag() => someTag(
+    "elsif",
+    config: config,
+    content: ref0(conditionTagContent),
+  ).labeled('elsifTag');
   Parser<Tag> elseTag() =>
       someTag('else', config: config, hasContent: false).labeled('elseTag');
 
@@ -374,7 +391,11 @@ class LiquidGrammar extends GrammarDefinition {
   // Case block
   // ---------------------------------------------------------------------------
 
-  Parser<Tag> whenTag() => someTag('when', config: config).labeled('whenTag');
+  Parser<Tag> whenTag() => someTag(
+    'when',
+    config: config,
+    content: ref0(whenTagContent),
+  ).labeled('whenTag');
   Parser<Tag> caseTag() => someTag('case', config: config).labeled('caseTag');
 
   Parser endCaseTag() =>

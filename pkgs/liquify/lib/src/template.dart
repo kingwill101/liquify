@@ -39,18 +39,17 @@ class Template {
   /// [templateName] is the name or path of the template to be rendered.
   /// [root] is the Root object used for resolving templates.
   /// [data] is an optional map of variables to be used in the template evaluation.
-  /// [config] is an optional delimiter configuration for custom delimiters.
+  /// [_config] is an optional delimiter configuration for custom delimiters.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
   Template.fromFile(
     String templateName,
     Root root, {
     Map<String, dynamic> data = const {},
-    LiquidConfig? config,
+    this._config,
     Environment? environment,
     void Function(Environment)? environmentSetup,
   }) : _templateContent = root.resolve(templateName).content,
-       _config = config,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
        );
@@ -59,7 +58,7 @@ class Template {
   ///
   /// [input] is the string content of the template.
   /// [data] is an optional map of variables to be used in the template evaluation.
-  /// [config] is an optional delimiter configuration for custom delimiters.
+  /// [_config] is an optional delimiter configuration for custom delimiters.
   /// [root] is an optional Root object used for resolving templates.
   /// [environment] is an optional custom Environment instance to use.
   /// [environmentSetup] is an optional callback to configure the environment with custom filters/tags.
@@ -87,12 +86,11 @@ class Template {
   Template.parse(
     String input, {
     Map<String, dynamic> data = const {},
-    LiquidConfig? config,
+    this._config,
     Root? root,
     Environment? environment,
     void Function(Environment)? environmentSetup,
   }) : _templateContent = input,
-       _config = config,
        _evaluator = Evaluator(
          _createEnvironment(data, environment, environmentSetup)..setRoot(root),
        );

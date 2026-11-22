@@ -2,6 +2,7 @@ import 'package:liquify/src/filter_registry.dart';
 import 'dart:convert';
 
 import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/liquid_number.dart' show unwrapLiquidNumber;
 
 /// Returns the input value if it's not falsy, otherwise returns the default value.
 ///
@@ -27,11 +28,10 @@ FilterFunction defaultFilter =
         throw ArgumentError('default filter requires at least one argument');
       }
       dynamic defaultValue = arguments[0];
-      bool allowFalse = arguments.length > 1 ? arguments[1] as bool : false;
+      final allowFalse = namedArguments.containsKey('allow_false')
+          ? namedArguments['allow_false'] == true
+          : arguments.length > 1 && arguments[1] == true;
 
-      if (value is List || value is String) {
-        return (value as dynamic).isEmpty ? defaultValue : value;
-      }
       if (value == false && allowFalse) return false;
       return isFalsy(value) ? defaultValue : value;
     };
@@ -162,8 +162,9 @@ FilterFunction toInteger =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      if (value is num) {
-        return value.round();
+      final number = unwrapLiquidNumber(value);
+      if (number is num) {
+        return number.round();
       }
       return int.parse(value.toString());
     };
@@ -190,9 +191,9 @@ FilterFunction raw =
 bool isFalsy(dynamic value) {
   return value == null ||
       value == false ||
-      (value is num && value == 0) ||
       (value is String && value.isEmpty) ||
-      (value is Iterable && value.isEmpty);
+      (value is Iterable && value.isEmpty) ||
+      (value is Map && value.isEmpty);
 }
 
 class MiscModule extends Module {

@@ -144,6 +144,15 @@ void main() {
       );
     });
 
+    test('string filters preserve Unicode characters and word boundaries', () {
+      expect(truncate('a😀bcd', [4, '…'], {}), 'a😀b…');
+      expect(truncate('abc', [1], {}), '...');
+      expect(replace('a😀b', ['', 'x'], {}), 'xax😀xbx');
+      expect(truncatewords(' \ta\n b \r\n', [2, '…'], {}), 'a b…');
+      expect(truncatewords(' \ta\n b', [2, '…'], {}), ' \ta\n b');
+      expect(truncatewords(' \ta\n b c \r\n', [2, '…'], {}), 'a b…');
+    });
+
     test('truncatewords enforces minimum word count', () {
       expect(truncatewords('Hello World Foo Bar', [0], {}), equals('Hello...'));
       expect(

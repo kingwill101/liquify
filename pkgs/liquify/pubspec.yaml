@@ -3,7 +3,7 @@ description: >
   A powerful and extensible Liquid template engine for Dart.
   Supports full Liquid syntax, custom tags and filters, and high-performance parsing and rendering.
 
-version: 1.6.1
+version: 2.0.0-wip
 
 homepage: https://github.com/kingwill101/liquify
 
@@ -16,7 +16,7 @@ topics:
   - dart
 
 environment:
-  sdk: ">=3.8.0 <4.0.0"
+  sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
   petitparser: ^7.0.2

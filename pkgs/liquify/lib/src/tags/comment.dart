@@ -14,19 +14,13 @@ class CommentTag extends AbstractTag with CustomTagParser, AsyncTag {
 
   @override
   Parser parser([LiquidConfig? config]) {
-    final start = createTagStart(config);
-    final end = createTagEnd(config);
-    return (start &
-            string('comment').trim() &
-            end &
-            any()
-                .starLazy((start & string('endcomment').trim() & end))
-                .flatten() &
-            start &
-            string('endcomment').trim() &
-            end)
-        .map((values) {
-          return Tag("comment", [TextNode(values[3])]);
-        });
+    final open = someTag('comment', config: config, hasContent: false);
+    final close = someTag('endcomment', config: config, hasContent: false);
+    final nested = undefined();
+    final body = (nested | (open | close).not() & any()).star().flatten();
+    nested.set(open & body & close);
+    return (open & body & close).map(
+      (values) => Tag('comment', [TextNode(values[1])]),
+    );
   }
 }

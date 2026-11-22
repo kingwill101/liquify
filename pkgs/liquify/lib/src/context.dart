@@ -39,7 +39,7 @@ class Environment {
     bool strictMode = false,
     LiquidConfig? config,
   ]) : _variableStack = [data],
-       _registers = register ?? {},
+       _registers = {...?register},
        _strictMode = strictMode,
        _config = config;
 
@@ -47,7 +47,7 @@ class Environment {
     Map<String, dynamic> data = const {},
     Map<String, dynamic>? register,
   ]) : _variableStack = [data],
-       _registers = register ?? {},
+       _registers = {...?register},
        _strictMode = true;
 
   Environment._clone(
@@ -270,13 +270,29 @@ class Environment {
   /// [name] The name of the variable to retrieve.
   /// [return] The value of the variable, or `null` if the variable is not found.
   dynamic getVariable(String name) {
-    // Iterate from the top of the stack (most recent scope) to the bottom (global scope)
-    for (var i = _variableStack.length - 1; i >= 0; i--) {
+    for (var i = _variableStack.length - 1; i > 0; i--) {
       if (_variableStack[i].containsKey(name)) {
         return _variableStack[i][name];
       }
     }
-    return null;
+
+    final supplied = _variableStack.first;
+    const counterPrefix = 'counter:';
+    if (name.startsWith(counterPrefix)) {
+      return supplied.containsKey(name)
+          ? supplied[name]
+          : supplied[name.substring(counterPrefix.length)];
+    }
+
+    // Assignments in template scopes take precedence over counters. A
+    // counter, in turn, takes precedence over its initial supplied value.
+    for (var i = _variableStack.length - 1; i >= 0; i--) {
+      final scope = _variableStack[i];
+      if (scope.containsKey('$counterPrefix$name')) {
+        return scope['$counterPrefix$name'];
+      }
+    }
+    return supplied[name];
   }
 
   /// Sets a variable in the current scope.
@@ -355,6 +371,9 @@ class Environment {
       setVariable(key, value);
     });
   }
+
+  /// Returns the variables written in the current scope.
+  Map<String, dynamic> currentScopeVariables() => Map.of(_variableStack.last);
 
   /// Returns a map containing all variables in the current context.
   ///

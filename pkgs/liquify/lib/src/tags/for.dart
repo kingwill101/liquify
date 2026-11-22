@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:liquify/src/ast.dart';
 import 'package:liquify/src/buffer.dart';
 import 'package:liquify/src/evaluator.dart';
@@ -6,6 +8,7 @@ import 'package:liquify/src/tags/tag.dart';
 
 class ForLoopObject {
   final int length;
+  final String? name;
   final ForLoopObject? parentloop;
   int index;
   int index0;
@@ -16,6 +19,7 @@ class ForLoopObject {
 
   ForLoopObject({
     required this.length,
+    this.name,
     this.parentloop,
     this.index = 1,
     this.index0 = 0,
@@ -36,6 +40,7 @@ class ForLoopObject {
   Map<String, dynamic> toMap() {
     return {
       'length': length,
+      if (name != null) 'name': name,
       'parentloop': parentloop?.toMap(),
       'index': index,
       'index0': index0,
@@ -48,6 +53,7 @@ class ForLoopObject {
 
   ForLoopObject.fromJson(Map<String, dynamic> json)
     : length = json['length'],
+      name = json['name'],
       parentloop = json['parentloop'] != null
           ? ForLoopObject.fromJson(json['parentloop'])
           : null,
@@ -61,12 +67,27 @@ class ForLoopObject {
 
 class ForTag extends AbstractTag with AsyncTag {
   late String variableName;
+  late String loopName;
   late List<dynamic> iterable;
   int? limit;
   int? offset;
   bool reversed = false;
 
   ForTag(super.content, super.filters);
+
+  String _collectionName(ASTNode node) => switch (node) {
+    Identifier(:final name) => name,
+    MemberAccess(:final object, :final members) => [
+      _collectionName(object),
+      ...members.map(_collectionName),
+    ].join('.'),
+    ArrayAccess(:final array, :final key) =>
+      '${_collectionName(array)}[${_collectionName(key)}]',
+    BinaryOperation(left: final start, operator: '..', right: final end) =>
+      '(${_collectionName(start)}..${_collectionName(end)})',
+    Literal(:final value) => value.toString(),
+    _ => '',
+  };
 
   @override
   void preprocess(Evaluator evaluator) {
@@ -89,43 +110,33 @@ class ForTag extends AbstractTag with AsyncTag {
     }
 
     variableName = left.name;
+    loopName = '$variableName-${_collectionName(right)}';
+    final continuationKey = '$variableName-${jsonEncode(right.toJson())}';
 
-    if (right is BinaryOperation && right.operator == '..') {
-      final start = evaluator.evaluate(right.left);
-      final end = evaluator.evaluate(right.right);
-      iterable = end < start
-          ? []
-          : List.generate(end - start + 1, (index) => start + index);
-    } else {
-      final evaluated = evaluator.evaluate(right);
-      // Convert Map to a list of [key, value] pairs for iteration
-      iterable = (evaluated is Map)
-          ? evaluated.entries.map((e) => [e.key, e.value]).toList()
-          : evaluated ?? [];
-    }
+    final collection = evaluator.evaluate(right);
+
+    final offsets =
+        evaluator.context.registers.putIfAbsent('for', () => <String, int>{})
+            as Map<String, int>;
 
     for (final arg in namedArgs) {
       if (arg.identifier.name == 'limit') {
         limit = evaluator.evaluate(arg.value);
       } else if (arg.identifier.name == 'offset') {
-        offset = evaluator.evaluate(arg.value);
+        final value = arg.value;
+        offset = value is Identifier && value.name == 'continue'
+            ? offsets[continuationKey]
+            : evaluator.evaluate(value);
       }
     }
 
-    for (final arg in args) {
-      if (arg.name == 'reversed') {
-        reversed = true;
-      }
-    }
+    final modifier = content.length > 1 ? content[1] : null;
+    reversed = modifier is Identifier && modifier.name == 'reversed';
 
-    final startOffset = offset;
-    if (startOffset != null && startOffset > 0) {
-      iterable = iterable.skip(startOffset).toList();
-    }
-
-    if (limit != null) {
-      iterable = iterable.take(limit!).toList();
-    }
+    final startOffset = offset ?? 0;
+    iterable = sliceLoopItems(collection, startOffset, limit);
+    offsets[continuationKey] =
+        (startOffset < 0 ? 0 : startOffset) + iterable.length;
 
     if (reversed) {
       iterable = iterable.reversed.toList();
@@ -150,18 +161,17 @@ class ForTag extends AbstractTag with AsyncTag {
       return;
     }
 
-    final parentLoop =
-        evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
+    final parentLoop = evaluator.context.getVariable('forloop');
     final forLoop = ForLoopObject(
       length: iterable.length,
-      parentloop: parentLoop != null
+      name: loopName,
+      parentloop: parentLoop is Map<String, dynamic>
           ? ForLoopObject.fromJson(parentLoop)
           : null,
     );
 
     evaluator.context.pushScope();
 
-    Map<String, dynamic> merged = {};
     try {
       outerLoop:
       for (final item in iterable) {
@@ -180,6 +190,7 @@ class ForTag extends AbstractTag with AsyncTag {
           } on BreakException {
             return;
           } on ContinueException {
+            forLoop.increment();
             continue outerLoop;
           }
         }
@@ -187,7 +198,7 @@ class ForTag extends AbstractTag with AsyncTag {
         forLoop.increment();
       }
     } finally {
-      merged = evaluator.context.all();
+      final merged = evaluator.context.currentScopeVariables();
       evaluator.context.popScope();
       merged.remove('forloop');
       merged.remove(variableName);
@@ -216,18 +227,17 @@ class ForTag extends AbstractTag with AsyncTag {
       return;
     }
 
-    final parentLoop =
-        evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
+    final parentLoop = evaluator.context.getVariable('forloop');
     final forLoop = ForLoopObject(
       length: iterable.length,
-      parentloop: parentLoop != null
+      name: loopName,
+      parentloop: parentLoop is Map<String, dynamic>
           ? ForLoopObject.fromJson(parentLoop)
           : null,
     );
 
     evaluator.context.pushScope();
 
-    Map<String, dynamic> merged = {};
     try {
       outerLoop:
       for (final item in iterable) {
@@ -246,6 +256,7 @@ class ForTag extends AbstractTag with AsyncTag {
           } on BreakException {
             return;
           } on ContinueException {
+            forLoop.increment();
             continue outerLoop;
           }
         }
@@ -253,11 +264,26 @@ class ForTag extends AbstractTag with AsyncTag {
         forLoop.increment();
       }
     } finally {
-      merged = evaluator.context.all();
+      final merged = evaluator.context.currentScopeVariables();
       evaluator.context.popScope();
       merged.remove('forloop');
       merged.remove(variableName);
       evaluator.context.merge(merged);
     }
   }
+}
+
+/// Selects the items for the built-in Liquid iteration tags.
+List<dynamic> sliceLoopItems(Object? collection, int offset, int? limit) {
+  // Liquid iterates a nonempty string as a single item, regardless of slice options.
+  if (collection is String) return collection.isEmpty ? [] : [collection];
+
+  final Iterable<dynamic> items = switch (collection) {
+    Map() => collection.entries.map((entry) => [entry.key, entry.value]),
+    Iterable() => collection,
+    _ => const [],
+  };
+  final remaining = offset > 0 ? items.skip(offset) : items;
+  return (limit == null ? remaining : remaining.take(limit < 0 ? 0 : limit))
+      .toList();
 }

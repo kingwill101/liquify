@@ -85,28 +85,17 @@ abstract class AbstractTag {
   dynamic applyFilters(dynamic value, Evaluator evaluator) {
     var result = value;
     for (final filter in filters) {
-      final filterFunction = evaluator.context.getFilter(filter.name.name);
-      if (filterFunction == null) {
-        throw Exception('Undefined filter: ${filter.name.name}');
-      }
-      final args = filter.arguments
-          .map((arg) => evaluator.evaluate(arg))
-          .toList();
-      result = filterFunction(result, args, {});
+      final filterFunction = evaluator.evaluate(filter) as Function;
+      result = filterFunction(result);
     }
     return result;
   }
 
   Future<dynamic> applyFiltersAsync(dynamic value, Evaluator evaluator) async {
     for (final filter in filters) {
-      final filterFunction = evaluator.context.getFilter(filter.name.name);
-      if (filterFunction == null) {
-        throw Exception('Undefined filter: ${filter.name.name}');
-      }
-      final args = await Future.wait(
-        filter.arguments.map((arg) => evaluator.evaluateAsync(arg)),
-      );
-      value = filterFunction(value, args, {});
+      final filterFunction = await evaluator.evaluateAsync(filter) as Function;
+      final filtered = filterFunction(value);
+      value = filtered is Future ? await filtered : filtered;
     }
     return value;
   }
@@ -115,38 +104,38 @@ abstract class AbstractTag {
   FutureOr<dynamic> evaluateAsync(Evaluator evaluator, Buffer buffer) async {
     evaluator.context.pushScope();
 
-    final innerContext = evaluator.context.clone();
-    final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
-      ..context.setRoot(evaluator.context.getRoot());
+    final Map<String, dynamic> variables;
+    final dynamic result;
+    try {
+      final innerContext = evaluator.context.clone();
+      final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
+        ..context.setRoot(evaluator.context.getRoot());
 
-    var result = await evaluateWithContextAsync(innerEvaluator, buffer);
-
-    // Store the variables from the current scope before popping it
-    final currentScopeVariables = innerEvaluator.context.all();
-    evaluator.context.popScope();
-
-    // Merge the stored variables back into the previous scope
-    evaluator.context.merge(currentScopeVariables);
-
+      result = await evaluateWithContextAsync(innerEvaluator, buffer);
+      variables = innerContext.currentScopeVariables();
+    } finally {
+      evaluator.context.popScope();
+    }
+    evaluator.context.merge(variables);
     return result;
   }
 
   dynamic evaluate(Evaluator evaluator, Buffer buffer) {
     evaluator.context.pushScope();
 
-    final innerContext = evaluator.context.clone();
-    final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
-      ..context.setRoot(evaluator.context.getRoot());
+    final Map<String, dynamic> variables;
+    final dynamic result;
+    try {
+      final innerContext = evaluator.context.clone();
+      final innerEvaluator = Evaluator.withBuffer(innerContext, buffer)
+        ..context.setRoot(evaluator.context.getRoot());
 
-    var result = evaluateWithContext(innerEvaluator, buffer);
-
-    // Store the variables from the current scope before popping it
-    final currentScopeVariables = innerEvaluator.context.all();
-    evaluator.context.popScope();
-
-    // Merge the stored variables back into the previous scope
-    evaluator.context.merge(currentScopeVariables);
-
+      result = evaluateWithContext(innerEvaluator, buffer);
+      variables = innerContext.currentScopeVariables();
+    } finally {
+      evaluator.context.popScope();
+    }
+    evaluator.context.merge(variables);
     return result;
   }
 
