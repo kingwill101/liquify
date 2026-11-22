@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-String _renderLiquidValue(Object? value) => switch (value) {
+String liquidValueToString(Object? value) => switch (value) {
   null => '',
-  List() => value.map(_renderLiquidValue).join(),
+  List() => value.map(liquidValueToString).join(),
   Map() => _inspectLiquidValue(value),
   _ => value.toString(),
 };
@@ -60,7 +60,7 @@ class StringRenderSink extends RenderSink {
 
   @override
   void write(Object? value) {
-    _buffer.write(_renderLiquidValue(value));
+    _buffer.write(liquidValueToString(value));
   }
 
   @override

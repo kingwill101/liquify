@@ -79,7 +79,7 @@ void main() {
     test('reverse', () {
       expect(reverse([1, 2, 3], [], {}), equals([3, 2, 1]));
       expect(reverse([], [], {}), equals([]));
-      expect(reverse('not a list', [], {}), equals('not a list'));
+      expect(reverse('not a list', [], {}), equals(['not a list']));
     });
 
     test('size', () {
@@ -95,7 +95,7 @@ void main() {
       expect(sort([3, 1, 2], [], {}), equals([1, 2, 3]));
       expect(sort(['c', 'a', 'b'], [], {}), equals(['a', 'b', 'c']));
       expect(sort([], [], {}), equals([]));
-      expect(sort('not a list', [], {}), equals('not a list'));
+      expect(sort('not a list', [], {}), equals(['not a list']));
     });
 
     test('map', () {
@@ -105,8 +105,8 @@ void main() {
       ];
       expect(map(input, ['name'], {}), equals(['Alice', 'Bob']));
       expect(map([], ['name'], {}), equals([]));
-      expect(map('not a list', ['name'], {}), equals('not a list'));
-      expect(map([1, 2, 3], ['nonexistent'], {}), equals([null, null, null]));
+      expect(map('not a list', ['name'], {}), equals([null]));
+      expect(() => map([1, 2, 3], ['nonexistent'], {}), throwsArgumentError);
     });
 
     test('map without property returns input', () {
@@ -145,7 +145,7 @@ void main() {
       );
       expect(where(input, ['age'], {}), equals(input));
       expect(where([], ['age', 30], {}), equals([]));
-      expect(where('not a list', ['age', 30], {}), equals('not a list'));
+      expect(where('not a list', ['age', 30], {}), equals([]));
     });
 
     test('where excludes null properties', () {
@@ -165,7 +165,7 @@ void main() {
       expect(uniq([1, 2, 2, 3, 3, 3], [], {}), equals([1, 2, 3]));
       expect(uniq(['a', 'b', 'b', 'c'], [], {}), equals(['a', 'b', 'c']));
       expect(uniq([], [], {}), equals([]));
-      expect(uniq('not a list', [], {}), equals('not a list'));
+      expect(uniq('not a list', [], {}), equals(['not a list']));
     });
 
     test('slice', () {
@@ -174,7 +174,7 @@ void main() {
       expect(slice('abcde', [1, 2], {}), equals('bc'));
       expect(slice([], [1, 2], {}), equals([]));
       expect(slice('', [1, 2], {}), equals(''));
-      expect(slice(123, [1, 2], {}), equals(123));
+      expect(slice(123, [1, 2], {}), equals('23'));
       expect(slice([1, 2, 3], [10, 2], {}), equals([]));
       expect(slice([1, 2, 3], [-1, 2], {}), equals([3]));
       expect(slice([1, 2, 3], [-2, 2], {}), equals([2, 3]));
@@ -182,7 +182,7 @@ void main() {
       expect(slice('abcde', [3, 5], {}), equals('de'));
       expect(slice([1], [0, 0], {}), equals([]));
       expect(slice([1, 2, 3], [1, -1], {}), equals([]));
-      expect(slice([1, 2, 3], [-5, 2], {}), equals([1, 2]));
+      expect(slice([1, 2, 3], [-5, 2], {}), equals([]));
     });
 
     test('compact', () {
@@ -190,7 +190,7 @@ void main() {
       expect(compact([null, null], [], {}), equals([]));
       expect(compact([1, 2, 3], [], {}), equals([1, 2, 3]));
       expect(compact([], [], {}), equals([]));
-      expect(compact('not a list', [], {}), equals('not a list'));
+      expect(compact('not a list', [], {}), equals(['not a list']));
       expect(
         compact([1, '', false, 0, null], [], {}),
         equals([1, '', false, 0]),
@@ -225,14 +225,14 @@ void main() {
         equals([1, 2]),
       );
       expect(concat([1, 2], [[]], {}), equals([1, 2]));
-      expect(concat([1, 2], [], {}), equals([1, 2]));
+      expect(() => concat([1, 2], [], {}), throwsArgumentError);
       expect(
         concat('not a list', [
           [1, 2],
         ], {}),
-        equals('not a list'),
+        equals(['not a list', 1, 2]),
       );
-      expect(concat([1, 2], ['not a list'], {}), equals([1, 2]));
+      expect(() => concat([1, 2], ['not a list'], {}), throwsArgumentError);
     });
 
     test('reject', () {
@@ -262,15 +262,13 @@ void main() {
         equals([
           {'available': false, 'name': 'Item2'},
           {'available': null, 'name': 'Item3'},
-          {'available': '', 'name': 'Item4'},
-          {'available': 0, 'name': 'Item5'},
         ]),
       );
 
       expect(reject([], ['type', 'kitchen'], {}), equals([]));
       expect(
         reject('not a list', ['type', 'kitchen'], {}),
-        equals('not a list'),
+        equals(['not a list']),
       );
       expect(reject(input, [], {}), equals(input));
     });
@@ -353,17 +351,17 @@ void main() {
 
       expect(findIndex(input, ['name', 'Bob'], {}), equals(1));
       expect(findIndex(input, ['age', 30], {}), equals(0));
-      expect(findIndex(input, ['name', 'David'], {}), equals(-1));
+      expect(findIndex(input, ['name', 'David'], {}), isNull);
 
       expect(findIndex(input, ['active'], {}), equals(0));
 
-      expect(findIndex([], ['name', 'Bob'], {}), equals(-1));
-      expect(findIndex('not a list', ['name', 'Bob'], {}), equals(-1));
-      expect(findIndex(input, [], {}), equals(-1));
+      expect(findIndex([], ['name', 'Bob'], {}), isNull);
+      expect(findIndex('not a list', ['name', 'Bob'], {}), isNull);
+      expect(findIndex(input, [], {}), isNull);
     });
 
     test('findIndex ignores non-map items', () {
-      expect(findIndex(['Alice', 'Bob'], ['name', 'Bob'], {}), equals(-1));
+      expect(findIndex(['Alice', 'Bob'], ['name', 'Bob'], {}), isNull);
     });
 
     test('sum', () {
@@ -407,11 +405,11 @@ void main() {
     test('sortNatural', () {
       expect(
         sortNatural(['item10', 'item2', 'item1'], [], {}),
-        equals(['item1', 'item2', 'item10']),
+        equals(['item1', 'item10', 'item2']),
       );
       expect(
         sortNatural(['file1.txt', 'file10.txt', 'file2.txt'], [], {}),
-        equals(['file1.txt', 'file2.txt', 'file10.txt']),
+        equals(['file1.txt', 'file10.txt', 'file2.txt']),
       );
 
       expect(
@@ -425,13 +423,46 @@ void main() {
 
       expect(
         sortNatural(['test', 'test1', 'test10', 'test2'], [], {}),
-        equals(['test', 'test1', 'test2', 'test10']),
+        equals(['test', 'test1', 'test10', 'test2']),
       );
 
       expect(sortNatural([3, 1, 2], [], {}), equals([1, 2, 3]));
 
       expect(sortNatural([], [], {}), equals([]));
-      expect(sortNatural('not a list', [], {}), equals('not a list'));
+      expect(sortNatural('not a list', [], {}), equals(['not a list']));
+    });
+
+    test('collection filters use property keys and Liquid truthiness', () {
+      final rows = [
+        {'name': 'b', 'price': '2.5', 'active': false},
+        {'name': 'A', 'price': 2, 'active': 0},
+        {'name': 'b', 'price': 1, 'active': ''},
+        {'price': 3},
+      ];
+      expect(map(sort(rows, ['name'], {}), ['name'], {}), [
+        'A',
+        'b',
+        'b',
+        null,
+      ]);
+      expect(compact(rows, ['name'], {}), rows.take(3).toList());
+      expect(uniq(rows, ['name'], {}), [rows[0], rows[1], rows[3]]);
+      expect(where(rows, ['active'], {}), [rows[1], rows[2]]);
+      expect(findIndex(rows, ['active'], {}), 1);
+      expect(sum(rows, ['price'], {}), 8.5);
+      expect(
+        join(
+          [
+            1,
+            null,
+            {'x': 2},
+          ],
+          ['|'],
+          {},
+        ),
+        '1||{"x"=>2}',
+      );
+      expect(slice('a😀b', [1, 1], {}), '😀');
     });
 
     test('groupBy', () {

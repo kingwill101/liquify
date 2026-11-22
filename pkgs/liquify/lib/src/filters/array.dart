@@ -6,9 +6,45 @@ import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
 import 'package:liquify/src/ast.dart' show ASTNode;
 
-/// Cached RegExp for natural sort comparison.
-/// This is created once and reused across all sortNatural invocations.
-final _naturalSortRegex = RegExp(r'^(.*?)(\d+)(.*)$');
+import 'package:liquify/src/filters/math.dart' show plus, toLiquidNumber;
+import 'package:liquify/src/render_target.dart' show liquidValueToString;
+import 'package:liquify/src/util.dart' show isTruthy;
+
+Iterable<Object?> _arrayItems(Object? input) sync* {
+  if (input is List) {
+    for (final item in input) {
+      if (item is List) {
+        yield* _arrayItems(item);
+      } else {
+        yield item;
+      }
+    }
+  } else if (input != null) {
+    yield input;
+  }
+}
+
+bool _canIndex(Object? value) =>
+    value is Map || value is String || value is int;
+
+Object? _property(Object? value, Object? key) {
+  if (value is Map) return value[key];
+  if (value is String) {
+    if (key is String) return value.contains(key) ? key : null;
+    if (key is int) {
+      final chars = value.runes.toList();
+      final index = key < 0 ? chars.length + key : key;
+      return index >= 0 && index < chars.length
+          ? String.fromCharCode(chars[index])
+          : null;
+    }
+  }
+  if (value is int && key is int) return key < 0 ? 0 : (value >> key) & 1;
+  if (_canIndex(value)) {
+    throw ArgumentError("Cannot select the property '$key'");
+  }
+  return null;
+}
 
 /// Cache for parsed Liquid expressions used by *_exp filters.
 /// Key: expression string, Value: parsed AST nodes
@@ -63,9 +99,10 @@ dynamic join(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return value;
-  final separator = arguments.isNotEmpty ? arguments[0].toString() : ' ';
-  return value.join(separator);
+  final separator = arguments.isNotEmpty
+      ? liquidValueToString(arguments[0])
+      : ' ';
+  return _arrayItems(value).map(liquidValueToString).join(separator);
 }
 
 /// Returns the first item of a list or first character of a string.
@@ -116,8 +153,7 @@ dynamic reverse(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return value;
-  return value.reversed.toList();
+  return _arrayItems(value).toList().reversed.toList();
 }
 
 /// Returns the size (length) of a string or list.
@@ -150,10 +186,48 @@ dynamic sort(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return value;
-  final sorted = List.from(value);
-  sorted.sort();
-  return sorted;
+  return _sortItems(value, arguments.firstOrNull, ignoreCase: false);
+}
+
+List<Object?>? _sortItems(
+  Object? input,
+  Object? property, {
+  required bool ignoreCase,
+}) {
+  final items = _arrayItems(input).toList();
+  if (property != null && items.any((item) => !_canIndex(item))) return null;
+
+  // Keep input order among equal keys, including case-insensitive ties.
+  final keyed = [
+    for (final (index, value) in items.indexed)
+      (
+        index: index,
+        value: value,
+        key: property == null ? value : _property(value, property),
+      ),
+  ];
+  keyed.sort((a, b) {
+    final left = a.key;
+    final right = b.key;
+    final int result;
+    if (left == null || right == null) {
+      result = left == null ? (right == null ? 0 : 1) : -1;
+    } else if (ignoreCase) {
+      result = liquidValueToString(
+        left,
+      ).toLowerCase().compareTo(liquidValueToString(right).toLowerCase());
+    } else if (left is num && right is num) {
+      result = left.compareTo(right);
+    } else if (left is String && right is String) {
+      result = left.compareTo(right);
+    } else if (left == right && left is bool) {
+      result = 0;
+    } else {
+      throw ArgumentError('Cannot sort values of incompatible types');
+    }
+    return result == 0 ? a.index.compareTo(b.index) : result;
+  });
+  return keyed.map((item) => item.value).toList();
 }
 
 /// Maps a property of each item in a list of objects.
@@ -167,9 +241,11 @@ dynamic map(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List || arguments.isEmpty) return value;
-  final property = arguments[0].toString();
-  return value.map((item) => item is Map ? item[property] : null).toList();
+  if (arguments.isEmpty) return value;
+  final property = arguments[0];
+  return _arrayItems(value)
+      .map((item) => property == 'to_liquid' ? item : _property(item, property))
+      .toList();
 }
 
 /// Filters a list of objects based on a property value.
@@ -184,14 +260,25 @@ dynamic where(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List || arguments.isEmpty) return value;
-  final property = arguments[0].toString();
-  final expected = arguments.length > 1 ? arguments[1] : null;
-  return value.where((item) {
-    if (item is! Map) return false;
-    final itemValue = item[property];
-    return expected == null ? itemValue != null : itemValue == expected;
-  }).toList();
+  return _filterByProperty(value, arguments, rejectMatches: false);
+}
+
+Object? _filterByProperty(
+  Object? input,
+  List<dynamic> arguments, {
+  required bool rejectMatches,
+}) {
+  if (arguments.isEmpty) return input;
+  final result = <Object?>[];
+  final property = arguments.first;
+  final expected = arguments.elementAtOrNull(1);
+  for (final item in _arrayItems(input)) {
+    if (!_canIndex(item)) return null;
+    final value = _property(item, property);
+    final matches = expected == null ? isTruthy(value) : value == expected;
+    if (matches != rejectMatches) result.add(item);
+  }
+  return result;
 }
 
 /// Removes duplicate elements from a list.
@@ -204,8 +291,15 @@ dynamic uniq(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return value;
-  return value.toSet().toList();
+  final property = arguments.firstOrNull;
+  final keys = <Object?>{};
+  final result = <Object?>[];
+  for (final item in _arrayItems(value)) {
+    if (property != null && !_canIndex(item)) return null;
+    final key = property == null ? item : _property(item, property);
+    if (keys.add(key)) result.add(item);
+  }
+  return result;
 }
 
 /// Extracts a subset of a list or string.
@@ -221,26 +315,23 @@ dynamic slice(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List && value is! String) return value;
-
-  final length = value is String ? value.length : (value as List).length;
-  if (length == 0) return value is String ? '' : [];
-
-  int start = arguments.isNotEmpty ? arguments[0] as int : 0;
-  if (start < 0) start = math.max(length + start, 0);
-
-  final sliceLength = arguments.length > 1
-      ? math.max(0, arguments[1] as int)
-      : 1;
-  final end = math.min(start + sliceLength, length);
-
-  if (start >= length) return value is String ? '' : [];
-
-  if (value is String) {
-    return value.substring(start, end);
-  } else {
-    return (value as List).sublist(start, end);
+  final isList = value is List;
+  final List<dynamic> items = isList
+      ? value
+      : liquidValueToString(value).runes.toList();
+  final offset = toLiquidNumber(arguments.firstOrNull).toInt();
+  final lengthArgument = arguments.elementAtOrNull(1);
+  final int length = lengthArgument == null
+      ? 1
+      : toLiquidNumber(lengthArgument).toInt();
+  final start = offset < 0 ? items.length + offset : offset;
+  if (start < 0 || start >= items.length || length <= 0) {
+    return isList ? [] : '';
   }
+
+  final end = start + math.min<int>(length, items.length - start);
+  final result = items.sublist(start, end);
+  return isList ? result : String.fromCharCodes(result.cast<int>());
 }
 
 /// Removes any nil values from an array.
@@ -253,8 +344,15 @@ dynamic compact(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return value;
-  return value.where((item) => item != null).toList();
+  final property = arguments.firstOrNull;
+  final result = <Object?>[];
+  for (final item in _arrayItems(value)) {
+    if (property != null && !_canIndex(item)) return null;
+    if ((property == null ? item : _property(item, property)) != null) {
+      result.add(item);
+    }
+  }
+  return result;
 }
 
 /// Concatenates (joins together) multiple arrays.
@@ -268,10 +366,11 @@ dynamic concat(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List || arguments.isEmpty) return value;
-  final array = arguments[0];
-  if (array is! List) return value;
-  return [...value, ...array];
+  final array = arguments.firstOrNull;
+  if (array is! List) {
+    throw ArgumentError('Concat filter requires an array argument');
+  }
+  return [..._arrayItems(value), ...array];
 }
 
 /// Creates an array excluding the objects with a given property value.
@@ -286,22 +385,7 @@ dynamic reject(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List || arguments.isEmpty) return value;
-  final property = arguments[0].toString();
-  final expected = arguments.length > 1 ? arguments[1] : null;
-  return value.where((item) {
-    if (item is! Map) return true;
-    final itemValue = item[property];
-    if (expected == null) {
-      // Reject truthy values
-      return itemValue == null ||
-          itemValue == false ||
-          (itemValue is String && itemValue.isEmpty) ||
-          (itemValue is num && itemValue == 0);
-    } else {
-      return itemValue != expected;
-    }
-  }).toList();
+  return _filterByProperty(value, arguments, rejectMatches: true);
 }
 
 /// Pushes an element to the end of an array (non-destructive).
@@ -376,28 +460,7 @@ dynamic find(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List || arguments.isEmpty) return null;
-  final property = arguments[0].toString();
-  final expected = arguments.length > 1 ? arguments[1] : null;
-
-  for (final item in value) {
-    if (item is! Map) continue;
-    final itemValue = item[property];
-    if (expected == null) {
-      // Find first truthy value
-      if (itemValue != null &&
-          itemValue != false &&
-          !(itemValue is String && itemValue.isEmpty) &&
-          !(itemValue is num && itemValue == 0)) {
-        return item;
-      }
-    } else {
-      if (itemValue == expected) {
-        return item;
-      }
-    }
-  }
-  return null;
+  return _findPropertyMatch(value, arguments)?.$2;
 }
 
 /// Finds the index of the first element in an array that matches a property value.
@@ -412,29 +475,21 @@ dynamic findIndex(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List || arguments.isEmpty) return -1;
-  final property = arguments[0].toString();
-  final expected = arguments.length > 1 ? arguments[1] : null;
+  return _findPropertyMatch(value, arguments)?.$1;
+}
 
-  for (int i = 0; i < value.length; i++) {
-    final item = value[i];
-    if (item is! Map) continue;
-    final itemValue = item[property];
-    if (expected == null) {
-      // Find first truthy value
-      if (itemValue != null &&
-          itemValue != false &&
-          !(itemValue is String && itemValue.isEmpty) &&
-          !(itemValue is num && itemValue == 0)) {
-        return i;
-      }
-    } else {
-      if (itemValue == expected) {
-        return i;
-      }
+(int, Object?)? _findPropertyMatch(Object? input, List<dynamic> arguments) {
+  if (arguments.isEmpty) return null;
+  final property = arguments.first;
+  final expected = arguments.elementAtOrNull(1);
+  for (final (index, item) in _arrayItems(input).indexed) {
+    if (!_canIndex(item)) return null;
+    final value = _property(item, property);
+    if (expected == null ? isTruthy(value) : value == expected) {
+      return (index, item);
     }
   }
-  return -1;
+  return null;
 }
 
 /// Sums numeric values in an array.
@@ -449,81 +504,28 @@ dynamic sum(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return 0;
-
-  if (arguments.isNotEmpty) {
-    // Sum property values
-    final property = arguments[0].toString();
-    num total = 0;
-    for (final item in value) {
-      if (item is Map) {
-        final itemValue = item[property];
-        if (itemValue is num) {
-          total += itemValue;
-        }
-      }
-    }
-    return total;
-  } else {
-    // Sum array values
-    num total = 0;
-    for (final item in value) {
-      if (item is num) {
-        total += item;
-      }
-    }
-    return total;
-  }
+  final property = arguments.firstOrNull;
+  final items = _arrayItems(value);
+  final values = property == null
+      ? items
+      : _arrayItems(items.map((item) => _property(item, property)).toList());
+  return values.fold<num>(
+    0,
+    (total, item) => plus(total, [toLiquidNumber(item)], {}) as num,
+  );
 }
 
-/// Sorts an array using natural/human-friendly ordering.
+/// Sorts an array using case-insensitive lexicographic ordering.
 ///
 /// Arguments: None
 ///
-/// Example: {{ ["item10", "item2", "item1"] | sort_natural }} => ["item1", "item2", "item10"]
+/// Example: {{ ["item10", "item2", "item1"] | sort_natural }} => ["item1", "item10", "item2"]
 dynamic sortNatural(
   dynamic value,
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is! List) return value;
-  final sorted = List.from(value);
-
-  // Natural sort comparison function
-  int naturalCompare(dynamic a, dynamic b) {
-    String aStr = a.toString();
-    String bStr = b.toString();
-
-    // Extract numeric parts for natural comparison (using cached RegExp)
-    final aMatch = _naturalSortRegex.firstMatch(aStr);
-    final bMatch = _naturalSortRegex.firstMatch(bStr);
-
-    if (aMatch != null && bMatch != null) {
-      String aPrefix = aMatch.group(1) ?? '';
-      String bPrefix = bMatch.group(1) ?? '';
-
-      // Compare prefixes first
-      int prefixComparison = aPrefix.compareTo(bPrefix);
-      if (prefixComparison != 0) return prefixComparison;
-
-      // Compare numeric parts as numbers
-      int aNum = int.tryParse(aMatch.group(2) ?? '0') ?? 0;
-      int bNum = int.tryParse(bMatch.group(2) ?? '0') ?? 0;
-      int numComparison = aNum.compareTo(bNum);
-      if (numComparison != 0) return numComparison;
-
-      // Compare suffixes
-      String aSuffix = aMatch.group(3) ?? '';
-      String bSuffix = bMatch.group(3) ?? '';
-      return aSuffix.compareTo(bSuffix);
-    }
-
-    // Fallback to regular string comparison
-    return aStr.compareTo(bStr);
-  }
-
-  sorted.sort(naturalCompare);
-  return sorted;
+  return _sortItems(value, arguments.firstOrNull, ignoreCase: true);
 }
 
 /// Groups an array's items by a given property.
