@@ -7,7 +7,7 @@ void main() {
     test('escape should escape " and < >', () {
       expect(
         html.escape('"Hello" <world>', [], {}),
-        equals('&#34;Hello&#34; &lt;world&gt;'),
+        equals('&quot;Hello&quot; &lt;world&gt;'),
       );
     });
 
@@ -38,6 +38,10 @@ void main() {
     });
 
     test('escape_once should escape nil value to empty string', () {
+      expect(
+        html.escapeOnce('&unknown; &#39; &#x27; <', [], {}),
+        '&unknown; &#39; &amp;#x27; &lt;',
+      );
       expect(html.escapeOnce(null, [], {}), equals(''));
     });
 

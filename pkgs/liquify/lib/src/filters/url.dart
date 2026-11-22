@@ -38,14 +38,7 @@ FilterFunction urlDecode =
 /// Example:
 /// Input: "hello world"
 /// Output: "hello+world"
-FilterFunction urlEncode =
-    (
-      dynamic value,
-      List<dynamic> arguments,
-      Map<String, dynamic> namedArguments,
-    ) {
-      return Uri.encodeComponent(stringify(value)).replaceAll('%20', '+');
-    };
+FilterFunction urlEncode = cgiEscape;
 
 /// Escapes a string using CGI escape characters.
 ///

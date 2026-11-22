@@ -5,7 +5,7 @@ final Map<String, String> _escapeMap = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
-  '"': '&#34;',
+  '"': '&quot;',
   "'": '&#39;',
 };
 
@@ -81,8 +81,10 @@ FilterFunction escapeOnce =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      final unescaped = unescape(value, arguments, namedArguments);
-      return escape(unescaped, arguments, namedArguments);
+      return _stringify(value).replaceAllMapped(
+        RegExp(r'''[<>"']|&(?![a-zA-Z]+;|#\d+;)'''),
+        (match) => _escapeMap[match.group(0)]!,
+      );
     };
 
 /// Converts newlines to HTML line breaks.

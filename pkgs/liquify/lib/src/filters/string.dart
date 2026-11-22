@@ -1,5 +1,7 @@
 import 'package:liquify/src/filter_registry.dart';
 import 'package:liquify/src/filters/module.dart';
+import 'package:liquify/src/filters/math.dart' show toLiquidNumber;
+import 'package:liquify/src/render_target.dart' show liquidValueToString;
 
 /// Cached RegExp patterns for performance.
 /// These are created once and reused across all filter invocations.
@@ -318,6 +320,14 @@ FilterFunction replace =
       String str = value.toString();
       String pattern = arguments[0].toString();
       String replacement = arguments[1].toString();
+      if (pattern.isEmpty && replacement.isNotEmpty) {
+        final result = StringBuffer(replacement);
+        for (final rune in str.runes) {
+          result.writeCharCode(rune);
+          result.write(replacement);
+        }
+        return result.toString();
+      }
       return str.replaceAll(pattern, replacement);
     };
 
@@ -389,11 +399,21 @@ FilterFunction truncate =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      String str = value.toString();
-      int length = arguments.isNotEmpty ? arguments[0] as int : 50;
-      String ellipsis = arguments.length > 1 ? arguments[1].toString() : '...';
-      if (str.length <= length) return str;
-      return str.substring(0, length - ellipsis.length) + ellipsis;
+      if (value == null) return null;
+      final text = liquidValueToString(value);
+      final length = arguments.isEmpty
+          ? 50
+          : toLiquidNumber(arguments[0]).toInt();
+      final ellipsis = arguments.length > 1
+          ? liquidValueToString(arguments[1])
+          : '...';
+      final runes = text.runes.toList();
+      if (runes.length <= length) return text;
+      final prefixLength = length - ellipsis.runes.length;
+      return String.fromCharCodes(
+            runes.take(prefixLength < 0 ? 0 : prefixLength),
+          ) +
+          ellipsis;
     };
 
 /// Truncates a string to a specified number of words.
@@ -412,13 +432,18 @@ FilterFunction truncatewords =
       List<dynamic> arguments,
       Map<String, dynamic> namedArguments,
     ) {
-      String str = value.toString();
-      int words = arguments.isNotEmpty ? arguments[0] as int : 15;
-      String ellipsis = arguments.length > 1 ? arguments[1].toString() : '...';
-      List<String> wordList = str.split(_whitespaceRegex);
-      if (words <= 0) words = 1;
-      if (wordList.length <= words) return str;
-      return wordList.take(words).join(' ') + ellipsis;
+      if (value == null) return null;
+      final text = liquidValueToString(value);
+      final requested = arguments.isEmpty
+          ? 15
+          : toLiquidNumber(arguments[0]).toInt();
+      final count = requested <= 0 ? 1 : requested;
+      final words = text.trimLeft().split(_whitespaceRegex);
+      if (words.length <= count) return text;
+      final ellipsis = arguments.length > 1
+          ? liquidValueToString(arguments[1])
+          : '...';
+      return words.take(count).join(' ') + ellipsis;
     };
 
 /// Normalizes whitespace in a string, replacing multiple spaces with a single space.
