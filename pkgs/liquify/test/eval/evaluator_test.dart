@@ -548,13 +548,11 @@ void main() {
         return value.toString().toUpperCase();
       });
 
-      final filteredExpression = FilteredExpression(
-        Literal('hello', LiteralType.string),
-        [
-          Filter(Identifier('async_upper_chain'), []),
-          Filter(Identifier('length'), []),
-        ],
-      );
+      final filteredExpression =
+          FilteredExpression(Literal('hello', LiteralType.string), [
+            Filter(Identifier('async_upper_chain'), []),
+            Filter(Identifier('length'), []),
+          ]);
       expect(await evaluator.evaluateAsync(filteredExpression), 5);
     });
 
@@ -568,13 +566,11 @@ void main() {
         return value.toString().toUpperCase();
       });
 
-      final filteredExpression = FilteredExpression(
-        Literal('hello', LiteralType.string),
-        [
-          Filter(Identifier('async_upper_chain'), []),
-          Filter(Identifier('length'), []),
-        ],
-      );
+      final filteredExpression =
+          FilteredExpression(Literal('hello', LiteralType.string), [
+            Filter(Identifier('async_upper_chain'), []),
+            Filter(Identifier('length'), []),
+          ]);
       expect(await evaluator.evaluateAsync(filteredExpression), 5);
     });
 

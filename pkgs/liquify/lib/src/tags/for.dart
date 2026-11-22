@@ -93,7 +93,9 @@ class ForTag extends AbstractTag with AsyncTag {
     if (right is BinaryOperation && right.operator == '..') {
       final start = evaluator.evaluate(right.left);
       final end = evaluator.evaluate(right.right);
-      iterable = List.generate(end - start + 1, (index) => start + index);
+      iterable = end < start
+          ? []
+          : List.generate(end - start + 1, (index) => start + index);
     } else {
       final evaluated = evaluator.evaluate(right);
       // Convert Map to a list of [key, value] pairs for iteration
@@ -116,8 +118,9 @@ class ForTag extends AbstractTag with AsyncTag {
       }
     }
 
-    if (offset != null) {
-      iterable = iterable.skip(offset!).toList();
+    final startOffset = offset;
+    if (startOffset != null && startOffset > 0) {
+      iterable = iterable.skip(startOffset).toList();
     }
 
     if (limit != null) {
