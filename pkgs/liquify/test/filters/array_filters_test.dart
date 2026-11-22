@@ -86,7 +86,9 @@ void main() {
       expect(size([1, 2, 3], [], {}), equals(3));
       expect(size([], [], {}), equals(0));
       expect(size('string', [], {}), equals(6));
-      expect(size(123, [], {}), equals(0));
+      expect(size(123, [], {}), equals(8));
+      expect(size('a😀b', [], {}), equals(3));
+      expect(size({'a': 1}, [], {}), equals(1));
     });
 
     test('sort', () {

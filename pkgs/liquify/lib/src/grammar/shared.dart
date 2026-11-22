@@ -233,6 +233,13 @@ Parser varStart([LiquidConfig? config]) => createVarStart(config);
 /// If [config] is provided, uses custom delimiters from the config.
 Parser varEnd([LiquidConfig? config]) => createVarEnd(config);
 
+String lookupRootName(ASTNode node) => switch (node) {
+  Identifier(:final name) => name,
+  ArrayAccess(:final array) => lookupRootName(array),
+  MemberAccess(:final object) => lookupRootName(object),
+  _ => '',
+};
+
 /// Variable parser - parses `{{ expression | filter }}` syntax.
 ///
 /// If [config] is provided, uses custom delimiters from the config.
@@ -247,7 +254,7 @@ Parser variable([LiquidConfig? config]) =>
           if (expr is Identifier) {
             name = expr.name;
           } else if (expr is MemberAccess) {
-            name = (expr.object as Identifier).name;
+            name = lookupRootName(expr.object);
           }
 
           if ((values[2] as List).isNotEmpty) {
@@ -629,10 +636,10 @@ Parser memberAccess() {
 
   // Slow path: Original recursive parsing for complex cases (with array access)
   final complexMemberAccess =
-      (ref0(identifier) &
+      ((ref0(arrayAccess) | ref0(identifier)) &
               (char('.') & (ref0(arrayAccess) | ref0(identifier))).plus())
           .map((values) {
-            var object = values[0] as Identifier;
+            final object = values[0] as ASTNode;
             var members = (values[1] as List)
                 .map((m) => m[1] as ASTNode)
                 .toList();
@@ -644,7 +651,12 @@ Parser memberAccess() {
 }
 
 Parser arrayAccess() =>
-    seq4(ref0(identifier), char('['), ref0(literal), char(']'))
+    seq4(
+          ref0(identifier),
+          char('[').trim(),
+          ref0(primaryTerm).trim(),
+          char(']'),
+        )
         .map((array) {
           return ArrayAccess(array.$1, array.$3);
         })

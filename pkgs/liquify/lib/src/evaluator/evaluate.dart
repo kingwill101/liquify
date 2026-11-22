@@ -21,6 +21,39 @@ extension Evaluation on Evaluator {
     };
   }
 
+  int? _compare(Object? left, Object? right) {
+    if (left is num && right is num) {
+      if (left == right) return 0;
+      if (left < right) return -1;
+      return left > right ? 1 : null;
+    }
+    if (left is String && right is String) return left.compareTo(right);
+    if ((left is num || left is String) && (right is num || right is String)) {
+      throw ArgumentError(
+        'Cannot compare ${left.runtimeType} with ${right.runtimeType}',
+      );
+    }
+    return null;
+  }
+
+  dynamic _lookupMember(Object? value, String name) {
+    if (value is Drop) return value(Symbol(name));
+    if (value is Map && value.containsKey(name)) return value[name];
+    if (value is! List && value is! String && value is! Map && value is! int) {
+      return null;
+    }
+    if (!FilterRegistry.isDotNotationFilter(name)) return null;
+    return FilterRegistry.getFilter(name)?.call(value, [], {});
+  }
+
+  dynamic _lookupIndex(Object? value, Object? key) {
+    if (value is Drop && key is String) return value(Symbol(key));
+    if (value is Map) return value[key];
+    if (value is! List || key is! int) return null;
+    final index = key < 0 ? value.length + key : key;
+    return index >= 0 && index < value.length ? value[index] : null;
+  }
+
   dynamic evaluate(ASTNode node) {
     return node.accept(this);
   }

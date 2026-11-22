@@ -66,6 +66,27 @@ void main() {
       expect(await template.renderAsync(), '1|23');
     });
 
+    test('evaluates chained dynamic and negative lookups', () async {
+      final template = Template.parse(
+        '{{ rows[key].name }}|{{ data.rows[-1].name }}|{{ text.missing }}',
+        data: {
+          'key': 0,
+          'rows': [
+            {'name': 'first'},
+          ],
+          'data': {
+            'rows': [
+              {'name': 'last'},
+            ],
+          },
+          'text': 'ignored',
+        },
+      );
+
+      expect(template.render(), 'first|last|');
+      expect(await template.renderAsync(), 'first|last|');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

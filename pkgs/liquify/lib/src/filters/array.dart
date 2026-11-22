@@ -127,9 +127,13 @@ dynamic size(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
-  if (value is String) return value.length;
-  if (value is List) return value.length;
-  return 0;
+  return switch (value) {
+    String() => value.runes.length,
+    List() => value.length,
+    Map() => value.length,
+    int() => 8,
+    _ => 0,
+  };
 }
 
 /// Sorts the elements of a list.

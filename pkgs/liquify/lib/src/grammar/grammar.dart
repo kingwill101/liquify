@@ -128,7 +128,7 @@ class LiquidGrammar extends GrammarDefinition {
             if (expr is Identifier) {
               name = expr.name;
             } else if (expr is MemberAccess) {
-              name = (expr.object as Identifier).name;
+              name = lookupRootName(expr.object);
             }
 
             if (filters.isNotEmpty) {

@@ -132,13 +132,17 @@ class Evaluator implements ASTVisitor<dynamic> {
       case '!=':
         return !liquidEquals(left, right);
       case '<':
-        return (left ?? 0) < (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison < 0;
       case '>':
-        return (left ?? 0) > (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison > 0;
       case '<=':
-        return (left ?? 0) <= (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison <= 0;
       case '>=':
-        return (left ?? 0) >= (right ?? 0);
+        final comparison = _compare(left, right);
+        return comparison != null && comparison >= 0;
       case 'and':
         return isTruthy(left) && isTruthy(right);
       case 'or':
@@ -154,14 +158,13 @@ class Evaluator implements ASTVisitor<dynamic> {
         }
         return right.contains(left);
       case 'contains':
-        if (left is String && right is String) {
-          return left.contains(right);
-        } else if (left is Iterable && right is String) {
-          return left.contains(right);
-        }
-        throw Exception(
-          'contains operator requires string or iterable on left side and string on right side',
-        );
+        if (!isTruthy(right)) return false;
+        return switch (left) {
+          String() => left.contains(right.toString()),
+          Iterable() => left.contains(right),
+          Map() => left.containsKey(right),
+          _ => false,
+        };
       default:
         throw UnsupportedError('Unsupported operator: $op');
     }
@@ -275,57 +278,26 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   dynamic visitMemberAccess(MemberAccess node) {
-    var object = node.object;
-    final objName = (object as Identifier).name;
-    var objectVal = context.getVariable(objName);
-
-    if (objectVal == null) return null;
-
+    var value = node.object.accept(this);
     for (final member in node.members) {
-      final keyName = member is Identifier
-          ? member.name
-          : ((member as ArrayAccess).array as Identifier).name;
-      final isArray = member is ArrayAccess;
-
-      if (isArray) {
-        final key = (member.array as Identifier).name;
-        final index = (member.key as Literal).value;
-        objectVal = objectVal[key];
-
-        if (objectVal == null) return;
-        if (objectVal is List) {
-          if (index >= 0 && index < objectVal.length) {
-            objectVal = objectVal[index];
-          } else {
-            return null;
-          }
-        } else {
-          objectVal = objectVal[index];
-        }
-      } else if (objectVal is Drop) {
-        if (member is Identifier) {
-          objectVal = objectVal(Symbol(keyName));
-        }
-      } else if ((objectVal is List || objectVal is String) &&
-          member is Identifier) {
-        // Check if it's a registered dot notation filter
-        if (FilterRegistry.isDotNotationFilter(keyName)) {
-          final filterFunction = FilterRegistry.getFilter(keyName);
-          if (filterFunction != null) {
-            objectVal = filterFunction(objectVal, [], {});
-          }
-        }
-      } else if (objectVal is Map) {
-        if (!objectVal.containsKey(keyName)) {
-          return null;
-        }
-        objectVal = objectVal[keyName];
-      } else if (objectVal == null) {
-        return null;
-      }
+      if (value == null) return null;
+      value = _resolveMember(value, member, (key) => key.accept(this));
     }
-    return objectVal;
+    return value;
   }
+
+  dynamic _resolveMember(
+    Object? value,
+    ASTNode member,
+    Object? Function(ASTNode) evaluateKey,
+  ) => switch (member) {
+    Identifier(:final name) => _lookupMember(value, name),
+    ArrayAccess(:final array, :final key) => _lookupIndex(
+      _resolveMember(value, array, evaluateKey),
+      evaluateKey(key),
+    ),
+    _ => null,
+  };
 
   @override
   dynamic visitNamedArgument(NamedArgument node) {
@@ -355,34 +327,14 @@ class Evaluator implements ASTVisitor<dynamic> {
   }
 
   @override
-  visitArrayAccess(ArrayAccess arrayAccess) {
-    final array = arrayAccess.array.accept(this);
-    final key = arrayAccess.key.accept(this);
-    if (array is List) {
-      final index = key is int ? key : int.parse(key);
-      if (index >= 0 && index < array.length) {
-        return array[index];
-      }
-    } else if (array is Map && array.containsKey(key)) {
-      return array[key];
-    }
-    return null;
-  }
+  dynamic visitArrayAccess(ArrayAccess node) =>
+      _lookupIndex(node.array.accept(this), node.key.accept(this));
 
   @override
-  Future<dynamic> visitArrayAccessAsync(ArrayAccess arrayAccess) async {
-    final array = await arrayAccess.array.acceptAsync(this);
-    final key = await arrayAccess.key.acceptAsync(this);
-    if (array is List) {
-      final index = key is int ? key : int.parse(key);
-      if (index >= 0 && index < array.length) {
-        return array[index];
-      }
-    } else if (array is Map && array.containsKey(key)) {
-      return array[key];
-    }
-    return null;
-  }
+  Future<dynamic> visitArrayAccessAsync(ArrayAccess node) async => _lookupIndex(
+    await node.array.acceptAsync(this),
+    await node.key.acceptAsync(this),
+  );
 
   @override
   Future<dynamic> visitAssignmentAsync(Assignment node) async {
@@ -489,56 +441,21 @@ class Evaluator implements ASTVisitor<dynamic> {
 
   @override
   Future<dynamic> visitMemberAccessAsync(MemberAccess node) async {
-    var object = node.object;
-    final objName = (object as Identifier).name;
-    var objectVal = context.getVariable(objName);
-
-    if (objectVal == null) return null;
-
+    var value = await node.object.acceptAsync(this);
     for (final member in node.members) {
-      final keyName = member is Identifier
-          ? member.name
-          : ((member as ArrayAccess).array as Identifier).name;
-      final isArray = member is ArrayAccess;
-
-      if (isArray) {
-        final key = (member.array as Identifier).name;
-        final index = (member.key as Literal).value;
-        objectVal = objectVal[key];
-
-        if (objectVal == null) return;
-        if (objectVal is List) {
-          if (index >= 0 && index < objectVal.length) {
-            objectVal = objectVal[index];
-          } else {
-            return null;
-          }
-        } else {
-          objectVal = objectVal[index];
-        }
-      } else if (objectVal is Drop) {
-        if (member is Identifier) {
-          objectVal = objectVal(Symbol(keyName));
-        }
-      } else if ((objectVal is List || objectVal is String) &&
-          member is Identifier) {
-        // Check if it's a registered dot notation filter
-        if (FilterRegistry.isDotNotationFilter(keyName)) {
-          final filterFunction = FilterRegistry.getFilter(keyName);
-          if (filterFunction != null) {
-            objectVal = await filterFunction(objectVal, [], {});
-          }
-        }
-      } else if (objectVal is Map) {
-        if (!objectVal.containsKey(keyName)) {
-          return null;
-        }
-        objectVal = objectVal[keyName];
-      } else if (objectVal == null) {
-        return null;
-      }
+      if (value == null) return null;
+      value = await _resolveMemberAsync(value, member);
     }
-    return objectVal;
+    return value;
+  }
+
+  Future<dynamic> _resolveMemberAsync(Object? value, ASTNode member) async {
+    if (member is Identifier) return _lookupMember(value, member.name);
+    if (member is ArrayAccess) {
+      final collection = await _resolveMemberAsync(value, member.array);
+      return _lookupIndex(collection, await member.key.acceptAsync(this));
+    }
+    return null;
   }
 
   @override

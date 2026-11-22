@@ -190,7 +190,7 @@ void main() {
         '<',
         Literal(5, LiteralType.number),
       );
-      expect(evaluator.evaluate(nullComparison), true);
+      expect(evaluator.evaluate(nullComparison), false);
     });
   });
 
