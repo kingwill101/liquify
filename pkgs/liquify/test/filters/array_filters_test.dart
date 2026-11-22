@@ -565,6 +565,25 @@ void main() {
       expect(map([-1, 8589934592], [33], {}), [1, 1]);
     });
 
+    test('expression filters apply predicates only in condition mode', () {
+      final empty = {'tags': [], 'name': ' '};
+      final filled = {
+        'tags': ['tag'],
+        'name': 'named',
+      };
+      final records = [empty, filled];
+      final args = ['item', 'empty == item.tags and item.name == blank'];
+
+      expect(whereExp(records, args, {}), [empty]);
+      expect(rejectExp(records, args, {}), [filled]);
+      expect(findExp(records, args, {}), empty);
+      expect(findIndexExp(records, args, {}), 0);
+      expect(hasExp(records, args, {}), isTrue);
+      expect(groupByExp(records, ['item', 'blank'], {}), [
+        {'name': '', 'items': records},
+      ]);
+    });
+
     test('length', () {
       expect(length('hello', [], {}), equals(5));
       expect(length('', [], {}), equals(0));

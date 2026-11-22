@@ -1025,7 +1025,7 @@ Parser<Tag> conditionalBlock(
 }
 
 Parser<List<ASTNode>> conditionTagContent() => tagContent().map(
-  (values) => (values as List<ASTNode>).map(_conditionOperand).toList(),
+  (values) => (values as List<ASTNode>).map(asConditionOperand).toList(),
 );
 
 Parser<List<ASTNode>> whenTagContent() => tagContent().map(
@@ -1037,28 +1037,36 @@ Iterable<ASTNode> _whenOperands(ASTNode node) sync* {
     yield* _whenOperands(left);
     yield* _whenOperands(right);
   } else {
-    yield _conditionOperand(node);
+    yield asConditionOperand(node);
   }
 }
 
 // Bare literals in conditions carry a predicate. Values obtained by
 // evaluating an ordinary expression remain ordinary values.
-ASTNode _conditionOperand(ASTNode node) => switch (node) {
+ASTNode asConditionOperand(ASTNode node) => switch (node) {
+  Variable(:final name, :final expression) => Variable(
+    name,
+    asConditionOperand(expression),
+  ),
+  FilteredExpression(:final expression, :final filters) => FilteredExpression(
+    asConditionOperand(expression),
+    filters,
+  ),
   Literal(type: LiteralType.blank) => Literal('', LiteralType.blankPredicate),
   Literal(type: LiteralType.empty) => Literal('', LiteralType.emptyPredicate),
   BinaryOperation(:final left, :final operator, :final right)
       when const {'==', '!=', 'and', 'or'}.contains(operator) =>
     BinaryOperation(
-      _conditionOperand(left),
+      asConditionOperand(left),
       operator,
-      _conditionOperand(right),
+      asConditionOperand(right),
     ),
   GroupedExpression(:final expression) => GroupedExpression(
-    _conditionOperand(expression),
+    asConditionOperand(expression),
   ),
   UnaryOperation(:final operator, :final expression) => UnaryOperation(
     operator,
-    _conditionOperand(expression),
+    asConditionOperand(expression),
   ),
   _ => node,
 };

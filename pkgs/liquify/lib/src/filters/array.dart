@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:liquify/src/filters/module.dart';
 import 'package:liquify/src/filter_registry.dart';
 import 'package:liquify/parser.dart' show parseInput;
+import 'package:liquify/src/grammar/shared.dart' show asConditionOperand;
 import 'package:liquify/src/context.dart';
 import 'package:liquify/src/evaluator.dart';
 import 'package:liquify/src/ast.dart' show ASTNode;
@@ -53,9 +54,7 @@ int _integerBit(int value, int index) {
   return ((integer >> index) & BigInt.one).toInt();
 }
 
-/// Cache for parsed Liquid expressions used by *_exp filters.
-/// Key: expression string, Value: parsed AST nodes
-final Map<String, List<ASTNode>> _expressionCache = {};
+final Map<(String, bool), ASTNode?> _expressionCache = {};
 
 /// Converts the input value to uppercase.
 ///
@@ -781,12 +780,14 @@ dynamic _evaluateLiquidExpression(
     // Create a complete Liquid expression by wrapping it in {{ }}
     final liquidExpression = '{{ $expression }}';
 
-    // Check cache first, parse if not cached
-    List<ASTNode> parsed =
-        _expressionCache[liquidExpression] ??
-        (_expressionCache[liquidExpression] = parseInput(liquidExpression));
-
-    if (parsed.isEmpty) return returnValue ? null : false;
+    final parsed = _expressionCache.putIfAbsent(
+      (liquidExpression, returnValue),
+      () {
+        final node = parseInput(liquidExpression).firstOrNull;
+        return node == null || returnValue ? node : asConditionOperand(node);
+      },
+    );
+    if (parsed == null) return returnValue ? null : false;
 
     // Create an evaluator with the item as context
     final context = Environment();
@@ -805,7 +806,7 @@ dynamic _evaluateLiquidExpression(
     final evaluator = Evaluator(context);
 
     // Evaluate the parsed expression
-    final result = evaluator.evaluate(parsed.first);
+    final result = evaluator.evaluate(parsed);
 
     if (returnValue) {
       return result;
