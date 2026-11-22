@@ -183,6 +183,22 @@ void main() {
       },
     );
 
+    test(
+      'capture recognizes closing tags only between complete elements',
+      () async {
+        final template = Template.parse(
+          '{% capture x %}{{ "{% endcapture %}" }}'
+          '{% raw %}{% endcapture %}{% endraw %}'
+          '{% comment %}{% endcapture %}{% endcomment %}'
+          '{% capture nested %}inner{% endcapture %}{{ nested }}'
+          '{% endcapture %}{{ x }}',
+        );
+        const expected = '{% endcapture %}{% endcapture %}inner';
+        expect(template.render(), expected);
+        expect(await template.renderAsync(), expected);
+      },
+    );
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 
