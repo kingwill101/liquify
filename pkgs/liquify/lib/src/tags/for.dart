@@ -6,6 +6,7 @@ import 'package:liquify/src/tags/tag.dart';
 
 class ForLoopObject {
   final int length;
+  final String? name;
   final ForLoopObject? parentloop;
   int index;
   int index0;
@@ -16,6 +17,7 @@ class ForLoopObject {
 
   ForLoopObject({
     required this.length,
+    this.name,
     this.parentloop,
     this.index = 1,
     this.index0 = 0,
@@ -36,6 +38,7 @@ class ForLoopObject {
   Map<String, dynamic> toMap() {
     return {
       'length': length,
+      if (name != null) 'name': name,
       'parentloop': parentloop?.toMap(),
       'index': index,
       'index0': index0,
@@ -48,6 +51,7 @@ class ForLoopObject {
 
   ForLoopObject.fromJson(Map<String, dynamic> json)
     : length = json['length'],
+      name = json['name'],
       parentloop = json['parentloop'] != null
           ? ForLoopObject.fromJson(json['parentloop'])
           : null,
@@ -61,12 +65,27 @@ class ForLoopObject {
 
 class ForTag extends AbstractTag with AsyncTag {
   late String variableName;
+  late String loopName;
   late List<dynamic> iterable;
   int? limit;
   int? offset;
   bool reversed = false;
 
   ForTag(super.content, super.filters);
+
+  String _collectionName(ASTNode node) => switch (node) {
+    Identifier(:final name) => name,
+    MemberAccess(:final object, :final members) => [
+      _collectionName(object),
+      ...members.map(_collectionName),
+    ].join('.'),
+    ArrayAccess(:final array, :final key) =>
+      '${_collectionName(array)}[${_collectionName(key)}]',
+    BinaryOperation(left: final start, operator: '..', right: final end) =>
+      '(${_collectionName(start)}..${_collectionName(end)})',
+    Literal(:final value) => value.toString(),
+    _ => '',
+  };
 
   @override
   void preprocess(Evaluator evaluator) {
@@ -89,6 +108,7 @@ class ForTag extends AbstractTag with AsyncTag {
     }
 
     variableName = left.name;
+    loopName = '$variableName-${_collectionName(right)}';
 
     if (right is BinaryOperation && right.operator == '..') {
       final start = evaluator.evaluate(right.left);
@@ -154,6 +174,7 @@ class ForTag extends AbstractTag with AsyncTag {
         evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
     final forLoop = ForLoopObject(
       length: iterable.length,
+      name: loopName,
       parentloop: parentLoop != null
           ? ForLoopObject.fromJson(parentLoop)
           : null,
@@ -220,6 +241,7 @@ class ForTag extends AbstractTag with AsyncTag {
         evaluator.context.getVariable('forloop') as Map<String, dynamic>?;
     final forLoop = ForLoopObject(
       length: iterable.length,
+      name: loopName,
       parentloop: parentLoop != null
           ? ForLoopObject.fromJson(parentLoop)
           : null,
