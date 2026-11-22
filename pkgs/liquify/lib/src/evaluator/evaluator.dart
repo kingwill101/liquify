@@ -144,10 +144,10 @@ class Evaluator implements ASTVisitor<dynamic> {
       case 'or':
         return isTruthy(left) || isTruthy(right);
       case '..':
-        return List.generate(
-          (right ?? 0) - (left ?? 0) + 1,
-          (index) => (left ?? 0) + index,
-        );
+        final start = left ?? 0;
+        final end = right ?? 0;
+        if (end < start) return [];
+        return List.generate(end - start + 1, (index) => start + index);
       case 'in':
         if (right is! Iterable) {
           throw Exception('Right side of "in" operator must be iterable.');

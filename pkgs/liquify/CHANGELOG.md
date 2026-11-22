@@ -1,3 +1,7 @@
+## unreleased
+## Bug Fixes 
+- **Fix negative range loop handling** - `for` and `tablerow` tags now align with shopify liquid when handling negative ranges
+
 ## 1.6.1
 - fix topic typo
 

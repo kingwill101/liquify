@@ -134,8 +134,9 @@ class TableRowTag extends AbstractTag with CustomTagParser, AsyncTag {
       }
     }
 
-    if (offset != null) {
-      iterable = iterable.skip(offset!).toList();
+    final startOffset = offset;
+    if (startOffset != null && startOffset > 0) {
+      iterable = iterable.skip(startOffset).toList();
     }
 
     if (limit != null) {
