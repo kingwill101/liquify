@@ -14,6 +14,7 @@ final Map<String, String> _unescapeMap = {
   '&lt;': '<',
   '&gt;': '>',
   '&#34;': '"',
+  '&quot;': '"',
   '&#39;': "'",
 };
 
@@ -63,7 +64,7 @@ FilterFunction unescape =
     ) {
       final str = _stringify(value);
       return str.replaceAllMapped(
-        RegExp(r'&(amp|lt|gt|#34|#39);'),
+        RegExp(r'&(amp|lt|gt|quot|#34|#39);'),
         (Match m) => _unescapeMap[m.group(0)] ?? m.group(0)!,
       );
     };

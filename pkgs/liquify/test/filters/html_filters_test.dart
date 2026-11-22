@@ -52,6 +52,11 @@ void main() {
       );
     });
 
+    test('unescape decodes both forms of the double quote entity once', () {
+      expect(html.unescape(html.escape('"', [], {}), [], {}), '"');
+      expect(html.unescape('&quot;&#34;&amp;quot;', [], {}), '""&quot;');
+    });
+
     test('unescape should restore known entities', () {
       expect(
         html.unescape('&lt;p&gt;Hello &amp; welcome&lt;/p&gt;', [], {}),
