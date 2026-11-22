@@ -39,11 +39,18 @@ Object? _property(Object? value, Object? key) {
           : null;
     }
   }
-  if (value is int && key is int) return key < 0 ? 0 : (value >> key) & 1;
+  if (value is int && key is int) return _integerBit(value, key);
   if (_canIndex(value)) {
     throw ArgumentError("Cannot select the property '$key'");
   }
   return null;
+}
+
+int _integerBit(int value, int index) {
+  if (index < 0) return 0;
+  final integer = BigInt.from(value);
+  if (index >= integer.bitLength) return value < 0 ? 1 : 0;
+  return ((integer >> index) & BigInt.one).toInt();
 }
 
 /// Cache for parsed Liquid expressions used by *_exp filters.
@@ -580,7 +587,7 @@ dynamic has(
   for (final item in value) {
     final itemValue = switch (item) {
       Map() => item[property],
-      int() when key is int => key < 0 ? 0 : (item >> key) & 1,
+      int() when key is int => _integerBit(item, key),
       _ => null,
     };
 

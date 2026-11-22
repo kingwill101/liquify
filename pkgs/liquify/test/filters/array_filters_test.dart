@@ -559,6 +559,12 @@ void main() {
       expect(has([1, 2, 3], ['active'], {}), equals(false));
     });
 
+    test('integer property lookup preserves bits above index 31', () {
+      expect(has([8589934592], [33, 1], {}), isTrue);
+      expect(has([8589934592], [33, 0], {}), isFalse);
+      expect(map([-1, 8589934592], [33], {}), [1, 1]);
+    });
+
     test('length', () {
       expect(length('hello', [], {}), equals(5));
       expect(length('', [], {}), equals(0));
