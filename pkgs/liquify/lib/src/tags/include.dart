@@ -17,20 +17,23 @@ class IncludeTag extends AbstractTag with AsyncTag {
     final value = binding == null
         ? evaluator.context.getVariable(name)
         : evaluator.evaluate(binding);
-    final variables = {
-      for (final arg in namedArgs)
-        arg.identifier.name: evaluator.evaluate(arg.value),
-    };
-
-    for (final item in value is List ? value : [value]) {
-      final bindings = {...variables, arguments.bindingName(name): item};
-      evaluator.context.pushScope();
-      try {
-        evaluator.context.merge(bindings);
-        evaluator.evaluateNodes(nodes);
-      } finally {
-        _leavePartial(evaluator, bindings);
+    final bindings = <String, dynamic>{};
+    final bindingName = arguments.bindingName(name);
+    evaluator.context.pushScope();
+    try {
+      for (final arg in namedArgs) {
+        final key = arg.identifier.name;
+        final argumentValue = evaluator.evaluate(arg.value);
+        bindings[key] = argumentValue;
+        evaluator.context.setVariable(key, argumentValue);
       }
+      for (final item in value is List ? value : [value]) {
+        bindings[bindingName] = item;
+        evaluator.context.setVariable(bindingName, item);
+        evaluator.evaluateBody(nodes);
+      }
+    } finally {
+      _leavePartial(evaluator, bindings);
     }
   }
 
@@ -46,20 +49,23 @@ class IncludeTag extends AbstractTag with AsyncTag {
     final value = binding == null
         ? evaluator.context.getVariable(name)
         : await evaluator.evaluateAsync(binding);
-    final variables = {
-      for (final arg in namedArgs)
-        arg.identifier.name: await evaluator.evaluateAsync(arg.value),
-    };
-
-    for (final item in value is List ? value : [value]) {
-      final bindings = {...variables, arguments.bindingName(name): item};
-      evaluator.context.pushScope();
-      try {
-        evaluator.context.merge(bindings);
-        await evaluator.evaluateNodesAsync(nodes);
-      } finally {
-        _leavePartial(evaluator, bindings);
+    final bindings = <String, dynamic>{};
+    final bindingName = arguments.bindingName(name);
+    evaluator.context.pushScope();
+    try {
+      for (final arg in namedArgs) {
+        final key = arg.identifier.name;
+        final argumentValue = await evaluator.evaluateAsync(arg.value);
+        bindings[key] = argumentValue;
+        evaluator.context.setVariable(key, argumentValue);
       }
+      for (final item in value is List ? value : [value]) {
+        bindings[bindingName] = item;
+        evaluator.context.setVariable(bindingName, item);
+        await evaluator.evaluateBodyAsync(nodes);
+      }
+    } finally {
+      _leavePartial(evaluator, bindings);
     }
   }
 

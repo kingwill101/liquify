@@ -199,6 +199,23 @@ void main() {
       },
     );
 
+    test(
+      'include evaluates named arguments in order without leaking them',
+      () async {
+        Template template() => Template.parse(
+          "{% include 'pair' x: 'new', y: x %}|{{x}}|{{saved}}|"
+          "{% include 'counter' %}{% include 'counter' %}",
+          data: {'x': 'old'},
+          root: MapRoot({
+            'pair': '{{x}}:{{y}}{% assign saved = y %}',
+            'counter': '{% increment count %}',
+          }),
+        );
+        expect(template().render(), 'new:new|old|new|01');
+        expect(await template().renderAsync(), 'new:new|old|new|01');
+      },
+    );
+
     test('counter names do not interfere with loop metadata', () async {
       Template template() => Template.parse(
         '{% increment forloop %}{% for n in (1..2) %}{{forloop.index}}{% endfor %}'
