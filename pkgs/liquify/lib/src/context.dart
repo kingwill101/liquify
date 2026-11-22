@@ -276,6 +276,11 @@ class Environment {
         return _variableStack[i][name];
       }
     }
+    // An assigned variable takes precedence over a counter of the same name.
+    for (var i = _variableStack.length - 1; i >= 0; i--) {
+      final scope = _variableStack[i];
+      if (scope.containsKey('counter:$name')) return scope['counter:$name'];
+    }
     return null;
   }
 
