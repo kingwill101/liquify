@@ -43,7 +43,7 @@ extension Evaluation on Evaluator {
       return null;
     }
     if (!FilterRegistry.isDotNotationFilter(name)) return null;
-    return FilterRegistry.getFilter(name)?.call(value, [], {});
+    return context.getFilter(name)?.call(value, [], {});
   }
 
   dynamic _lookupIndex(Object? value, Object? key) {

@@ -1,5 +1,6 @@
-import 'package:liquify/src/fs.dart' show MapRoot;
-import 'package:liquify/src/template.dart';
+import 'package:liquify/liquify.dart';
+import 'package:liquify/src/ast.dart' show TextNode;
+import 'package:liquify/src/evaluator.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -254,6 +255,35 @@ void main() {
         expect(await template.renderAsync(), expected);
       },
     );
+
+    test(
+      'strict dot lookup uses the filters registered in its environment',
+      () async {
+        final environment = Environment.withStrictMode({
+          'items': [1, 2],
+          'record': {'size': 'key'},
+        });
+        final source = '{{ items.size }}|{{ record.size }}';
+
+        expect(
+          Template.parse(source, environment: environment).render(),
+          '|key',
+        );
+        environment.registerLocalFilter('size', (value, _, _) => 42);
+        final template = Template.parse(source, environment: environment);
+        expect(template.render(), '42|key');
+        expect(await template.renderAsync(), '42|key');
+      },
+    );
+
+    test('an environment with constant registers can render text', () async {
+      final evaluator = Evaluator(Environment({}, const {}));
+      final nodes = [TextNode('hello')];
+
+      expect(evaluator.evaluateNodes(nodes), 'hello');
+      evaluator.buffer.clear();
+      expect(await evaluator.evaluateNodesAsync(nodes), 'hello');
+    });
 
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');

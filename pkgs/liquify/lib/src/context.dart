@@ -39,7 +39,7 @@ class Environment {
     bool strictMode = false,
     LiquidConfig? config,
   ]) : _variableStack = [data],
-       _registers = register ?? {},
+       _registers = {...?register},
        _strictMode = strictMode,
        _config = config;
 
@@ -47,7 +47,7 @@ class Environment {
     Map<String, dynamic> data = const {},
     Map<String, dynamic>? register,
   ]) : _variableStack = [data],
-       _registers = register ?? {},
+       _registers = {...?register},
        _strictMode = true;
 
   Environment._clone(
