@@ -161,7 +161,7 @@ class LiquidGrammar extends GrammarDefinition {
 
     // Whitespace is safe if not followed by strip delimiters
     final safeWhitespace =
-        pattern(' \t\r\n') &
+        pattern(' \t\r\n').plus() &
         (string(cfg.varStartStrip) | string(cfg.tagStartStrip)).not();
 
     final textChar =

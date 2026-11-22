@@ -104,6 +104,14 @@ void main() {
       expect(await template.renderAsync(), '123|{"key"=>"value"}|keyvalue');
     });
 
+    test('a trim marker consumes the entire preceding whitespace run', () {
+      final template = Template.parse(
+        'A \r\n\t {%- if true -%} B {%- endif -%} C',
+      );
+
+      expect(template.render(), 'ABC');
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

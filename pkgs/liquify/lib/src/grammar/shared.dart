@@ -693,7 +693,7 @@ Parser text([LiquidConfig? config]) {
 
   // Whitespace is safe if not followed by strip delimiters
   final safeWhitespace =
-      pattern(' \t\r\n') &
+      pattern(' \t\r\n').plus() &
       (string(cfg.varStartStrip) | string(cfg.tagStartStrip)).not();
 
   // A text character is either:
