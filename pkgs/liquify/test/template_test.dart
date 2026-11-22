@@ -112,6 +112,27 @@ void main() {
       expect(template.render(), 'ABC');
     });
 
+    test('uses Liquid collection semantics for for and tablerow', () async {
+      final template = Template.parse(
+        '{% for c in text limit:0 offset:9 %}{{c}}{% endfor %}|'
+        '{% tablerow p in record cols:1 %}{{p.first}}:'
+        '{{tablerowloop.col0}}:{{tablerowloop.col_last}}{% endtablerow %}|'
+        '{% tablerow x in empty_list %}{{x}}{% endtablerow %}',
+        data: {
+          'text': 'abc',
+          'record': {'a': 1, 'b': 2},
+          'empty_list': [],
+        },
+      );
+      const expected =
+          'abc|<tr class="row1">\n<td class="col1">a:0:true</td>'
+          '</tr>\n<tr class="row2"><td class="col1">b:0:true</td></tr>\n'
+          '|<tr class="row1">\n</tr>\n';
+
+      expect(template.render(), expected);
+      expect(await template.renderAsync(), expected);
+    });
+
     test('context updates between renders', () async {
       final template = Template.parse('{{ greeting }} {{ name }}!');
 

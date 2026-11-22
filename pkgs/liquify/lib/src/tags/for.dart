@@ -110,19 +110,7 @@ class ForTag extends AbstractTag with AsyncTag {
     variableName = left.name;
     loopName = '$variableName-${_collectionName(right)}';
 
-    if (right is BinaryOperation && right.operator == '..') {
-      final start = evaluator.evaluate(right.left);
-      final end = evaluator.evaluate(right.right);
-      iterable = end < start
-          ? []
-          : List.generate(end - start + 1, (index) => start + index);
-    } else {
-      final evaluated = evaluator.evaluate(right);
-      // Convert Map to a list of [key, value] pairs for iteration
-      iterable = (evaluated is Map)
-          ? evaluated.entries.map((e) => [e.key, e.value]).toList()
-          : evaluated ?? [];
-    }
+    final collection = evaluator.evaluate(right);
 
     final offsets =
         evaluator.context.registers.putIfAbsent('for', () => <String, int>{})
@@ -142,18 +130,9 @@ class ForTag extends AbstractTag with AsyncTag {
     final modifier = content.length > 1 ? content[1] : null;
     reversed = modifier is Identifier && modifier.name == 'reversed';
 
-    final startOffset = offset;
-    if (startOffset != null && startOffset > 0) {
-      iterable = iterable.skip(startOffset).toList();
-    }
-
-    if (limit != null) {
-      iterable = iterable.take(limit!).toList();
-    }
-
-    offsets[loopName] =
-        (startOffset != null && startOffset > 0 ? startOffset : 0) +
-        iterable.length;
+    final startOffset = offset ?? 0;
+    iterable = sliceLoopItems(collection, startOffset, limit);
+    offsets[loopName] = (startOffset < 0 ? 0 : startOffset) + iterable.length;
 
     if (reversed) {
       iterable = iterable.reversed.toList();
@@ -292,4 +271,19 @@ class ForTag extends AbstractTag with AsyncTag {
       evaluator.context.merge(merged);
     }
   }
+}
+
+/// Selects the items for the built-in Liquid iteration tags.
+List<dynamic> sliceLoopItems(Object? collection, int offset, int? limit) {
+  // Liquid iterates a nonempty string as a single item, regardless of slice options.
+  if (collection is String) return collection.isEmpty ? [] : [collection];
+
+  final Iterable<dynamic> items = switch (collection) {
+    Map() => collection.entries.map((entry) => [entry.key, entry.value]),
+    Iterable() => collection,
+    _ => const [],
+  };
+  final remaining = offset > 0 ? items.skip(offset) : items;
+  return (limit == null ? remaining : remaining.take(limit < 0 ? 0 : limit))
+      .toList();
 }
