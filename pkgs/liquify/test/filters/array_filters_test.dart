@@ -63,13 +63,17 @@ void main() {
     test('first', () {
       expect(first([1, 2, 3], [], {}), equals(1));
       expect(first([], [], {}), equals(''));
-      expect(first('not a list', [], {}), equals(''));
+      expect(first('😀abc', [], {}), equals('😀'));
+      expect(first('', [], {}), equals(''));
+      expect(first(' 😀\n', [], {}), equals(' '));
     });
 
     test('last', () {
       expect(last([1, 2, 3], [], {}), equals(3));
       expect(last([], [], {}), equals(''));
-      expect(last('not a list', [], {}), equals(''));
+      expect(last('abc😀', [], {}), equals('😀'));
+      expect(last('', [], {}), equals(''));
+      expect(last(' 😀\n', [], {}), equals('\n'));
     });
 
     test('reverse', () {

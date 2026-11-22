@@ -68,7 +68,7 @@ dynamic join(
   return value.join(separator);
 }
 
-/// Returns the first element of a list.
+/// Returns the first item of a list or first character of a string.
 ///
 /// Arguments: None
 ///
@@ -78,11 +78,14 @@ dynamic first(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
+  if (value is String) {
+    return value.isEmpty ? '' : String.fromCharCode(value.runes.first);
+  }
   if (value is! List || value.isEmpty) return '';
   return value.first;
 }
 
-/// Returns the last element of a list.
+/// Returns the last item of a list or last character of a string.
 ///
 /// Arguments: None
 ///
@@ -92,6 +95,9 @@ dynamic last(
   List<dynamic> arguments,
   Map<String, dynamic> namedArguments,
 ) {
+  if (value is String) {
+    return value.isEmpty ? '' : String.fromCharCode(value.runes.last);
+  }
   if (value is! List || value.isEmpty) return '';
   return value.last;
 }

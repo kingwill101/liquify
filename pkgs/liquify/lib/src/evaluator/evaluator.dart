@@ -304,7 +304,8 @@ class Evaluator implements ASTVisitor<dynamic> {
         if (member is Identifier) {
           objectVal = objectVal(Symbol(keyName));
         }
-      } else if (objectVal is List && member is Identifier) {
+      } else if ((objectVal is List || objectVal is String) &&
+          member is Identifier) {
         // Check if it's a registered dot notation filter
         if (FilterRegistry.isDotNotationFilter(keyName)) {
           final filterFunction = FilterRegistry.getFilter(keyName);
@@ -515,7 +516,8 @@ class Evaluator implements ASTVisitor<dynamic> {
         if (member is Identifier) {
           objectVal = objectVal(Symbol(keyName));
         }
-      } else if (objectVal is List && member is Identifier) {
+      } else if ((objectVal is List || objectVal is String) &&
+          member is Identifier) {
         // Check if it's a registered dot notation filter
         if (FilterRegistry.isDotNotationFilter(keyName)) {
           final filterFunction = FilterRegistry.getFilter(keyName);
