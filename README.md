@@ -80,3 +80,15 @@ This project is licensed under the [MIT License](pkgs/liquify/LICENSE).
 - [LiquidJS](https://github.com/harttle/liquidjs) for their comprehensive set of filters
 - [liquid_dart](https://github.com/ergonlabs/liquid_dart) for their initial Dart implementation
 
+
+## Playground development
+
+From `pkgs/liquify`, build the client-mode Jaspr playground with:
+
+```sh
+dart pub get
+dart run build_runner build --release -o web:../liquify_pages
+```
+
+The static site is written to `pkgs/liquify_pages`. The Web Build workflow
+builds the same site and deploys it to GitHub Pages on pushes to `master`.
