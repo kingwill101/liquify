@@ -127,7 +127,8 @@ class _PlaygroundState extends State<Playground> {
       }
       final template = Template.fromFile(
         entry,
-        MapRoot(Map.of(_files)),
+        MapRoot(Map.of(_files), throwOnMissing: true),
+        environmentSetup: (environment) => environment.maxRangeSize = 10000,
         data: context,
       );
       final result = await template.renderAsync();

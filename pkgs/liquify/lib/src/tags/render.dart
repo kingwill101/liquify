@@ -45,6 +45,7 @@ class RenderTag extends AbstractTag with AsyncTag {
     Map<String, dynamic> variables,
   ) {
     final context = Environment()
+      ..maxRangeSize = parent.context.maxRangeSize
       ..setRoot(parent.context.getRoot())
       ..setConfig(parent.context.config)
       ..pushScope()

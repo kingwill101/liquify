@@ -22,6 +22,12 @@ class Environment {
   bool _strictMode = false;
   LiquidConfig? _config;
 
+  /// Maximum number of items materialized by one range expression.
+  ///
+  /// A sliced loop range counts only the items in its slice. Null allows any
+  /// range size that the platform can represent as a list.
+  int? maxRangeSize;
+
   /// Constructs a new [Environment] instance with the provided initial data.
   ///
   /// The [Environment] class manages the variable stack and filters used within a
@@ -90,6 +96,7 @@ class Environment {
       _config,
     );
     cloned._root = _root;
+    cloned.maxRangeSize = maxRangeSize;
     return cloned;
   }
 

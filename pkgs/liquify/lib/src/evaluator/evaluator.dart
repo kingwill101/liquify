@@ -163,10 +163,7 @@ class Evaluator implements ASTVisitor<dynamic> {
       case 'or':
         return isTruthy(left) || isTruthy(right);
       case '..':
-        final start = left ?? 0;
-        final end = right ?? 0;
-        if (end < start) return [];
-        return List.generate(end - start + 1, (index) => start + index);
+        return materializeRange(left, right);
       case 'in':
         if (right is! Iterable) {
           throw Exception('Right side of "in" operator must be iterable.');
@@ -183,6 +180,33 @@ class Evaluator implements ASTVisitor<dynamic> {
       default:
         throw UnsupportedError('Unsupported operator: $op');
     }
+  }
+
+  /// Builds the inclusive range or a requested window of it.
+  List<dynamic> materializeRange(
+    Object? left,
+    Object? right, {
+    int offset = 0,
+    int? limit,
+  }) {
+    final start = (unwrapLiquidNumber(left) ?? 0) as num;
+    final end = (unwrapLiquidNumber(right) ?? 0) as num;
+    if (end < start || (limit != null && limit <= 0)) return [];
+    // Use exact arithmetic so distant endpoints cannot wrap the length before
+    // the window and allocation limit are applied.
+    final first =
+        BigInt.from(start as int) + BigInt.from(offset < 0 ? 0 : offset);
+    final last = BigInt.from(end as int);
+    if (first > last) return [];
+    var count = last - first + BigInt.one;
+    if (limit != null && count > BigInt.from(limit)) count = BigInt.from(limit);
+    final maxSize = context.maxRangeSize;
+    if (maxSize != null && count > BigInt.from(maxSize)) {
+      throw RangeError('Range exceeds the maximum of $maxSize items.');
+    }
+    if (!count.isValidInt) throw RangeError('Range is too large.');
+    final firstValue = first.toInt();
+    return List<dynamic>.generate(count.toInt(), (index) => firstValue + index);
   }
 
   @override
