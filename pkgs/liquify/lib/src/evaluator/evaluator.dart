@@ -189,14 +189,13 @@ class Evaluator implements ASTVisitor<dynamic> {
     int offset = 0,
     int? limit,
   }) {
-    final start = (unwrapLiquidNumber(left) ?? 0) as num;
-    final end = (unwrapLiquidNumber(right) ?? 0) as num;
+    final start = _rangeEndpoint(left);
+    final end = _rangeEndpoint(right);
     if (end < start || (limit != null && limit <= 0)) return [];
     // Use exact arithmetic so distant endpoints cannot wrap the length before
     // the window and allocation limit are applied.
-    final first =
-        BigInt.from(start as int) + BigInt.from(offset < 0 ? 0 : offset);
-    final last = BigInt.from(end as int);
+    final first = BigInt.from(start) + BigInt.from(offset < 0 ? 0 : offset);
+    final last = BigInt.from(end);
     if (first > last) return [];
     var count = last - first + BigInt.one;
     if (limit != null && count > BigInt.from(limit)) count = BigInt.from(limit);
@@ -208,6 +207,12 @@ class Evaluator implements ASTVisitor<dynamic> {
     final firstValue = first.toInt();
     return List<dynamic>.generate(count.toInt(), (index) => firstValue + index);
   }
+
+  int _rangeEndpoint(Object? value) => switch (unwrapLiquidNumber(value)) {
+    null => 0,
+    num endpoint when endpoint.isFinite => endpoint.toInt(),
+    _ => throw RangeError('Range endpoints must be finite numbers.'),
+  };
 
   @override
   dynamic visitBinaryOperation(BinaryOperation node) {
