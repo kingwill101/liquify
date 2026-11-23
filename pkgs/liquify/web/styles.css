@@ -116,7 +116,11 @@ pre { white-space: pre-wrap; overflow: auto; overflow-wrap: anywhere; }
 pre.error { color: #ffaaa4; }
 iframe { flex: 1; min-height: 0; width: 100%; border: 0; background: white; }
 @media (max-width: 850px) {
-  .workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr)); }
+  .app { height: auto; min-height: 100dvh; overflow: visible; }
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(22rem, 50dvh) repeat(2, minmax(14rem, 30dvh));
+  }
   .templates { grid-row: auto; }
 }
 
