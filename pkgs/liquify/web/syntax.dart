@@ -82,8 +82,9 @@ List<Component> _tokenize(
     components.addAll(color(match));
     offset = match.end;
   }
-  if (offset < source.length)
+  if (offset < source.length) {
     components.addAll(plain(source.substring(offset)));
+  }
   return components;
 }
 
