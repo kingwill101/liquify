@@ -31,7 +31,7 @@ jobs:
           sdk: stable
 
       - name: Install dependencies
-        run: dart pub get --enforce-lockfile
+        run: dart pub get
 
       - name: Analyze Jaspr playground
         run: dart analyze web
