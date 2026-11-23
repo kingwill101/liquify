@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'pkgs/liquify/**'
+      - 'prototypes/jaspr_playground/**'
       - '.github/workflows/web_build.yml'
   pull_request:
     paths:
       - 'pkgs/liquify/**'
+      - 'prototypes/jaspr_playground/**'
       - '.github/workflows/web_build.yml'
   workflow_dispatch:
 
@@ -40,6 +42,33 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: pkgs/liquify_pages
+
+  build-jaspr:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: prototypes/jaspr_playground
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - run: dart pub get --enforce-lockfile
+      - run: dart analyze
+      - name: Build client
+        run: dart run build_runner build --release -o web:build/site
+      - name: Verify static site
+        run: |
+          test -s build/site/index.html
+          test -s build/site/styles.css
+          test -s build/site/main.dart.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jaspr-playground
+          path: prototypes/jaspr_playground/build/site/
+          if-no-files-found: error
 
   deploy-pages:
     needs: build-web
