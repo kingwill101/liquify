@@ -94,38 +94,27 @@ Multiplies the input value by a number.
 
 ## divided_by
 
-Divides the input value by a number.
+Divides a number by the divisor. Two integer operands produce an integer
+result rounded down. A decimal operand produces a decimal result.
 
 ### Syntax
 ```liquid
-{{ value | divided_by: number }}
-{{ value | divided_by: number, integer_arithmetic }}
+{{ value | divided_by: divisor }}
 ```
-
-### Parameters
-- **number** (required) - The number to divide by
-- **integer_arithmetic** (optional) - If `true`, performs integer division (default: `false`)
 
 ### Examples
-```liquid
-{{ 10 | divided_by: 3 }}
-<!-- Output: 3.3333333333333335 -->
 
-{{ 10 | divided_by: 3, true }}
-<!-- Output: 3 -->
-
-{{ 15 | divided_by: 5 }}
-<!-- Output: 3.0 -->
-
-{{ 10 | divided_by: 0 }}
-<!-- Output: 0 (prevents division by zero) -->
+```liquid-live
+Integer division: {{ total | divided_by: portions }}
+Decimal division: {{ total | divided_by: 4.0 }}
 ```
 
-### Notes
-- Prevents division by zero (returns `0`)
-- Integer arithmetic floors the result
-- Treats `null` input as `0`
-- Treats `null` divisor as `1`
+```json-live
+{
+  "total": 19,
+  "portions": 4
+}
+```
 
 ---
 

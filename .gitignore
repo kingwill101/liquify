@@ -18,3 +18,6 @@ openspec
 **/GeneratedPluginRegistrant.*
 **/local.properties
 **/flutter_export_environment.sh
+
+# Playground deployment output
+/pkgs/liquify_pages/

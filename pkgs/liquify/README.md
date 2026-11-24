@@ -13,6 +13,8 @@
 
 Liquify is a comprehensive Dart implementation of the [Liquid template language](https://shopify.github.io/liquid/), originally created by Shopify. This high-performance library allows you to parse, render, and extend Liquid templates in your Dart and Flutter applications.
 
+[Try Liquify in the browser playground](https://kingwill101.github.io/liquify/).
+
 ## Features
 
 - Full support for standard Liquid syntax and semantics
@@ -32,7 +34,7 @@ Add Liquify to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquify: ^2.0.0-wip.1
+  liquify: ^2.0.0-wip.2
 ```
 
 Then run `dart pub get` or `flutter pub get`.

@@ -81,7 +81,7 @@ Each example produces formatted output demonstrating the specific features:
 
 - [Tags Documentation](../tags/) - Complete tag reference
 - [Filters Documentation](../filters/) - Complete filter reference
-- [API Reference](../api/) - Core library documentation
+- [API Reference](https://pub.dev/documentation/liquify/latest/) - Core library documentation
 
 ## Contributing Examples
 

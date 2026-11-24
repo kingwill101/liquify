@@ -3,7 +3,7 @@ description: >
   A powerful and extensible Liquid template engine for Dart.
   Supports full Liquid syntax, custom tags and filters, and high-performance parsing and rendering.
 
-version: 2.0.0-wip.1
+version: 2.0.0-wip.2
 
 homepage: https://github.com/kingwill101/liquify
 
@@ -32,6 +32,7 @@ dependencies:
   web: ^1.1.1
 
 dev_dependencies:
+  jaspr: ^0.23.5
   lints: ^6.1.0
   meta: ^1.18.3
   stack_trace: ^1.12.1

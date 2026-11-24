@@ -1,0 +1,18 @@
+name: liquify_docs
+publish_to: none
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  highlight: ^0.7.0
+  jaspr: ^0.23.5
+  jaspr_content: ^0.5.4
+
+dev_dependencies:
+  build_runner: ^2.15.0
+  build_web_compilers: ^4.8.0
+  jaspr_builder: ^0.23.5
+  jaspr_cli: ^0.23.5
+
+jaspr:
+  mode: static

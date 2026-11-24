@@ -4,10 +4,16 @@ on:
   push:
     paths:
       - 'pkgs/liquify/**'
+      - 'site/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
       - '.github/workflows/web_build.yml'
   pull_request:
     paths:
       - 'pkgs/liquify/**'
+      - 'site/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
       - '.github/workflows/web_build.yml'
   workflow_dispatch:
 
@@ -24,16 +30,32 @@ jobs:
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: stable
+          sdk: 3.13.7 # Jaspr CLI 0.23.5 and build_web_compilers require Dart 3.13.
 
       - name: Install dependencies
         run: dart pub get
 
-      - name: Activate webdev
-        run: dart pub global activate webdev
+      - name: Analyze Jaspr playground
+        run: dart analyze web
 
-      - name: Build (webdev)
+      - name: Build Jaspr playground
         run: dart run build_runner build --release -o web:../liquify_pages
+
+      - name: Build documentation
+        working-directory: .
+        run: bash site/build.sh
+
+      - name: Verify static site
+        run: |
+          test -s ../liquify_pages/index.html
+          test -s ../liquify_pages/styles.css
+          test -s ../liquify_pages/main.dart.js
+          test -s ../liquify_pages/theme.css
+          test -s ../liquify_pages/theme.js
+          test -s ../liquify_pages/docs_examples.dart.js
+          test -s ../liquify_pages/docs/index.html
+          test -s ../liquify_pages/docs/tags/layout/index.html
+          test -s ../liquify_pages/docs/styles.css
 
       - name: Upload Pages artifact
         if: success()

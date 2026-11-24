@@ -113,7 +113,14 @@ class ForTag extends AbstractTag with AsyncTag {
     loopName = '$variableName-${_collectionName(right)}';
     final continuationKey = '$variableName-${jsonEncode(right.toJson())}';
 
-    final collection = evaluator.evaluate(right);
+    final range = switch (right) {
+      BinaryOperation(operator: '..', :final left, :final right) => (
+        evaluator.evaluate(left),
+        evaluator.evaluate(right),
+      ),
+      _ => null,
+    };
+    final collection = range == null ? evaluator.evaluate(right) : null;
 
     final offsets =
         evaluator.context.registers.putIfAbsent('for', () => <String, int>{})
@@ -134,7 +141,14 @@ class ForTag extends AbstractTag with AsyncTag {
     reversed = modifier is Identifier && modifier.name == 'reversed';
 
     final startOffset = offset ?? 0;
-    iterable = sliceLoopItems(collection, startOffset, limit);
+    iterable = range == null
+        ? sliceLoopItems(collection, startOffset, limit)
+        : evaluator.materializeRange(
+            range.$1,
+            range.$2,
+            offset: startOffset,
+            limit: limit,
+          );
     offsets[continuationKey] =
         (startOffset < 0 ? 0 : startOffset) + iterable.length;
 

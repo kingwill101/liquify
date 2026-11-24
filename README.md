@@ -39,7 +39,7 @@ Add Liquify to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquify: ^2.0.0-wip.1
+  liquify: ^2.0.0-wip.2
 ```
 
 Basic usage:
@@ -80,3 +80,16 @@ This project is licensed under the [MIT License](pkgs/liquify/LICENSE).
 - [LiquidJS](https://github.com/harttle/liquidjs) for their comprehensive set of filters
 - [liquid_dart](https://github.com/ergonlabs/liquid_dart) for their initial Dart implementation
 
+
+## Playground development
+
+From `pkgs/liquify`, build the client-mode Jaspr playground with:
+
+```sh
+dart pub get
+dart run build_runner build --release -o web:../liquify_pages
+```
+
+The static site is written to `pkgs/liquify_pages`. See the [site build guide](site/README.md)
+to build the docs and preview both locally. The Web Build workflow deploys
+both to GitHub Pages on pushes to `master`.

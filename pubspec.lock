@@ -265,6 +265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  hotreloader:
+    dependency: transitive
+    description:
+      name: hotreloader
+      sha256: "66871df468fc24eee81f1a0a7cb98acc104716f9b7376d355437b48d633c4ebf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
   html:
     dependency: transitive
     description:
@@ -321,6 +329,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  jaspr:
+    dependency: transitive
+    description:
+      name: jaspr
+      sha256: c4e7459389fadb3f48ed7c2d5165b000ad93f4aaa08f86a490eaf5d3b652bb3e
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.23.5"
   json_annotation:
     dependency: transitive
     description:
@@ -457,6 +473,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.2"
+  shelf_gzip:
+    dependency: transitive
+    description:
+      name: shelf_gzip
+      sha256: "4f4b793c0f969f348aece1ab4cc05fceba9fea431c1ce76b1bc0fa369cecfc15"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   shelf_packages_handler:
     dependency: transitive
     description:
@@ -465,6 +489,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  shelf_proxy:
+    dependency: transitive
+    description:
+      name: shelf_proxy
+      sha256: "0c3a7b2b4c111cae8a6d9077701e0622c6013d38a780373ac359d6d45b3aa10b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   shelf_static:
     dependency: transitive
     description:
@@ -585,6 +617,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  universal_web:
+    dependency: transitive
+    description:
+      name: universal_web
+      sha256: c58bee740bb9672a3df36cef9b8ee06e75e738d91bcb4309f1ada62a0763a1c0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1+2"
   uuid:
     dependency: transitive
     description:

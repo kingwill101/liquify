@@ -4,7 +4,7 @@ Control flow tags allow you to create conditional logic in your Liquid templates
 
 ## if
 
-Executes a block of code if a condition is true. Supports `else` and `elseif`/`elif` for multiple conditions.
+Executes a block of code if a condition is true. Supports `else` and `elsif` for multiple conditions.
 
 ### Syntax
 ```liquid
@@ -20,7 +20,7 @@ Executes a block of code if a condition is true. Supports `else` and `elseif`/`e
 
 {% if condition1 %}
   content for condition1
-{% elseif condition2 %}
+{% elsif condition2 %}
   content for condition2
 {% else %}
   fallback content
@@ -32,12 +32,20 @@ Executes a block of code if a condition is true. Supports `else` and `elseif`/`e
 
 ### Examples
 
-#### Basic If Statement
-```liquid
-{% if true %}
-  True
-{% endif %}
-<!-- Output: True -->
+#### Show a message when inventory is low
+
+```liquid-live
+{%- if product.stock < 5 -%}
+Only {{ product.stock }} left in stock.
+{%- else -%}
+In stock.
+{%- endif -%}
+```
+
+```json-live
+{
+  "product": { "stock": 3 }
+}
 ```
 
 #### If-Else Statement
@@ -54,9 +62,9 @@ Executes a block of code if a condition is true. Supports `else` and `elseif`/`e
 ```liquid
 {% if false %}
   first
-{% elseif true %}
+{% elsif true %}
   second
-{% elseif true %}
+{% elsif true %}
   third
 {% else %}
   fourth
@@ -104,6 +112,28 @@ Executes a block of code if a condition is true. Supports `else` and `elseif`/`e
 
 ---
 
+## elsif
+
+Use `elsif` to test a second condition only if the first is false.
+
+```liquid-live
+{%- if score >= 90 -%}
+  Gold
+{%- elsif score >= 70 -%}
+  Silver
+{%- else -%}
+  Bronze
+{%- endif -%}
+```
+
+```json-live
+{
+  "score": 78
+}
+```
+
+---
+
 ## unless
 
 Executes a block of code if a condition is false. This is the inverse of `if`.
@@ -119,6 +149,20 @@ Executes a block of code if a condition is false. This is the inverse of `if`.
 - **condition** (required) - Any expression that evaluates to true or false
 
 ### Examples
+Toggle the account’s active status to see the message change.
+
+```liquid-live
+{% unless account.active %}Activate your account.{% else %}Account is active.{% endunless %}
+```
+
+```json-live
+{
+  "account": {
+    "active": false
+  }
+}
+```
+
 
 #### Basic Unless
 ```liquid
@@ -185,6 +229,24 @@ Provides multi-way conditional logic, similar to switch statements in other lang
 - **when values** (required) - One or more values to match against
 
 ### Examples
+Change the order status to select a branch.
+
+```liquid-live
+{%- case order.status -%}
+  {%- when "packed" -%}Ready to ship.
+  {%- when "shipped" -%}On its way.
+  {%- else -%}Order received.
+{%- endcase -%}
+```
+
+```json-live
+{
+  "order": {
+    "status": "packed"
+  }
+}
+```
+
 
 #### Basic Case Statement
 ```liquid

@@ -1,3 +1,11 @@
+## 2.0.0-wip.2
+
+- Rebuild the playground in Jaspr with syntax highlighting and shareable workspace links.
+- Publish the documentation alongside the playground, with live examples for all 25 built-in tags, editable partials, and highlighted Dart snippets.
+- Add a shared light and dark theme with more readable fonts across the docs and playground.
+- Report missing templates and oversized ranges in the playground.
+- Apply loop offsets and limits before allocating ranges, and validate range endpoints.
+
 ## 2.0.0-wip.1
 
 Prerelease for the upcoming Liquify 2.0.0 release. This release aligns rendering with Shopify Liquid and can change the output of existing templates.

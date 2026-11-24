@@ -11,7 +11,10 @@ void main() {
       test('${entry.key} renders its expected output', () async {
         final example = entry.value;
         final data = jsonDecode(example.contextJson) as Map<String, dynamic>;
-        final root = MapRoot(Map<String, String>.from(example.files));
+        final root = MapRoot(
+          Map<String, String>.from(example.files),
+          throwOnMissing: true,
+        );
         final template = Template.fromFile(example.entryFile, root, data: data);
 
         final output = await template.renderAsync();
