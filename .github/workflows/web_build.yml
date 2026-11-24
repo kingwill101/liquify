@@ -30,7 +30,7 @@ jobs:
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: stable
+          sdk: 3.13.7 # Jaspr CLI 0.23.5 and build_web_compilers require Dart 3.13.
 
       - name: Install dependencies
         run: dart pub get

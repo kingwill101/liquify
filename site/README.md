@@ -3,7 +3,7 @@
 The static Jaspr Content build reads the Markdown in `pkgs/liquify/doc`.
 The docs and playground use the same GitHub Pages base path.
 
-From the repository root:
+Use Dart 3.13 for the site build. From the repository root:
 
 ```sh
 (cd pkgs/liquify && dart pub get && dart run build_runner build --release -o web:../liquify_pages)
