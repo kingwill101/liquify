@@ -27,6 +27,23 @@ The primary iteration tag for looping through collections with advanced features
 - **reversed** (optional) - Iterate in reverse order
 
 ### Examples
+List the products with their one-based loop positions.
+
+```liquid-live
+{%- for product in products -%}
+{{ forloop.index }}. {{ product }}{% unless forloop.last %}, {% endunless %}
+{%- endfor -%}
+```
+
+```json-live
+{
+  "products": [
+    "Notebook",
+    "Pencil"
+  ]
+}
+```
+
 
 #### Basic Iteration
 ```liquid
@@ -119,6 +136,24 @@ Generates HTML table rows with automatic row and column management.
 - **offset** (optional) - Number of items to skip
 
 ### Examples
+Render the items in two columns. Change `cols` to see the row markup change.
+
+```liquid-live
+<table>
+{% tablerow item in items cols: 2 %}{{ item }}{% endtablerow %}
+</table>
+```
+
+```json-live
+{
+  "items": [
+    "Copper",
+    "Tin",
+    "Iron"
+  ]
+}
+```
+
 
 #### Basic Table Row
 ```liquid
@@ -180,6 +215,24 @@ Cycles through a list of values, commonly used in loops for alternating content.
 - **group_name** (optional) - Name for independent cycle groups
 
 ### Examples
+Alternate two labels as the loop advances.
+
+```liquid-live
+{%- for name in names -%}
+{% cycle "A", "B" %}: {{ name }}{% unless forloop.last %}; {% endunless %}
+{%- endfor -%}
+```
+
+```json-live
+{
+  "names": [
+    "Ada",
+    "Lin",
+    "Sam"
+  ]
+}
+```
+
 
 #### Basic Cycling
 ```liquid
@@ -232,19 +285,49 @@ Repeats content a specified number of times.
 - **count** (required) - Number of times to repeat content
 
 ### Examples
+Repeat a short label a fixed number of times.
+
+```liquid-live
+{% repeat 3 %}★{% endrepeat %}
+```
+
 
 #### Basic Repeat
 ```liquid
 {% repeat 3 %}Hello{% endrepeat %}
-<!-- Output: HelloHelloHello -->
+<!-- Output: Hello Hello Hello -->
 ```
 
 #### With Variables
 ```liquid
 {% assign count = 4 %}
 {% repeat count %}*{% endrepeat %}
-<!-- Output: **** -->
+<!-- Output: * * * * -->
 ```
+
+## ifchanged
+
+Show a heading when the rendered category changes from the previous iteration.
+
+```liquid-live
+{%- for category in categories -%}
+  {%- ifchanged -%}[{{ category }}]{%- endifchanged -%}
+{%- endfor -%}
+```
+
+```json-live
+{
+  "categories": [
+    "Books",
+    "Books",
+    "Games",
+    "Games",
+    "Books"
+  ]
+}
+```
+
+---
 
 ## Loop Control
 

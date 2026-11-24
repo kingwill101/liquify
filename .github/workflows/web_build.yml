@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - 'pkgs/liquify/**'
+      - 'site/**'
       - 'pubspec.yaml'
       - 'pubspec.lock'
       - '.github/workflows/web_build.yml'
   pull_request:
     paths:
       - 'pkgs/liquify/**'
+      - 'site/**'
       - 'pubspec.yaml'
       - 'pubspec.lock'
       - '.github/workflows/web_build.yml'
@@ -39,11 +41,21 @@ jobs:
       - name: Build Jaspr playground
         run: dart run build_runner build --release -o web:../liquify_pages
 
+      - name: Build documentation
+        working-directory: .
+        run: bash site/build.sh
+
       - name: Verify static site
         run: |
           test -s ../liquify_pages/index.html
           test -s ../liquify_pages/styles.css
           test -s ../liquify_pages/main.dart.js
+          test -s ../liquify_pages/theme.css
+          test -s ../liquify_pages/theme.js
+          test -s ../liquify_pages/docs_examples.dart.js
+          test -s ../liquify_pages/docs/index.html
+          test -s ../liquify_pages/docs/tags/layout/index.html
+          test -s ../liquify_pages/docs/styles.css
 
       - name: Upload Pages artifact
         if: success()

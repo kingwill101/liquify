@@ -90,5 +90,6 @@ dart pub get
 dart run build_runner build --release -o web:../liquify_pages
 ```
 
-The static site is written to `pkgs/liquify_pages`. The Web Build workflow
-builds the same site and deploys it to GitHub Pages on pushes to `master`.
+The static site is written to `pkgs/liquify_pages`. See the [site build guide](site/README.md)
+to build the docs and preview both locally. The Web Build workflow deploys
+both to GitHub Pages on pushes to `master`.

@@ -190,11 +190,40 @@ class _PlaygroundState extends State<Playground> {
   @override
   Component build(BuildContext context) {
     return div(classes: 'app', [
-      header([
-        div(classes: 'brand', [
-          span(classes: 'mark', [Component.text('{%')]),
-          h1([Component.text('Liquify Playground')]),
+      header(classes: 'site-header', [
+        a(classes: 'site-brand', href: './', [
+          img(
+            classes: 'brand-mark',
+            src:
+                'https://raw.githubusercontent.com/kingwill101/liquify/master/pkgs/liquify/assets/logo.png',
+            alt: '',
+          ),
+          const Component.text('Liquify'),
         ]),
+        nav(
+          classes: 'site-nav',
+          attributes: {'aria-label': 'Site'},
+          [
+            a(href: 'docs/', [const Component.text('Docs')]),
+            a(
+              href: './',
+              attributes: {'aria-current': 'page'},
+              [const Component.text('Playground')],
+            ),
+            a(href: 'https://github.com/kingwill101/liquify', [
+              const Component.text('GitHub'),
+            ]),
+            button(
+              [const Component.text('Dark')],
+              classes: 'theme-toggle',
+              type: ButtonType.button,
+              attributes: {'data-theme-toggle': '', 'aria-label': 'Dark mode'},
+            ),
+          ],
+        ),
+      ]),
+      div(classes: 'workspace-bar', [
+        h1([const Component.text('Liquify Playground')]),
         div(classes: 'controls', [
           select(
             [
@@ -237,7 +266,7 @@ class _PlaygroundState extends State<Playground> {
         section(classes: 'panel templates', [
           _panelHeader(
             'Templates',
-            '${_files.length} files',
+            '${_files.length} ${_files.length == 1 ? 'file' : 'files'}',
             actions: [_button('New file', () => _editPath(rename: false))],
           ),
           div(classes: 'template-body', [

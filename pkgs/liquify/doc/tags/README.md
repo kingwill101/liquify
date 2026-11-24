@@ -8,6 +8,7 @@ Tags are the logic elements of Liquid templates. They control the flow of the te
 Control the execution flow of your templates with conditional logic.
 
 - **[if](control-flow.md#if)** - Conditional execution
+- **[elsif](control-flow.md#elsif)** - Add another condition
 - **[unless](control-flow.md#unless)** - Negative conditional execution  
 - **[case](control-flow.md#case)** - Multi-way conditional execution
 
@@ -17,6 +18,7 @@ Loop through arrays, objects, and ranges to generate repetitive content.
 - **[for](iteration.md#for)** - Standard iteration with advanced features
 - **[tablerow](iteration.md#tablerow)** - Generate HTML table rows
 - **[cycle](iteration.md#cycle)** - Cycle through values
+- **[ifchanged](iteration.md#ifchanged)** - Output content when it changes
 - **[repeat](iteration.md#repeat)** - Repeat content a specific number of times
 
 ### Variable Tags
@@ -33,6 +35,7 @@ Handle template composition, inheritance, and partial rendering.
 - **[layout](layout.md#layout)** - Define layout templates
 - **[block](layout.md#block)** - Define replaceable content blocks
 - **[super](layout.md#super)** - Call parent block content
+- **[include](layout.md#include)** - Render a partial with access to outer variables
 - **[render](layout.md#render)** - Include and render other templates
 
 ### Output Tags
@@ -47,6 +50,7 @@ Utility tags for content handling and flow control.
 - **[raw](utility.md#raw)** - Output content without processing
 - **[comment](utility.md#comment)** - Add comments (not rendered)
 - **[break](utility.md#break)** - Exit loops early
+- **[doc](utility.md#doc)** - Document a template without rendering the documentation
 - **[continue](utility.md#continue)** - Skip to next iteration
 
 ## Syntax Overview

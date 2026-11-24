@@ -518,6 +518,18 @@ Counts the number of words in a string.
 <!-- Output: 0 -->
 ```
 
+### array_to_sentence_string
+
+Formats a list as a sentence. The optional argument supplies the connector
+before the final item and defaults to `and`.
+
+```liquid
+{{ fruits | array_to_sentence_string: "or" }}
+```
+
+With `fruits` set to `["apple", "banana", "orange"]`, this renders
+`apple, banana, or orange`.
+
 ## Usage Patterns
 
 ### Text Processing Pipeline

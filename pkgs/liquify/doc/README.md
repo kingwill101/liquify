@@ -5,12 +5,12 @@ A comprehensive Dart implementation of the Liquid template language with support
 ## Table of Contents
 
 ### 📖 [Tags Documentation](tags/)
-- **[Control Flow](tags/control-flow.md)** - `if`, `unless`, `case`, conditional logic
-- **[Iteration](tags/iteration.md)** - `for`, `tablerow`, `cycle`, `repeat` 
+- **[Control Flow](tags/control-flow.md)** - `if`, `elsif`, `unless`, `case`, conditional logic
+- **[Iteration](tags/iteration.md)** - `for`, `tablerow`, `cycle`, `repeat`, `ifchanged`
 - **[Variables](tags/variables.md)** - `assign`, `capture`, `increment`, `decrement`
-- **[Layout & Rendering](tags/layout.md)** - `layout`, `block`, `super`, `render`
+- **[Layout & Rendering](tags/layout.md)** - `layout`, `block`, `super`, `render`, `include`
 - **[Output](tags/output.md)** - `echo`, `liquid`
-- **[Utility](tags/utility.md)** - `raw`, `comment`, `break`, `continue`
+- **[Utility](tags/utility.md)** - `raw`, `comment`, `break`, `continue`, `doc`
 
 ### 🔧 [Filters Documentation](filters/)
 - **[Array Filters](filters/array.md)** - Array manipulation and processing

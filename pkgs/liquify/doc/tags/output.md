@@ -13,6 +13,18 @@ Outputs the result of an expression, equivalent to using `{{ }}` syntax.
 ```
 
 ### Examples
+Print an expression after applying a filter.
+
+```liquid-live
+Welcome, {% echo name | upcase %}!
+```
+
+```json-live
+{
+  "name": "Maya"
+}
+```
+
 ```liquid
 {% echo "Hello World" %}
 <!-- Output: Hello World -->
@@ -37,6 +49,22 @@ Allows for compact, inline Liquid syntax without the need for separate tag block
 ```
 
 ### Examples
+Group assignment and output statements inside one tag.
+
+```liquid-live
+{% liquid
+  assign units = crates | times: items_per_crate
+  echo units | append: " items"
+%}
+```
+
+```json-live
+{
+  "crates": 3,
+  "items_per_crate": 8
+}
+```
+
 ```liquid
 {% liquid
   assign name = "John"

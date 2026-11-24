@@ -17,6 +17,22 @@ Creates or updates variables with values, expressions, or filter results.
 - **value** (required) - The value, expression, or filtered expression to assign
 
 ### Examples
+Save a computed value and use it twice.
+
+```liquid-live
+{% assign subtotal = price | times: quantity -%}
+Subtotal: {{ subtotal }}
+With fee: {{ subtotal | plus: fee }}
+```
+
+```json-live
+{
+  "price": 7,
+  "quantity": 3,
+  "fee": 2
+}
+```
+
 
 #### Basic Assignment
 ```liquid
@@ -69,6 +85,23 @@ Captures the rendered output of a template block into a variable.
 - **variable_name** (required) - The name of the variable to store the captured content
 
 ### Examples
+Capture rendered text for reuse later in the template.
+
+```liquid-live
+{% capture label %}Ticket {{ ticket.number }} · {{ ticket.status }}{% endcapture -%}
+{{ label }}
+Logged: {{ label }}
+```
+
+```json-live
+{
+  "ticket": {
+    "number": 42,
+    "status": "Open"
+  }
+}
+```
+
 
 #### Basic Capture
 ```liquid
@@ -116,6 +149,12 @@ Outputs and increments a counter variable. Each counter maintains its own indepe
 - **counter_name** (required) - The name of the counter variable
 
 ### Examples
+Observe the counter before it increments.
+
+```liquid-live
+Row {% increment row_number %}, row {% increment row_number %}
+```
+
 
 #### Basic Increment
 ```liquid
@@ -171,6 +210,12 @@ Outputs and decrements a counter variable. Shares state with increment counters.
 - **counter_name** (required) - The name of the counter variable
 
 ### Examples
+Observe the counter after each decrement.
+
+```liquid-live
+Adjustments: {% decrement balance %}, {% decrement balance %}
+```
+
 
 #### Basic Decrement
 ```liquid
